@@ -12,65 +12,13 @@
     Height="450"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    Style="{DynamicResource MyWindowStyle}"
+    Style="{DynamicResource WindowStyle}"
     TextElement.FontSize="13"
     TextElement.FontWeight="Light"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <Window.Resources>
-        <SolidColorBrush x:Key="WindowBackgroundColorBrush" Color="{StaticResource Primary700}" />
-        <SolidColorBrush x:Key="HighlightColorBrush" Color="{StaticResource Primary500}" />
-        <SolidColorBrush x:Key="BlueColorBrush" Color="{StaticResource Accent200}" />
-        <SolidColorBrush x:Key="ForegroundColorBrush" Color="{StaticResource Accent200Foreground}" />
-
-        <Style x:Key="WindowButtonStyle" TargetType="{x:Type Button}">
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundColorBrush}" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="1" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid Background="{TemplateBinding Background}">
-                            <ContentPresenter
-                                x:Name="contentPresenter"
-                                Margin="{TemplateBinding Padding}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource HighlightColorBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource BlueColorBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="contentPresenter" Property="Opacity" Value=".5" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="MyWindowStyle" TargetType="local:MainWindow">
-            <Setter Property="ResizeMode" Value="CanResize" />
-            <Setter Property="WindowChrome.WindowChrome">
-                <Setter.Value>
-                    <WindowChrome
-                        CornerRadius="0"
-                        GlassFrameThickness="0"
-                        UseAeroCaptionButtons="False" />
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -86,9 +34,8 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="22">
-                    Material Design In XAML Toolkit
-                </TextBlock>
+                    FontSize="22"
+                    Text="Snap It" />
             </DockPanel>
         </materialDesign:ColorZone>
 
@@ -96,20 +43,10 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             WindowChrome.IsHitTestVisibleInChrome="True">
-            <Button materialDesign:ShadowAssist.ShadowDepth="Depth0" Command="{Binding Source={x:Static SystemCommands.CloseWindowCommand}}">
-                <Button.Content>
-                    <Grid RenderTransform="1,0,0,1,0,1">
-                        <Path
-                            Width="8"
-                            Height="7"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Data="M0,0 L8,7 M8,0 L0,7 Z"
-                            Stroke="{StaticResource PrimaryHueDarkForegroundBrush}"
-                            StrokeThickness="1.5" />
-                    </Grid>
-                </Button.Content>
-            </Button>
+            <Button
+                materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                Command="{Binding Source={x:Static SystemCommands.CloseWindowCommand}}"
+                ContentTemplate="{DynamicResource CloseBtnContentTemplate}" />
         </Grid>
 
         <dragablz:TabablzControl

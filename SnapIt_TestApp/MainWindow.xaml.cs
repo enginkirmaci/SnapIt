@@ -91,7 +91,13 @@ namespace SnapIt
                     {
                         SendKeys.SendWait("{ESC}");
 
-                        Win32Api.DwmGetWindowAttribute(ActiveWindow, Win32Api.DWMWINDOWATTRIBUTE.ExtendedFrameBounds, out Win32Api.RECT withMargin, Marshal.SizeOf(typeof(Win32Api.RECT)));
+                        Win32Api.DwmGetWindowAttribute(
+                            ActiveWindow,
+                            Win32Api.DWMWINDOWATTRIBUTE.ExtendedFrameBounds,
+                            out Win32Api.RECT withMargin,
+                            Marshal.SizeOf(typeof(Win32Api.RECT)));
+
+                        var windowStyle = Win32ApiTest.RemoveBorders(ActiveWindow);
 
                         if (!withMargin.Equals(default(Win32Api.RECT)))
                         {
@@ -110,20 +116,14 @@ namespace SnapIt
                             newRect.Width += systemMargin.Left + systemMargin.Right;
                             newRect.Height += systemMargin.Top + systemMargin.Bottom;
 
-                            Win32ApiTest.RemoveMenuBar(ActiveWindow);
-
                             Win32ApiTest.MoveWindow(ActiveWindow, newRect);
-
-                            Win32ApiTest.DrawMenu(ActiveWindow);
                         }
                         else
                         {
-                            Win32ApiTest.RemoveMenuBar(ActiveWindow);
-
                             Win32ApiTest.MoveWindow(ActiveWindow, newRect);
-
-                            Win32ApiTest.DrawMenu(ActiveWindow);
                         }
+
+                        Win32ApiTest.RedrawBorders(ActiveWindow, windowStyle);
                     }
                 }
             }

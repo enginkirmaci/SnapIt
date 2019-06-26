@@ -10,11 +10,14 @@ namespace SnapIt
     /// </summary>
     public partial class Window1 : Window
     {
+        private int bitsperscreen = 96;
+
         public Window1()
         {
             InitializeComponent();
 
-            var screen = Screen.AllScreens[1];
+            var screen = Screen.PrimaryScreen; // Screen.AllScreens[1];
+            bitsperscreen = screen.BitsPerPixel;
 
             Width = screen.WorkingArea.Width;
             Height = screen.WorkingArea.Height;
@@ -51,7 +54,19 @@ namespace SnapIt
 
                     var location = grid.PointToScreen(new Point(0, 0));
 
-                    return new Rect(location, new Size(grid.ActualWidth, grid.ActualHeight));
+                    PresentationSource presentationsource = PresentationSource.FromVisual(this);
+                    Matrix m = presentationsource.CompositionTarget.TransformToDevice;
+
+                    double DpiWidthFactor = m.M11;
+                    double DpiHeightFactor = m.M22;
+
+                    var scaled = new Point
+                    {
+                        X = grid.ActualWidth * DpiWidthFactor,
+                        Y = grid.ActualHeight * DpiHeightFactor
+                    };
+
+                    return new Rect(location, new Size(scaled.X, scaled.Y));
                 }
             }
 

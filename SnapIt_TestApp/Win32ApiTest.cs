@@ -90,37 +90,35 @@ namespace SnapIt
             return rct;
         }
 
-        public static void RemoveMenuBar(HWND hWnd)
+        public static uint RemoveBorders(HWND hWnd)
         {
-            //get menu
-            HWND HMENU = GetMenu(hWnd);
-            //get item count
-            int count = GetMenuItemCount(HMENU);
-            //loop & remove
-            for (int i = 0; i < count; i++)
-                RemoveMenu(HMENU, 0, (MF_BYPOSITION | MF_REMOVE));
-        }
-
-        public static void DrawMenu(HWND hWnd)
-        {
-            //force a redraw
-            DrawMenuBar(hWnd);
-        }
-
-        public static HWND RemoveBorders(HWND WindowHandle)
-        {
-            var MenuHandle = GetMenu(WindowHandle);
+            var MenuHandle = GetMenu(hWnd);
             int count = GetMenuItemCount(MenuHandle);
             for (int i = 0; i < count; i++)
                 RemoveMenu(MenuHandle, 0, (0x40 | 0x10));
 
-            int WindowStyle = GetWindowLongPtr(WindowHandle, -16);
+            var windowStyle = (uint)GetWindowLongPtr(hWnd, GWL_STYLE);
 
-            //Redraw
-            DrawMenuBar(WindowHandle);
-            SetWindowLongPtr(WindowHandle, -16, (WindowStyle & ~0x00080000));
-            SetWindowLongPtr(WindowHandle, -16, (WindowStyle & ~0x00800000 | 0x00400000));
-            return MenuHandle;
+            var currentstyle = windowStyle;
+            uint[] styles = new uint[] { WS_CAPTION, WS_THICKFRAME, WS_MINIMIZE, WS_MAXIMIZE, WS_SYSMENU };
+
+            foreach (uint style in styles)
+            {
+                if ((currentstyle & style) != 0)
+                {
+                    currentstyle &= ~style;
+                }
+            }
+
+            SetWindowLongPtr(hWnd, GWL_STYLE, (HWND)currentstyle);
+
+            return windowStyle;
+        }
+
+        public static void RedrawBorders(HWND hWnd, uint windowStyle)
+        {
+            DrawMenuBar(hWnd);
+            SetWindowLongPtr(hWnd, GWL_STYLE, (HWND)windowStyle);
         }
     }
 }

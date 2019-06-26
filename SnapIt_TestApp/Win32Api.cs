@@ -168,17 +168,27 @@ namespace SnapIt
         }
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
-        private static extern int SetWindowLong32(HandleRef hWnd, int nIndex, int dwNewLong);
+        private static extern int SetWindowLong32(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
-        private static extern IntPtr SetWindowLongPtr64(HandleRef hWnd, int nIndex, IntPtr dwNewLong);
+        private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
-        public static IntPtr SetWindowLongPtr(HandleRef hWnd, int nIndex, IntPtr dwNewLong)
+        public static IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
         {
             if (IntPtr.Size == 8)
                 return SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
             else
                 return new IntPtr(SetWindowLong32(hWnd, nIndex, dwNewLong.ToInt32()));
         }
+
+        public const uint WS_BORDER = 0x00800000;
+        public const uint WS_DLGFRAME = 0x00400000;
+        public const uint WS_THICKFRAME = 0x00040000;
+        public const uint WS_CAPTION = WS_BORDER | WS_DLGFRAME;
+        public const uint WS_MINIMIZE = 0x20000000;
+        public const uint WS_MAXIMIZE = 0x01000000;
+        public const uint WS_SYSMENU = 0x00080000;
+        public const uint WS_VISIBLE = 0x10000000;
+        public const int GWL_STYLE = -16;
     }
 }
