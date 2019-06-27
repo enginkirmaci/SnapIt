@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.UI", "SnapIt.UI\Snap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt_TestApp", "SnapIt_TestApp\SnapIt_TestApp.csproj", "{49BF2FAB-D9F6-423B-B146-1F3497A4C860}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapIt.System", "SnapIt.System\SnapIt.System.csproj", "{0C0B7B83-AD52-4D2F-9E61-B9E7D4AF11BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt", "SnapIt.System\SnapIt.csproj", "{0C0B7B83-AD52-4D2F-9E61-B9E7D4AF11BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

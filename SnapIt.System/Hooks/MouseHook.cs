@@ -1,9 +1,10 @@
-﻿using PInvoke;
-using System;
-using System.Drawing;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using SnapIt.Entities;
+using SnapIt.InteropServices;
 
-namespace SnapIt.System.Hooks
+namespace SnapIt.Hooks
 {
     public class MouseHook
     {
@@ -13,7 +14,7 @@ namespace SnapIt.System.Hooks
             get { return point; }
             set
             {
-                if (point != value)
+                if (!point.Equals(value))
                 {
                     point = value;
                     if (MouseMoveEvent != null)
@@ -25,7 +26,7 @@ namespace SnapIt.System.Hooks
             }
         }
 
-        private User32.SafeHookHandle hHook;
+        private int hHook;
         private const int WM_MOUSEMOVE = 0x200;
         private const int WM_LBUTTONDOWN = 0x201;
         private const int WM_RBUTTONDOWN = 0x204;
@@ -37,31 +38,31 @@ namespace SnapIt.System.Hooks
         private const int WM_RBUTTONDBLCLK = 0x206;
         private const int WM_MBUTTONDBLCLK = 0x209;
         public const int WH_MOUSE_LL = 14;
-        public User32.WindowsHookDelegate hProc;
+        public User32.HookProc hProc;
 
         public MouseHook()
         {
             this.Point = new Point();
         }
 
-        public User32.SafeHookHandle SetHook()
+        public int SetHook()
         {
-            hProc = new User32.WindowsHookDelegate(MouseHookProc);
-            hHook = User32.SetWindowsHookEx(User32.WindowsHookType.WH_MOUSE_LL, hProc, IntPtr.Zero, 0);
+            hProc = new User32.HookProc(MouseHookProc);
+            hHook = User32.SetWindowsHookEx(WH_MOUSE_LL, hProc, IntPtr.Zero, 0);
             return hHook;
         }
 
         public void UnHook()
         {
-            hHook.Dispose();
+            User32.UnhookWindowsHookEx(hHook);
         }
 
         private int MouseHookProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            User32.MouseHookStruct MyMouseHookStruct = (Win32Api.MouseHookStruct)Marshal.PtrToStructure(lParam, typeof(Win32Api.MouseHookStruct));
+            MouseHookStruct MyMouseHookStruct = (MouseHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseHookStruct));
             if (nCode < 0)
             {
-                return User32.CallNextHookEx(hHook.DangerousGetHandle(), nCode, wParam, lParam); //TODO change DangerousGetHandle
+                return User32.CallNextHookEx(hHook, nCode, wParam, lParam);
             }
             else
             {
@@ -111,8 +112,8 @@ namespace SnapIt.System.Hooks
                     var e = new MouseEventArgs(button, clickCount, point.X, point.Y, 0);
                     MouseClickEvent(this, e);
                 }
-                this.Point = new Point(MyMouseHookStruct.pt.x, MyMouseHookStruct.pt.y);
-                return User32.CallNextHookEx(hHook.DangerousGetHandle(), nCode, wParam, lParam);  //TODO change DangerousGetHandle
+                this.Point = MyMouseHookStruct.pt;
+                return User32.CallNextHookEx(hHook, nCode, wParam, lParam);
             }
         }
 

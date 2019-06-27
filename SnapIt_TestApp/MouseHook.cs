@@ -111,7 +111,7 @@ namespace SnapIt
                     var e = new MouseEventArgs(button, clickCount, point.X, point.Y, 0);
                     MouseClickEvent(this, e);
                 }
-                this.Point = new Point(MyMouseHookStruct.pt.x, MyMouseHookStruct.pt.y);
+                this.Point = new Point(MyMouseHookStruct.pt.X, MyMouseHookStruct.pt.Y);
                 return Win32Api.CallNextHookEx(hHook, nCode, wParam, lParam);
             }
         }

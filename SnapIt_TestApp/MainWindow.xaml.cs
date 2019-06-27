@@ -94,16 +94,16 @@ namespace SnapIt
                         Win32Api.DwmGetWindowAttribute(
                             ActiveWindow,
                             Win32Api.DWMWINDOWATTRIBUTE.ExtendedFrameBounds,
-                            out Win32Api.RECT withMargin,
-                            Marshal.SizeOf(typeof(Win32Api.RECT)));
+                            out Win32Api.Rectangle withMargin,
+                            Marshal.SizeOf(typeof(Win32Api.Rectangle)));
 
                         var windowStyle = Win32ApiTest.RemoveBorders(ActiveWindow);
 
-                        if (!withMargin.Equals(default(Win32Api.RECT)))
+                        if (!withMargin.Equals(default(Win32Api.Rectangle)))
                         {
                             var noMargin = Win32ApiTest.GetWindowRectangle(ActiveWindow);
 
-                            var systemMargin = new Win32Api.RECT()
+                            var systemMargin = new Win32Api.Rectangle()
                             {
                                 Left = withMargin.Left - noMargin.Left,
                                 Top = withMargin.Top - noMargin.Top,

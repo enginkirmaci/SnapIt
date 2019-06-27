@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using SnapIt.Entities;
 
 namespace SnapIt
 {
-    using System.Windows;
-    using static SnapIt.Win32Api;
+    using static InteropServices.User32;
     using HWND = IntPtr;
 
-    public static class Win32ApiTest
+    public static class User32Test
     {
         public static IDictionary<HWND, string> GetOpenWindows()
         {
@@ -35,9 +35,9 @@ namespace SnapIt
             return windows;
         }
 
-        public static void MoveWindow(HWND activeWindow, Rect newRect)
+        public static void MoveWindow(HWND activeWindow, Rectangle newRect)
         {
-            MoveWindow(activeWindow, (int)newRect.X, (int)newRect.Y, (int)newRect.Width, (int)newRect.Height);
+            MoveWindow(activeWindow, newRect.X, newRect.Y, newRect.Width, newRect.Height);
         }
 
         public static bool MoveWindow(HWND hWnd, int X, int Y, int width, int height)

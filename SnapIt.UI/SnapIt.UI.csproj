@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SnapIt.System\SnapIt.System.csproj" />
+    <ProjectReference Include="..\SnapIt.System\SnapIt.csproj" />
   </ItemGroup>
 
 </Project>
