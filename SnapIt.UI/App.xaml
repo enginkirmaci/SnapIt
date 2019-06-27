@@ -1,11 +1,10 @@
-﻿<Application
+﻿<prism:PrismApplication
     x:Class="SnapIt.UI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-    xmlns:local="clr-namespace:SnapIt.UI"
-    StartupUri="MainWindow.xaml">
-    <Application.Resources>
+    xmlns:prism="http://prismlibrary.com/">
+    <prism:PrismApplication.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
 
@@ -46,5 +45,5 @@
             <!--  tell Dragablz tab control to use the Material Design theme  -->
             <Style BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" TargetType="{x:Type dragablz:TabablzControl}" />
         </ResourceDictionary>
-    </Application.Resources>
-</Application>
+    </prism:PrismApplication.Resources>
+</prism:PrismApplication>

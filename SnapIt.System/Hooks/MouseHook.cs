@@ -42,7 +42,7 @@ namespace SnapIt.Hooks
 
         public MouseHook()
         {
-            this.Point = new Point();
+            Point = new Point();
         }
 
         public int SetHook()
@@ -112,7 +112,7 @@ namespace SnapIt.Hooks
                     var e = new MouseEventArgs(button, clickCount, point.X, point.Y, 0);
                     MouseClickEvent(this, e);
                 }
-                this.Point = MyMouseHookStruct.pt;
+                Point = MyMouseHookStruct.pt;
                 return User32.CallNextHookEx(hHook, nCode, wParam, lParam);
             }
         }

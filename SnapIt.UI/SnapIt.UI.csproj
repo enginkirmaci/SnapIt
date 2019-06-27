@@ -7,17 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MainWindow2.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Custom.xaml" />
+    <None Remove="MainWindow2.xaml" />
     <None Remove="Themes\CustomWindowStyle.xaml" />
+    <None Remove="Views\MainWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="MainWindow2.xaml" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Dragablz" Version="0.0.3.203" />
+    <PackageReference Include="DryIoc.dll" Version="4.0.5" />
     <PackageReference Include="MaterialDesignThemes" Version="2.5.1" />
+    <PackageReference Include="Prism.Core" Version="7.2.0.1347-pre" />
+    <PackageReference Include="Prism.DryIoc" Version="7.2.0.1347-pre" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1347-pre" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SnapIt.System\SnapIt.csproj" />
   </ItemGroup>
-
 </Project>

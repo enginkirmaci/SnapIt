@@ -1,17 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using Prism.Ioc;
+using SnapIt.UI.Views;
 
 namespace SnapIt.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
+        protected override Window CreateShell()
+        {
+            return Container.Resolve<MainWindow>();
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            //containerRegistry.Register<ICopyManager, CopyManager>();
+            //containerRegistry.Register<ICommandManager, CommandManager>();
+            //containerRegistry.Register<IAuthenticationInitializer, AuthenticationInitializer>();
+
+            //containerRegistry.RegisterSingleton<INotifierService, NotifierService>();
+        }
     }
 }

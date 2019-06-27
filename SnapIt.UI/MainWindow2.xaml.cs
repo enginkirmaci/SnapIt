@@ -6,9 +6,9 @@ namespace SnapIt.UI
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow2 : Window
     {
-        public MainWindow()
+        public MainWindow2()
         {
             InitializeComponent();
 
