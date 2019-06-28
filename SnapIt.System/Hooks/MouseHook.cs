@@ -59,7 +59,7 @@ namespace SnapIt.Hooks
 
         private int MouseHookProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            MouseHookStruct MyMouseHookStruct = (MouseHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseHookStruct));
+            var MyMouseHookStruct = (MouseHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseHookStruct));
             if (nCode < 0)
             {
                 return User32.CallNextHookEx(hHook, nCode, wParam, lParam);

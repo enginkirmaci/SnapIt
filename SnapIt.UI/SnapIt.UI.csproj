@@ -4,21 +4,16 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Themes\app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="MainWindow2.xaml.cs" />
+    <None Remove="icon.ico" />
+    <None Remove="Themes\app.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Custom.xaml" />
-    <None Remove="MainWindow2.xaml" />
-    <None Remove="Themes\CustomWindowStyle.xaml" />
-    <None Remove="Views\MainWindow.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Remove="MainWindow2.xaml" />
+    <Resource Include="Themes\app.ico" />
   </ItemGroup>
 
   <ItemGroup>
