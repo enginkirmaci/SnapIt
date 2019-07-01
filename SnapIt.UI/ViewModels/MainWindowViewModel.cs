@@ -26,6 +26,11 @@ namespace SnapIt.UI.ViewModels
                 {
                     window.Hide();
                 }
+
+                if (Settings.IsDevMode)
+                {
+                    Application.Current.Shutdown();
+                }
             });
         }
     }

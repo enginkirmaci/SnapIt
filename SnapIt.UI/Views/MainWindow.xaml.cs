@@ -19,7 +19,7 @@ namespace SnapIt.UI.Views
         {
             base.OnActivated(e);
 
-            if (oneTime)
+            if (!Settings.IsDevMode && oneTime)
             {
                 oneTime = false;
                 Hide();

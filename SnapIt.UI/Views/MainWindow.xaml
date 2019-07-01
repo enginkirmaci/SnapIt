@@ -13,10 +13,10 @@
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
+    FontFamily="{StaticResource MaterialDesignFont}"
     Style="{DynamicResource WindowStyle}"
-    TextElement.FontSize="13"
-    TextElement.FontWeight="Light"
+    TextElement.FontSize="14"
+    TextElement.FontWeight="Regular"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
@@ -55,13 +55,61 @@
             Grid.Row="1"
             Margin="0,-1,0,0"
             FixedHeaderCount="3">
-            <TabItem Header="HELLO">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Hello World</TextBlock>
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}">
+                <TabItem.Header>
+                    <materialDesign:PackIcon Kind="HomeOutline" />
+                </TabItem.Header>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
             </TabItem>
-            <TabItem Header="MATERIAL" IsSelected="True">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Material Design</TextBlock>
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}">
+                <TabItem.Header>
+                    <materialDesign:PackIcon Kind="BorderAll" />
+                </TabItem.Header>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
             </TabItem>
-            <TabItem Header="DESIGN">
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="SettingsOutline" />
+                        <TextBlock Text=" SETTINGS" />
+                    </StackPanel>
+                </TabItem.Header>
+                <StackPanel Margin="16">
+                    <TextBlock Margin="0,5">
+                        Use window title to drag window (recommended)
+                    </TextBlock>
+                    <ToggleButton
+                        Margin="0,5"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                        ToolTip="Default ToggleButton Style" />
+
+                    <TextBlock Margin="0,5">
+                        Mouse button to drag window
+                    </TextBlock>
+                    <ComboBox Margin="0,5" HorizontalAlignment="Left">
+                        <ComboBoxItem>
+                            Apple
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            Banana
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            Pear
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            Orange
+                        </ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="InformationVariant" />
+                        <TextBlock Text=" ABOUT" />
+                    </StackPanel>
+                </TabItem.Header>
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
             </TabItem>
         </dragablz:TabablzControl>

@@ -1,7 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 using Prism.Ioc;
+using SnapIt.Configuration;
 using SnapIt.Services;
 using SnapIt.UI.Views;
 
@@ -12,6 +15,8 @@ namespace SnapIt.UI
     /// </summary>
     public partial class App
     {
+        private static Mutex mutex = new Mutex(true, "{FE4F369C-450C-4FA5-ACCA-3D261A3A7969}");
+
         private NotifyIcon _notifyIcon;
         private bool _isExit;
 
@@ -19,11 +24,23 @@ namespace SnapIt.UI
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            if (mutex.WaitOne(TimeSpan.Zero, true))
+            {
+                mutex.ReleaseMutex();
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("only one instance at a time");
+
+                Shutdown();
+                return;
+            }
+
             base.OnStartup(e);
 
             _notifyIcon = new NotifyIcon();
             _notifyIcon.DoubleClick += (s, args) => ShowDefaultWindow();
-            _notifyIcon.Icon = new System.Drawing.Icon(GetResourceStream(new System.Uri("pack://application:,,,/Themes/app.ico")).Stream);
+            _notifyIcon.Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/app.ico")).Stream);
             _notifyIcon.Visible = true;
 
             CreateContextMenu();
@@ -37,6 +54,7 @@ namespace SnapIt.UI
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IConfigService, ConfigService>();
             containerRegistry.RegisterSingleton<ISnapService, SnapService>();
             containerRegistry.Register<IWindowService, WindowService>();
         }
@@ -79,7 +97,7 @@ namespace SnapIt.UI
             if (!_isExit)
             {
                 e.Cancel = true;
-                DefaultWindow.Hide(); // A hidden window can be shown again, a closed one not
+                DefaultWindow.Hide();
             }
         }
     }
