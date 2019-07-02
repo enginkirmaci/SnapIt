@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Configuration;
@@ -13,16 +14,12 @@ namespace SnapIt.UI.ViewModels
         private readonly IConfigService configService;
 
         private Config config;
+        private ObservableCollection<MouseButton> mouseButtons;
 
         public string Title { get; set; } = $"Snap It {System.Windows.Forms.Application.ProductVersion}";
-        public bool DragByTitle
-        {
-            get => config.DragByTitle;
-            set
-            {
-                config.DragByTitle = value;
-            }
-        }
+        public bool DragByTitle { get => config.DragByTitle; set { config.DragByTitle = value; ApplyChanges(); } }
+        public MouseButton MouseButton { get => config.MouseButton; set { config.MouseButton = value; ApplyChanges(); } }
+        public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
 
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
 
@@ -38,24 +35,40 @@ namespace SnapIt.UI.ViewModels
 
         private void Initialize()
         {
+            CloseWindowCommand = new DelegateCommand<Window>(CloseWindow);
+
             config = configService.Load<Config>();
+            MouseButtons = new ObservableCollection<MouseButton>
+            {
+                MouseButton.Left,
+                MouseButton.Middle,
+                MouseButton.Right
+            };
 
             snapService.Initialize();
+        }
 
-            CloseWindowCommand = new DelegateCommand<Window>((window) =>
+        private void ApplyChanges()
+        {
+            configService.Save(config);
+
+            snapService.Release();
+            snapService.Initialize();
+        }
+
+        private void CloseWindow(Window window)
+        {
+            if (window != null)
             {
                 configService.Save(config);
 
-                if (window != null)
-                {
-                    window.Hide();
-                }
+                window.Hide();
+            }
 
-                if (Settings.IsDevMode)
-                {
-                    Application.Current.Shutdown();
-                }
-            });
+            if (Settings.IsDevMode)
+            {
+                Application.Current.Shutdown();
+            }
         }
     }
 }

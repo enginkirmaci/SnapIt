@@ -3,5 +3,7 @@
     public interface ISnapService
     {
         void Initialize();
+
+        void Release();
     }
 }

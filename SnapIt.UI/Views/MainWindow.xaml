@@ -36,7 +36,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontSize="22"
-                    Text="Snap It" />
+                    Text="Snap It!" />
             </DockPanel>
         </materialDesign:ColorZone>
 
@@ -70,7 +70,7 @@
                 </TabItem.Header>
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
             </TabItem>
-            <TabItem Foreground="{DynamicResource MaterialDesignBody}">
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}" IsSelected="True">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="SettingsOutline" />
@@ -91,20 +91,11 @@
                     <TextBlock Margin="0,5">
                         Mouse button to drag window
                     </TextBlock>
-                    <ComboBox Margin="0,5" HorizontalAlignment="Left">
-                        <ComboBoxItem>
-                            Apple
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            Banana
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            Pear
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            Orange
-                        </ComboBoxItem>
-                    </ComboBox>
+                    <ComboBox
+                        Margin="0,5"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding MouseButtons}"
+                        SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
                 </StackPanel>
             </TabItem>
             <TabItem Foreground="{DynamicResource MaterialDesignBody}">

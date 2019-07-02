@@ -2,16 +2,20 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using SnapIt.Configuration;
 using SnapIt.Entities;
 using SnapIt.Hooks;
 using SnapIt.InteropServices;
+using SnapIt.Mappers;
 
 namespace SnapIt.Services
 {
     public class SnapService : ISnapService
     {
         private readonly IWindowService windowService;
+        private readonly ConfigService configService;
 
+        private Config config;
         private MouseHook mouseHook;
         private SnapWindow snapWindow;
         private IntPtr ActiveWindow;
@@ -33,19 +37,36 @@ namespace SnapIt.Services
             }
         }
 
-        public SnapService(IWindowService windowService)
+        public SnapService(
+            IWindowService windowService,
+            ConfigService configService)
         {
             this.windowService = windowService;
+            this.configService = configService;
         }
 
         public void Initialize()
         {
+            config = configService.Load<Config>();
+
             mouseHook = new MouseHook();
             mouseHook.SetHook();
             mouseHook.MouseMoveEvent += MouseMoveEvent;
             mouseHook.MouseDownEvent += MouseDownEvent;
             mouseHook.MouseUpEvent += MouseUpEvent;
             mouseHook.MouseClickEvent += MouseClickEvent;
+        }
+
+        public void Release()
+        {
+            config = null;
+
+            mouseHook.MouseMoveEvent -= MouseMoveEvent;
+            mouseHook.MouseDownEvent -= MouseDownEvent;
+            mouseHook.MouseUpEvent -= MouseUpEvent;
+            mouseHook.MouseClickEvent -= MouseClickEvent;
+            mouseHook.UnHook();
+            mouseHook = null;
         }
 
         private void MouseClickEvent(object sender, MouseEventArgs e)
@@ -65,14 +86,21 @@ namespace SnapIt.Services
                     var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
 
                     //check if mouse click on title bar
-                    if (ActiveWindowRectangle.Top + titleBarHeight + FixedFrameBorderSize * 2 >= e.Location.Y)
+                    if (config.DragByTitle)
                     {
-                        isWindowDetected = true;
-                        Debug.WriteLine("window detected");
+                        if (ActiveWindowRectangle.Top + titleBarHeight + FixedFrameBorderSize * 2 >= e.Location.Y)
+                        {
+                            isWindowDetected = true;
+                            Debug.WriteLine("window detected");
+                        }
+                        else
+                        {
+                            isListening = false;
+                        }
                     }
                     else
                     {
-                        isListening = false;
+                        isWindowDetected = true;
                     }
                 }
                 else if (!SnapWindow.IsVisible)
@@ -88,7 +116,7 @@ namespace SnapIt.Services
 
         private void MouseDownEvent(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtonMapper.Map(config.MouseButton))
             {
                 Debug.WriteLine("DownEvent");
 
@@ -103,7 +131,7 @@ namespace SnapIt.Services
         {
             Debug.WriteLine("UpEvent");
 
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtonMapper.Map(config.MouseButton))
             {
                 isListening = false;
                 SnapWindow.Hide();

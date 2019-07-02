@@ -19,13 +19,12 @@ namespace SnapIt.Entities
             Background = new SolidColorBrush(Colors.Transparent);
             ResizeMode = ResizeMode.NoResize;
             ShowInTaskbar = false;
-            WindowState = WindowState.Maximized;
-            WindowStyle = WindowStyle.None;
             Width = screen.WorkingArea.Width;
             Height = screen.WorkingArea.Height;
-            Left = screen.WorkingArea.X;
             Top = screen.WorkingArea.Y;
+            Left = screen.WorkingArea.X;
             WindowState = WindowState.Normal;
+            WindowStyle = WindowStyle.None;
         }
 
         public void CreateGrids()
