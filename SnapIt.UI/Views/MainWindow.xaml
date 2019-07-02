@@ -63,7 +63,10 @@
             </TabItem>
             <TabItem Foreground="{DynamicResource MaterialDesignBody}">
                 <TabItem.Header>
-                    <materialDesign:PackIcon Kind="BorderAll" />
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="BorderAll" />
+                        <TextBlock Text=" LAYOUT" />
+                    </StackPanel>
                 </TabItem.Header>
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
             </TabItem>
@@ -81,6 +84,7 @@
                     <ToggleButton
                         Margin="0,5"
                         HorizontalAlignment="Left"
+                        IsChecked="{Binding DragByTitle}"
                         Style="{StaticResource MaterialDesignSwitchToggleButton}"
                         ToolTip="Default ToggleButton Style" />
 

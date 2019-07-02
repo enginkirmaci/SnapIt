@@ -2,6 +2,13 @@
 
 namespace SnapIt.Entities
 {
+    public enum MouseButton
+    {
+        Left,
+        Right,
+        Middle
+    }
+
     public enum SpecialWindowHandles
     {
         /// <summary>

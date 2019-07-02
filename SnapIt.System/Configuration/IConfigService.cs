@@ -4,6 +4,6 @@
     {
         void Save<T>(T config);
 
-        T Load<T>();
+        T Load<T>() where T : new();
     }
 }
