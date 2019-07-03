@@ -17,7 +17,6 @@ namespace SnapIt.Services
 
         private Config config;
         private MouseHook mouseHook;
-        private SnapWindow snapWindow;
         private IntPtr ActiveWindow;
         private Rectangle ActiveWindowRectangle;
         private Rectangle snapArea;
@@ -25,19 +24,6 @@ namespace SnapIt.Services
         private bool isListening = false;
 
         public event GetStatus StatusChanged;
-
-        public SnapWindow SnapWindow
-        {
-            get
-            {
-                if (snapWindow == null)
-                {
-                    snapWindow = windowService.CreateSnapWindow();
-                }
-
-                return snapWindow;
-            }
-        }
 
         public SnapService(
             IWindowService windowService,
@@ -50,6 +36,7 @@ namespace SnapIt.Services
         public void Initialize()
         {
             config = configService.Load<Config>();
+            windowService.Initialize();
 
             mouseHook = new MouseHook();
             mouseHook.SetHook();
@@ -64,6 +51,7 @@ namespace SnapIt.Services
         public void Release()
         {
             config = null;
+            windowService.Release();
 
             mouseHook.MouseMoveEvent -= MouseMoveEvent;
             mouseHook.MouseDownEvent -= MouseDownEvent;
@@ -112,13 +100,13 @@ namespace SnapIt.Services
                         isWindowDetected = true;
                     }
                 }
-                else if (!SnapWindow.IsVisible)
+                else if (!windowService.IsVisible)
                 {
-                    SnapWindow.Show();
+                    windowService.Show();
                 }
                 else
                 {
-                    snapArea = SnapWindow.SelectElementWithPoint(e.Location.X, e.Location.Y);
+                    snapArea = windowService.SelectElementWithPoint(e.Location.X, e.Location.Y);
                 }
             }
         }
@@ -143,7 +131,7 @@ namespace SnapIt.Services
             if (e.Button == MouseButtonMapper.Map(config.MouseButton))
             {
                 isListening = false;
-                SnapWindow.Hide();
+                windowService.Hide();
 
                 if (ActiveWindow != IntPtr.Zero)
                 {

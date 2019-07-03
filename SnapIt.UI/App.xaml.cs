@@ -4,14 +4,10 @@ using System.Windows;
 using Prism.Ioc;
 using SnapIt.Configuration;
 using SnapIt.Services;
-using SnapIt.UI.Services;
 using SnapIt.UI.Views;
 
 namespace SnapIt.UI
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App
     {
         private static readonly Mutex mutex = new Mutex(true, "{FE4F369C-450C-4FA5-ACCA-3D261A3A7969}");
@@ -24,7 +20,7 @@ namespace SnapIt.UI
             }
             else
             {
-                System.Windows.MessageBox.Show("only one instance at a time");
+                MessageBox.Show("only one instance at a time");
 
                 Shutdown();
                 return;

@@ -1,7 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Drawing;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
+using Color = System.Windows.Media.Color;
 
 namespace SnapIt.Entities
 {
@@ -10,19 +13,21 @@ namespace SnapIt.Entities
         private Border current;
         private Grid mainGrid;
 
-        public SnapWindow()
+        public SnapWindow(Screen screen)
         {
-            var screen = Screen.PrimaryScreen; // Screen.AllScreens[1];
+            var graphics = Graphics.FromHwnd(IntPtr.Zero);
+            var pixelToDpiX = 96.0 / graphics.DpiX;
+            var pixelToDpiY = 96.0 / graphics.DpiY;
 
             Topmost = true;
             AllowsTransparency = true;
             Background = new SolidColorBrush(Colors.Transparent);
             ResizeMode = ResizeMode.NoResize;
             ShowInTaskbar = false;
-            Width = screen.WorkingArea.Width;
-            Height = screen.WorkingArea.Height;
-            Top = screen.WorkingArea.Y;
-            Left = screen.WorkingArea.X;
+            Width = screen.WorkingArea.Width * pixelToDpiX;
+            Height = screen.WorkingArea.Height * pixelToDpiY;
+            Top = screen.WorkingArea.Top * pixelToDpiY;
+            Left = screen.WorkingArea.Left * pixelToDpiX;
             WindowState = WindowState.Normal;
             WindowStyle = WindowStyle.None;
         }

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SnapIt.UI.Services
+namespace SnapIt.Services
 {
     public interface INotifyIconService
     {

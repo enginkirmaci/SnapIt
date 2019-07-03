@@ -4,6 +4,16 @@ namespace SnapIt.Services
 {
     public interface IWindowService
     {
-        SnapWindow CreateSnapWindow();
+        bool IsVisible { get; }
+
+        void Initialize();
+
+        void Release();
+
+        void Show();
+
+        void Hide();
+
+        Rectangle SelectElementWithPoint(int x, int y);
     }
 }

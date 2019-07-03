@@ -2,9 +2,8 @@
 using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using SnapIt.Services;
 
-namespace SnapIt.UI.Services
+namespace SnapIt.Services
 {
     public class NotifyIconService : INotifyIconService
     {
