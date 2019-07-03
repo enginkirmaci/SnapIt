@@ -24,6 +24,8 @@ namespace SnapIt.Services
         private bool isWindowDetected = false;
         private bool isListening = false;
 
+        public event GetStatus StatusChanged;
+
         public SnapWindow SnapWindow
         {
             get
@@ -55,6 +57,8 @@ namespace SnapIt.Services
             mouseHook.MouseDownEvent += MouseDownEvent;
             mouseHook.MouseUpEvent += MouseUpEvent;
             mouseHook.MouseClickEvent += MouseClickEvent;
+
+            StatusChanged?.Invoke(true);
         }
 
         public void Release()
@@ -67,6 +71,8 @@ namespace SnapIt.Services
             mouseHook.MouseClickEvent -= MouseClickEvent;
             mouseHook.UnHook();
             mouseHook = null;
+
+            StatusChanged?.Invoke(false);
         }
 
         private void MouseClickEvent(object sender, MouseEventArgs e)
@@ -84,6 +90,9 @@ namespace SnapIt.Services
 
                     var titleBarHeight = SystemInformation.CaptionHeight;
                     var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
+
+                    var res = User32Test.IsFullscreen(ActiveWindowRectangle);
+                    Debug.WriteLine(res);
 
                     //check if mouse click on title bar
                     if (config.DragByTitle)

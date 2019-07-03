@@ -1,7 +1,7 @@
-﻿using SnapIt.Entities;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using SnapIt.Entities;
 
 namespace SnapIt.InteropServices
 {
@@ -101,5 +101,8 @@ namespace SnapIt.InteropServices
         public const uint WS_SYSMENU = 0x00080000;
         public const uint WS_VISIBLE = 0x10000000;
         public const int GWL_STYLE = -16;
+
+        [DllImport("user32.dll", SetLastError = false)]
+        public static extern IntPtr GetDesktopWindow();
     }
 }

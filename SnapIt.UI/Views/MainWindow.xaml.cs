@@ -19,16 +19,11 @@ namespace SnapIt.UI.Views
         {
             base.OnActivated(e);
 
-            if (!Settings.IsDevMode && oneTime)
+            if (!DevMode.IsActive && oneTime)
             {
                 oneTime = false;
                 Hide();
             }
-        }
-
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
         }
     }
 }

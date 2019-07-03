@@ -20,6 +20,7 @@ namespace SnapIt.UI.ViewModels
         public bool DragByTitle { get => config.DragByTitle; set { config.DragByTitle = value; ApplyChanges(); } }
         public MouseButton MouseButton { get => config.MouseButton; set { config.MouseButton = value; ApplyChanges(); } }
         public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
+        public bool DisableForFullscreen { get => config.DisableForFullscreen; set { config.DisableForFullscreen = value; ApplyChanges(); } }
 
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
 
@@ -65,7 +66,7 @@ namespace SnapIt.UI.ViewModels
                 window.Hide();
             }
 
-            if (Settings.IsDevMode)
+            if (DevMode.IsActive)
             {
                 Application.Current.Shutdown();
             }

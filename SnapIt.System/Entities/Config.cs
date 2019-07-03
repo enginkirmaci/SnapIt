@@ -9,5 +9,7 @@ namespace SnapIt.Entities
 
         [JsonConverter(typeof(StringEnumConverter))]
         public MouseButton MouseButton { get; set; } = MouseButton.Left;
+
+        public bool DisableForFullscreen { get; set; } = true;
     }
 }

@@ -35,6 +35,15 @@ namespace SnapIt
             return windows;
         }
 
+        public static bool IsFullscreen(Rectangle activeWindowRectangle)
+        {
+            GetWindowRect(GetDesktopWindow(), out Rectangle desktopWindow);
+            return activeWindowRectangle.Left == desktopWindow.Left &&
+                    activeWindowRectangle.Top == desktopWindow.Top &&
+                    activeWindowRectangle.Right == desktopWindow.Right &&
+                    activeWindowRectangle.Bottom == desktopWindow.Bottom;
+        }
+
         public static void MoveWindow(HWND activeWindow, Rectangle newRect)
         {
             MoveWindow(activeWindow, newRect.X, newRect.Y, newRect.Width, newRect.Height);

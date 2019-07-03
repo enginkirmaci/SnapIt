@@ -79,7 +79,7 @@
                 </TabItem.Header>
                 <StackPanel Margin="16">
                     <TextBlock Margin="0,5">
-                        Use window title to drag window (recommended)
+                        Use window title to drag window
                     </TextBlock>
                     <ToggleButton
                         Margin="0,5"
@@ -96,6 +96,16 @@
                         HorizontalAlignment="Left"
                         ItemsSource="{Binding MouseButtons}"
                         SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
+
+                    <TextBlock Margin="0,5">
+                        Disable dragging for fullscreen application and games (recommended)
+                    </TextBlock>
+                    <ToggleButton
+                        Margin="0,5"
+                        HorizontalAlignment="Left"
+                        IsChecked="{Binding DisableForFullscreen}"
+                        Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                        ToolTip="Default ToggleButton Style" />
                 </StackPanel>
             </TabItem>
             <TabItem Foreground="{DynamicResource MaterialDesignBody}">
