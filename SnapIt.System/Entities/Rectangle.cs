@@ -18,11 +18,24 @@ namespace SnapIt.Entities
             Bottom = bottom;
         }
 
+        public Rectangle(int left, int top, double width, double height)
+        {
+            Left = left;
+            Top = top;
+            Right = left + (int)width;
+            Bottom = top + (int)height;
+        }
+
         public int X { get { return Left; } }
         public int Y { get { return Top; } }
         public int Width { get { return Right - Left; } }
         public int Height { get { return Bottom - Top; } }
 
         public static Rectangle Empty { get { return new Rectangle(); } }
+
+        public override string ToString()
+        {
+            return $"X:{X}, Y:{Y}, Width:{Width}, Height:{Height}";
+        }
     }
 }

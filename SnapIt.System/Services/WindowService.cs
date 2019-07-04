@@ -33,6 +33,7 @@ namespace SnapIt.Services
         public void Release()
         {
             snapWindows.ForEach(window => window.Close());
+            snapWindows.Clear();
         }
 
         public void Show()

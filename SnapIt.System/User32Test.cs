@@ -129,5 +129,16 @@ namespace SnapIt
             DrawMenuBar(hWnd);
             SetWindowLongPtr(hWnd, GWL_STYLE, (HWND)windowStyle);
         }
+
+        public static DEVMODE GetScreenInfo(string deviceName)
+        {
+            const int ENUM_CURRENT_SETTINGS = -1;
+
+            DEVMODE dm = new DEVMODE();
+            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+            EnumDisplaySettings(deviceName, ENUM_CURRENT_SETTINGS, ref dm);
+
+            return dm;
+        }
     }
 }
