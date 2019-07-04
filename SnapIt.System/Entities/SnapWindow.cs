@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
-using SnapIt.InteropServices;
+using SnapIt.Extensions;
 
 namespace SnapIt.Entities
 {
@@ -19,36 +18,34 @@ namespace SnapIt.Entities
         {
             this.screen = screen;
 
-            var pixelToDpiX = 1.0;
-            var pixelToDpiY = 1.0;
-
             CalculateDpi();
 
-            //TODO use it wisely
-            var isDPIAware = User32.IsProcessDPIAware();
-
-            //var screenInfo = User32Test.GetScreenInfo(screen.DeviceName);
-            //pixelToDpiX = screen.Bounds.Width / (double)screenInfo.dmPelsWidth;
-            //pixelToDpiY = screen.Bounds.Height / (double)screenInfo.dmPelsHeight;
+            ////TODO use it wisely
+            //var isDPIAware = User32.IsProcessDPIAware();
 
             Topmost = true;
             AllowsTransparency = true;
             Background = new SolidColorBrush(Colors.Transparent);
             ResizeMode = ResizeMode.NoResize;
             ShowInTaskbar = false;
-            Width = screen.WorkingArea.Width * pixelToDpiX;
-            Height = screen.WorkingArea.Height * pixelToDpiY;
-            Top = screen.WorkingArea.Y * pixelToDpiX;
-            Left = screen.WorkingArea.X * pixelToDpiX;
+            Width = screen.WorkingArea.Width * DpiX;
+            Height = screen.WorkingArea.Height * DpiY;
+            Left = screen.WorkingArea.X * DpiX;
+            Top = screen.WorkingArea.Y * DpiY;
             WindowState = WindowState.Normal;
             WindowStyle = WindowStyle.None;
         }
 
         private void CalculateDpi()
         {
-            var screenInfo = User32Test.GetScreenInfo(screen.DeviceName);
-            DpiX = screen.Bounds.Width / (double)screenInfo.dmPelsWidth;
-            DpiY = screen.Bounds.Height / (double)screenInfo.dmPelsHeight;
+            //var screenInfo = User32Test.GetScreenInfo(screen.DeviceName);
+            //DpiX = screen.Bounds.Width / (double)screenInfo.dmPelsWidth;
+            //DpiY = screen.Bounds.Height / (double)screenInfo.dmPelsHeight;
+
+            screen.GetDpi(DpiType.Effective, out uint x, out uint y);
+
+            DpiX = 96.0 / x;
+            DpiY = 96.0 / y;
         }
 
         public void CreateGrids()
@@ -96,8 +93,8 @@ namespace SnapIt.Entities
             {
                 System.Windows.Point point = new System.Windows.Point(x, y);
                 var Point2Window = PointFromScreen(point);
-                Point2Window.X *= DpiX;
-                Point2Window.Y *= DpiY;
+                //Point2Window.X *= DpiX;
+                //Point2Window.Y *= DpiY;
 
                 var element = InputHitTest(Point2Window);
                 if (element != null)
@@ -115,15 +112,13 @@ namespace SnapIt.Entities
 
                     System.Windows.Point scaled = grid.PointToScreen(new System.Windows.Point(grid.ActualWidth, grid.ActualHeight));
 
-                    var res = new Rectangle(
-                        (int)(location.X / DpiX),
-                        (int)(location.Y / DpiY),
-                       (int)(scaled.X / DpiX),
-                        (int)(scaled.Y / DpiY));
+                    var windowRectangle = new Rectangle(
+                       (int)location.X,
+                       (int)location.Y,
+                       (int)scaled.X,
+                       (int)scaled.Y);
 
-                    Debug.WriteLine(DpiX + " " + point + " -> " + location + " " + scaled + " " + res);
-
-                    return res;
+                    return windowRectangle;
                 }
                 else
                 {
