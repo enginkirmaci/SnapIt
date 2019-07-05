@@ -1,6 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using System.Windows.Media;
 using SnapIt.Extensions;
 
@@ -20,28 +23,34 @@ namespace SnapIt.Entities
 
             CalculateDpi();
 
-            ////TODO use it wisely
-            //var isDPIAware = User32.IsProcessDPIAware();
-
             Topmost = true;
             AllowsTransparency = true;
             Background = new SolidColorBrush(Colors.Transparent);
             ResizeMode = ResizeMode.NoResize;
             ShowInTaskbar = false;
-            Width = screen.WorkingArea.Width * DpiX;
-            Height = screen.WorkingArea.Height * DpiY;
-            Left = screen.WorkingArea.X * DpiX;
-            Top = screen.WorkingArea.Y * DpiY;
+            Width = screen.WorkingArea.Width;
+            Height = screen.WorkingArea.Height;
+            Left = screen.WorkingArea.X;
+            Top = screen.WorkingArea.Y;
             WindowState = WindowState.Normal;
             WindowStyle = WindowStyle.None;
         }
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            var wih = new WindowInteropHelper(this);
+            IntPtr hWnd = wih.Handle;
+
+            User32Test.MoveWindow(hWnd, screen.WorkingArea.Left, screen.WorkingArea.Top, screen.WorkingArea.Width, screen.WorkingArea.Height);
+        }
+
         private void CalculateDpi()
         {
-            //var screenInfo = User32Test.GetScreenInfo(screen.DeviceName);
-            //DpiX = screen.Bounds.Width / (double)screenInfo.dmPelsWidth;
-            //DpiY = screen.Bounds.Height / (double)screenInfo.dmPelsHeight;
-
             screen.GetDpi(DpiType.Effective, out uint x, out uint y);
 
             DpiX = 96.0 / x;
@@ -93,8 +102,6 @@ namespace SnapIt.Entities
             {
                 System.Windows.Point point = new System.Windows.Point(x, y);
                 var Point2Window = PointFromScreen(point);
-                //Point2Window.X *= DpiX;
-                //Point2Window.Y *= DpiY;
 
                 var element = InputHitTest(Point2Window);
                 if (element != null)
