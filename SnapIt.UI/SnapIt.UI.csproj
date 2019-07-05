@@ -11,6 +11,7 @@
   <ItemGroup>
     <None Remove="icon.ico" />
     <None Remove="Themes\app.ico" />
+    <None Remove="Views\DesignWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>

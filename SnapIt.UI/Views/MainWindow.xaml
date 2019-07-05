@@ -68,7 +68,10 @@
                         <TextBlock Text=" LAYOUT" />
                     </StackPanel>
                 </TabItem.Header>
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
+                <StackPanel>
+                    <Button Command="{Binding OpenDesignerCommand}" Content="Open Designer" />
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
+                </StackPanel>
             </TabItem>
             <TabItem Foreground="{DynamicResource MaterialDesignBody}" IsSelected="True">
                 <TabItem.Header>

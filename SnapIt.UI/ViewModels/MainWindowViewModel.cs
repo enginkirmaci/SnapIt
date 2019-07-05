@@ -5,6 +5,7 @@ using Prism.Mvvm;
 using SnapIt.Configuration;
 using SnapIt.Entities;
 using SnapIt.Services;
+using SnapIt.UI.Views;
 
 namespace SnapIt.UI.ViewModels
 {
@@ -23,6 +24,7 @@ namespace SnapIt.UI.ViewModels
         public bool DisableForFullscreen { get => config.DisableForFullscreen; set { config.DisableForFullscreen = value; ApplyChanges(); } }
 
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
+        public DelegateCommand OpenDesignerCommand { get; private set; }
 
         public MainWindowViewModel(
             ISnapService snapService,
@@ -37,6 +39,7 @@ namespace SnapIt.UI.ViewModels
         private void Initialize()
         {
             CloseWindowCommand = new DelegateCommand<Window>(CloseWindow);
+            OpenDesignerCommand = new DelegateCommand(OpenDesigner);
 
             config = configService.Load<Config>();
             MouseButtons = new ObservableCollection<MouseButton>
@@ -46,7 +49,23 @@ namespace SnapIt.UI.ViewModels
                 MouseButton.Right
             };
 
-            snapService.Initialize();
+            if (!DevMode.IsActive)
+            {
+                snapService.Initialize();
+            }
+            else
+            {
+                OpenDesigner();
+            }
+        }
+
+        private void OpenDesigner()
+        {
+            //foreach (var screen in Screen.AllScreens)
+            {
+                var designWindow = new DesignWindow();
+                designWindow.Show();
+            }
         }
 
         private void ApplyChanges()

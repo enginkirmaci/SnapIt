@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -11,7 +10,7 @@ namespace SnapIt.Entities
 {
     public class SnapWindow : Window
     {
-        private Border current;
+        private SnapArea current;
         private Grid mainGrid;
         private Screen screen;
         private double DpiX = 1.0;
@@ -35,9 +34,6 @@ namespace SnapIt.Entities
             WindowState = WindowState.Normal;
             WindowStyle = WindowStyle.None;
         }
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
         protected override void OnSourceInitialized(EventArgs e)
         {
@@ -73,7 +69,7 @@ namespace SnapIt.Entities
                 for (int j = 0; j < 3; j++)
                 {
                     var grid = new Grid();
-                    grid.Children.Add(AddSnapArea());
+                    grid.Children.Add(new SnapArea());
 
                     mainGrid.Children.Add(grid);
 
@@ -84,55 +80,32 @@ namespace SnapIt.Entities
             Content = mainGrid;
         }
 
-        public Border AddSnapArea()
-        {
-            var border = new Border
-            {
-                Background = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255)),
-                BorderBrush = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100)),
-                BorderThickness = new Thickness(1, 1, 1, 1)
-            };
-
-            return border;
-        }
-
         public Rectangle SelectElementWithPoint(int x, int y)
         {
             if (IsVisible)
             {
-                System.Windows.Point point = new System.Windows.Point(x, y);
-                var Point2Window = PointFromScreen(point);
+                var Point2Window = PointFromScreen(new System.Windows.Point(x, y));
 
                 var element = InputHitTest(Point2Window);
-                if (element != null)
+                if (element != null && element is SnapArea)
                 {
                     if (current != null)
                     {
                         current.Background = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
                     }
 
-                    var grid = current = (Border)element;
+                    var snapArea = current = (SnapArea)element;
 
-                    grid.Background = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0));
+                    snapArea.OnHoverStyle();
 
-                    System.Windows.Point location = grid.PointToScreen(new System.Windows.Point(0, 0));
-
-                    System.Windows.Point scaled = grid.PointToScreen(new System.Windows.Point(grid.ActualWidth, grid.ActualHeight));
-
-                    var windowRectangle = new Rectangle(
-                       (int)location.X,
-                       (int)location.Y,
-                       (int)scaled.X,
-                       (int)scaled.Y);
-
-                    return windowRectangle;
+                    return snapArea.ScreenSnapArea();
                 }
                 else
                 {
                     //TODO imporove here. mooving on different screens, old one preserves the hover style
                     if (current != null)
                     {
-                        current.Background = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
+                        current.NormalStyle();
                     }
                 }
             }

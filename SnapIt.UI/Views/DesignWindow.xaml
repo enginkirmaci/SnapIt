@@ -1,0 +1,65 @@
+﻿<Window
+    x:Class="SnapIt.UI.Views.DesignWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:local="clr-namespace:SnapIt.UI.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:snapit="clr-namespace:SnapIt.Entities;assembly=SnapIt"
+    x:Name="DesignWindowView"
+    Title="DesignWindow"
+    Width="800"
+    Height="450"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MainSnapArea}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid x:Name="MainSnapArea" Margin="60">
+            <!--<Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <snapit:SnapArea>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <snapit:SnapArea>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">1</TextBlock>
+                    </snapit:SnapArea>
+
+                    <snapit:SnapArea Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">2</TextBlock>
+                    </snapit:SnapArea>
+                    <GridSplitter
+                        Grid.Column="1"
+                        Width="10"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Stretch"
+                        Background="Gray"
+                        ResizeDirection="Auto" />
+                </Grid>
+            </snapit:SnapArea>
+
+            <snapit:SnapArea Grid.Column="1">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">2</TextBlock>
+            </snapit:SnapArea>
+            <GridSplitter
+                Grid.Column="1"
+                Width="10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"
+                Background="Gray"
+                ResizeDirection="Auto" />-->
+        </Grid>
+    </Grid>
+</Window>

@@ -53,12 +53,15 @@ namespace SnapIt.Services
             config = null;
             windowService.Release();
 
-            mouseHook.MouseMoveEvent -= MouseMoveEvent;
-            mouseHook.MouseDownEvent -= MouseDownEvent;
-            mouseHook.MouseUpEvent -= MouseUpEvent;
-            mouseHook.MouseClickEvent -= MouseClickEvent;
-            mouseHook.UnHook();
-            mouseHook = null;
+            if (mouseHook != null)
+            {
+                mouseHook.MouseMoveEvent -= MouseMoveEvent;
+                mouseHook.MouseDownEvent -= MouseDownEvent;
+                mouseHook.MouseUpEvent -= MouseUpEvent;
+                mouseHook.MouseClickEvent -= MouseClickEvent;
+                mouseHook.UnHook();
+                mouseHook = null;
+            }
 
             StatusChanged?.Invoke(false);
         }
