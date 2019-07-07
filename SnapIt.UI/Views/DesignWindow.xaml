@@ -20,46 +20,8 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <Grid x:Name="MainSnapArea" Margin="60">
-            <!--<Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <snapit:SnapArea>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-
-                    <snapit:SnapArea>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">1</TextBlock>
-                    </snapit:SnapArea>
-
-                    <snapit:SnapArea Grid.Column="1">
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">2</TextBlock>
-                    </snapit:SnapArea>
-                    <GridSplitter
-                        Grid.Column="1"
-                        Width="10"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Stretch"
-                        Background="Gray"
-                        ResizeDirection="Auto" />
-                </Grid>
-            </snapit:SnapArea>
-
-            <snapit:SnapArea Grid.Column="1">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">2</TextBlock>
-            </snapit:SnapArea>
-            <GridSplitter
-                Grid.Column="1"
-                Width="10"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Stretch"
-                Background="Gray"
-                ResizeDirection="Auto" />-->
+        <Grid Margin="60">
+            <snapit:SnapArea x:Name="MainSnapArea" />
         </Grid>
     </Grid>
 </Window>

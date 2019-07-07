@@ -134,8 +134,11 @@ namespace SnapIt
         {
             const int ENUM_CURRENT_SETTINGS = -1;
 
-            DEVMODE dm = new DEVMODE();
-            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+            var dm = new DEVMODE
+            {
+                dmSize = (short)Marshal.SizeOf(typeof(DEVMODE))
+            };
+
             EnumDisplaySettings(deviceName, ENUM_CURRENT_SETTINGS, ref dm);
 
             return dm;
