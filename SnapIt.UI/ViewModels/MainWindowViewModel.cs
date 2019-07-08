@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Forms;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Configuration;
@@ -61,9 +62,10 @@ namespace SnapIt.UI.ViewModels
 
         private void OpenDesigner()
         {
-            //foreach (var screen in Screen.AllScreens)
+            foreach (var screen in Screen.AllScreens)
             {
                 var designWindow = new DesignWindow();
+                designWindow.SetScreen(screen);
                 designWindow.Show();
             }
         }
@@ -87,7 +89,7 @@ namespace SnapIt.UI.ViewModels
 
             if (DevMode.IsActive)
             {
-                Application.Current.Shutdown();
+                System.Windows.Application.Current.Shutdown();
             }
         }
     }

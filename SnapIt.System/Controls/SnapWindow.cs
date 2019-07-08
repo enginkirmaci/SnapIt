@@ -4,9 +4,11 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
+using SnapIt.Entities;
 using SnapIt.Extensions;
+using Point = System.Windows.Point;
 
-namespace SnapIt.Entities
+namespace SnapIt.Controls
 {
     public class SnapWindow : Window
     {
@@ -84,7 +86,7 @@ namespace SnapIt.Entities
         {
             if (IsVisible)
             {
-                var Point2Window = PointFromScreen(new System.Windows.Point(x, y));
+                var Point2Window = PointFromScreen(new Point(x, y));
 
                 var element = InputHitTest(Point2Window);
                 if (element != null && element is SnapArea)

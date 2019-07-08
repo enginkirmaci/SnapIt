@@ -2,15 +2,23 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using MaterialDesignThemes.Wpf;
+using SnapIt.Entities;
+using Point = System.Windows.Point;
 
-namespace SnapIt.Entities
+namespace SnapIt.Controls
 {
     public class SnapArea : Border
     {
         private readonly SolidColorBrush backgroundBrush = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
         private readonly SolidColorBrush borderBrush = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
         private readonly SolidColorBrush backgroundOnHoverBrush = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0));
-        private readonly SolidColorBrush splitterBackgroundBrush = new SolidColorBrush(Color.FromArgb(100, 150, 150, 150));
+        private readonly SolidColorBrush splitterBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
+        private readonly SolidColorBrush buttonBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
+
+        private readonly PackIcon splitVerticallyIcon = new PackIcon { Kind = PackIconKind.ArrowSplitVertical };
+        private readonly PackIcon splitHorizontallyIcon = new PackIcon { Kind = PackIconKind.ArrowSplitHorizontal };
+        private readonly PackIcon removeSnapAreaIcon = new PackIcon { Kind = PackIconKind.Remove };
 
         private StackPanel designPanel;
 
@@ -29,9 +37,9 @@ namespace SnapIt.Entities
 
         public Rectangle ScreenSnapArea()
         {
-            var topLeft = PointToScreen(new System.Windows.Point(0, 0));
+            var topLeft = PointToScreen(new Point(0, 0));
 
-            var bottomRight = PointToScreen(new System.Windows.Point(ActualWidth, ActualHeight));
+            var bottomRight = PointToScreen(new Point(ActualWidth, ActualHeight));
 
             return new Rectangle(
                (int)topLeft.X,
@@ -52,6 +60,8 @@ namespace SnapIt.Entities
 
         public void SetDesignMode(SnapArea parent)
         {
+            Background = new SolidColorBrush(Colors.Transparent);
+
             ParentSnapArea = parent;
 
             designPanel = new StackPanel
@@ -64,17 +74,23 @@ namespace SnapIt.Entities
 
             var splitVertically = new Button
             {
-                Margin = new Thickness(5),
-                Content = "|"
+                Margin = new Thickness(2),
+                Padding = new Thickness(12, 2, 12, 2),
+                Background = buttonBackgroundBrush,
+                Style = Application.Current.TryFindResource("MaterialDesignFlatButton") as Style,
             };
+            splitVertically.Content = splitVerticallyIcon;
             splitVertically.Click += SplitVertically_Click;
             designPanel.Children.Add(splitVertically);
 
             var splitHorizantally = new Button
             {
-                Margin = new Thickness(5),
-                Content = "-"
+                Margin = new Thickness(2),
+                Padding = new Thickness(12, 2, 12, 2),
+                Background = buttonBackgroundBrush,
+                Style = Application.Current.TryFindResource("MaterialDesignFlatButton") as Style
             };
+            splitHorizantally.Content = splitHorizontallyIcon;
             splitHorizantally.Click += SplitHorizantally_Click;
             designPanel.Children.Add(splitHorizantally);
 
@@ -82,11 +98,14 @@ namespace SnapIt.Entities
             {
                 var removeSnapArea = new Button
                 {
-                    Margin = new Thickness(20, 5, 5, 5),
-                    Content = "X",
+                    Margin = new Thickness(2),
+                    Padding = new Thickness(12, 2, 12, 2),
+                    Background = buttonBackgroundBrush,
                     HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Bottom
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    Style = Application.Current.TryFindResource("MaterialDesignFlatButton") as Style
                 };
+                removeSnapArea.Content = removeSnapAreaIcon;
                 removeSnapArea.Click += RemoveSnapArea_Click;
 
                 designPanel.Children.Add(removeSnapArea);
@@ -99,35 +118,9 @@ namespace SnapIt.Entities
 
         private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
         {
-            //Parent.Child = Parent.MainArea = new Grid();
+            ParentSnapArea.Child = ParentSnapArea.MainArea = new Grid();
 
-            //Parent.SetDesignMode(Parent.Parent);
-
-            ParentSnapArea?.RemoveSnapArea(this);
-        }
-
-        public void RemoveSnapArea(SnapArea snapArea)
-        {
-            //Parent.MainArea.Children.Remove(snapArea);
-
-            SnapArea otherChild = null;
-            foreach (var child in ParentSnapArea.MainArea.Children)
-            {
-                if (child is SnapArea && child != snapArea)
-                {
-                    otherChild = child as SnapArea;
-                    break;
-                }
-            }
-            ParentSnapArea.RemoveLogicalChild(otherChild);
-
-            ParentSnapArea.MainArea.Children.Remove(otherChild);
-
-            ParentSnapArea.Child = otherChild.Child;
-
-            otherChild.ParentSnapArea = ParentSnapArea.ParentSnapArea;
-            //ParentSnapArea = otherChild;
-            //ParentSnapArea.InvalidateVisual();
+            ParentSnapArea.SetDesignMode(ParentSnapArea.ParentSnapArea);
         }
 
         private void SnapArea_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)

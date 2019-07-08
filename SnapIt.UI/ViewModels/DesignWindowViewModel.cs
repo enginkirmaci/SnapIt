@@ -1,6 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
-using SnapIt.Entities;
+using SnapIt.Controls;
 
 namespace SnapIt.UI.ViewModels
 {

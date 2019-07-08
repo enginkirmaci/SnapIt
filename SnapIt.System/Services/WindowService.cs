@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using SnapIt.Controls;
 using SnapIt.Entities;
 
 namespace SnapIt.Services

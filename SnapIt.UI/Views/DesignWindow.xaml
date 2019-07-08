@@ -7,12 +7,19 @@
     xmlns:local="clr-namespace:SnapIt.UI.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:snapit="clr-namespace:SnapIt.Entities;assembly=SnapIt"
+    xmlns:snapit="clr-namespace:SnapIt.Controls;assembly=SnapIt"
     x:Name="DesignWindowView"
     Title="DesignWindow"
     Width="800"
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    AllowsTransparency="True"
+    Background="#7F000000"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    Topmost="True"
+    WindowState="Normal"
+    WindowStyle="None"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -20,8 +27,6 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <Grid Margin="60">
-            <snapit:SnapArea x:Name="MainSnapArea" />
-        </Grid>
+        <snapit:SnapArea x:Name="MainSnapArea" />
     </Grid>
 </Window>
