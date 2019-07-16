@@ -10,7 +10,7 @@
     x:Name="MainWindowView"
     Title="{Binding Title}"
     Width="800"
-    Height="450"
+    Height="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
@@ -70,23 +70,24 @@
                 </TabItem.Header>
                 <Grid Margin="16">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="200" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Margin="0,5">
-                        Select screen to pick a layout
-                    </TextBlock>
 
-                    <Grid Grid.Row="1">
+                    <StackPanel>
+                        <TextBlock
+                            Margin="0,5"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Screens" />
+
                         <ListView
                             HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            ItemsSource="{Binding SnapScreens}">
+                            ItemsSource="{Binding SnapScreens}"
+                            SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -110,18 +111,14 @@
                                             <TextBlock
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                                 Text="{Binding Resolution}" />
                                             <TextBlock
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                                 Text="{Binding Primary}" />
                                         </StackPanel>
-                                        <!--<TextBlock
-                                            Margin="0,-8,0,0"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-                                            Text="" />-->
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -131,36 +128,126 @@
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
                         </ListView>
-                    </Grid>
+                    </StackPanel>
 
                     <GroupBox
-                        Grid.RowSpan="2"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Header="Layout Options">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                        </Grid>
+                        Style="{DynamicResource MaterialDesignCardGroupBox}">
+                        <GroupBox.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        VerticalAlignment="Center"
+                                        Kind="MixerSettings" />
+                                    <TextBlock
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                        Text="Options" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupBox.HeaderTemplate>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button
+                                    Margin="0,0,4,0"
+                                    Command="{Binding NewLayoutCommand}"
+                                    Style="{StaticResource MaterialDesignRaisedButton}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Add" />
+                                            <TextBlock
+                                                Margin="4,0,0,0"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                Text="New" />
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button
+                                    Margin="0,0,4,0"
+                                    Style="{StaticResource MaterialDesignRaisedButton}"
+                                    ToolTip="Import Layout">
+                                    <Button.Content>
+                                        <materialDesign:PackIcon Kind="Import" />
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+
+                            <Grid Margin="0,16,0,0" Visibility="{Binding Path=SelectedSnapLayout, TargetNullValue=Collapsed}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <TextBox
+                                    x:Name="SelectedLayoutName"
+                                    Margin="0,5"
+                                    materialDesign:HintAssist.Hint="Layout Name"
+                                    Text="{Binding SelectedSnapLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Margin="0,5"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Margin="0,0,4,0"
+                                        Command="{Binding SaveLayoutCommand}"
+                                        Style="{StaticResource MaterialDesignRaisedButton}">
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="ContentSave" />
+                                                <TextBlock
+                                                    Margin="4,0,0,0"
+                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                    Text="Save" />
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button Margin="0,0,4,0" Style="{StaticResource MaterialDesignRaisedButton}">
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="ViewQuilt" />
+                                                <TextBlock
+                                                    Margin="4,0,0,0"
+                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                    Text="Designer" />
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button
+                                        Margin="0,0,4,0"
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        ToolTip="Export Layout">
+                                        <Button.Content>
+                                            <materialDesign:PackIcon Kind="Export" />
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
                     </GroupBox>
 
-                    <!--<ListBox Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" ItemsSource="{Binding Screens}">
+                    <ListBox
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        ItemsSource="{Binding SnapLayouts}"
+                        SelectedItem="{Binding SelectedSnapLayout, Mode=TwoWay}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <materialDesign:PackIcon
-                                        Width="60"
-                                        Height="60"
-                                        Kind="Monitor" />
+
                                     <TextBlock
                                         Margin="0,-8,0,0"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-                                        Text="1" />
+                                        Text="{Binding Name}" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -169,7 +256,7 @@
                                 <WrapPanel Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
-                    </ListBox>-->
+                    </ListBox>
                 </Grid>
             </TabItem>
             <TabItem Foreground="{DynamicResource MaterialDesignBody}">
