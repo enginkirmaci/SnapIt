@@ -10,7 +10,7 @@
     xmlns:snapit="clr-namespace:SnapIt.Controls;assembly=SnapIt"
     x:Name="DesignWindowView"
     Title="DesignWindow"
-    Width="800"
+    Width="600"
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
@@ -28,5 +28,12 @@
     </i:Interaction.Triggers>
     <Grid>
         <snapit:SnapArea x:Name="MainSnapArea" />
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Background="White"
+            Orientation="Horizontal">
+            <Button Content="Save" Style="{StaticResource MaterialDesignFlatButton}" />
+        </StackPanel>
     </Grid>
 </Window>

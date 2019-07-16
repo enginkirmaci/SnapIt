@@ -10,6 +10,9 @@ namespace SnapIt.Controls
 {
     public class SnapArea : Border
     {
+        private const int splitterTickness = 10;
+        private const int splitterMargin = -5;
+
         private readonly SolidColorBrush backgroundBrush = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
         private readonly SolidColorBrush borderBrush = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
         private readonly SolidColorBrush backgroundOnHoverBrush = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0));
@@ -60,6 +63,7 @@ namespace SnapIt.Controls
 
         public void SetDesignMode(SnapArea parent)
         {
+            BorderThickness = new Thickness(0);
             Background = new SolidColorBrush(Colors.Transparent);
 
             ParentSnapArea = parent;
@@ -159,7 +163,8 @@ namespace SnapIt.Controls
 
             var splitter = new GridSplitter
             {
-                Width = 10,
+                Width = splitterTickness,
+                Margin = new Thickness(splitterMargin, 0, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 ResizeDirection = GridResizeDirection.Auto,
@@ -192,7 +197,8 @@ namespace SnapIt.Controls
 
             var splitter = new GridSplitter
             {
-                Height = 10,
+                Height = splitterTickness,
+                Margin = new Thickness(0, splitterMargin, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Top,
                 ResizeDirection = GridResizeDirection.Auto,

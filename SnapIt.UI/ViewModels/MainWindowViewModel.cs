@@ -17,15 +17,16 @@ namespace SnapIt.UI.ViewModels
 
         private Config config;
         private ObservableCollection<MouseButton> mouseButtons;
+        private ObservableCollection<SnapScreen> snapScreens;
 
         public string Title { get; set; } = $"Snap It {System.Windows.Forms.Application.ProductVersion}";
         public bool DragByTitle { get => config.DragByTitle; set { config.DragByTitle = value; ApplyChanges(); } }
         public MouseButton MouseButton { get => config.MouseButton; set { config.MouseButton = value; ApplyChanges(); } }
         public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
         public bool DisableForFullscreen { get => config.DisableForFullscreen; set { config.DisableForFullscreen = value; ApplyChanges(); } }
+        public ObservableCollection<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
 
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
-        public DelegateCommand OpenDesignerCommand { get; private set; }
 
         public MainWindowViewModel(
             ISnapService snapService,
@@ -40,7 +41,6 @@ namespace SnapIt.UI.ViewModels
         private void Initialize()
         {
             CloseWindowCommand = new DelegateCommand<Window>(CloseWindow);
-            OpenDesignerCommand = new DelegateCommand(OpenDesigner);
 
             config = configService.Load<Config>();
             MouseButtons = new ObservableCollection<MouseButton>
@@ -50,13 +50,22 @@ namespace SnapIt.UI.ViewModels
                 MouseButton.Right
             };
 
-            if (!DevMode.IsActive)
+            //if (!DevMode.IsActive)
+            //{
+            //    snapService.Initialize();
+            //}
+            //else
+            //{
+            //    //var test = new TestWindow();
+            //    //test.Show();
+            //    OpenDesigner();
+            //}
+
+            SnapScreens = new ObservableCollection<SnapScreen>();
+
+            foreach (var screen in Screen.AllScreens)
             {
-                snapService.Initialize();
-            }
-            else
-            {
-                OpenDesigner();
+                SnapScreens.Add(new SnapScreen(screen));
             }
         }
 
