@@ -33,7 +33,10 @@
             VerticalAlignment="Top"
             Background="White"
             Orientation="Horizontal">
-            <Button Content="Save" Style="{StaticResource MaterialDesignFlatButton}" />
+            <Button
+                Command="{Binding SaveLayoutCommand}"
+                Content="Save"
+                Style="{StaticResource MaterialDesignFlatButton}" />
         </StackPanel>
     </Grid>
 </Window>

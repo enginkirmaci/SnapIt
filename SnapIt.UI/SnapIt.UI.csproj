@@ -10,8 +10,15 @@
 
   <ItemGroup>
     <None Remove="icon.ico" />
+    <None Remove="Layouts\Layout 1_effbbdbb-1fe0-4639-8f8b-3f49156d5b2c.json" />
     <None Remove="Themes\app.ico" />
     <None Remove="Views\DesignWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Layouts\Layout 1_effbbdbb-1fe0-4639-8f8b-3f49156d5b2c.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

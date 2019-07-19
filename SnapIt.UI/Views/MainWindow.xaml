@@ -178,57 +178,65 @@
                                 </Button>
                             </StackPanel>
 
-                            <Grid Margin="0,16,0,0" Visibility="{Binding Path=SelectedSnapLayout, TargetNullValue=Collapsed}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
+                            <Grid
+                                Margin="-9,16,-9,-9"
+                                Background="{StaticResource MaterialDesignPaper}"
+                                Visibility="{Binding Path=SelectedLayout, TargetNullValue=Collapsed}">
+                                <Grid Margin="9,0,9,9">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
 
-                                <TextBox
-                                    x:Name="SelectedLayoutName"
-                                    Margin="0,5"
-                                    materialDesign:HintAssist.Hint="Layout Name"
-                                    Text="{Binding SelectedSnapLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox
+                                        x:Name="SelectedLayoutName"
+                                        Margin="0,5"
+                                        materialDesign:HintAssist.Hint="Layout Name"
+                                        Text="{Binding SelectedLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
 
-                                <StackPanel
-                                    Grid.Row="1"
-                                    Margin="0,5"
-                                    Orientation="Horizontal">
-                                    <Button
-                                        Margin="0,0,4,0"
-                                        Command="{Binding SaveLayoutCommand}"
-                                        Style="{StaticResource MaterialDesignRaisedButton}">
-                                        <Button.Content>
-                                            <StackPanel Orientation="Horizontal">
-                                                <materialDesign:PackIcon Kind="ContentSave" />
-                                                <TextBlock
-                                                    Margin="4,0,0,0"
-                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                    Text="Save" />
-                                            </StackPanel>
-                                        </Button.Content>
-                                    </Button>
-                                    <Button Margin="0,0,4,0" Style="{StaticResource MaterialDesignRaisedButton}">
-                                        <Button.Content>
-                                            <StackPanel Orientation="Horizontal">
-                                                <materialDesign:PackIcon Kind="ViewQuilt" />
-                                                <TextBlock
-                                                    Margin="4,0,0,0"
-                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                    Text="Designer" />
-                                            </StackPanel>
-                                        </Button.Content>
-                                    </Button>
-                                    <Button
-                                        Margin="0,0,4,0"
-                                        Style="{StaticResource MaterialDesignRaisedButton}"
-                                        ToolTip="Export Layout">
-                                        <Button.Content>
-                                            <materialDesign:PackIcon Kind="Export" />
-                                        </Button.Content>
-                                    </Button>
-                                </StackPanel>
+                                    <StackPanel
+                                        Grid.Row="1"
+                                        Margin="0,5"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Margin="0,0,4,0"
+                                            Command="{Binding SaveLayoutCommand}"
+                                            Style="{StaticResource MaterialDesignRaisedButton}">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="ContentSave" />
+                                                    <TextBlock
+                                                        Margin="4,0,0,0"
+                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                        Text="Save" />
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
+                                        <Button
+                                            Margin="0,0,4,0"
+                                            Command="{Binding DesignLayoutCommand}"
+                                            Style="{StaticResource MaterialDesignRaisedButton}">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="ViewQuilt" />
+                                                    <TextBlock
+                                                        Margin="4,0,0,0"
+                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                        Text="Designer" />
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
+                                        <Button
+                                            Margin="0,0,4,0"
+                                            Style="{StaticResource MaterialDesignRaisedButton}"
+                                            ToolTip="Export Layout">
+                                            <Button.Content>
+                                                <materialDesign:PackIcon Kind="Export" />
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </StackPanel>
                     </GroupBox>
@@ -236,8 +244,8 @@
                     <ListBox
                         Grid.Row="1"
                         Grid.ColumnSpan="2"
-                        ItemsSource="{Binding SnapLayouts}"
-                        SelectedItem="{Binding SelectedSnapLayout, Mode=TwoWay}">
+                        ItemsSource="{Binding Layouts}"
+                        SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">

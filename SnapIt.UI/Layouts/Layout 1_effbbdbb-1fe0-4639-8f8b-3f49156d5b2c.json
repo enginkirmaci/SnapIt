@@ -1,0 +1,51 @@
+{
+  "Guid": "effbbdbb-1fe0-4639-8f8b-3f49156d5b2c",
+  "Name": "Layout 1",
+  "LayoutArea": {
+    "Areas": [
+      {
+        "Width": 1648,
+        "Areas": [
+          {
+            "Width": 634,
+            "Areas": [
+              {
+                "Height": 469
+              },
+              {
+                "Height": 571,
+                "Row": 1
+              }
+            ]
+          },
+          {
+            "Width": 1013,
+            "Column": 1
+          }
+        ]
+      },
+      {
+        "Width": 912,
+        "Column": 1,
+        "Areas": [
+          {
+            "Height": 648,
+            "Areas": [
+              {
+                "Width": 505
+              },
+              {
+                "Width": 406,
+                "Column": 1
+              }
+            ]
+          },
+          {
+            "Height": 392,
+            "Row": 1
+          }
+        ]
+      }
+    ]
+  }
+}

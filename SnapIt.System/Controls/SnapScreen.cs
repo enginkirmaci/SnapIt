@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace SnapIt.Entities
+namespace SnapIt.Controls
 {
     public class SnapScreen
     {
