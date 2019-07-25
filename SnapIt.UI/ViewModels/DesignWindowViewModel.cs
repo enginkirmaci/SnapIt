@@ -2,6 +2,7 @@
 using Prism.Mvvm;
 using SnapIt.Controls;
 using SnapIt.Entities;
+using SnapIt.UI.Views;
 
 namespace SnapIt.UI.ViewModels
 {
@@ -10,6 +11,8 @@ namespace SnapIt.UI.ViewModels
         public SnapScreen SnapScreen { get; set; }
         public Layout Layout { get; set; }
         public SnapArea MainSnapArea { get; set; }
+        public DesignWindow Window { get; set; }
+
         public DelegateCommand<object> LoadedCommand { get; }
         public DelegateCommand SaveLayoutCommand { get; private set; }
 
@@ -18,13 +21,13 @@ namespace SnapIt.UI.ViewModels
             LoadedCommand = new DelegateCommand<object>((mainSnapArea) =>
             {
                 MainSnapArea = mainSnapArea as SnapArea;
-                //MainSnapArea.SetDesignMode(null); //remove this
-                MainSnapArea.ApplyLayout(Layout.LayoutArea);
+                MainSnapArea.ApplyLayout(Layout.LayoutArea, true);
             });
 
             SaveLayoutCommand = new DelegateCommand(() =>
             {
                 Layout.GenerateLayoutArea(MainSnapArea);
+                Window.Close();
             });
         }
     }

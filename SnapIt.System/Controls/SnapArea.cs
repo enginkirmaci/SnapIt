@@ -23,6 +23,20 @@ namespace SnapIt.Controls
 
         public SnapGrid MainGrid { get; set; }
         public SnapArea ParentSnapArea { get; set; }
+        public LayoutArea LayoutArea { get; set; }
+
+        public static readonly DependencyProperty LayoutAreaProperty
+            = DependencyProperty.Register("LayoutArea", typeof(LayoutArea), typeof(SnapArea),
+              new FrameworkPropertyMetadata()
+              {
+                  BindsTwoWayByDefault = true,
+                  PropertyChangedCallback = new PropertyChangedCallback(LayoutAreaPropertyChanged)
+              });
+
+        private static void LayoutAreaPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((SnapArea)d).ApplyLayout((LayoutArea)e.NewValue, false);
+        }
 
         public SnapArea()
         {
@@ -143,14 +157,17 @@ namespace SnapIt.Controls
             }
         }
 
-        public void ApplyLayout(LayoutArea layoutArea, SnapArea parent = null)
+        public void ApplyLayout(LayoutArea layoutArea, bool isDesignMode, SnapArea parent = null)
         {
             SetDesignMode(parent);
 
             if (layoutArea.Areas != null && layoutArea.Areas.Count > 0)
             {
-                IsMouseDirectlyOverChanged -= SnapArea_IsMouseDirectlyOverChanged;
-                MainGrid.Children.Remove(designPanel);
+                if (isDesignMode)
+                {
+                    IsMouseDirectlyOverChanged -= SnapArea_IsMouseDirectlyOverChanged;
+                    MainGrid.Children.Remove(designPanel);
+                }
 
                 MainGrid.ApplyLayout(layoutArea);
 
@@ -160,7 +177,7 @@ namespace SnapIt.Controls
 
                     MainGrid.Children.Add(snapArea);
                     MainGrid.SetColumnRow(snapArea, area.Column, area.Row);
-                    snapArea.ApplyLayout(area, this);
+                    snapArea.ApplyLayout(area, isDesignMode, this);
                 }
             }
         }

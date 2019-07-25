@@ -28,6 +28,7 @@ namespace SnapIt.UI.Views
             Top = snapScreen.Base.WorkingArea.Y;
 
             var model = DataContext as DesignWindowViewModel;
+            model.Window = this;
             model.SnapScreen = snapScreen;
             model.Layout = layout;
 

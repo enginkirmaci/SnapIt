@@ -7,6 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:snapit="clr-namespace:SnapIt.Controls;assembly=SnapIt"
     x:Name="MainWindowView"
     Title="{Binding Title}"
     Width="800"
@@ -249,6 +250,10 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <snapit:SnapArea
+                                        Width="400"
+                                        Height="300"
+                                        LayoutArea="{Binding LayoutArea}" />
 
                                     <TextBlock
                                         Margin="0,-8,0,0"
