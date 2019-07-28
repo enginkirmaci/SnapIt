@@ -21,12 +21,14 @@ namespace SnapIt.UI.ViewModels
             LoadedCommand = new DelegateCommand<object>((mainSnapArea) =>
             {
                 MainSnapArea = mainSnapArea as SnapArea;
+
                 MainSnapArea.ApplyLayout(Layout.LayoutArea, true);
             });
 
             SaveLayoutCommand = new DelegateCommand(() =>
             {
                 Layout.GenerateLayoutArea(MainSnapArea);
+
                 Window.Close();
             });
         }

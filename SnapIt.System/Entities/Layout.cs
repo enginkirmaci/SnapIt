@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Newtonsoft.Json;
 using SnapIt.Controls;
 
@@ -8,27 +7,23 @@ namespace SnapIt.Entities
     public class Layout : Bindable
     {
         private string name;
+        private LayoutArea layoutArea;
 
         public Guid Guid { get; set; }
-        public string Name { get => name; set => SetProperty(ref name, value); }
+        [JsonIgnore]
+        public bool IsSaved { get; set; }
 
-        public LayoutArea LayoutArea { get; set; }
-
-        public void Save()
+        public string Name
         {
-            var settings = new JsonSerializerSettings
+            get => name;
+            set
             {
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.Indented
-            };
-
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"Layouts\\{Name}_{Guid}.json");
-
-            var json = JsonConvert.SerializeObject(this, settings);
-
-            File.WriteAllText(filePath, json);
+                IsSaved = false;
+                SetProperty(ref name, value);
+            }
         }
+
+        public LayoutArea LayoutArea { get => layoutArea; set => SetProperty(ref layoutArea, value); }
 
         public void GenerateLayoutArea(SnapArea snapArea)
         {

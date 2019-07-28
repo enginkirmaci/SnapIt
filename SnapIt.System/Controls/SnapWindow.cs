@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using SnapIt.Entities;
-using SnapIt.Extensions;
 using Point = System.Windows.Point;
 
 namespace SnapIt.Controls
@@ -13,26 +10,27 @@ namespace SnapIt.Controls
     public class SnapWindow : Window
     {
         private SnapArea current;
-        private Grid mainGrid;
-        private Screen screen;
-        private double DpiX = 1.0;
-        private double DpiY = 1.0;
+        private SnapScreen screen;
 
-        public SnapWindow(Screen screen)
+        //private Grid mainGrid;
+        //private double DpiX = 1.0;
+        //private double DpiY = 1.0;
+
+        public SnapWindow(SnapScreen screen)
         {
             this.screen = screen;
 
-            CalculateDpi();
+            //CalculateDpi();
 
             Topmost = true;
             AllowsTransparency = true;
             Background = new SolidColorBrush(Colors.Transparent);
             ResizeMode = ResizeMode.NoResize;
             ShowInTaskbar = false;
-            Width = screen.WorkingArea.Width;
-            Height = screen.WorkingArea.Height;
-            Left = screen.WorkingArea.X;
-            Top = screen.WorkingArea.Y;
+            Width = screen.Base.WorkingArea.Width;
+            Height = screen.Base.WorkingArea.Height;
+            Left = screen.Base.WorkingArea.X;
+            Top = screen.Base.WorkingArea.Y;
             WindowState = WindowState.Normal;
             WindowStyle = WindowStyle.None;
         }
@@ -44,42 +42,50 @@ namespace SnapIt.Controls
             var wih = new WindowInteropHelper(this);
             IntPtr hWnd = wih.Handle;
 
-            User32Test.MoveWindow(hWnd, screen.WorkingArea.Left, screen.WorkingArea.Top, screen.WorkingArea.Width, screen.WorkingArea.Height);
+            User32Test.MoveWindow(
+                hWnd,
+                screen.Base.WorkingArea.Left,
+                screen.Base.WorkingArea.Top,
+                screen.Base.WorkingArea.Width,
+                screen.Base.WorkingArea.Height);
         }
 
-        private void CalculateDpi()
-        {
-            screen.GetDpi(DpiType.Effective, out uint x, out uint y);
+        //private void CalculateDpi()
+        //{
+        //    screen.Base.GetDpi(DpiType.Effective, out uint x, out uint y);
 
-            DpiX = 96.0 / x;
-            DpiY = 96.0 / y;
-        }
+        //    DpiX = 96.0 / x;
+        //    DpiY = 96.0 / y;
+        //}
 
         public void CreateGrids()
         {
-            mainGrid = new Grid();
+            var snapArea = new SnapArea();
+            snapArea.ApplyLayout(screen.Layout.LayoutArea, false, true);
 
-            mainGrid.RowDefinitions.Add(new RowDefinition());
-            mainGrid.RowDefinitions.Add(new RowDefinition());
-            mainGrid.RowDefinitions.Add(new RowDefinition());
+            //mainGrid = new Grid();
 
-            mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            //mainGrid.RowDefinitions.Add(new RowDefinition());
+            //mainGrid.RowDefinitions.Add(new RowDefinition());
+            //mainGrid.RowDefinitions.Add(new RowDefinition());
 
-            for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
-                {
-                    var grid = new Grid();
-                    grid.Children.Add(new SnapArea());
+            //mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            //mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            //mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-                    mainGrid.Children.Add(grid);
+            //for (int i = 0; i < 3; i++)
+            //    for (int j = 0; j < 3; j++)
+            //    {
+            //        var grid = new Grid();
+            //        grid.Children.Add(new SnapArea());
 
-                    Grid.SetColumn(grid, i);
-                    Grid.SetRow(grid, j);
-                }
+            //        mainGrid.Children.Add(grid);
 
-            Content = mainGrid;
+            //        Grid.SetColumn(grid, i);
+            //        Grid.SetRow(grid, j);
+            //    }
+
+            Content = snapArea;
         }
 
         public Rectangle SelectElementWithPoint(int x, int y)
@@ -104,7 +110,7 @@ namespace SnapIt.Controls
                 }
                 else
                 {
-                    //TODO imporove here. mooving on different screens, old one preserves the hover style
+                    //TODO imporove here. moving on different screens, old one preserves the hover style
                     if (current != null)
                     {
                         current.NormalStyle();

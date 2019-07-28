@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Forms;
 using SnapIt.Controls;
 using SnapIt.Entities;
 
@@ -7,10 +6,16 @@ namespace SnapIt.Services
 {
     public class WindowService : IWindowService
     {
+        private readonly ISettingService settingService;
+
         private List<SnapWindow> snapWindows;
 
-        public WindowService()
+        public WindowService(
+            ISettingService settingService
+            )
         {
+            this.settingService = settingService;
+
             snapWindows = new List<SnapWindow>();
         }
 
@@ -21,7 +26,7 @@ namespace SnapIt.Services
 
         public void Initialize()
         {
-            foreach (var screen in Screen.AllScreens)
+            foreach (var screen in settingService.SnapScreens)
             {
                 var window = new SnapWindow(screen);
 
