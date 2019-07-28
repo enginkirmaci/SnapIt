@@ -8,54 +8,55 @@ using SnapIt.UI.Views;
 
 namespace SnapIt.UI
 {
-    public partial class App
-    {
-        private static readonly Mutex mutex = new Mutex(true, "{FE4F369C-450C-4FA5-ACCA-3D261A3A7969}");
+	public partial class App
+	{
+		private static readonly Mutex mutex = new Mutex(true, "{FE4F369C-450C-4FA5-ACCA-3D261A3A7969}");
 
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            if (mutex.WaitOne(TimeSpan.Zero, true))
-            {
-                mutex.ReleaseMutex();
-            }
-            else
-            {
-                MessageBox.Show("only one instance at a time");
+		protected override void OnStartup(StartupEventArgs e)
+		{
+			if (mutex.WaitOne(TimeSpan.Zero, true))
+			{
+				mutex.ReleaseMutex();
+			}
+			else
+			{
+				MessageBox.Show("only one instance at a time");
 
-                Shutdown();
-                return;
-            }
+				Shutdown();
+				return;
+			}
 
-            base.OnStartup(e);
-        }
+			base.OnStartup(e);
+		}
 
-        protected override Window CreateShell()
-        {
-            var notifyIconService = Container.Resolve<INotifyIconService>();
+		protected override Window CreateShell()
+		{
+			var notifyIconService = Container.Resolve<INotifyIconService>();
 
-            notifyIconService.Initialize();
+			notifyIconService.Initialize();
 
-            var applicationWindow = Container.Resolve<MainWindow>();
+			var applicationWindow = Container.Resolve<MainWindow>();
 
-            notifyIconService.SetApplicationWindow(applicationWindow);
+			notifyIconService.SetApplicationWindow(applicationWindow);
 
-            return applicationWindow;
-        }
+			return applicationWindow;
+		}
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
-            containerRegistry.RegisterSingleton<IConfigService, ConfigService>();
-            containerRegistry.RegisterSingleton<ISnapService, SnapService>();
-            containerRegistry.Register<IWindowService, WindowService>();
-        }
+		protected override void RegisterTypes(IContainerRegistry containerRegistry)
+		{
+			containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
+			containerRegistry.RegisterSingleton<IConfigService, ConfigService>();
+			containerRegistry.RegisterSingleton<ISnapService, SnapService>();
+			containerRegistry.RegisterSingleton<ISettingService, SettingService>();
+			containerRegistry.Register<IWindowService, WindowService>();
+		}
 
-        protected override void OnExit(ExitEventArgs e)
-        {
-            base.OnExit(e);
+		protected override void OnExit(ExitEventArgs e)
+		{
+			base.OnExit(e);
 
-            Container.Resolve<INotifyIconService>().Release();
-            Container.Resolve<ISnapService>().Release();
-        }
-    }
+			Container.Resolve<INotifyIconService>().Release();
+			Container.Resolve<ISnapService>().Release();
+		}
+	}
 }

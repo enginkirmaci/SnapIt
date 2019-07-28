@@ -1,9 +1,16 @@
-﻿namespace SnapIt.Configuration
-{
-    public interface IConfigService
-    {
-        void Save<T>(T config);
+﻿using System.Collections.Generic;
+using SnapIt.Entities;
 
-        T Load<T>() where T : new();
-    }
+namespace SnapIt.Configuration
+{
+	public interface IConfigService
+	{
+		void Save<T>(T config);
+
+		T Load<T>() where T : new();
+
+		void SaveLayout(Layout layout);
+
+		IList<Layout> GetLayouts();
+	}
 }

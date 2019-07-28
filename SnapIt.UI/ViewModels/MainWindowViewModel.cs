@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
-using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Mvvm;
-using SnapIt.Configuration;
 using SnapIt.Controls;
 using SnapIt.Entities;
 using SnapIt.Services;
@@ -15,160 +10,144 @@ using SnapIt.UI.Views;
 
 namespace SnapIt.UI.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
-    {
-        private readonly ISnapService snapService;
-        private readonly IConfigService configService;
+	public class MainWindowViewModel : BindableBase
+	{
+		private readonly ISnapService snapService;
+		private readonly ISettingService settingService;
 
-        private Config config;
-        private ObservableCollection<MouseButton> mouseButtons;
-        private ObservableCollection<SnapScreen> snapScreens;
-        private SnapScreen selectedSnapScreen;
-        private ObservableCollection<Layout> layouts;
-        private Layout selectedLayout;
+		private ObservableCollection<MouseButton> mouseButtons;
+		private ObservableCollection<SnapScreen> snapScreens;
+		private SnapScreen selectedSnapScreen;
+		private ObservableCollection<Layout> layouts;
+		private Layout selectedLayout;
 
-        public string Title { get; set; } = $"Snap It {System.Windows.Forms.Application.ProductVersion}";
-        public bool DragByTitle { get => config.DragByTitle; set { config.DragByTitle = value; ApplyChanges(); } }
-        public MouseButton MouseButton { get => config.MouseButton; set { config.MouseButton = value; ApplyChanges(); } }
-        public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
-        public bool DisableForFullscreen { get => config.DisableForFullscreen; set { config.DisableForFullscreen = value; ApplyChanges(); } }
-        public ObservableCollection<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
-        public SnapScreen SelectedSnapScreen
-        {
-            get => selectedSnapScreen;
-            set
-            {
-                SetProperty(ref selectedSnapScreen, value);
-                selectedLayout = selectedSnapScreen.Layout;
-            }
-        }
+		public string Title { get; set; } = $"Snap It {System.Windows.Forms.Application.ProductVersion}";
+		public bool DragByTitle { get => settingService.Config.DragByTitle; set { settingService.Config.DragByTitle = value; ApplyChanges(); } }
+		public MouseButton MouseButton { get => settingService.Config.MouseButton; set { settingService.Config.MouseButton = value; ApplyChanges(); } }
+		public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
+		public bool DisableForFullscreen { get => settingService.Config.DisableForFullscreen; set { settingService.Config.DisableForFullscreen = value; ApplyChanges(); } }
+		public ObservableCollection<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
+		public SnapScreen SelectedSnapScreen
+		{
+			get => selectedSnapScreen;
+			set
+			{
+				SetProperty(ref selectedSnapScreen, value);
+				selectedLayout = selectedSnapScreen.Layout;
+			}
+		}
 
-        public ObservableCollection<Layout> Layouts { get => layouts; set => SetProperty(ref layouts, value); }
+		public ObservableCollection<Layout> Layouts { get => layouts; set => SetProperty(ref layouts, value); }
 
-        public Layout SelectedLayout
-        {
-            get => selectedLayout;
-            set
-            {
-                SetProperty(ref selectedLayout, value);
-                SaveLayoutCommand.RaiseCanExecuteChanged();
-                SelectedSnapScreen.Layout = selectedLayout;
-            }
-        }
+		public Layout SelectedLayout
+		{
+			get => selectedLayout;
+			set
+			{
+				SetProperty(ref selectedLayout, value);
+				SaveLayoutCommand.RaiseCanExecuteChanged();
 
-        public DelegateCommand<Window> CloseWindowCommand { get; private set; }
-        public DelegateCommand NewLayoutCommand { get; private set; }
-        public DelegateCommand SaveLayoutCommand { get; private set; }
-        public DelegateCommand DesignLayoutCommand { get; private set; }
+				if (SelectedSnapScreen != null)
+				{
+					SelectedSnapScreen.Layout = selectedLayout;
+					settingService.LinkScreenLayout(SelectedSnapScreen, SelectedLayout);
+					ApplyChanges();
+				}
+			}
+		}
 
-        public MainWindowViewModel(
-            ISnapService snapService,
-            IConfigService configService)
-        {
-            this.snapService = snapService;
-            this.configService = configService;
+		public DelegateCommand<Window> CloseWindowCommand { get; private set; }
+		public DelegateCommand NewLayoutCommand { get; private set; }
+		public DelegateCommand SaveLayoutCommand { get; private set; }
+		public DelegateCommand DesignLayoutCommand { get; private set; }
 
-            Initialize();
-        }
+		public MainWindowViewModel(
+			ISnapService snapService,
+			ISettingService settingService)
+		{
+			this.snapService = snapService;
+			this.settingService = settingService;
 
-        private void Initialize()
-        {
-            CloseWindowCommand = new DelegateCommand<Window>(CloseWindow);
+			Initialize();
+		}
 
-            NewLayoutCommand = new DelegateCommand(() =>
-            {
-                SelectedLayout = new Layout
-                {
-                    Guid = Guid.NewGuid()
-                };
+		private void Initialize()
+		{
+			Layouts = new ObservableCollection<Layout>(settingService.Layouts);
+			SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
 
-                var designWindow = new DesignWindow();
-                designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
-                designWindow.Show();
-            });
+			CloseWindowCommand = new DelegateCommand<Window>(CloseWindow);
 
-            SaveLayoutCommand = new DelegateCommand(() =>
-            {
-                selectedLayout.Save();
-            },
-            () =>
-            {
-                return !string.IsNullOrWhiteSpace(SelectedLayout?.Name);
-            }).ObservesProperty(() => SelectedLayout.Name);
+			NewLayoutCommand = new DelegateCommand(() =>
+			{
+				SelectedLayout = new Layout
+				{
+					Guid = Guid.NewGuid()
+				};
 
-            DesignLayoutCommand = new DelegateCommand(() =>
-            {
-                var designWindow = new DesignWindow();
-                designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
-                designWindow.Show();
-            },
-            () =>
-            {
-                return SelectedLayout != null;
-            }).ObservesProperty(() => SelectedLayout);
+				var designWindow = new DesignWindow();
+				designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
+				designWindow.Show();
+			});
 
-            config = configService.Load<Config>();
-            MouseButtons = new ObservableCollection<MouseButton>
-            {
-                MouseButton.Left,
-                MouseButton.Middle,
-                MouseButton.Right
-            };
+			SaveLayoutCommand = new DelegateCommand(() =>
+			{
+				settingService.SaveLayout(SelectedLayout);
+			},
+			() =>
+			{
+				return !string.IsNullOrWhiteSpace(SelectedLayout?.Name);
+			}).ObservesProperty(() => SelectedLayout.Name);
 
-            //if (!DevMode.IsActive)
-            //{
-            //    snapService.Initialize();
-            //}
-            //else
-            //{
-            //    //var test = new TestWindow();
-            //    //test.Show();
-            //    OpenDesigner();
-            //}
+			DesignLayoutCommand = new DelegateCommand(() =>
+			{
+				var designWindow = new DesignWindow();
+				designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
+				designWindow.Show();
+			},
+			() =>
+			{
+				return SelectedLayout != null;
+			}).ObservesProperty(() => SelectedLayout);
 
-            SnapScreens = new ObservableCollection<SnapScreen>();
+			MouseButtons = new ObservableCollection<MouseButton>
+			{
+				MouseButton.Left,
+				MouseButton.Middle,
+				MouseButton.Right
+			};
 
-            foreach (var screen in Screen.AllScreens)
-            {
-                SnapScreens.Add(new SnapScreen(screen));
-            }
+			//if (!DevMode.IsActive)
+			//{
+			//    snapService.Initialize();
+			//}
+			//else
+			//{
+			//    //var test = new TestWindow();
+			//    //test.Show();
+			//    OpenDesigner();
+			//}
+		}
 
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Layouts");
-            var files = Directory.GetFiles(folderPath, "*.json");
-            Layouts = new ObservableCollection<Layout>();
+		private void ApplyChanges()
+		{
+			snapService.Release();
+			snapService.Initialize();
+		}
 
-            foreach (var file in files)
-            {
-                var layout = JsonConvert.DeserializeObject<Layout>(File.ReadAllText(file));
-                Layouts.Add(layout);
-            }
+		private void CloseWindow(Window window)
+		{
+			if (window != null)
+			{
+				settingService.Save();
 
-            var selected = SnapScreens.FirstOrDefault(screen => screen.Base.Primary);
-            selected.Layout = Layouts.FirstOrDefault();
-            SelectedSnapScreen = selected;
-        }
+				window.Hide();
+			}
 
-        private void ApplyChanges()
-        {
-            configService.Save(config);
-
-            snapService.Release();
-            snapService.Initialize();
-        }
-
-        private void CloseWindow(Window window)
-        {
-            if (window != null)
-            {
-                configService.Save(config);
-
-                window.Hide();
-            }
-
-            if (DevMode.IsActive)
-            {
-                System.Windows.Application.Current.Shutdown();
-            }
-        }
-    }
+			if (DevMode.IsActive)
+			{
+				System.Windows.Application.Current.Shutdown();
+			}
+		}
+	}
 }
