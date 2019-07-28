@@ -23,8 +23,8 @@ namespace SnapIt.UI.ViewModels
         private Config config;
         private ObservableCollection<MouseButton> mouseButtons;
         private ObservableCollection<SnapScreen> snapScreens;
-        private SnapScreen _selectedSnapScreens;
-        private ObservableCollection<Layout> _layouts;
+        private SnapScreen selectedSnapScreen;
+        private ObservableCollection<Layout> layouts;
         private Layout selectedLayout;
 
         public string Title { get; set; } = $"Snap It {System.Windows.Forms.Application.ProductVersion}";
@@ -33,8 +33,18 @@ namespace SnapIt.UI.ViewModels
         public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
         public bool DisableForFullscreen { get => config.DisableForFullscreen; set { config.DisableForFullscreen = value; ApplyChanges(); } }
         public ObservableCollection<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
-        public SnapScreen SelectedSnapScreen { get => _selectedSnapScreens; set => SetProperty(ref _selectedSnapScreens, value); }
-        public ObservableCollection<Layout> Layouts { get => _layouts; set => SetProperty(ref _layouts, value); }
+        public SnapScreen SelectedSnapScreen
+        {
+            get => selectedSnapScreen;
+            set
+            {
+                SetProperty(ref selectedSnapScreen, value);
+                selectedLayout = selectedSnapScreen.Layout;
+            }
+        }
+
+        public ObservableCollection<Layout> Layouts { get => layouts; set => SetProperty(ref layouts, value); }
+
         public Layout SelectedLayout
         {
             get => selectedLayout;
@@ -42,6 +52,7 @@ namespace SnapIt.UI.ViewModels
             {
                 SetProperty(ref selectedLayout, value);
                 SaveLayoutCommand.RaiseCanExecuteChanged();
+                SelectedSnapScreen.Layout = selectedLayout;
             }
         }
 
@@ -122,8 +133,6 @@ namespace SnapIt.UI.ViewModels
                 SnapScreens.Add(new SnapScreen(screen));
             }
 
-            SelectedSnapScreen = SnapScreens.FirstOrDefault(screen => screen.Base.Primary);
-
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Layouts");
             var files = Directory.GetFiles(folderPath, "*.json");
             Layouts = new ObservableCollection<Layout>();
@@ -133,6 +142,10 @@ namespace SnapIt.UI.ViewModels
                 var layout = JsonConvert.DeserializeObject<Layout>(File.ReadAllText(file));
                 Layouts.Add(layout);
             }
+
+            var selected = SnapScreens.FirstOrDefault(screen => screen.Base.Primary);
+            selected.Layout = Layouts.FirstOrDefault();
+            SelectedSnapScreen = selected;
         }
 
         private void ApplyChanges()
