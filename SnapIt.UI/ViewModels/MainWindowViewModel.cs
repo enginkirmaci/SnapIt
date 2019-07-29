@@ -58,7 +58,6 @@ namespace SnapIt.UI.ViewModels
 
 		public DelegateCommand<Window> CloseWindowCommand { get; private set; }
 		public DelegateCommand NewLayoutCommand { get; private set; }
-		//public DelegateCommand SaveLayoutCommand { get; private set; }
 		public DelegateCommand DesignLayoutCommand { get; private set; }
 
 		public MainWindowViewModel(
@@ -68,11 +67,6 @@ namespace SnapIt.UI.ViewModels
 			this.snapService = snapService;
 			this.settingService = settingService;
 
-			Initialize();
-		}
-
-		private void Initialize()
-		{
 			Layouts = new ObservableCollection<Layout>(settingService.Layouts);
 			SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
 			SelectedSnapScreen = SnapScreens.FirstOrDefault();
@@ -96,15 +90,6 @@ namespace SnapIt.UI.ViewModels
 				designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
 				designWindow.Show();
 			});
-
-			//SaveLayoutCommand = new DelegateCommand(() =>
-			//{
-			//    settingService.SaveLayout(SelectedLayout);
-			//},
-			//() =>
-			//{
-			//    return !string.IsNullOrWhiteSpace(SelectedLayout?.Name);
-			//}).ObservesProperty(() => SelectedLayout.Name);
 
 			DesignLayoutCommand = new DelegateCommand(() =>
 			{
@@ -134,9 +119,12 @@ namespace SnapIt.UI.ViewModels
 		private void DesignWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			settingService.SaveLayout(SelectedLayout);
+			settingService.LinkScreenLayout(SelectedSnapScreen, SelectedLayout);
 
 			Layouts.Remove(SelectedLayout);
 			Layouts.Add(SelectedLayout);
+
+			ApplyChanges();
 		}
 
 		private void ApplyChanges()

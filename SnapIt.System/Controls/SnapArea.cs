@@ -16,6 +16,7 @@ namespace SnapIt.Controls
 		private readonly SolidColorBrush splitterBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
 
 		private readonly SolidColorBrush backgroundBrush = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
+		private readonly SolidColorBrush transparentBackgroundBrush = new SolidColorBrush(Colors.Transparent);
 		private readonly SolidColorBrush borderBrush = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
 		private readonly SolidColorBrush backgroundOnHoverBrush = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0));
 		private readonly SolidColorBrush buttonBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
@@ -218,9 +219,19 @@ namespace SnapIt.Controls
 			}
 			else
 			{
-				Background = isTransparent ? backgroundBrush : solidBackgroundBrush;
+				Background = solidBackgroundBrush;
 				Border.BorderBrush = borderBrush;
 				Border.BorderThickness = new Thickness(1);
+
+				if (isTransparent)
+				{
+					Background = backgroundBrush;
+				}
+			}
+
+			if (parent != null)
+			{
+				parent.Background = transparentBackgroundBrush;
 			}
 
 			if (layoutArea?.Areas != null && layoutArea.Areas.Count > 0)

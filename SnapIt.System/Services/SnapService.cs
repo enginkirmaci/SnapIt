@@ -82,13 +82,11 @@ namespace SnapIt.Services
 					var res = User32Test.IsFullscreen(ActiveWindowRectangle);
 					Debug.WriteLine(res);
 
-					if (ActiveWindow != null && ActiveWindow.Title.Contains("Snap It"))
+					if (ActiveWindow?.Title != null && ActiveWindow.Title.Contains("Snap It"))
 					{
 						isListening = false;
 					}
-					//check if mouse click on title bar
-					else
-					if (config.DragByTitle)
+					else if (config.DragByTitle)
 					{
 						if (ActiveWindowRectangle.Top + titleBarHeight + FixedFrameBorderSize * 2 >= e.Location.Y)
 						{

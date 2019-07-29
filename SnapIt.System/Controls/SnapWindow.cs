@@ -12,7 +12,6 @@ namespace SnapIt.Controls
 		private SnapArea current;
 		private SnapScreen screen;
 
-		//private Grid mainGrid;
 		//private double DpiX = 1.0;
 		//private double DpiY = 1.0;
 
