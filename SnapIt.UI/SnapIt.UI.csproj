@@ -10,8 +10,23 @@
 
   <ItemGroup>
     <None Remove="icon.ico" />
+    <None Remove="Layouts\effbbdbb-1fe0-4639-8f8b-3f49156d5b2c.json" />
+    <None Remove="Layouts\f216a979-b3f3-427a-9c31-7977eaf91b19.json" />
+    <None Remove="Layouts\f332538f-5f83-4c4f-8472-1155f1aef340.json" />
     <None Remove="Themes\app.ico" />
     <None Remove="Views\DesignWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Layouts\effbbdbb-1fe0-4639-8f8b-3f49156d5b2c.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Layouts\f216a979-b3f3-427a-9c31-7977eaf91b19.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Layouts\f332538f-5f83-4c4f-8472-1155f1aef340.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

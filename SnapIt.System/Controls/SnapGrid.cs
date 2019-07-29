@@ -34,7 +34,7 @@ namespace SnapIt.Controls
 						Height = RowDefinitions.Count > row ? (int?)RowDefinitions[row].Height.Value : null
 					};
 
-					childSnapArea.MainGrid.GetLayoutAreas(childLayoutArea);
+					childSnapArea.GetLayoutAreas(childLayoutArea);
 
 					if (layoutArea.Areas == null)
 					{
