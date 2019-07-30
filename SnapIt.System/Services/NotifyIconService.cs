@@ -24,7 +24,7 @@ namespace SnapIt.Services
 		{
 			notifyIcon = new NotifyIcon();
 			notifyIcon.DoubleClick += (s, args) => ShowDefaultWindow();
-			notifyIcon.Icon = new Icon(System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Themes/app.ico")).Stream);
+			notifyIcon.Icon = new Icon(System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream);
 			notifyIcon.Visible = true;
 
 			CreateContextMenu();

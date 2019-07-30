@@ -6,6 +6,10 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Themes\app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Authors>Engin KIRMACI</Authors>
+    <Product>Snap It!</Product>
+    <PackageProjectUrl>http://enginkirmaci.com/projects/snapit</PackageProjectUrl>
+    <NeutralLanguage></NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +18,8 @@
     <None Remove="Layouts\f216a979-b3f3-427a-9c31-7977eaf91b19.json" />
     <None Remove="Layouts\f332538f-5f83-4c4f-8472-1155f1aef340.json" />
     <None Remove="Themes\app.ico" />
+    <None Remove="Themes\notifyicon.ico" />
+    <None Remove="Themes\snapit.png" />
     <None Remove="Views\DesignWindow.xaml" />
   </ItemGroup>
 
@@ -31,6 +37,8 @@
 
   <ItemGroup>
     <Resource Include="Themes\app.ico" />
+    <Resource Include="Themes\notifyicon.ico" />
+    <Resource Include="Themes\snapit.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Controls;
 using SnapIt.Entities;
 using SnapIt.Services;
+using SnapIt.UI.Resources;
 using SnapIt.UI.Views;
 
 namespace SnapIt.UI.ViewModels
@@ -22,7 +25,7 @@ namespace SnapIt.UI.ViewModels
 		private ObservableCollection<Layout> layouts;
 		private Layout selectedLayout;
 
-		public string Title { get; set; } = $"Snap It {System.Windows.Forms.Application.ProductVersion}";
+		public string Title { get; set; } = $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}";
 		public bool DragByTitle { get => settingService.Config.DragByTitle; set { settingService.Config.DragByTitle = value; ApplyChanges(); } }
 		public MouseButton MouseButton { get => settingService.Config.MouseButton; set { settingService.Config.MouseButton = value; ApplyChanges(); } }
 		public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
@@ -59,6 +62,8 @@ namespace SnapIt.UI.ViewModels
 		public DelegateCommand<Window> CloseWindowCommand { get; private set; }
 		public DelegateCommand NewLayoutCommand { get; private set; }
 		public DelegateCommand DesignLayoutCommand { get; private set; }
+
+		public DelegateCommand<string> HandleLinkClick { get; private set; }
 
 		public MainWindowViewModel(
 			ISnapService snapService,
@@ -103,6 +108,16 @@ namespace SnapIt.UI.ViewModels
 				return SelectedLayout != null;
 			}).ObservesProperty(() => SelectedLayout);
 
+			HandleLinkClick = new DelegateCommand<string>((url) =>
+			{
+				var ps = new ProcessStartInfo("http://" + url)
+				{
+					UseShellExecute = true,
+					Verb = "open"
+				};
+				Process.Start(ps);
+			});
+
 			MouseButtons = new ObservableCollection<MouseButton>
 			{
 				MouseButton.Left,
@@ -114,6 +129,14 @@ namespace SnapIt.UI.ViewModels
 			{
 				snapService.Initialize();
 			}
+		}
+
+		private static string GetDefaultBrowserPath()
+		{
+			string key = @"http\shell\open\command";
+			RegistryKey registryKey =
+			Registry.ClassesRoot.OpenSubKey(key, false);
+			return ((string)registryKey.GetValue(null, null)).Split('"')[1];
 		}
 
 		private void DesignWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -17,7 +17,7 @@ namespace SnapIt.Controls
 
 		private readonly SolidColorBrush backgroundBrush = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
 		private readonly SolidColorBrush transparentBackgroundBrush = new SolidColorBrush(Colors.Transparent);
-		private readonly SolidColorBrush borderBrush = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+		private readonly SolidColorBrush borderBrush = new SolidColorBrush(Color.FromArgb(180, 200, 200, 200));
 		private readonly SolidColorBrush backgroundOnHoverBrush = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0));
 		private readonly SolidColorBrush buttonBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
 		private readonly SolidColorBrush solidBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));

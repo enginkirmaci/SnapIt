@@ -9,7 +9,6 @@ namespace SnapIt.Services
 {
 	public class SettingService : ISettingService
 	{
-		//private readonly ISnapService snapService;
 		private readonly IConfigService configService;
 
 		public Config Config { get; private set; }
@@ -17,10 +16,8 @@ namespace SnapIt.Services
 		public IList<SnapScreen> SnapScreens { get; private set; }
 
 		public SettingService(
-			//ISnapService snapService,
 			IConfigService configService)
 		{
-			//this.snapService = snapService;
 			this.configService = configService;
 
 			Config = configService.Load<Config>();
@@ -36,9 +33,6 @@ namespace SnapIt.Services
 			{
 				SaveLayout(layout);
 			}
-
-			//snapService.Release();
-			//snapService.Initialize();
 		}
 
 		public void SaveLayout(Layout layout)
