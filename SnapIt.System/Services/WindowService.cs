@@ -1,72 +1,93 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using SnapIt.Controls;
 using SnapIt.Entities;
 
 namespace SnapIt.Services
 {
-    public class WindowService : IWindowService
-    {
-        private readonly ISettingService settingService;
+	public class WindowService : IWindowService
+	{
+		private readonly ISettingService settingService;
 
-        private List<SnapWindow> snapWindows;
+		private List<SnapWindow> snapWindows;
 
-        public WindowService(
-            ISettingService settingService
-            )
-        {
-            this.settingService = settingService;
+		public event EscKeyPressedDelegate EscKeyPressed;
 
-            snapWindows = new List<SnapWindow>();
-        }
+		public WindowService(
+			ISettingService settingService
+			)
+		{
+			this.settingService = settingService;
 
-        public bool IsVisible
-        {
-            get => snapWindows.TrueForAll(window => window.IsVisible);
-        }
+			snapWindows = new List<SnapWindow>();
+		}
 
-        public void Initialize()
-        {
-            foreach (var screen in settingService.SnapScreens)
-            {
-                var window = new SnapWindow(screen);
+		public bool IsVisible
+		{
+			get => snapWindows.TrueForAll(window => window.IsVisible);
+		}
 
-                window.CreateGrids();
+		public void Initialize()
+		{
+			foreach (var screen in settingService.SnapScreens)
+			{
+				var window = new SnapWindow(screen);
 
-                snapWindows.Add(window);
-            }
-        }
+				window.CreateGrids();
+				window.KeyDown += Window_KeyDown;
 
-        public void Release()
-        {
-            snapWindows.ForEach(window => window.Close());
-            snapWindows.Clear();
-        }
+				snapWindows.Add(window);
+			}
+		}
 
-        public void Show()
-        {
-            snapWindows.ForEach(window => window.Show());
-        }
+		private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+		{
+			if (e.Key == System.Windows.Input.Key.Escape)
+			{
+				Debug.WriteLine("Escape");
+				EscKeyPressed?.Invoke();
+			}
+		}
 
-        public void Hide()
-        {
-            snapWindows.ForEach(window => window.Hide());
-        }
+		public void Release()
+		{
+			snapWindows.ForEach(window =>
+			{
+				window.KeyDown -= Window_KeyDown;
+				window.Close();
+			});
+			snapWindows.Clear();
+		}
 
-        public Rectangle SelectElementWithPoint(int x, int y)
-        {
-            var result = new Rectangle();
+		public void Show()
+		{
+			snapWindows.ForEach(window =>
+			{
+				window.Show();
+				window.Activate();
+			});
+		}
 
-            foreach (var window in snapWindows)
-            {
-                var selectedArea = window.SelectElementWithPoint(x, y);
-                if (!selectedArea.Equals(Rectangle.Empty))
-                {
-                    result = selectedArea;
-                    break;
-                }
-            }
+		public void Hide()
+		{
+			snapWindows.ForEach(window => window.Hide());
+		}
 
-            return result;
-        }
-    }
+		public Rectangle SelectElementWithPoint(int x, int y)
+		{
+			var result = new Rectangle();
+
+			foreach (var window in snapWindows)
+			{
+				var selectedArea = window.SelectElementWithPoint(x, y);
+				if (!selectedArea.Equals(Rectangle.Empty))
+				{
+					result = selectedArea;
+					break;
+				}
+			}
+
+			return result;
+		}
+	}
 }

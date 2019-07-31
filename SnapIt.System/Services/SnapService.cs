@@ -19,6 +19,7 @@ namespace SnapIt.Services
 		private Rectangle snapArea;
 		private bool isWindowDetected = false;
 		private bool isListening = false;
+		//private IKeyboardMouseEvents globalHook;
 
 		public event GetStatus StatusChanged;
 
@@ -34,6 +35,7 @@ namespace SnapIt.Services
 		{
 			config = configService.Load<Config>();
 			windowService.Initialize();
+			windowService.EscKeyPressed += WindowService_EscKeyPressed;
 
 			mouseHook = new MouseHook();
 			mouseHook.SetHook();
@@ -42,8 +44,23 @@ namespace SnapIt.Services
 			mouseHook.MouseUpEvent += MouseUpEvent;
 			mouseHook.MouseClickEvent += MouseClickEvent;
 
+			//globalHook = Hook.AppEvents();
+
+			//globalHook.KeyPress += GlobalHook_KeyPress;
+
 			StatusChanged?.Invoke(true);
 		}
+
+		private void WindowService_EscKeyPressed()
+		{
+			windowService.Hide();
+			isListening = false;
+		}
+
+		//private void GlobalHook_KeyPress(object sender, KeyPressEventArgs e)
+		//{
+		//	Debug.WriteLine("KeyPress: \t{0}", e.KeyChar);
+		//}
 
 		public void Release()
 		{
@@ -59,6 +76,12 @@ namespace SnapIt.Services
 				mouseHook.UnHook();
 				mouseHook = null;
 			}
+
+			//if (globalHook != null)
+			//{
+			//	globalHook.KeyPress -= GlobalHook_KeyPress;
+			//	globalHook.Dispose();
+			//}
 
 			StatusChanged?.Invoke(false);
 		}
@@ -131,7 +154,7 @@ namespace SnapIt.Services
 		{
 			Debug.WriteLine("UpEvent");
 
-			if (e.Button == MouseButtonMapper.Map(config.MouseButton))
+			if (e.Button == MouseButtonMapper.Map(config.MouseButton) && isListening)
 			{
 				isListening = false;
 				windowService.Hide();

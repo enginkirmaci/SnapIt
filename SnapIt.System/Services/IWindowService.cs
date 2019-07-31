@@ -2,18 +2,22 @@
 
 namespace SnapIt.Services
 {
-    public interface IWindowService
-    {
-        bool IsVisible { get; }
+	public interface IWindowService
+	{
+		bool IsVisible { get; }
 
-        void Initialize();
+		void Initialize();
 
-        void Release();
+		void Release();
 
-        void Show();
+		void Show();
 
-        void Hide();
+		void Hide();
 
-        Rectangle SelectElementWithPoint(int x, int y);
-    }
+		Rectangle SelectElementWithPoint(int x, int y);
+
+		event EscKeyPressedDelegate EscKeyPressed;
+	}
+
+	public delegate void EscKeyPressedDelegate();
 }
