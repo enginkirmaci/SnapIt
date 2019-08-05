@@ -134,6 +134,16 @@
 									<StackPanel Orientation="Horizontal" />
 								</ItemsPanelTemplate>
 							</ListBox.ItemsPanel>
+							<ListBox.ItemContainerStyle>
+								<Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+									<Style.Triggers>
+										<Trigger Property="IsSelected" Value="True">
+											<Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
+											<Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+										</Trigger>
+									</Style.Triggers>
+								</Style>
+							</ListBox.ItemContainerStyle>
 						</ListBox>
 					</StackPanel>
 
@@ -282,6 +292,20 @@
 									<WrapPanel Orientation="Horizontal" />
 								</ItemsPanelTemplate>
 							</ListBox.ItemsPanel>
+							<ListBox.ItemContainerStyle>
+								<Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+									<Style.Triggers>
+										<Trigger Property="IsSelected" Value="True">
+											<Setter Property="FontWeight" Value="Bold" />
+											<Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
+											<Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+										</Trigger>
+									</Style.Triggers>
+									<Style.Resources>
+										<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+									</Style.Resources>
+								</Style>
+							</ListBox.ItemContainerStyle>
 						</ListBox>
 					</Grid>
 				</Grid>

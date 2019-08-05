@@ -1,24 +1,24 @@
 {
-  "Guid": "f332538f-5f83-4c4f-8472-1155f1aef340",
-  "Name": "Layout 3",
-  "LayoutArea": {
-    "Areas": [
-      {
-        "Width": 1,
-        "Areas": [
-          {
-            "Height": 1
-          },
-          {
-            "Height": 1,
-            "Row": 1
-          }
-        ]
-      },
-      {
-        "Width": 1,
-        "Column": 1
-      }
-    ]
-  }
+	"Guid": "f332538f-5f83-4c4f-8472-1155f1aef340",
+	"Name": "3 Part Horizontal",
+	"LayoutArea": {
+		"Areas": [
+			{
+				"Width": 1
+			},
+			{
+				"Width": 2,
+				"Column": 1,
+				"Areas": [
+					{
+						"Width": 1
+					},
+					{
+						"Width": 1,
+						"Column": 1
+					}
+				]
+			}
+		]
+	}
 }

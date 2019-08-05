@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
+using Gma.System.MouseKeyHook;
 using SnapIt.Configuration;
 using SnapIt.Entities;
-using SnapIt.Hooks;
 using SnapIt.Mappers;
 
 namespace SnapIt.Services
@@ -13,13 +13,15 @@ namespace SnapIt.Services
 		private readonly ConfigService configService;
 
 		private Config config;
-		private MouseHook mouseHook;
+
+		//private MouseHook mouseHook;
 		private ActiveWindow ActiveWindow;
+
 		private Rectangle ActiveWindowRectangle;
 		private Rectangle snapArea;
 		private bool isWindowDetected = false;
 		private bool isListening = false;
-		//private IKeyboardMouseEvents globalHook;
+		private IKeyboardMouseEvents globalHook;
 
 		public event GetStatus StatusChanged;
 
@@ -37,16 +39,17 @@ namespace SnapIt.Services
 			windowService.Initialize();
 			windowService.EscKeyPressed += WindowService_EscKeyPressed;
 
-			mouseHook = new MouseHook();
-			mouseHook.SetHook();
-			mouseHook.MouseMoveEvent += MouseMoveEvent;
-			mouseHook.MouseDownEvent += MouseDownEvent;
-			mouseHook.MouseUpEvent += MouseUpEvent;
-			mouseHook.MouseClickEvent += MouseClickEvent;
+			//mouseHook = new MouseHook();
+			//mouseHook.SetHook();
+			//mouseHook.MouseMoveEvent += MouseMoveEvent;
+			//mouseHook.MouseDownEvent += MouseDownEvent;
+			//mouseHook.MouseUpEvent += MouseUpEvent;
+			//mouseHook.MouseClickEvent += MouseClickEvent;
 
-			//globalHook = Hook.AppEvents();
-
-			//globalHook.KeyPress += GlobalHook_KeyPress;
+			globalHook = Hook.GlobalEvents();
+			globalHook.MouseMove += MouseMoveEvent;
+			globalHook.MouseDown += MouseDownEvent;
+			globalHook.MouseUp += MouseUpEvent;
 
 			StatusChanged?.Invoke(true);
 		}
@@ -67,21 +70,23 @@ namespace SnapIt.Services
 			config = null;
 			windowService.Release();
 
-			if (mouseHook != null)
-			{
-				mouseHook.MouseMoveEvent -= MouseMoveEvent;
-				mouseHook.MouseDownEvent -= MouseDownEvent;
-				mouseHook.MouseUpEvent -= MouseUpEvent;
-				mouseHook.MouseClickEvent -= MouseClickEvent;
-				mouseHook.UnHook();
-				mouseHook = null;
-			}
-
-			//if (globalHook != null)
+			//if (mouseHook != null)
 			//{
-			//	globalHook.KeyPress -= GlobalHook_KeyPress;
-			//	globalHook.Dispose();
+			//	mouseHook.MouseMoveEvent -= MouseMoveEvent;
+			//	mouseHook.MouseDownEvent -= MouseDownEvent;
+			//	mouseHook.MouseUpEvent -= MouseUpEvent;
+			//	mouseHook.MouseClickEvent -= MouseClickEvent;
+			//	mouseHook.UnHook();
+			//	mouseHook = null;
 			//}
+
+			if (globalHook != null)
+			{
+				globalHook.MouseMove -= MouseMoveEvent;
+				globalHook.MouseDown -= MouseDownEvent;
+				globalHook.MouseUp -= MouseUpEvent;
+				globalHook.Dispose();
+			}
 
 			StatusChanged?.Invoke(false);
 		}

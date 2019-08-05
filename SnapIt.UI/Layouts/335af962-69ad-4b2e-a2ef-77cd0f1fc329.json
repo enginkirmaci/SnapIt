@@ -1,0 +1,33 @@
+{
+  "Guid": "335af962-69ad-4b2e-a2ef-77cd0f1fc329",
+  "Name": "4 Part",
+  "LayoutArea": {
+    "Areas": [
+      {
+        "Width": 1,
+        "Areas": [
+          {
+            "Height": 1
+          },
+          {
+            "Height": 1,
+            "Row": 1
+          }
+        ]
+      },
+      {
+        "Width": 1,
+        "Column": 1,
+        "Areas": [
+          {
+            "Height": 1
+          },
+          {
+            "Height": 1,
+            "Row": 1
+          }
+        ]
+      }
+    ]
+  }
+}

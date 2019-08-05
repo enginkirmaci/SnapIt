@@ -1,0 +1,24 @@
+{
+  "Guid": "f640fa94-b4ea-4755-9b6f-68bf49b85c0c",
+  "Name": "3 Part Left Wide",
+  "LayoutArea": {
+    "Areas": [
+      {
+        "Width": 1
+      },
+      {
+        "Width": 1,
+        "Column": 1,
+        "Areas": [
+          {
+            "Width": 1
+          },
+          {
+            "Width": 1,
+            "Column": 1
+          }
+        ]
+      }
+    ]
+  }
+}

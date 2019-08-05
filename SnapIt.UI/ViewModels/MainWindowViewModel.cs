@@ -37,7 +37,7 @@ namespace SnapIt.UI.ViewModels
 			set
 			{
 				SetProperty(ref selectedSnapScreen, value);
-				selectedLayout = selectedSnapScreen.Layout;
+				SelectedLayout = selectedSnapScreen.Layout;
 			}
 		}
 
@@ -52,6 +52,7 @@ namespace SnapIt.UI.ViewModels
 				{
 					SetProperty(ref selectedLayout, value);
 					//SaveLayoutCommand.RaiseCanExecuteChanged();
+
 					SelectedSnapScreen.Layout = selectedLayout;
 					settingService.LinkScreenLayout(SelectedSnapScreen, SelectedLayout);
 					ApplyChanges();
@@ -102,11 +103,12 @@ namespace SnapIt.UI.ViewModels
 				designWindow.Closing += DesignWindow_Closing;
 				designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
 				designWindow.Show();
-			},
-			() =>
-			{
-				return SelectedLayout != null;
-			}).ObservesProperty(() => SelectedLayout);
+			});
+			//},
+			//() =>
+			//{
+			//	return SelectedLayout != null;
+			//}).ObservesProperty(() => SelectedLayout);
 
 			HandleLinkClick = new DelegateCommand<string>((url) =>
 			{
@@ -144,8 +146,10 @@ namespace SnapIt.UI.ViewModels
 			settingService.SaveLayout(SelectedLayout);
 			settingService.LinkScreenLayout(SelectedSnapScreen, SelectedLayout);
 
+			var position = Layouts.IndexOf(SelectedLayout);
+
 			Layouts.Remove(SelectedLayout);
-			Layouts.Add(SelectedLayout);
+			Layouts.Insert(position, SelectedLayout);
 
 			ApplyChanges();
 		}

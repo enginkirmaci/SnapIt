@@ -1,24 +1,15 @@
 {
-  "Guid": "f216a979-b3f3-427a-9c31-7977eaf91b19",
-  "Name": "Layout 2",
-  "LayoutArea": {
-    "Areas": [
-      {
-        "Width": 1
-      },
-      {
-        "Width": 1,
-        "Column": 1,
-        "Areas": [
-          {
-            "Height": 1
-          },
-          {
-            "Height": 1,
-            "Row": 1
-          }
-        ]
-      }
-    ]
-  }
+	"Guid": "f216a979-b3f3-427a-9c31-7977eaf91b19",
+	"Name": "One Third Right",
+	"LayoutArea": {
+		"Areas": [
+			{
+				"Width": 1
+			},
+			{
+				"Width": 2,
+				"Column": 1
+			}
+		]
+	}
 }
