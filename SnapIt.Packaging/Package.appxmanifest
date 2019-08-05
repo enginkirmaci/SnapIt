@@ -31,7 +31,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Snap It!"
+        DisplayName="SnapIt"
         Description="Snap It! is a windows manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens."
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
@@ -50,6 +50,7 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <rescap:Capability Name="broadFileSystemAccess" />
     <rescap:Capability Name="runFullTrust" />
     <rescap:Capability Name="allowElevation" />
   </Capabilities>
