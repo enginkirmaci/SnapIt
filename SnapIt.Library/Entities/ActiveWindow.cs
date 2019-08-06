@@ -6,6 +6,7 @@ namespace SnapIt.Library.Entities
 	{
 		public IntPtr Handle { get; set; }
 		public string Title { get; set; }
+		public Rectangle Boundry { get; set; }
 
 		public static readonly ActiveWindow Empty = new ActiveWindow();
 	}

@@ -1,4 +1,5 @@
-﻿using SnapIt.Library.Entities;
+﻿using System.Collections.Generic;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
@@ -13,6 +14,8 @@ namespace SnapIt.Library.Services
 		void Show();
 
 		void Hide();
+
+		IList<Rectangle> SnapAreaBoundries();
 
 		Rectangle SelectElementWithPoint(int x, int y);
 

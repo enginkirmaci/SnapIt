@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using SnapIt.Library.Entities;
@@ -64,7 +63,6 @@ namespace SnapIt.Library
 			var msg = Marshal.GetLastWin32Error();
 			if (msg != 0)
 			{
-				Debug.WriteLine("error: " + msg);
 			}
 			return res;
 		}
@@ -106,7 +104,6 @@ namespace SnapIt.Library
 		{
 			if (!GetWindowRect(activeWindow.Handle, out Rectangle rct))
 			{
-				Debug.WriteLine("ERROR");
 				return new Rectangle();
 			}
 

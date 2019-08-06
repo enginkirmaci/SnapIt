@@ -78,7 +78,6 @@
     <Compile Include="Entities\Point.cs" />
     <Compile Include="Entities\Rectangle.cs" />
     <Compile Include="Extensions\ScreenExtension.cs" />
-    <Compile Include="Hooks\MouseHook.cs" />
     <Compile Include="InteropServices\DwmApi.cs" />
     <Compile Include="InteropServices\User32.cs" />
     <Compile Include="Mappers\MouseButtonMapper.cs" />
@@ -107,5 +106,6 @@
     <EmbeddedResource Include="Layouts\f640fa94-b4ea-4755-9b6f-68bf49b85c0c.json" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

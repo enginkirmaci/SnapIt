@@ -18,18 +18,15 @@ namespace SnapIt.Library.Entities
 			Bottom = bottom;
 		}
 
-		public Rectangle(int left, int top, double width, double height)
-		{
-			Left = left;
-			Top = top;
-			Right = left + (int)width;
-			Bottom = top + (int)height;
-		}
-
 		public int X { get { return Left; } }
 		public int Y { get { return Top; } }
 		public int Width { get { return Right - Left; } }
 		public int Height { get { return Bottom - Top; } }
+
+		public bool Contains(Rectangle rectangle)
+		{
+			return Left <= rectangle.Left && rectangle.Left < Right && Top <= rectangle.Top && rectangle.Top < Bottom;
+		}
 
 		public static Rectangle Empty { get { return new Rectangle(); } }
 

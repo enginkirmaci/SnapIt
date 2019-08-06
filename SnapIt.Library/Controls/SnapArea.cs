@@ -90,6 +90,25 @@ namespace SnapIt.Library.Controls
 			}
 		}
 
+		public void GenerateSnapAreaBoundries(ref List<Rectangle> rectangles)
+		{
+			var hasSnapChild = false;
+			foreach (var child in Children)
+			{
+				if (child is SnapArea)
+				{
+					hasSnapChild = true;
+
+					(child as SnapArea).GenerateSnapAreaBoundries(ref rectangles);
+				}
+			}
+
+			if (!hasSnapChild)
+			{
+				rectangles.Add(ScreenSnapArea());
+			}
+		}
+
 		public Rectangle ScreenSnapArea()
 		{
 			var topLeft = PointToScreen(new Point(0, 0));

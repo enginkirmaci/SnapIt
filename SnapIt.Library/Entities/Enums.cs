@@ -2,6 +2,14 @@
 
 namespace SnapIt.Library.Entities
 {
+	public enum MoveDirection
+	{
+		Left,
+		Right,
+		Up,
+		Down
+	}
+
 	public enum SplitDirection
 	{
 		Vertically,

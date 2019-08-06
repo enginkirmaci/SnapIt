@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
@@ -34,18 +34,29 @@ namespace SnapIt.Library.Services
 			{
 				var window = new SnapWindow(screen);
 
-				window.CreateGrids();
-				window.KeyDown += Window_KeyDown;
+				if (!snapWindows.Any(i => i.Screen == screen))
+				{
+					window.ApplyLayout();
+					window.KeyDown += Window_KeyDown;
 
-				snapWindows.Add(window);
+					snapWindows.Add(window);
+				}
 			}
+
+			snapWindows.ForEach(window =>
+			{
+				window.Opacity = 0;
+				window.Show();
+				window.GenerateSnapAreaBoundries();
+				window.Hide();
+				window.Opacity = 100;
+			});
 		}
 
 		private void Window_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Escape)
+			if (e.Key == Key.Escape) // TODO globalhook can be used instead of this
 			{
-				Debug.WriteLine("Escape");
 				EscKeyPressed?.Invoke();
 			}
 		}
@@ -72,6 +83,15 @@ namespace SnapIt.Library.Services
 		public void Hide()
 		{
 			snapWindows.ForEach(window => window.Hide());
+		}
+
+		public IList<Rectangle> SnapAreaBoundries()
+		{
+			var boundries = new List<Rectangle>();
+
+			snapWindows.ForEach(window => boundries.AddRange(window.SnapAreaBoundries));
+
+			return boundries;
 		}
 
 		public Rectangle SelectElementWithPoint(int x, int y)

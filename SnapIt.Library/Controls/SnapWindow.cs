@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -10,14 +12,16 @@ namespace SnapIt.Library.Controls
 	public class SnapWindow : Window
 	{
 		private SnapArea current;
-		private SnapScreen screen;
+
+		public SnapScreen Screen { get; set; }
+		public List<Rectangle> SnapAreaBoundries { get; set; }
 
 		//private double DpiX = 1.0;
 		//private double DpiY = 1.0;
 
 		public SnapWindow(SnapScreen screen)
 		{
-			this.screen = screen;
+			Screen = screen;
 
 			//CalculateDpi();
 
@@ -47,10 +51,10 @@ namespace SnapIt.Library.Controls
 
 			User32Test.MoveWindow(
 				window,
-				screen.Base.WorkingArea.Left,
-				screen.Base.WorkingArea.Top,
-				screen.Base.WorkingArea.Width,
-				screen.Base.WorkingArea.Height);
+				Screen.Base.WorkingArea.Left,
+				Screen.Base.WorkingArea.Top,
+				Screen.Base.WorkingArea.Width,
+				Screen.Base.WorkingArea.Height);
 		}
 
 		//private void CalculateDpi()
@@ -61,16 +65,29 @@ namespace SnapIt.Library.Controls
 		//    DpiY = 96.0 / y;
 		//}
 
-		public void CreateGrids()
+		public void ApplyLayout()
 		{
 			var snapArea = new SnapArea();
 
-			if (screen.Layout != null)
+			if (Screen.Layout != null)
 			{
-				snapArea.ApplyLayout(screen.Layout.LayoutArea, false, true);
+				snapArea.ApplyLayout(Screen.Layout.LayoutArea, false, true);
 			}
 
 			Content = snapArea;
+		}
+
+		public void GenerateSnapAreaBoundries()
+		{
+			if (SnapAreaBoundries == null)
+			{
+				var generated = new List<Rectangle>();
+
+				var rootSnapArea = Content as SnapArea;
+				rootSnapArea.GenerateSnapAreaBoundries(ref generated);
+
+				SnapAreaBoundries = generated.OrderBy(i => i.X).ThenBy(i => i.Y).ToList();
+			}
 		}
 
 		public Rectangle SelectElementWithPoint(int x, int y)

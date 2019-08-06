@@ -69,6 +69,10 @@ namespace SnapIt.Library.Services
 				{
 					snapScreen.Layout = Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutGuid);
 				}
+				else
+				{
+					snapScreen.Layout = Layouts.FirstOrDefault();
+				}
 
 				snapScreens.Add(snapScreen);
 			}

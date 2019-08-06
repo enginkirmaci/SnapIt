@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
-using SnapIt.Library.Configuration;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Mappers;
 
@@ -10,14 +12,9 @@ namespace SnapIt.Library.Services
 	public class SnapService : ISnapService
 	{
 		private readonly IWindowService windowService;
-		private readonly ConfigService configService;
+		private readonly SettingService settingService;
 
-		private Config config;
-
-		//private MouseHook mouseHook;
 		private ActiveWindow ActiveWindow;
-
-		private Rectangle ActiveWindowRectangle;
 		private Rectangle snapArea;
 		private bool isWindowDetected = false;
 		private bool isListening = false;
@@ -27,31 +24,72 @@ namespace SnapIt.Library.Services
 
 		public SnapService(
 			IWindowService windowService,
-			ConfigService configService)
+			SettingService settingService)
 		{
 			this.windowService = windowService;
-			this.configService = configService;
+			this.settingService = settingService;
 		}
 
 		public void Initialize()
 		{
-			config = configService.Load<Config>();
 			windowService.Initialize();
 			windowService.EscKeyPressed += WindowService_EscKeyPressed;
 
-			//mouseHook = new MouseHook();
-			//mouseHook.SetHook();
-			//mouseHook.MouseMoveEvent += MouseMoveEvent;
-			//mouseHook.MouseDownEvent += MouseDownEvent;
-			//mouseHook.MouseUpEvent += MouseUpEvent;
-			//mouseHook.MouseClickEvent += MouseClickEvent;
+			var map = new Dictionary<Combination, Action>
+			{
+				{Combination.FromString("Control+Left"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Left) },
+				{Combination.FromString("Control+Right"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Right) },
+				{Combination.FromString("Control+Up"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Up) },
+				{Combination.FromString("Control+Down"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Down) }
+			};
 
 			globalHook = Hook.GlobalEvents();
+			globalHook.OnCombination(map);
 			globalHook.MouseMove += MouseMoveEvent;
 			globalHook.MouseDown += MouseDownEvent;
 			globalHook.MouseUp += MouseUpEvent;
 
 			StatusChanged?.Invoke(true);
+		}
+
+		private void MoveActiveWindowByKeyboard(MoveDirection direction)
+		{
+			ActiveWindow = User32Test.GetActiveWindow();
+			ActiveWindow.Boundry = User32Test.GetWindowRectangle(ActiveWindow);
+
+			Debug.WriteLine(ActiveWindow?.Title);
+
+			if (ActiveWindow != ActiveWindow.Empty)
+			{
+				var boundries = windowService.SnapAreaBoundries();
+				if (boundries != null)
+				{
+					var activeBoundry = boundries.FirstOrDefault(i => i.Contains(ActiveWindow.Boundry));
+					var copyActiveBoundry = new Rectangle(activeBoundry.Left, activeBoundry.Top, activeBoundry.Right, activeBoundry.Bottom);
+					switch (direction)
+					{
+						case MoveDirection.Left:
+							activeBoundry.Left -= 1;
+							break;
+
+						case MoveDirection.Right:
+							activeBoundry.Left += activeBoundry.Width;
+							break;
+
+						case MoveDirection.Up:
+							activeBoundry.Top -= 1;
+							break;
+
+						case MoveDirection.Down:
+							activeBoundry.Top += activeBoundry.Height;
+							break;
+					}
+
+					var newSnapArea = boundries.FirstOrDefault(i => i.Contains(activeBoundry));
+
+					MoveActiveWindow(!newSnapArea.Equals(Rectangle.Empty) ? newSnapArea : copyActiveBoundry);
+				}
+			}
 		}
 
 		private void WindowService_EscKeyPressed()
@@ -60,25 +98,9 @@ namespace SnapIt.Library.Services
 			isListening = false;
 		}
 
-		//private void GlobalHook_KeyPress(object sender, KeyPressEventArgs e)
-		//{
-		//	Debug.WriteLine("KeyPress: \t{0}", e.KeyChar);
-		//}
-
 		public void Release()
 		{
-			config = null;
 			windowService.Release();
-
-			//if (mouseHook != null)
-			//{
-			//	mouseHook.MouseMoveEvent -= MouseMoveEvent;
-			//	mouseHook.MouseDownEvent -= MouseDownEvent;
-			//	mouseHook.MouseUpEvent -= MouseUpEvent;
-			//	mouseHook.MouseClickEvent -= MouseClickEvent;
-			//	mouseHook.UnHook();
-			//	mouseHook = null;
-			//}
 
 			if (globalHook != null)
 			{
@@ -91,10 +113,6 @@ namespace SnapIt.Library.Services
 			StatusChanged?.Invoke(false);
 		}
 
-		private void MouseClickEvent(object sender, MouseEventArgs e)
-		{
-		}
-
 		private void MouseMoveEvent(object sender, MouseEventArgs e)
 		{
 			if (isListening)
@@ -102,24 +120,24 @@ namespace SnapIt.Library.Services
 				if (!isWindowDetected)
 				{
 					ActiveWindow = User32Test.GetActiveWindow();
-					ActiveWindowRectangle = User32Test.GetWindowRectangle(ActiveWindow);
-
-					var titleBarHeight = SystemInformation.CaptionHeight;
-					var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
-
-					var res = User32Test.IsFullscreen(ActiveWindowRectangle);
-					Debug.WriteLine(res);
+					ActiveWindow.Boundry = User32Test.GetWindowRectangle(ActiveWindow);
 
 					if (ActiveWindow?.Title != null && ActiveWindow.Title.Contains("Snap It"))
 					{
 						isListening = false;
 					}
-					else if (config.DragByTitle)
+					else if (settingService.Config.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry))
 					{
-						if (ActiveWindowRectangle.Top + titleBarHeight + FixedFrameBorderSize * 2 >= e.Location.Y)
+						isListening = false;
+					}
+					else if (settingService.Config.DragByTitle)
+					{
+						var titleBarHeight = SystemInformation.CaptionHeight;
+						var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
+
+						if (ActiveWindow.Boundry.Top + titleBarHeight + FixedFrameBorderSize * 2 >= e.Location.Y)
 						{
 							isWindowDetected = true;
-							Debug.WriteLine("window detected");
 						}
 						else
 						{
@@ -144,10 +162,8 @@ namespace SnapIt.Library.Services
 
 		private void MouseDownEvent(object sender, MouseEventArgs e)
 		{
-			if (e.Button == MouseButtonMapper.Map(config.MouseButton))
+			if (e.Button == MouseButtonMapper.Map(settingService.Config.MouseButton))
 			{
-				Debug.WriteLine("DownEvent");
-
 				ActiveWindow = ActiveWindow.Empty;
 				snapArea = Rectangle.Empty;
 				isWindowDetected = false;
@@ -157,42 +173,43 @@ namespace SnapIt.Library.Services
 
 		private void MouseUpEvent(object sender, MouseEventArgs e)
 		{
-			Debug.WriteLine("UpEvent");
-
-			if (e.Button == MouseButtonMapper.Map(config.MouseButton) && isListening)
+			if (e.Button == MouseButtonMapper.Map(settingService.Config.MouseButton) && isListening)
 			{
 				isListening = false;
 				windowService.Hide();
 
-				if (ActiveWindow != ActiveWindow.Empty)
+				MoveActiveWindow(snapArea);
+			}
+		}
+
+		private void MoveActiveWindow(Rectangle rectangle)
+		{
+			if (ActiveWindow != ActiveWindow.Empty)
+			{
+				if (!rectangle.Equals(Rectangle.Empty))
 				{
-					if (!snapArea.Equals(Rectangle.Empty))
+					User32Test.GetWindowMargin(ActiveWindow, out Rectangle withMargin);
+
+					if (!withMargin.Equals(default(Rectangle)))
 					{
-						SendKeys.SendWait("{ESC}");
-
-						User32Test.GetWindowMargin(ActiveWindow, out Rectangle withMargin);
-
-						if (!withMargin.Equals(default(Rectangle)))
+						var systemMargin = new Rectangle()
 						{
-							var systemMargin = new Rectangle()
-							{
-								Left = withMargin.Left - ActiveWindowRectangle.Left,
-								Top = withMargin.Top - ActiveWindowRectangle.Top,
-								Right = ActiveWindowRectangle.Right - withMargin.Right,
-								Bottom = ActiveWindowRectangle.Bottom - withMargin.Bottom
-							};
+							Left = withMargin.Left - ActiveWindow.Boundry.Left,
+							Top = withMargin.Top - ActiveWindow.Boundry.Top,
+							Right = ActiveWindow.Boundry.Right - withMargin.Right,
+							Bottom = ActiveWindow.Boundry.Bottom - withMargin.Bottom
+						};
 
-							snapArea.Left -= systemMargin.Left;
-							snapArea.Top -= systemMargin.Top;
-							snapArea.Right += systemMargin.Right;
-							snapArea.Bottom += systemMargin.Bottom;
+						rectangle.Left -= systemMargin.Left;
+						rectangle.Top -= systemMargin.Top;
+						rectangle.Right += systemMargin.Right;
+						rectangle.Bottom += systemMargin.Bottom;
 
-							User32Test.MoveWindow(ActiveWindow, snapArea);
-						}
-						else
-						{
-							User32Test.MoveWindow(ActiveWindow, snapArea);
-						}
+						User32Test.MoveWindow(ActiveWindow, rectangle);
+					}
+					else
+					{
+						User32Test.MoveWindow(ActiveWindow, rectangle);
 					}
 				}
 			}
