@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using Microsoft.Win32;
+using System.Windows.Forms;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library.Controls;
@@ -27,10 +27,13 @@ namespace SnapIt.ViewModels
         private Layout selectedLayout;
 
         public string Title { get; set; } = $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}";
+        public bool EnableKeyboard { get => settingService.Config.EnableKeyboard; set { settingService.Config.EnableKeyboard = value; ApplyChanges(); } }
+        public bool EnableMouse { get => settingService.Config.EnableMouse; set { settingService.Config.EnableMouse = value; ApplyChanges(); } }
         public bool DragByTitle { get => settingService.Config.DragByTitle; set { settingService.Config.DragByTitle = value; ApplyChanges(); } }
         public MouseButton MouseButton { get => settingService.Config.MouseButton; set { settingService.Config.MouseButton = value; ApplyChanges(); } }
         public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
         public bool DisableForFullscreen { get => settingService.Config.DisableForFullscreen; set { settingService.Config.DisableForFullscreen = value; ApplyChanges(); } }
+        public bool IsStartupTaskActive { get => settingService.IsStartupTaskActive; set => settingService.IsStartupTaskActive = value; }
         public ObservableCollection<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
         public SnapScreen SelectedSnapScreen
         {
@@ -64,6 +67,8 @@ namespace SnapIt.ViewModels
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
         public DelegateCommand NewLayoutCommand { get; private set; }
         public DelegateCommand DesignLayoutCommand { get; private set; }
+        public DelegateCommand ExportLayoutCommand { get; private set; }
+        public DelegateCommand ImportLayoutCommand { get; private set; }
 
         public DelegateCommand<string> HandleLinkClick { get; private set; }
 
@@ -105,11 +110,43 @@ namespace SnapIt.ViewModels
                 designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
                 designWindow.Show();
             });
-            //},
-            //() =>
-            //{
-            //	return SelectedLayout != null;
-            //}).ObservesProperty(() => SelectedLayout);
+
+            ExportLayoutCommand = new DelegateCommand(() =>
+            {
+                var fileDialog = new SaveFileDialog
+                {
+                    DefaultExt = ".json",
+                    Filter = "Json (.json)|*.json",
+                    FileName = selectedLayout.Name
+                };
+
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    settingService.ExportLayout(SelectedLayout, fileDialog.FileName);
+                }
+            });
+
+            ImportLayoutCommand = new DelegateCommand(() =>
+            {
+                try
+                {
+                    var fileDialog = new OpenFileDialog
+                    {
+                        DefaultExt = ".json",
+                        Filter = "Json (.json)|*.json"
+                    };
+
+                    if (fileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        var imported = settingService.ImportLayout(fileDialog.FileName);
+                        Layouts.Insert(0, imported);
+                    }
+                }
+                catch
+                {
+                    System.Windows.Forms.MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
+                }
+            });
 
             HandleLinkClick = new DelegateCommand<string>((url) =>
             {
@@ -132,14 +169,6 @@ namespace SnapIt.ViewModels
             {
                 snapService.Initialize();
             }
-        }
-
-        private static string GetDefaultBrowserPath()
-        {
-            string key = @"http\shell\open\command";
-            RegistryKey registryKey =
-            Registry.ClassesRoot.OpenSubKey(key, false);
-            return ((string)registryKey.GetValue(null, null)).Split('"')[1];
         }
 
         private void DesignWindow_Closing(object sender, CancelEventArgs e)

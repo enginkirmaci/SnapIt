@@ -1,7 +1,7 @@
 ﻿namespace SnapIt
 {
-	public class DevMode
-	{
-		public const bool IsActive = false;
-	}
+    public class DevMode
+    {
+        public const bool IsActive = false;
+    }
 }

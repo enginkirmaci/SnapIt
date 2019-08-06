@@ -185,14 +185,20 @@
                                     </Button.Content>
                                 </Button>
 
-                                <!--<Button
+                                <Button
                                     Margin="0,0,4,0"
-                                    Style="{StaticResource MaterialDesignRaisedButton}"
-                                    ToolTip="Import Layout">
+                                    Command="{Binding ImportLayoutCommand}"
+                                    Style="{StaticResource MaterialDesignRaisedButton}">
                                     <Button.Content>
-                                        <materialDesign:PackIcon Kind="Import" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Import" />
+                                            <TextBlock
+                                                Margin="4,0,0,0"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                Text="Import Layout" />
+                                        </StackPanel>
                                     </Button.Content>
-                                </Button>-->
+                                </Button>
                             </StackPanel>
 
                             <Grid
@@ -216,20 +222,6 @@
                                         Grid.Row="1"
                                         Margin="0,5"
                                         Orientation="Horizontal">
-                                        <!--<Button
-                                            Margin="0,0,4,0"
-                                            Command="{Binding SaveLayoutCommand}"
-                                            Style="{StaticResource MaterialDesignRaisedButton}">
-                                            <Button.Content>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <materialDesign:PackIcon Kind="ContentSave" />
-                                                    <TextBlock
-                                                        Margin="4,0,0,0"
-                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                        Text="Save" />
-                                                </StackPanel>
-                                            </Button.Content>
-                                        </Button>-->
                                         <Button
                                             Margin="0,0,4,0"
                                             Command="{Binding DesignLayoutCommand}"
@@ -244,14 +236,21 @@
                                                 </StackPanel>
                                             </Button.Content>
                                         </Button>
-                                        <!--<Button
+
+                                        <Button
                                             Margin="0,0,4,0"
-                                            Style="{StaticResource MaterialDesignRaisedButton}"
-                                            ToolTip="Export Layout">
+                                            Command="{Binding ExportLayoutCommand}"
+                                            Style="{StaticResource MaterialDesignRaisedButton}">
                                             <Button.Content>
-                                                <materialDesign:PackIcon Kind="Export" />
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Export" />
+                                                    <TextBlock
+                                                        Margin="4,0,0,0"
+                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                        Text="Export Layout" />
+                                                </StackPanel>
                                             </Button.Content>
-                                        </Button>-->
+                                        </Button>
                                     </StackPanel>
                                 </Grid>
                             </Grid>
@@ -317,36 +316,100 @@
                         <TextBlock Text=" SETTINGS" />
                     </StackPanel>
                 </TabItem.Header>
-                <StackPanel Margin="16">
-                    <TextBlock Margin="0,5">
-                        Use window title to drag window
-                    </TextBlock>
-                    <ToggleButton
-                        Margin="0,5"
-                        HorizontalAlignment="Left"
-                        IsChecked="{Binding DragByTitle}"
-                        Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                        ToolTip="Default ToggleButton Style" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                    <TextBlock Margin="0,5">
-                        Mouse button to drag window
-                    </TextBlock>
-                    <ComboBox
-                        Margin="0,5"
-                        HorizontalAlignment="Left"
-                        ItemsSource="{Binding MouseButtons}"
-                        SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
+                    <StackPanel Margin="16">
+                        <TextBlock
+                            Margin="0,5"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Mouse" />
+                        <TextBlock Margin="0,5">
+                            Use mouse to snap window
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,5"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding EnableMouse}"
+                            Style="{StaticResource MaterialDesignSwitchToggleButton}" />
 
-                    <TextBlock Margin="0,5">
-                        Disable dragging for fullscreen application and games (recommended)
-                    </TextBlock>
-                    <ToggleButton
-                        Margin="0,5"
-                        HorizontalAlignment="Left"
-                        IsChecked="{Binding DisableForFullscreen}"
-                        Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                        ToolTip="Default ToggleButton Style" />
-                </StackPanel>
+                        <TextBlock Margin="0,5">
+                            Only use window title to snap window
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,5"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding DragByTitle}"
+                            Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+
+                        <TextBlock Margin="0,5">
+                            Mouse button for snapping window
+                        </TextBlock>
+                        <ComboBox
+                            Margin="0,5"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding MouseButtons}"
+                            SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="16">
+                        <TextBlock
+                            Margin="0,5"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Keyboard" />
+                        <TextBlock Margin="0,5">
+                            Use keyboard to snap window
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,5"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding EnableKeyboard}"
+                            Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+
+                        <TextBlock Margin="0,5">
+                            <Run Text="Use following shortcuts to snap window" /><LineBreak />
+                            <Run Text="  Ctrl + Alt + Up" /><LineBreak />
+                            <Run Text="  Ctrl + Alt + Down" /><LineBreak />
+                            <Run Text="  Ctrl + Alt + Left" /><LineBreak />
+                            <Run Text="  Ctrl + Alt + Right" />
+                        </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="16">
+                        <TextBlock
+                            Margin="0,5"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Other Settings" />
+
+                        <TextBlock Margin="0,5">
+                            Disable snapping for fullscreen application and games (recommended)
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,5"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding DisableForFullscreen}"
+                            Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+
+                        <TextBlock Margin="0,5">
+                            Start Snap It when I start Windows
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,5"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding IsStartupTaskActive}"
+                            Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+                    </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Foreground="{DynamicResource MaterialDesignBody}">
                 <TabItem.Header>
@@ -466,16 +529,6 @@
                                     </Hyperlink.Inlines>
                                 </Hyperlink>
                             </TextBlock>
-                            <!--<TextBlock Margin="0,0,0,18" HorizontalAlignment="Right" Grid.Column="1">
-								<Hyperlink
-									Command="{Binding HandleLinkClick}"
-									CommandParameter="{x:Static c:Constants.CompanyName}"
-									Style="{StaticResource MaterialDesignBody1Hyperlink}">
-									<Hyperlink.Inlines>
-										<Run Text="Privacy" />
-									</Hyperlink.Inlines>
-								</Hyperlink>
-							</TextBlock>-->
                         </Grid>
                     </StackPanel>
                 </Grid>

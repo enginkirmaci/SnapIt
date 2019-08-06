@@ -9,118 +9,134 @@ using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Configuration
 {
-	public class ConfigService : IConfigService
-	{
-		private JsonSerializerSettings jsonSerializerSettings;
-		private readonly string rootFolder;
+    public class ConfigService : IConfigService
+    {
+        private JsonSerializerSettings jsonSerializerSettings;
+        private readonly string rootFolder;
 
-		public ConfigService()
-		{
-			rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+        public ConfigService()
+        {
+            rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
 
-			if (!Directory.Exists(rootFolder))
-			{
-				Directory.CreateDirectory(rootFolder);
-				InitializeLayouts();
-			}
+            Directory.CreateDirectory(rootFolder);
 
-			jsonSerializerSettings = new JsonSerializerSettings
-			{
-				DefaultValueHandling = DefaultValueHandling.Ignore,
-				NullValueHandling = NullValueHandling.Ignore,
-				Formatting = Formatting.Indented
-			};
-		}
+            InitializeLayouts();
 
-		private void InitializeLayouts()
-		{
-			var layouts = new string[]{
-				"0e217130-d44e-4057-bfe9-daf6f6e341d2",
-				"335af962-69ad-4b2e-a2ef-77cd0f1fc329",
-				"377f159c-72bd-4876-bdbe-85745e10f3cc",
-				"792fc82f-65dd-4795-a589-b6b39a21d9ef",
-				"00904f1f-4e41-4dc6-8677-6e5a2b231935",
-				"e5e6b3d7-cb2c-4e90-92b7-e7f5dbd35f95",
-				"eba07116-7ba0-40ec-80f0-fa9542afc640",
-				"effbbdbb-1fe0-4639-8f8b-3f49156d5b2c",
-				"f216a979-b3f3-427a-9c31-7977eaf91b19",
-				"f640fa94-b4ea-4755-9b6f-68bf49b85c0c",
-				"f332538f-5f83-4c4f-8472-1155f1aef340"
-			};
+            jsonSerializerSettings = new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
+            };
+        }
 
-			var layoutsFolder = Path.Combine(rootFolder, "Layouts");
-			Directory.CreateDirectory(layoutsFolder);
+        private void InitializeLayouts()
+        {
+            var layouts = new string[]{
+                "0e217130-d44e-4057-bfe9-daf6f6e341d2",
+                "335af962-69ad-4b2e-a2ef-77cd0f1fc329",
+                "377f159c-72bd-4876-bdbe-85745e10f3cc",
+                "792fc82f-65dd-4795-a589-b6b39a21d9ef",
+                "00904f1f-4e41-4dc6-8677-6e5a2b231935",
+                "e5e6b3d7-cb2c-4e90-92b7-e7f5dbd35f95",
+                "eba07116-7ba0-40ec-80f0-fa9542afc640",
+                "effbbdbb-1fe0-4639-8f8b-3f49156d5b2c",
+                "f216a979-b3f3-427a-9c31-7977eaf91b19",
+                "f640fa94-b4ea-4755-9b6f-68bf49b85c0c",
+                "f332538f-5f83-4c4f-8472-1155f1aef340"
+            };
 
-			foreach (var layout in layouts)
-			{
-				using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"SnapIt.Library.Layouts.{layout}.json"))
-				{
-					using (TextReader tr = new StreamReader(stream))
-					{
-						string fileContents = tr.ReadToEnd();
+            var layoutsFolder = Path.Combine(rootFolder, "Layouts");
+            Directory.CreateDirectory(layoutsFolder);
 
-						File.WriteAllText(Path.Combine(rootFolder, $"Layouts\\{layout}.json"), fileContents);
-					}
-				}
-			}
-		}
+            foreach (var layout in layouts)
+            {
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"SnapIt.Library.Layouts.{layout}.json"))
+                {
+                    using (TextReader tr = new StreamReader(stream))
+                    {
+                        string fileContents = tr.ReadToEnd();
 
-		public void Save<T>(T config)
-		{
-			var configPath = GetConfigPath<T>();
+                        File.WriteAllText(Path.Combine(rootFolder, $"Layouts\\{layout}.json"), fileContents);
+                    }
+                }
+            }
+        }
 
-			var json = JsonConvert.SerializeObject(config, jsonSerializerSettings);
+        public void Save<T>(T config)
+        {
+            var configPath = GetConfigPath<T>();
 
-			File.WriteAllText(configPath, json);
-		}
+            var json = JsonConvert.SerializeObject(config, jsonSerializerSettings);
 
-		public T Load<T>() where T : new()
-		{
-			var configPath = GetConfigPath<T>();
+            File.WriteAllText(configPath, json);
+        }
 
-			if (!File.Exists(configPath))
-			{
-				File.WriteAllText(configPath, JsonConvert.SerializeObject(new T(), jsonSerializerSettings));
-			}
+        public T Load<T>() where T : new()
+        {
+            var configPath = GetConfigPath<T>();
 
-			var json = File.ReadAllText(configPath);
+            if (!File.Exists(configPath))
+            {
+                File.WriteAllText(configPath, JsonConvert.SerializeObject(new T(), jsonSerializerSettings));
+            }
 
-			return JsonConvert.DeserializeObject<T>(json, jsonSerializerSettings);
-		}
+            var json = File.ReadAllText(configPath);
 
-		public void SaveLayout(Layout layout)
-		{
-			var layoutPath = GetLayoutPath(layout);
+            return JsonConvert.DeserializeObject<T>(json, jsonSerializerSettings);
+        }
 
-			var json = JsonConvert.SerializeObject(layout, jsonSerializerSettings);
+        public void SaveLayout(Layout layout)
+        {
+            var layoutPath = GetLayoutPath(layout);
 
-			File.WriteAllText(layoutPath, json);
-		}
+            var json = JsonConvert.SerializeObject(layout, jsonSerializerSettings);
 
-		public IList<Layout> GetLayouts()
-		{
-			var folderPath = Path.Combine(rootFolder, "Layouts");
-			var files = Directory.GetFiles(folderPath, "*.json");
-			var layouts = new List<Layout>();
+            File.WriteAllText(layoutPath, json);
+        }
 
-			foreach (var file in files)
-			{
-				var layout = JsonConvert.DeserializeObject<Layout>(File.ReadAllText(file));
-				layout.IsSaved = true;
-				layouts.Add(layout);
-			}
+        public void ExportLayout(Layout layout, string layoutPath)
+        {
+            var json = JsonConvert.SerializeObject(layout, jsonSerializerSettings);
 
-			return layouts.OrderBy(i => i.Name).ToList();
-		}
+            File.WriteAllText(layoutPath, json);
+        }
 
-		private string GetConfigPath<T>()
-		{
-			return Path.Combine(rootFolder, $"{typeof(T).Name}.json");
-		}
+        public Layout ImportLayout(string layoutPath)
+        {
+            var json = File.ReadAllText(layoutPath);
 
-		private string GetLayoutPath(Layout layout)
-		{
-			return Path.Combine(rootFolder, $"Layouts\\{layout.Guid}.json");
-		}
-	}
+            var layout = JsonConvert.DeserializeObject<Layout>(json, jsonSerializerSettings);
+
+            SaveLayout(layout);
+
+            return layout;
+        }
+
+        public IList<Layout> GetLayouts()
+        {
+            var folderPath = Path.Combine(rootFolder, "Layouts");
+            var files = Directory.GetFiles(folderPath, "*.json");
+            var layouts = new List<Layout>();
+
+            foreach (var file in files)
+            {
+                var layout = JsonConvert.DeserializeObject<Layout>(File.ReadAllText(file));
+                layout.IsSaved = true;
+                layouts.Add(layout);
+            }
+
+            return layouts.OrderBy(i => i.Name).ToList();
+        }
+
+        private string GetConfigPath<T>()
+        {
+            return Path.Combine(rootFolder, $"{typeof(T).Name}.json");
+        }
+
+        private string GetLayoutPath(Layout layout)
+        {
+            return Path.Combine(rootFolder, $"Layouts\\{layout.Guid}.json");
+        }
+    }
 }
