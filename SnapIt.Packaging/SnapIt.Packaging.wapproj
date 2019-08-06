@@ -59,7 +59,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>88E586374EB8F54115D466E456C37CD9C0A99493</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>83BB20C268E24229CC51006A4119083921C39C5B</PackageCertificateThumbprint>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <EntryPointProjectUniqueName>..\SnapIt\SnapIt.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>

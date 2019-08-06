@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Snap It!")]
+[assembly: AssemblyTitle("Snap It")]
 [assembly: AssemblyDescription("Snap It! is a windows manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Engin KIRMACI")]
-[assembly: AssemblyProduct("SnapIt")]
+[assembly: AssemblyProduct("Snap It")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

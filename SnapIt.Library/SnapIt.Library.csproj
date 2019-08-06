@@ -94,6 +94,17 @@
     <Compile Include="User32Test.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Layouts\00904f1f-4e41-4dc6-8677-6e5a2b231935.json" />
+    <EmbeddedResource Include="Layouts\0e217130-d44e-4057-bfe9-daf6f6e341d2.json" />
+    <EmbeddedResource Include="Layouts\335af962-69ad-4b2e-a2ef-77cd0f1fc329.json" />
+    <EmbeddedResource Include="Layouts\377f159c-72bd-4876-bdbe-85745e10f3cc.json" />
+    <EmbeddedResource Include="Layouts\792fc82f-65dd-4795-a589-b6b39a21d9ef.json" />
+    <EmbeddedResource Include="Layouts\e5e6b3d7-cb2c-4e90-92b7-e7f5dbd35f95.json" />
+    <EmbeddedResource Include="Layouts\eba07116-7ba0-40ec-80f0-fa9542afc640.json" />
+    <EmbeddedResource Include="Layouts\effbbdbb-1fe0-4639-8f8b-3f49156d5b2c.json" />
+    <EmbeddedResource Include="Layouts\f216a979-b3f3-427a-9c31-7977eaf91b19.json" />
+    <EmbeddedResource Include="Layouts\f332538f-5f83-4c4f-8472-1155f1aef340.json" />
+    <EmbeddedResource Include="Layouts\f640fa94-b4ea-4755-9b6f-68bf49b85c0c.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

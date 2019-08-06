@@ -1,1 +1,1 @@
-F:\enginkirmaci\SnapIt\SnapIt.Packaging\bin\AnyCPU\Release\Upload\SnapIt.Packaging_1.0.0.0\SnapIt.Packaging_1.0.0.0_AnyCPU.msixbundle
+C:\development\enginkirmaci\SnapIt\SnapIt.Packaging\bin\AnyCPU\Release\Upload\SnapIt.Packaging_1.0.0.0\SnapIt.Packaging_1.0.0.0_AnyCPU.msixbundle
