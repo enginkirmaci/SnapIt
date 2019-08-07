@@ -5,7 +5,8 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
-  IgnorableNamespaces="uap rescap desktop">
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  IgnorableNamespaces="uap uap3 rescap desktop">
 
   <Identity
     Name="30071EnginKrmac.SnapIt"
@@ -50,6 +51,11 @@
         <desktop:Extension Category="windows.startupTask" Executable="SnapIt\SnapIt.exe" EntryPoint="Windows.FullTrustApplication">
           <desktop:StartupTask TaskId="SnapItStartupTask" Enabled="true" DisplayName="Snap It" />
         </desktop:Extension>
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="SnapIt\SnapIt.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="SnapIt.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
       </Extensions>
     </Application>
   </Applications>

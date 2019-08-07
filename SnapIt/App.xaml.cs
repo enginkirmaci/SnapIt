@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using DryIoc;
@@ -15,18 +16,35 @@ namespace SnapIt
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			if (mutex.WaitOne(TimeSpan.Zero, true))
+			if (e.Args.Length > 0 && e.Args[0].Contains("runas"))
 			{
-				mutex.ReleaseMutex();
+				if (mutex.WaitOne(TimeSpan.Zero, true))
+				{
+					mutex.ReleaseMutex();
+				}
+				else
+				{
+					MessageBox.Show("only one instance at a time");
+
+					Shutdown();
+					return;
+				}
 			}
 			else
 			{
-				MessageBox.Show("only one instance at a time");
+				var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-				Shutdown();
+				ProcessStartInfo info = new ProcessStartInfo
+				{
+					Verb = "runas", // we'll run our EXE as admin
+					Arguments = "-runas",
+					UseShellExecute = true,
+					FileName = localAppDataPath + @"\microsoft\windowsapps\SnapIt.exe" // path to the appExecutionAlias
+				};
+				Process.Start(info); // launch new elevated instance
+				Shutdown(); // exit current instance
 				return;
 			}
-
 			base.OnStartup(e);
 		}
 
@@ -56,8 +74,11 @@ namespace SnapIt
 		{
 			base.OnExit(e);
 
-			Container.Resolve<INotifyIconService>().Release();
-			Container.Resolve<ISnapService>().Release();
+			if (Container != null)
+			{
+				Container.Resolve<INotifyIconService>().Release();
+				Container.Resolve<ISnapService>().Release();
+			}
 		}
 	}
 }
