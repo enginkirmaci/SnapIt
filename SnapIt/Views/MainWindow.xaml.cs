@@ -8,8 +8,6 @@ namespace SnapIt.Views
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private bool oneTime = true;
-
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -18,12 +16,6 @@ namespace SnapIt.Views
 		protected override void OnActivated(EventArgs e)
 		{
 			base.OnActivated(e);
-
-			if (!DevMode.IsActive && oneTime)
-			{
-				oneTime = false;
-				Hide();
-			}
 		}
 	}
 }
