@@ -7,16 +7,16 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using SnapIt.Library.Entities;
 
-namespace SnapIt.Library.Configuration
+namespace SnapIt.Library.Services
 {
-	public class ConfigService : IConfigService
+	public class FileOperationService : IFileOperationService
 	{
 		private readonly string rootFolder;
 
 		private readonly JsonSerializerSettings defaultJsonSerializerSettings;
 		private readonly JsonSerializerSettings layoutJsonSerializerSettings;
 
-		public ConfigService()
+		public FileOperationService()
 		{
 			rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
 

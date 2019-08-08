@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Forms;
 using Prism.Commands;
 using Prism.Mvvm;
+using SnapIt.Library;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
@@ -27,14 +28,18 @@ namespace SnapIt.ViewModels
 		private ObservableCollection<Layout> layouts;
 		private Layout selectedLayout;
 		private bool isStartupTaskActive;
+		private ObservableCollection<string> runningApplications;
+		private string selectedApplication;
+		private string selectedExcludedApplication;
+		private ObservableCollection<string> excludedApplications;
 
 		public string Title { get; set; } = $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}";
-		public bool EnableKeyboard { get => settingService.Config.EnableKeyboard; set { settingService.Config.EnableKeyboard = value; ApplyChanges(); } }
-		public bool EnableMouse { get => settingService.Config.EnableMouse; set { settingService.Config.EnableMouse = value; ApplyChanges(); } }
-		public bool DragByTitle { get => settingService.Config.DragByTitle; set { settingService.Config.DragByTitle = value; ApplyChanges(); } }
-		public MouseButton MouseButton { get => settingService.Config.MouseButton; set { settingService.Config.MouseButton = value; ApplyChanges(); } }
+		public bool EnableKeyboard { get => settingService.Settings.EnableKeyboard; set { settingService.Settings.EnableKeyboard = value; ApplyChanges(); } }
+		public bool EnableMouse { get => settingService.Settings.EnableMouse; set { settingService.Settings.EnableMouse = value; ApplyChanges(); } }
+		public bool DragByTitle { get => settingService.Settings.DragByTitle; set { settingService.Settings.DragByTitle = value; ApplyChanges(); } }
+		public MouseButton MouseButton { get => settingService.Settings.MouseButton; set { settingService.Settings.MouseButton = value; ApplyChanges(); } }
 		public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
-		public bool DisableForFullscreen { get => settingService.Config.DisableForFullscreen; set { settingService.Config.DisableForFullscreen = value; ApplyChanges(); } }
+		public bool DisableForFullscreen { get => settingService.Settings.DisableForFullscreen; set { settingService.Settings.DisableForFullscreen = value; ApplyChanges(); } }
 		public bool IsStartupTaskActive
 		{
 			get => isStartupTaskActive;
@@ -42,6 +47,16 @@ namespace SnapIt.ViewModels
 			{
 				SetProperty(ref isStartupTaskActive, value);
 				settingService.SetStartupTaskStatusAsync(value);
+			}
+		}
+
+		public bool IsRunAsAdmin
+		{
+			get => Properties.Settings.Default.RunAsAdmin;
+			set
+			{
+				Properties.Settings.Default.RunAsAdmin = value;
+				Properties.Settings.Default.Save();
 			}
 		}
 
@@ -75,12 +90,20 @@ namespace SnapIt.ViewModels
 			}
 		}
 
+		public ObservableCollection<string> RunningApplications { get => runningApplications; set => SetProperty(ref runningApplications, value); }
+		public string SelectedApplication { get => selectedApplication; set => SetProperty(ref selectedApplication, value); }
+		public ObservableCollection<string> ExcludedApplications { get => excludedApplications; set => SetProperty(ref excludedApplications, value); }
+		public string SelectedExcludedApplication { get => selectedExcludedApplication; set => SetProperty(ref selectedExcludedApplication, value); }
+
 		public DelegateCommand<Window> ActivatedCommand { get; private set; }
 		public DelegateCommand<Window> CloseWindowCommand { get; private set; }
 		public DelegateCommand NewLayoutCommand { get; private set; }
 		public DelegateCommand DesignLayoutCommand { get; private set; }
 		public DelegateCommand ExportLayoutCommand { get; private set; }
 		public DelegateCommand ImportLayoutCommand { get; private set; }
+
+		public DelegateCommand ExcludeAppLayoutCommand { get; private set; }
+		public DelegateCommand IncludeAppLayoutCommand { get; private set; }
 
 		public DelegateCommand<string> HandleLinkClick { get; private set; }
 
@@ -94,12 +117,14 @@ namespace SnapIt.ViewModels
 			Layouts = new ObservableCollection<Layout>(settingService.Layouts);
 			SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
 			SelectedSnapScreen = SnapScreens.FirstOrDefault();
+			RunningApplications = new ObservableCollection<string>(User32Test.GetOpenWindowsNames());
+			ExcludedApplications = new ObservableCollection<string>(settingService.ExcludedApps.Applications);
 
 			ActivatedCommand = new DelegateCommand<Window>(async (mainWindow) =>
 			{
-				if (settingService.Config.ShowMainWindow)
+				if (settingService.Settings.ShowMainWindow)
 				{
-					settingService.Config.ShowMainWindow = false;
+					settingService.Settings.ShowMainWindow = false;
 					HideWindowAtStartup = false;
 				}
 				else if (!DevMode.IsActive && HideWindowAtStartup)
@@ -175,6 +200,31 @@ namespace SnapIt.ViewModels
 					System.Windows.Forms.MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
 				}
 			});
+
+			ExcludeAppLayoutCommand = new DelegateCommand(() =>
+			{
+				ExcludedApplications.Add(SelectedApplication);
+				SelectedApplication = null;
+
+				settingService.SaveExcludedApps(ExcludedApplications.ToList());
+				ApplyChanges();
+			},
+			() =>
+			{
+				return !string.IsNullOrWhiteSpace(SelectedApplication);
+			}).ObservesProperty(() => SelectedApplication);
+
+			IncludeAppLayoutCommand = new DelegateCommand(() =>
+			{
+				ExcludedApplications.Remove(SelectedExcludedApplication);
+
+				settingService.SaveExcludedApps(ExcludedApplications.ToList());
+				ApplyChanges();
+			},
+			() =>
+			{
+				return SelectedExcludedApplication != null;
+			}).ObservesProperty(() => SelectedExcludedApplication);
 
 			HandleLinkClick = new DelegateCommand<string>((url) =>
 			{

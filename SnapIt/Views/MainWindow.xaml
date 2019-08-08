@@ -71,7 +71,7 @@
 				</TabItem.Header>
 				<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
 			</TabItem>-->
-			<TabItem Foreground="{DynamicResource MaterialDesignBody}" IsSelected="True">
+			<TabItem Foreground="{DynamicResource MaterialDesignBody}">
 				<TabItem.Header>
 					<StackPanel Orientation="Horizontal">
 						<materialDesign:PackIcon Kind="BorderAll" />
@@ -346,7 +346,7 @@
 							Margin="0,5"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding EnableMouse}"
-							Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
 						<TextBlock Margin="0,5">
 							Only use window title to snap window
@@ -355,7 +355,7 @@
 							Margin="0,5"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding DragByTitle}"
-							Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
 						<TextBlock Margin="0,5">
 							Mouse button for snapping window
@@ -379,7 +379,7 @@
 							Margin="0,5"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding EnableKeyboard}"
-							Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
 						<TextBlock Margin="0,5">
 							<Run Text="Use following shortcuts to snap window" /><LineBreak />
@@ -406,7 +406,7 @@
 							Margin="0,5"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding DisableForFullscreen}"
-							Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
 						<TextBlock Margin="0,5">
 							Start Snap It when I start Windows
@@ -415,10 +415,107 @@
 							Margin="0,5"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding IsStartupTaskActive}"
-							Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+
+						<TextBlock Margin="0,5">
+							Run as administrator (experimental, needs to be restarted)
+						</TextBlock>
+						<ToggleButton
+							Margin="0,5"
+							HorizontalAlignment="Left"
+							IsChecked="{Binding IsRunAsAdmin}"
+							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 					</StackPanel>
 				</Grid>
 			</TabItem>
+			<TabItem Foreground="{DynamicResource MaterialDesignBody}" IsSelected="True">
+				<TabItem.Header>
+					<StackPanel Orientation="Horizontal">
+						<materialDesign:PackIcon Kind="WindowRestore" />
+						<TextBlock Text=" WINDOWS" />
+					</StackPanel>
+				</TabItem.Header>
+				<Grid Margin="16">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition />
+					</Grid.RowDefinitions>
+
+					<TextBlock
+						Margin="0,5"
+						Style="{StaticResource MaterialDesignTitleTextBlock}"
+						Text="Excluded Applications" />
+
+					<StackPanel Grid.Row="1">
+						<TextBlock Margin="0,5" TextWrapping="Wrap">
+							Application Title
+						</TextBlock>
+
+						<ComboBox
+							IsEditable="True"
+							ItemsSource="{Binding RunningApplications}"
+							SelectedItem="{Binding SelectedApplication, Mode=TwoWay}"
+							Text="{Binding SelectedApplication}" />
+					</StackPanel>
+
+					<StackPanel
+						Grid.Row="1"
+						Grid.Column="1"
+						Margin="0,24">
+						<Button
+							Grid.Column="1"
+							Margin="8,4"
+							Padding="0"
+							Command="{Binding ExcludeAppLayoutCommand}"
+							Style="{StaticResource MaterialDesignRaisedAccentButton}">
+							<Button.Content>
+								<materialDesign:PackIcon
+									Width="26"
+									Height="26"
+									Margin="2"
+									Kind="Add" />
+							</Button.Content>
+						</Button>
+						<Button
+							Grid.Column="1"
+							Margin="8,4"
+							Padding="0"
+							Command="{Binding IncludeAppLayoutCommand}"
+							Style="{StaticResource MaterialDesignRaisedAccentButton}">
+							<Button.Content>
+								<materialDesign:PackIcon
+									Width="22"
+									Height="22"
+									Margin="2"
+									Kind="Remove" />
+							</Button.Content>
+						</Button>
+					</StackPanel>
+
+					<Grid Grid.Row="1" Grid.Column="2">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+
+						<TextBlock Margin="0,5">
+							Excluded Applications
+						</TextBlock>
+						<Border
+							Grid.Row="1"
+							BorderBrush="{StaticResource MaterialDesignBody}"
+							BorderThickness="1,0,0,0">
+							<ListBox ItemsSource="{Binding ExcludedApplications}" SelectedItem="{Binding SelectedExcludedApplication}" />
+						</Border>
+					</Grid>
+				</Grid>
+			</TabItem>
+
 			<TabItem Foreground="{DynamicResource MaterialDesignBody}">
 				<TabItem.Header>
 					<StackPanel Orientation="Horizontal">

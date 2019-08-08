@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using SnapIt.Library.Entities;
@@ -33,6 +34,11 @@ namespace SnapIt.Library
 			}, 0);
 
 			return windows;
+		}
+
+		public static IEnumerable<string> GetOpenWindowsNames()
+		{
+			return GetOpenWindows().Select(i => i.Value).Distinct().OrderBy(i => i);
 		}
 
 		public static bool IsFullscreen(Rectangle activeWindowRectangle)

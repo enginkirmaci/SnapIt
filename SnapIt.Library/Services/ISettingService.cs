@@ -7,13 +7,16 @@ namespace SnapIt.Library.Services
 {
 	public interface ISettingService
 	{
-		Config Config { get; }
+		Settings Settings { get; }
+		ExcludedApps ExcludedApps { get; }
 		IList<Layout> Layouts { get; }
 		IList<SnapScreen> SnapScreens { get; }
 
 		void Save();
 
 		void SaveLayout(Layout layout);
+
+		void SaveExcludedApps(List<string> excludedAppsNames);
 
 		void ExportLayout(Layout layout, string layoutPath);
 

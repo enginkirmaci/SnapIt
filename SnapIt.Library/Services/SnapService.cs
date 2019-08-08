@@ -44,12 +44,12 @@ namespace SnapIt.Library.Services
 
 			globalHook = Hook.GlobalEvents();
 
-			if (settingService.Config.EnableKeyboard)
+			if (settingService.Settings.EnableKeyboard)
 			{
 				globalHook.OnCombination(map);
 			}
 
-			if (settingService.Config.EnableMouse)
+			if (settingService.Settings.EnableMouse)
 			{
 				globalHook.MouseMove += MouseMoveEvent;
 				globalHook.MouseDown += MouseDownEvent;
@@ -66,7 +66,8 @@ namespace SnapIt.Library.Services
 
 			if (ActiveWindow != ActiveWindow.Empty)
 			{
-				if (settingService.Config.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry))
+				if (settingService.Settings.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry) ||
+				IsExcludedApplication(ActiveWindow.Title))
 				{
 					return;
 				}
@@ -123,6 +124,11 @@ namespace SnapIt.Library.Services
 			StatusChanged?.Invoke(false);
 		}
 
+		private bool IsExcludedApplication(string Title)
+		{
+			return settingService.ExcludedApps.Applications.Any(i => Title.Contains(i));
+		}
+
 		private void MouseMoveEvent(object sender, MouseEventArgs e)
 		{
 			if (isListening)
@@ -132,15 +138,15 @@ namespace SnapIt.Library.Services
 					ActiveWindow = User32Test.GetActiveWindow();
 					ActiveWindow.Boundry = User32Test.GetWindowRectangle(ActiveWindow);
 
-					if (ActiveWindow?.Title != null && ActiveWindow.Title.Contains("Snap It"))
+					if (ActiveWindow?.Title != null && IsExcludedApplication(ActiveWindow.Title))
 					{
 						isListening = false;
 					}
-					else if (settingService.Config.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry))
+					else if (settingService.Settings.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry))
 					{
 						isListening = false;
 					}
-					else if (settingService.Config.DragByTitle)
+					else if (settingService.Settings.DragByTitle)
 					{
 						var titleBarHeight = SystemInformation.CaptionHeight;
 						var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
@@ -172,7 +178,7 @@ namespace SnapIt.Library.Services
 
 		private void MouseDownEvent(object sender, MouseEventArgs e)
 		{
-			if (e.Button == MouseButtonMapper.Map(settingService.Config.MouseButton))
+			if (e.Button == MouseButtonMapper.Map(settingService.Settings.MouseButton))
 			{
 				ActiveWindow = ActiveWindow.Empty;
 				snapArea = Rectangle.Empty;
@@ -183,7 +189,7 @@ namespace SnapIt.Library.Services
 
 		private void MouseUpEvent(object sender, MouseEventArgs e)
 		{
-			if (e.Button == MouseButtonMapper.Map(settingService.Config.MouseButton) && isListening)
+			if (e.Button == MouseButtonMapper.Map(settingService.Settings.MouseButton) && isListening)
 			{
 				isListening = false;
 				windowService.Hide();

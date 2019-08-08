@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SnapIt.Library.Configuration;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using Windows.ApplicationModel;
@@ -12,25 +11,27 @@ namespace SnapIt.Library.Services
 {
 	public class SettingService : ISettingService
 	{
-		private readonly IConfigService configService;
+		private readonly IFileOperationService fileOperationService;
 
-		public Config Config { get; private set; }
+		public Settings Settings { get; private set; }
+		public ExcludedApps ExcludedApps { get; private set; }
 		public IList<Layout> Layouts { get; private set; }
 		public IList<SnapScreen> SnapScreens { get; private set; }
 
 		public SettingService(
-			IConfigService configService)
+			IFileOperationService fileOperationService)
 		{
-			this.configService = configService;
+			this.fileOperationService = fileOperationService;
 
-			Config = configService.Load<Config>();
-			Layouts = configService.GetLayouts();
+			Settings = this.fileOperationService.Load<Settings>();
+			ExcludedApps = this.fileOperationService.Load<ExcludedApps>();
+			Layouts = this.fileOperationService.GetLayouts();
 			SnapScreens = GetSnapScreens();
 		}
 
 		public void Save()
 		{
-			configService.Save(Config);
+			fileOperationService.Save(Settings);
 
 			foreach (var layout in Layouts.Where(i => !i.IsSaved))
 			{
@@ -38,33 +39,40 @@ namespace SnapIt.Library.Services
 			}
 		}
 
+		public void SaveExcludedApps(List<string> excludedAppsNames)
+		{
+			ExcludedApps.Applications = excludedAppsNames;
+
+			fileOperationService.Save(ExcludedApps);
+		}
+
 		public void SaveLayout(Layout layout)
 		{
 			layout.IsSaved = true;
-			configService.SaveLayout(layout);
+			fileOperationService.SaveLayout(layout);
 		}
 
 		public void ExportLayout(Layout layout, string layoutPath)
 		{
-			configService.ExportLayout(layout, layoutPath);
+			fileOperationService.ExportLayout(layout, layoutPath);
 		}
 
 		public Layout ImportLayout(string layoutPath)
 		{
-			return configService.ImportLayout(layoutPath);
+			return fileOperationService.ImportLayout(layoutPath);
 		}
 
 		public void LinkScreenLayout(SnapScreen snapScreen, Layout layout)
 		{
 			SnapScreens.First(screen => screen.Base.DeviceName == snapScreen.Base.DeviceName).Layout = layout;
 
-			if (Config.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName))
+			if (Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName))
 			{
-				Config.ScreensLayouts[snapScreen.Base.DeviceName] = layout.Guid.ToString();
+				Settings.ScreensLayouts[snapScreen.Base.DeviceName] = layout.Guid.ToString();
 			}
 			else
 			{
-				Config.ScreensLayouts.Add(snapScreen.Base.DeviceName, layout.Guid.ToString());
+				Settings.ScreensLayouts.Add(snapScreen.Base.DeviceName, layout.Guid.ToString());
 			}
 		}
 
@@ -75,8 +83,8 @@ namespace SnapIt.Library.Services
 			foreach (var screen in Screen.AllScreens)
 			{
 				var snapScreen = new SnapScreen(screen);
-				var layoutGuid = Config.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName)
-					? Config.ScreensLayouts[snapScreen.Base.DeviceName] : string.Empty;
+				var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName)
+					? Settings.ScreensLayouts[snapScreen.Base.DeviceName] : string.Empty;
 
 				if (!string.IsNullOrWhiteSpace(layoutGuid))
 				{
