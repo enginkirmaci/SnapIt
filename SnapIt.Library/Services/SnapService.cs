@@ -126,7 +126,12 @@ namespace SnapIt.Library.Services
 
 		private bool IsExcludedApplication(string Title)
 		{
-			return settingService.ExcludedApps.Applications.Any(i => Title.Contains(i));
+			if (settingService.ExcludedApps?.Applications != null)
+			{
+				return settingService.ExcludedApps.Applications.Any(i => Title.Contains(i));
+			}
+
+			return false;
 		}
 
 		private void MouseMoveEvent(object sender, MouseEventArgs e)

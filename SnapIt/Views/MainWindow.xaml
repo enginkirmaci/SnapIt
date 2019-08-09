@@ -71,7 +71,7 @@
 				</TabItem.Header>
 				<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
 			</TabItem>-->
-			<TabItem Foreground="{DynamicResource MaterialDesignBody}">
+			<TabItem Foreground="{DynamicResource MaterialDesignBody}" IsSelected="True">
 				<TabItem.Header>
 					<StackPanel Orientation="Horizontal">
 						<materialDesign:PackIcon Kind="BorderAll" />
@@ -428,7 +428,7 @@
 					</StackPanel>
 				</Grid>
 			</TabItem>
-			<TabItem Foreground="{DynamicResource MaterialDesignBody}" IsSelected="True">
+			<TabItem Foreground="{DynamicResource MaterialDesignBody}">
 				<TabItem.Header>
 					<StackPanel Orientation="Horizontal">
 						<materialDesign:PackIcon Kind="WindowRestore" />

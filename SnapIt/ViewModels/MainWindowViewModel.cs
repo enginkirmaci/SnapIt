@@ -118,7 +118,10 @@ namespace SnapIt.ViewModels
 			SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
 			SelectedSnapScreen = SnapScreens.FirstOrDefault();
 			RunningApplications = new ObservableCollection<string>(User32Test.GetOpenWindowsNames());
-			ExcludedApplications = new ObservableCollection<string>(settingService.ExcludedApps.Applications);
+			if (settingService.ExcludedApps?.Applications != null)
+			{
+				ExcludedApplications = new ObservableCollection<string>(settingService.ExcludedApps.Applications);
+			}
 
 			ActivatedCommand = new DelegateCommand<Window>(async (mainWindow) =>
 			{
