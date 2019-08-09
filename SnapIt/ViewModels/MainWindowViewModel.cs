@@ -122,6 +122,10 @@ namespace SnapIt.ViewModels
 			{
 				ExcludedApplications = new ObservableCollection<string>(settingService.ExcludedApps.Applications);
 			}
+			else
+			{
+				ExcludedApplications = new ObservableCollection<string>();
+			}
 
 			ActivatedCommand = new DelegateCommand<Window>(async (mainWindow) =>
 			{
