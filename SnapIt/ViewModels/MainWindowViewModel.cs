@@ -11,7 +11,6 @@ using SnapIt.Library;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
-using SnapIt.Resources;
 using SnapIt.Views;
 
 namespace SnapIt.ViewModels
@@ -33,7 +32,6 @@ namespace SnapIt.ViewModels
 		private string selectedExcludedApplication;
 		private ObservableCollection<string> excludedApplications;
 
-		public string Title { get; set; } = $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}";
 		public bool EnableKeyboard { get => settingService.Settings.EnableKeyboard; set { settingService.Settings.EnableKeyboard = value; ApplyChanges(); } }
 		public bool EnableMouse { get => settingService.Settings.EnableMouse; set { settingService.Settings.EnableMouse = value; ApplyChanges(); } }
 		public bool DragByTitle { get => settingService.Settings.DragByTitle; set { settingService.Settings.DragByTitle = value; ApplyChanges(); } }

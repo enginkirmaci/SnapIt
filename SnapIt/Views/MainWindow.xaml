@@ -10,10 +10,13 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:prism="http://prismlibrary.com/"
 	xmlns:snapcontrols="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+	xmlns:vm="clr-namespace:SnapIt.ViewModels"
 	x:Name="MainWindowView"
 	Title="{Binding Title}"
 	Width="900"
 	Height="680"
+	d:DataContext="{d:DesignInstance vm:MainWindowDesignView,
+	                                 IsDesignTimeCreatable=True}"
 	prism:ViewModelLocator.AutoWireViewModel="True"
 	Background="{DynamicResource MaterialDesignPaper}"
 	FontFamily="{StaticResource MaterialDesignFont}"
@@ -90,7 +93,7 @@
 
 					<StackPanel>
 						<TextBlock
-							Margin="0,5"
+							Margin="0,6"
 							Style="{StaticResource MaterialDesignTitleTextBlock}"
 							Text="Screens" />
 
@@ -222,13 +225,13 @@
 
 									<TextBox
 										x:Name="SelectedLayoutName"
-										Margin="0,5"
+										Margin="0,6"
 										materialDesign:HintAssist.Hint="Layout Name"
 										Text="{Binding SelectedLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
 
 									<StackPanel
 										Grid.Row="1"
-										Margin="0,5"
+										Margin="0,6"
 										Orientation="Horizontal">
 										<Button
 											Margin="0,0,4,0"
@@ -271,7 +274,7 @@
 							<RowDefinition />
 						</Grid.RowDefinitions>
 						<TextBlock
-							Margin="0,5"
+							Margin="0,6"
 							Style="{StaticResource MaterialDesignTitleTextBlock}"
 							Text="Layouts" />
 						<ListBox
@@ -281,6 +284,19 @@
 							<ListBox.ItemTemplate>
 								<DataTemplate>
 									<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+										<materialDesign:PopupBox
+											Margin="0,6"
+											HorizontalAlignment="Right"
+											VerticalAlignment="Top"
+											IsPopupOpen="True">
+											<StackPanel>
+												<Button Content="Hello World" />
+												<Button Content="Nice Popup" />
+												<Button Content="Can't Touch This" IsEnabled="False" />
+												<Separator />
+												<Button Content="Goodbye" />
+											</StackPanel>
+										</materialDesign:PopupBox>
 										<snapcontrols:SnapArea
 											Width="256"
 											Height="192"
@@ -336,32 +352,33 @@
 
 					<StackPanel Margin="16">
 						<TextBlock
-							Margin="0,5"
+							Margin="0,6"
 							Style="{StaticResource MaterialDesignTitleTextBlock}"
 							Text="Mouse" />
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							Use mouse to snap window
 						</TextBlock>
 						<ToggleButton
-							Margin="0,5"
+							Margin="0,6"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding EnableMouse}"
 							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							Only use window title to snap window
 						</TextBlock>
 						<ToggleButton
-							Margin="0,5"
+							Margin="0,6"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding DragByTitle}"
 							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							Mouse button for snapping window
 						</TextBlock>
 						<ComboBox
-							Margin="0,5"
+							Width="128"
+							Margin="0,6"
 							HorizontalAlignment="Left"
 							ItemsSource="{Binding MouseButtons}"
 							SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
@@ -369,19 +386,19 @@
 
 					<StackPanel Grid.Column="1" Margin="16">
 						<TextBlock
-							Margin="0,5"
+							Margin="0,6"
 							Style="{StaticResource MaterialDesignTitleTextBlock}"
 							Text="Keyboard" />
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							Use keyboard to snap window
 						</TextBlock>
 						<ToggleButton
-							Margin="0,5"
+							Margin="0,6"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding EnableKeyboard}"
 							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							<Run Text="Use following shortcuts to snap window" /><LineBreak />
 							<Run Text="  Ctrl + Alt + Up" /><LineBreak />
 							<Run Text="  Ctrl + Alt + Down" /><LineBreak />
@@ -395,33 +412,33 @@
 						Grid.ColumnSpan="2"
 						Margin="16">
 						<TextBlock
-							Margin="0,5"
+							Margin="0,6"
 							Style="{StaticResource MaterialDesignTitleTextBlock}"
 							Text="Other Settings" />
 
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							Disable snapping for fullscreen application and games (recommended)
 						</TextBlock>
 						<ToggleButton
-							Margin="0,5"
+							Margin="0,6"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding DisableForFullscreen}"
 							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							Start Snap It when I start Windows
 						</TextBlock>
 						<ToggleButton
-							Margin="0,5"
+							Margin="0,6"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding IsStartupTaskActive}"
 							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							Run as administrator (experimental, needs to be restarted)
 						</TextBlock>
 						<ToggleButton
-							Margin="0,5"
+							Margin="0,6"
 							HorizontalAlignment="Left"
 							IsChecked="{Binding IsRunAsAdmin}"
 							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
@@ -447,12 +464,12 @@
 					</Grid.RowDefinitions>
 
 					<TextBlock
-						Margin="0,5"
+						Margin="0,6"
 						Style="{StaticResource MaterialDesignTitleTextBlock}"
 						Text="Excluded Applications" />
 
 					<StackPanel Grid.Row="1">
-						<TextBlock Margin="0,5" TextWrapping="Wrap">
+						<TextBlock Margin="0,6" TextWrapping="Wrap">
 							Application Title
 						</TextBlock>
 
@@ -503,7 +520,7 @@
 							<RowDefinition />
 						</Grid.RowDefinitions>
 
-						<TextBlock Margin="0,5">
+						<TextBlock Margin="0,6">
 							Excluded Applications
 						</TextBlock>
 						<Border
@@ -563,13 +580,13 @@
 
 						<TextBlock
 							x:Uid="FollowMe"
-							Margin="0,20,0,0"
+							Margin="0,24,0,0"
 							Style="{StaticResource MaterialDesignSubheadingTextBlock}"
 							Text="Follow Me" />
 
 						<StackPanel Orientation="Horizontal">
 							<Button
-								Margin="0,0,9,0"
+								Margin="0,0,12,0"
 								Padding="0"
 								BorderThickness="0"
 								Command="{Binding HandleLinkClick}"
@@ -584,7 +601,7 @@
 								</Button.Content>
 							</Button>
 							<Button
-								Margin="0,0,9,0"
+								Margin="0,0,12,0"
 								Padding="0"
 								BorderThickness="0"
 								Command="{Binding HandleLinkClick}"
@@ -599,7 +616,7 @@
 								</Button.Content>
 							</Button>
 							<Button
-								Margin="0,0,9,0"
+								Margin="0,0,12,0"
 								Padding="0"
 								BorderThickness="0"
 								Command="{Binding HandleLinkClick}"

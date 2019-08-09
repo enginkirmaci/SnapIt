@@ -2,6 +2,6 @@
 {
 	public class DevMode
 	{
-		public const bool IsActive = false;
+		public const bool IsActive = true;
 	}
 }

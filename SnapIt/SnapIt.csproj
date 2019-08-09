@@ -118,6 +118,7 @@
     <Compile Include="DevMode.cs" />
     <Compile Include="Resources\ResourceConstants.cs" />
     <Compile Include="ViewModels\DesignWindowViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowDesignView.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\DesignWindow.xaml.cs">
       <DependentUpon>DesignWindow.xaml</DependentUpon>
