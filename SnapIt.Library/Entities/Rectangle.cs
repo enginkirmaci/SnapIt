@@ -23,12 +23,12 @@ namespace SnapIt.Library.Entities
 		public int Width { get { return Right - Left; } }
 		public int Height { get { return Bottom - Top; } }
 
+		public static Rectangle Empty { get { return new Rectangle(); } }
+
 		public bool Contains(Rectangle rectangle)
 		{
 			return Left <= rectangle.Left && rectangle.Left < Right && Top <= rectangle.Top && rectangle.Top < Bottom;
 		}
-
-		public static Rectangle Empty { get { return new Rectangle(); } }
 
 		public override string ToString()
 		{

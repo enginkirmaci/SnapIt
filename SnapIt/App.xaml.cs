@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 using DryIoc;
 using Prism.Ioc;
+using SnapIt.Library.Applications;
 using SnapIt.Library.Services;
 using SnapIt.Views;
 
@@ -11,19 +9,13 @@ namespace SnapIt
 {
 	public partial class App
 	{
-		private static readonly Mutex mutex = new Mutex(true, "{FE4F369C-450C-4FA5-ACCA-3D261A3A7969}");
-
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
 			{
-				if (e.Args.Length > 0 && e.Args[0].Contains("runas"))
+				if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
 				{
-					if (mutex.WaitOne(TimeSpan.Zero, true))
-					{
-						mutex.ReleaseMutex();
-					}
-					else
+					if (!ApplicationInstance.RegisterSingleInstance())
 					{
 						MessageBox.Show("only one instance at a time");
 
@@ -33,27 +25,14 @@ namespace SnapIt
 				}
 				else
 				{
-					var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-					ProcessStartInfo info = new ProcessStartInfo
-					{
-						Verb = "runas", // we'll run our EXE as admin
-						Arguments = "-runas",
-						UseShellExecute = true,
-						FileName = localAppDataPath + @"\microsoft\windowsapps\SnapIt.exe" // path to the appExecutionAlias
-					};
-					Process.Start(info); // launch new elevated instance
-					Shutdown(); // exit current instance
+					RunAsAdministrator.Run();
+					Shutdown();
 					return;
 				}
 			}
 			else
 			{
-				if (mutex.WaitOne(TimeSpan.Zero, true))
-				{
-					mutex.ReleaseMutex();
-				}
-				else
+				if (!ApplicationInstance.RegisterSingleInstance())
 				{
 					MessageBox.Show("only one instance at a time");
 
@@ -61,6 +40,7 @@ namespace SnapIt
 					return;
 				}
 			}
+
 			base.OnStartup(e);
 		}
 

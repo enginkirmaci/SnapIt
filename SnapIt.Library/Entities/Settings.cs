@@ -11,6 +11,7 @@ namespace SnapIt.Library.Entities
 			ScreensLayouts = new Dictionary<string, string>();
 		}
 
+		public string Version = "1.0";
 		public bool EnableMouse { get; set; } = true;
 		public bool DragByTitle { get; set; } = true;
 		[JsonConverter(typeof(StringEnumConverter))]

@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using SnapIt.Library.Entities;
-using Point = System.Windows.Point;
 
 namespace SnapIt.Library.Controls
 {

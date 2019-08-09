@@ -48,11 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Applications\ApplicationInstance.cs" />
+    <Compile Include="Applications\RunAsAdministrator.cs" />
     <Compile Include="Entities\ExcludedApps.cs" />
     <Compile Include="Services\FileOperationService.cs" />
     <Compile Include="Services\IFileOperationService.cs" />
     <Compile Include="Controls\SnapArea.cs" />
-    <Compile Include="Controls\SnapGrid.cs" />
     <Compile Include="Controls\SnapScreen.cs" />
     <Compile Include="Controls\SnapWindow.cs" />
     <Compile Include="Entities\ActiveWindow.cs" />
@@ -61,8 +62,6 @@
     <Compile Include="Entities\Enums.cs" />
     <Compile Include="Entities\Layout.cs" />
     <Compile Include="Entities\LayoutArea.cs" />
-    <Compile Include="Entities\MouseHookStruct.cs" />
-    <Compile Include="Entities\Point.cs" />
     <Compile Include="Entities\Rectangle.cs" />
     <Compile Include="Extensions\ScreenExtension.cs" />
     <Compile Include="InteropServices\DwmApi.cs" />

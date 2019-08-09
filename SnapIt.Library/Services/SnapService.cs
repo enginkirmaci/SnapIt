@@ -213,7 +213,7 @@ namespace SnapIt.Library.Services
 
 					if (!withMargin.Equals(default(Rectangle)))
 					{
-						var systemMargin = new Rectangle()
+						var systemMargin = new Rectangle
 						{
 							Left = withMargin.Left - ActiveWindow.Boundry.Left,
 							Top = withMargin.Top - ActiveWindow.Boundry.Top,

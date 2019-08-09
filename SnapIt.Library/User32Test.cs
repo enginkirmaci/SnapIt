@@ -116,37 +116,6 @@ namespace SnapIt.Library
 			return rct;
 		}
 
-		public static uint RemoveBorders(HWND hWnd)
-		{
-			var MenuHandle = GetMenu(hWnd);
-			int count = GetMenuItemCount(MenuHandle);
-			for (int i = 0; i < count; i++)
-				RemoveMenu(MenuHandle, 0, (0x40 | 0x10));
-
-			var windowStyle = (uint)GetWindowLongPtr(hWnd, GWL_STYLE);
-
-			var currentstyle = windowStyle;
-			uint[] styles = new uint[] { WS_CAPTION, WS_THICKFRAME, WS_MINIMIZE, WS_MAXIMIZE, WS_SYSMENU };
-
-			foreach (uint style in styles)
-			{
-				if ((currentstyle & style) != 0)
-				{
-					currentstyle &= ~style;
-				}
-			}
-
-			SetWindowLongPtr(hWnd, GWL_STYLE, (HWND)currentstyle);
-
-			return windowStyle;
-		}
-
-		public static void RedrawBorders(HWND hWnd, uint windowStyle)
-		{
-			DrawMenuBar(hWnd);
-			SetWindowLongPtr(hWnd, GWL_STYLE, (HWND)windowStyle);
-		}
-
 		public static DEVMODE GetScreenInfo(string deviceName)
 		{
 			const int ENUM_CURRENT_SETTINGS = -1;

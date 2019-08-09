@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace SnapIt.Views
 {
@@ -11,11 +10,6 @@ namespace SnapIt.Views
 		public MainWindow()
 		{
 			InitializeComponent();
-		}
-
-		protected override void OnActivated(EventArgs e)
-		{
-			base.OnActivated(e);
 		}
 	}
 }

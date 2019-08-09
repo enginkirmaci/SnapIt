@@ -15,6 +15,12 @@ namespace SnapIt.Library.Mappers
 				case MouseButton.Middle:
 					return MouseButtons.Middle;
 
+				case MouseButton.XButton1:
+					return MouseButtons.XButton1;
+
+				case MouseButton.XButton2:
+					return MouseButtons.XButton2;
+
 				case MouseButton.Left:
 				default:
 					return MouseButtons.Left;

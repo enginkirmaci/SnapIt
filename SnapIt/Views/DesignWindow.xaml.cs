@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Interop;
-using SnapIt.Library;
+﻿using System.Windows;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.ViewModels;
@@ -38,23 +35,6 @@ namespace SnapIt.Views
 			{
 				Topmost = false;
 			}
-		}
-
-		protected override void OnSourceInitialized(EventArgs e)
-		{
-			base.OnSourceInitialized(e);
-
-			var wih = new WindowInteropHelper(this);
-			var window = new ActiveWindow
-			{
-				Handle = wih.Handle
-			};
-
-			User32Test.MoveWindow(window,
-								  snapScreen.Base.WorkingArea.Left,
-								  snapScreen.Base.WorkingArea.Top,
-								  snapScreen.Base.WorkingArea.Width,
-								  snapScreen.Base.WorkingArea.Height);
 		}
 	}
 }

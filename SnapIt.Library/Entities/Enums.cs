@@ -20,7 +20,9 @@ namespace SnapIt.Library.Entities
 	{
 		Left,
 		Right,
-		Middle
+		Middle,
+		XButton1,
+		XButton2
 	}
 
 	public enum SpecialWindowHandles

@@ -1,15 +1,16 @@
 {
-	"Guid": "effbbdbb-1fe0-4639-8f8b-3f49156d5b2c",
-	"Name": "One Third Left",
-	"LayoutArea": {
-		"Areas": [
-			{
-				"Width": 2
-			},
-			{
-				"Width": 1,
-				"Column": 1
-			}
-		]
-	}
+  "Version": "1.0",
+  "Guid": "effbbdbb-1fe0-4639-8f8b-3f49156d5b2c",
+  "Name": "One Third Left",
+  "LayoutArea": {
+    "Areas": [
+      {
+        "Width": 2
+      },
+      {
+        "Width": 1,
+        "Column": 1
+      }
+    ]
+  }
 }

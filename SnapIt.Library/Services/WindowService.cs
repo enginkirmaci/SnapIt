@@ -9,8 +9,7 @@ namespace SnapIt.Library.Services
 	public class WindowService : IWindowService
 	{
 		private readonly ISettingService settingService;
-
-		private List<SnapWindow> snapWindows;
+		private readonly List<SnapWindow> snapWindows;
 
 		public event EscKeyPressedDelegate EscKeyPressed;
 

@@ -9,6 +9,7 @@ namespace SnapIt.Library.Entities
 		private string name;
 		private LayoutArea layoutArea;
 
+		public string Version = "1.0";
 		public Guid Guid { get; set; }
 		[JsonIgnore]
 		public bool IsSaved { get; set; }

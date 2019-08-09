@@ -34,7 +34,7 @@
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="Snap It"
-        Description="Snap It! is a windows manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens."
+        Description="Snap It is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens."
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">

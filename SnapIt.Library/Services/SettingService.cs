@@ -112,11 +112,14 @@ namespace SnapIt.Library.Services
 					case StartupTaskState.DisabledByUser:
 					case StartupTaskState.DisabledByPolicy:
 						return false;
-				}
 
-				return true;
+					case StartupTaskState.Enabled:
+					case StartupTaskState.EnabledByPolicy:
+					default:
+						return true;
+				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return false;
 			}
@@ -136,7 +139,7 @@ namespace SnapIt.Library.Services
 					startupTask.Disable();
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 			}
 		}
