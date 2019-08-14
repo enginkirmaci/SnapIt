@@ -7,74 +7,75 @@ using SnapIt.Views;
 
 namespace SnapIt
 {
-	public partial class App
-	{
-		protected override void OnStartup(StartupEventArgs e)
-		{
-			if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
-			{
-				if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
-				{
-					if (!ApplicationInstance.RegisterSingleInstance())
-					{
-						MessageBox.Show("only one instance at a time");
+    public partial class App
+    {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            //if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
+            //{
+            //	if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
+            //	{
+            //		if (!ApplicationInstance.RegisterSingleInstance())
+            //		{
+            //			MessageBox.Show("only one instance at a time");
 
-						Shutdown();
-						return;
-					}
-				}
-				else
-				{
-					RunAsAdministrator.Run();
-					Shutdown();
-					return;
-				}
-			}
-			else
-			{
-				if (!ApplicationInstance.RegisterSingleInstance())
-				{
-					MessageBox.Show("only one instance at a time");
+            //			Shutdown();
+            //			return;
+            //		}
+            //	}
+            //	else
+            //	{
+            //		RunAsAdministrator.Run();
+            //		Shutdown();
+            //		return;
+            //	}
+            //}
+            //else
 
-					Shutdown();
-					return;
-				}
-			}
+            //{
+            if (!ApplicationInstance.RegisterSingleInstance())
+            {
+                MessageBox.Show("only one instance at a time");
 
-			base.OnStartup(e);
-		}
+                Shutdown();
+                return;
+            }
+            //}
 
-		protected override Window CreateShell()
-		{
-			var notifyIconService = Container.Resolve<INotifyIconService>();
+            base.OnStartup(e);
+        }
 
-			notifyIconService.Initialize();
+        protected override Window CreateShell()
+        {
+            var notifyIconService = Container.Resolve<INotifyIconService>();
 
-			var applicationWindow = Container.Resolve<MainWindow>();
+            notifyIconService.Initialize();
 
-			notifyIconService.SetApplicationWindow(applicationWindow);
+            var applicationWindow = Container.Resolve<MainWindow>();
 
-			return applicationWindow;
-		}
+            notifyIconService.SetApplicationWindow(applicationWindow);
 
-		protected override void RegisterTypes(IContainerRegistry containerRegistry)
-		{
-			containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
-			containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
-			containerRegistry.RegisterSingleton<ISnapService, SnapService>();
-			containerRegistry.RegisterSingleton<ISettingService, SettingService>();
-			containerRegistry.Register<IWindowService, WindowService>();
-		}
+            return applicationWindow;
+        }
 
-		protected override void OnExit(ExitEventArgs e)
-		{
-			base.OnExit(e);
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
+            containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
+            containerRegistry.RegisterSingleton<ISnapService, SnapService>();
+            containerRegistry.RegisterSingleton<ISettingService, SettingService>();
+            containerRegistry.Register<IWindowService, WindowService>();
+        }
 
-			if (Container != null)
-			{
-				Container.Resolve<INotifyIconService>().Release();
-				Container.Resolve<ISnapService>().Release();
-			}
-		}
-	}
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+
+            if (Container != null)
+            {
+                Container.Resolve<INotifyIconService>().Release();
+                Container.Resolve<ISnapService>().Release();
+            }
+        }
+    }
 }

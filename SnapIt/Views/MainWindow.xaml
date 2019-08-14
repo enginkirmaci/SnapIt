@@ -1,660 +1,661 @@
 ﻿<Window
-	x:Class="SnapIt.Views.MainWindow"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:c="clr-namespace:SnapIt.Resources;assembly="
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-	xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:prism="http://prismlibrary.com/"
-	xmlns:snapcontrols="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
-	xmlns:vm="clr-namespace:SnapIt.ViewModels"
-	x:Name="MainWindowView"
-	Title="{Binding Title}"
-	Width="900"
-	Height="680"
-	d:DataContext="{d:DesignInstance vm:MainWindowDesignView,
-	                                 IsDesignTimeCreatable=True}"
-	prism:ViewModelLocator.AutoWireViewModel="True"
-	Background="{DynamicResource MaterialDesignPaper}"
-	FontFamily="{StaticResource MaterialDesignFont}"
-	Style="{DynamicResource WindowStyle}"
-	TextElement.FontSize="14"
-	TextElement.FontWeight="Regular"
-	TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-	TextOptions.TextFormattingMode="Ideal"
-	TextOptions.TextRenderingMode="Auto"
-	mc:Ignorable="d">
+    x:Class="SnapIt.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:SnapIt.Resources;assembly="
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:snapcontrols="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:vm="clr-namespace:SnapIt.ViewModels"
+    x:Name="MainWindowView"
+    Title="{Binding Title}"
+    Width="900"
+    Height="680"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{StaticResource MaterialDesignFont}"
+    Style="{DynamicResource WindowStyle}"
+    TextElement.FontSize="14"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    mc:Ignorable="d">
+    <!--
+        d:DataContext="{d:DesignInstance vm:MainWindowDesignView,
+        IsDesignTimeCreatable=True}"
+    -->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Activated">
+            <i:InvokeCommandAction Command="{Binding ActivatedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
-	<i:Interaction.Triggers>
-		<i:EventTrigger EventName="Activated">
-			<i:InvokeCommandAction Command="{Binding ActivatedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
-		</i:EventTrigger>
-	</i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition />
-		</Grid.RowDefinitions>
+        <materialDesign:ColorZone
+            Padding="16"
+            DockPanel.Dock="Top"
+            Mode="PrimaryMid">
+            <DockPanel>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="22"
+                    Text="{x:Static c:Constants.AppName}" />
+            </DockPanel>
+        </materialDesign:ColorZone>
 
-		<materialDesign:ColorZone
-			Padding="16"
-			DockPanel.Dock="Top"
-			Mode="PrimaryMid">
-			<DockPanel>
-				<TextBlock
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
-					FontSize="22"
-					Text="{x:Static c:Constants.AppName}" />
-			</DockPanel>
-		</materialDesign:ColorZone>
+        <Grid
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            WindowChrome.IsHitTestVisibleInChrome="True">
+            <Button
+                materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                CommandParameter="{Binding ElementName=MainWindowView}"
+                ContentTemplate="{DynamicResource CloseBtnContentTemplate}" />
+        </Grid>
 
-		<Grid
-			HorizontalAlignment="Right"
-			VerticalAlignment="Top"
-			WindowChrome.IsHitTestVisibleInChrome="True">
-			<Button
-				materialDesign:ShadowAssist.ShadowDepth="Depth0"
-				Command="{Binding CloseWindowCommand, Mode=OneWay}"
-				CommandParameter="{Binding ElementName=MainWindowView}"
-				ContentTemplate="{DynamicResource CloseBtnContentTemplate}" />
-		</Grid>
-
-		<dragablz:TabablzControl
-			Grid.Row="1"
-			Margin="0,-1,0,0"
-			FixedHeaderCount="3">
-			<!--<TabItem Foreground="{DynamicResource MaterialDesignBody}">
+        <dragablz:TabablzControl
+            Grid.Row="1"
+            Margin="0,-1,0,0"
+            FixedHeaderCount="3">
+            <!--<TabItem Foreground="{DynamicResource MaterialDesignBody}">
 				<TabItem.Header>
 					<materialDesign:PackIcon Kind="HomeOutline" />
 				</TabItem.Header>
 				<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
 			</TabItem>-->
-			<TabItem Foreground="{DynamicResource MaterialDesignBody}" IsSelected="True">
-				<TabItem.Header>
-					<StackPanel Orientation="Horizontal">
-						<materialDesign:PackIcon Kind="BorderAll" />
-						<TextBlock Text=" LAYOUT" />
-					</StackPanel>
-				</TabItem.Header>
-				<Grid Margin="16">
-					<Grid.RowDefinitions>
-						<RowDefinition Height="200" />
-						<RowDefinition Height="*" />
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition />
-					</Grid.ColumnDefinitions>
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}" IsSelected="True">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="BorderAll" />
+                        <TextBlock Text=" LAYOUT" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="200" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-					<StackPanel>
-						<TextBlock
-							Margin="0,6"
-							Style="{StaticResource MaterialDesignTitleTextBlock}"
-							Text="Screens" />
+                    <StackPanel>
+                        <TextBlock
+                            Margin="0,6"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Screens" />
 
-						<ListBox
-							HorizontalContentAlignment="Center"
-							ItemsSource="{Binding SnapScreens}"
-							SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
-							<ListBox.ItemTemplate>
-								<DataTemplate>
-									<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-										<Grid.RowDefinitions>
-											<RowDefinition />
-											<RowDefinition />
-										</Grid.RowDefinitions>
-										<materialDesign:PackIcon
-											Width="60"
-											Height="60"
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center"
-											Kind="Monitor" />
-										<TextBlock
-											Margin="0,-8,0,0"
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center"
-											Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-											Text="{Binding DeviceNumber}" />
-										<StackPanel Grid.Row="1">
-											<TextBlock
-												HorizontalAlignment="Center"
-												VerticalAlignment="Center"
-												Style="{StaticResource MaterialDesignCaptionTextBlock}"
-												Text="{Binding Resolution}" />
-											<TextBlock
-												HorizontalAlignment="Center"
-												VerticalAlignment="Center"
-												Style="{StaticResource MaterialDesignCaptionTextBlock}"
-												Text="{Binding Primary}" />
-											<TextBlock
-												HorizontalAlignment="Center"
-												VerticalAlignment="Center"
-												Style="{StaticResource MaterialDesignCaptionTextBlock}"
-												Text="{Binding Layout.Name}" />
-										</StackPanel>
-									</Grid>
-								</DataTemplate>
-							</ListBox.ItemTemplate>
-							<ListBox.ItemsPanel>
-								<ItemsPanelTemplate>
-									<StackPanel Orientation="Horizontal" />
-								</ItemsPanelTemplate>
-							</ListBox.ItemsPanel>
-							<ListBox.ItemContainerStyle>
-								<Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
-									<Style.Triggers>
-										<Trigger Property="IsSelected" Value="True">
-											<Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
-											<Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
-										</Trigger>
-									</Style.Triggers>
-								</Style>
-							</ListBox.ItemContainerStyle>
-						</ListBox>
-					</StackPanel>
+                        <ListBox
+                            HorizontalContentAlignment="Center"
+                            ItemsSource="{Binding SnapScreens}"
+                            SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <materialDesign:PackIcon
+                                            Width="60"
+                                            Height="60"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Kind="Monitor" />
+                                        <TextBlock
+                                            Margin="0,-8,0,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                                            Text="{Binding DeviceNumber}" />
+                                        <StackPanel Grid.Row="1">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                Text="{Binding Resolution}" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                Text="{Binding Primary}" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                Text="{Binding Layout.Name}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemContainerStyle>
+                                <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
+                                            <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                    </StackPanel>
 
-					<GroupBox
-						Grid.Column="1"
-						HorizontalAlignment="Right"
-						VerticalAlignment="Top"
-						Style="{DynamicResource MaterialDesignCardGroupBox}">
-						<GroupBox.HeaderTemplate>
-							<DataTemplate>
-								<StackPanel Orientation="Horizontal">
-									<materialDesign:PackIcon
-										Width="24"
-										Height="24"
-										VerticalAlignment="Center"
-										Kind="MixerSettings" />
-									<TextBlock
-										Margin="8,0,0,0"
-										VerticalAlignment="Center"
-										Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-										Text="Options" />
-								</StackPanel>
-							</DataTemplate>
-						</GroupBox.HeaderTemplate>
-						<StackPanel>
-							<StackPanel Orientation="Horizontal">
-								<Button
-									Margin="0,0,4,0"
-									Command="{Binding NewLayoutCommand}"
-									Style="{StaticResource MaterialDesignRaisedButton}">
-									<Button.Content>
-										<StackPanel Orientation="Horizontal">
-											<materialDesign:PackIcon Kind="Add" />
-											<TextBlock
-												Margin="4,0,0,0"
-												Style="{StaticResource MaterialDesignCaptionTextBlock}"
-												Text="New" />
-										</StackPanel>
-									</Button.Content>
-								</Button>
+                    <GroupBox
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Style="{DynamicResource MaterialDesignCardGroupBox}">
+                        <GroupBox.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        VerticalAlignment="Center"
+                                        Kind="MixerSettings" />
+                                    <TextBlock
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                        Text="Options" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupBox.HeaderTemplate>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button
+                                    Margin="0,0,4,0"
+                                    Command="{Binding NewLayoutCommand}"
+                                    Style="{StaticResource MaterialDesignRaisedButton}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Add" />
+                                            <TextBlock
+                                                Margin="4,0,0,0"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                Text="New" />
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
 
-								<Button
-									Margin="0,0,4,0"
-									Command="{Binding ImportLayoutCommand}"
-									Style="{StaticResource MaterialDesignRaisedButton}">
-									<Button.Content>
-										<StackPanel Orientation="Horizontal">
-											<materialDesign:PackIcon Kind="Import" />
-											<TextBlock
-												Margin="4,0,0,0"
-												Style="{StaticResource MaterialDesignCaptionTextBlock}"
-												Text="Import" />
-										</StackPanel>
-									</Button.Content>
-								</Button>
-							</StackPanel>
+                                <Button
+                                    Margin="0,0,4,0"
+                                    Command="{Binding ImportLayoutCommand}"
+                                    Style="{StaticResource MaterialDesignRaisedButton}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Import" />
+                                            <TextBlock
+                                                Margin="4,0,0,0"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                Text="Import" />
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
 
-							<Grid
-								Margin="-9,16,-9,-9"
-								Background="{StaticResource MaterialDesignPaper}"
-								Visibility="{Binding Path=SelectedLayout, TargetNullValue=Collapsed}">
-								<Grid Margin="9,0,9,9">
-									<Grid.RowDefinitions>
-										<RowDefinition />
-										<RowDefinition />
-										<RowDefinition />
-									</Grid.RowDefinitions>
+                            <Grid
+                                Margin="-9,16,-9,-9"
+                                Background="{StaticResource MaterialDesignPaper}"
+                                Visibility="{Binding Path=SelectedLayout, TargetNullValue=Collapsed}">
+                                <Grid Margin="9,0,9,9">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
 
-									<TextBox
-										x:Name="SelectedLayoutName"
-										Margin="0,6"
-										materialDesign:HintAssist.Hint="Layout Name"
-										Text="{Binding SelectedLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox
+                                        x:Name="SelectedLayoutName"
+                                        Margin="0,6"
+                                        materialDesign:HintAssist.Hint="Layout Name"
+                                        Text="{Binding SelectedLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
 
-									<StackPanel
-										Grid.Row="1"
-										Margin="0,6"
-										Orientation="Horizontal">
-										<Button
-											Margin="0,0,4,0"
-											Command="{Binding DesignLayoutCommand}"
-											Style="{StaticResource MaterialDesignRaisedButton}">
-											<Button.Content>
-												<StackPanel Orientation="Horizontal">
-													<materialDesign:PackIcon Kind="ViewQuilt" />
-													<TextBlock
-														Margin="4,0,0,0"
-														Style="{StaticResource MaterialDesignCaptionTextBlock}"
-														Text="Designer" />
-												</StackPanel>
-											</Button.Content>
-										</Button>
+                                    <StackPanel
+                                        Grid.Row="1"
+                                        Margin="0,6"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Margin="0,0,4,0"
+                                            Command="{Binding DesignLayoutCommand}"
+                                            Style="{StaticResource MaterialDesignRaisedButton}">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="ViewQuilt" />
+                                                    <TextBlock
+                                                        Margin="4,0,0,0"
+                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                        Text="Designer" />
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
 
-										<Button
-											Margin="0,0,4,0"
-											Command="{Binding ExportLayoutCommand}"
-											Style="{StaticResource MaterialDesignRaisedButton}">
-											<Button.Content>
-												<StackPanel Orientation="Horizontal">
-													<materialDesign:PackIcon Kind="Export" />
-													<TextBlock
-														Margin="4,0,0,0"
-														Style="{StaticResource MaterialDesignCaptionTextBlock}"
-														Text="Export" />
-												</StackPanel>
-											</Button.Content>
-										</Button>
-									</StackPanel>
-								</Grid>
-							</Grid>
-						</StackPanel>
-					</GroupBox>
+                                        <Button
+                                            Margin="0,0,4,0"
+                                            Command="{Binding ExportLayoutCommand}"
+                                            Style="{StaticResource MaterialDesignRaisedButton}">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Export" />
+                                                    <TextBlock
+                                                        Margin="4,0,0,0"
+                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                        Text="Export" />
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </GroupBox>
 
-					<Grid Grid.Row="1" Grid.ColumnSpan="2">
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto" />
-							<RowDefinition />
-						</Grid.RowDefinitions>
-						<TextBlock
-							Margin="0,6"
-							Style="{StaticResource MaterialDesignTitleTextBlock}"
-							Text="Layouts" />
-						<ListBox
-							Grid.Row="1"
-							ItemsSource="{Binding Layouts}"
-							SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
-							<ListBox.ItemTemplate>
-								<DataTemplate>
-									<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-										<materialDesign:PopupBox
-											Margin="0,6"
-											HorizontalAlignment="Right"
-											VerticalAlignment="Top"
-											IsPopupOpen="True">
-											<StackPanel>
-												<Button Content="Hello World" />
-												<Button Content="Nice Popup" />
-												<Button Content="Can't Touch This" IsEnabled="False" />
-												<Separator />
-												<Button Content="Goodbye" />
-											</StackPanel>
-										</materialDesign:PopupBox>
-										<snapcontrols:SnapArea
-											Width="256"
-											Height="192"
-											LayoutArea="{Binding LayoutArea}" />
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Margin="0,6"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Layouts" />
+                        <ListBox
+                            Grid.Row="1"
+                            ItemsSource="{Binding Layouts}"
+                            SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <snapcontrols:SnapArea
+                                            Width="256"
+                                            Height="192"
+                                            LayoutArea="{Binding LayoutArea}" />
 
-										<TextBlock
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center"
-											Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-											Text="{Binding Name}" />
-									</Grid>
-								</DataTemplate>
-							</ListBox.ItemTemplate>
-							<ListBox.ItemsPanel>
-								<ItemsPanelTemplate>
-									<WrapPanel Orientation="Horizontal" />
-								</ItemsPanelTemplate>
-							</ListBox.ItemsPanel>
-							<ListBox.ItemContainerStyle>
-								<Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
-									<Style.Triggers>
-										<Trigger Property="IsSelected" Value="True">
-											<Setter Property="FontWeight" Value="Bold" />
-											<Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
-											<Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
-										</Trigger>
-									</Style.Triggers>
-									<Style.Resources>
-										<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-									</Style.Resources>
-								</Style>
-							</ListBox.ItemContainerStyle>
-						</ListBox>
-					</Grid>
-				</Grid>
-			</TabItem>
-			<TabItem Foreground="{DynamicResource MaterialDesignBody}">
-				<TabItem.Header>
-					<StackPanel Orientation="Horizontal">
-						<materialDesign:PackIcon Kind="SettingsOutline" />
-						<TextBlock Text=" SETTINGS" />
-					</StackPanel>
-				</TabItem.Header>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition />
-						<ColumnDefinition />
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-					</Grid.RowDefinitions>
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                                            Text="{Binding Name}" />
 
-					<StackPanel Margin="16">
-						<TextBlock
-							Margin="0,6"
-							Style="{StaticResource MaterialDesignTitleTextBlock}"
-							Text="Mouse" />
-						<TextBlock Margin="0,6">
-							Use mouse to snap window
-						</TextBlock>
-						<ToggleButton
-							Margin="0,6"
-							HorizontalAlignment="Left"
-							IsChecked="{Binding EnableMouse}"
-							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                                        <!--<materialDesign:PopupBox
+                                            Margin="0,6"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top">
+                                            <StackPanel>
+                                                <TextBlock Text="Name" />
+                                                <TextBox Margin="6,0" Text="{Binding Name}" />
+                                                <Separator />
+                                                <Button Command="{Binding DesignLayoutCommand}" Content="Open in Designer" />
+                                                <Button Command="{Binding ExportLayoutCommand}" Content="Export" />
+                                            </StackPanel>
+                                        </materialDesign:PopupBox>-->
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemContainerStyle>
+                                <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="FontWeight" Value="Bold" />
+                                            <Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
+                                            <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                    <Style.Resources>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                                    </Style.Resources>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="SettingsOutline" />
+                        <TextBlock Text=" SETTINGS" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-						<TextBlock Margin="0,6">
-							Only use window title to snap window
-						</TextBlock>
-						<ToggleButton
-							Margin="0,6"
-							HorizontalAlignment="Left"
-							IsChecked="{Binding DragByTitle}"
-							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                    <StackPanel Margin="16">
+                        <TextBlock
+                            Margin="0,6"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Mouse" />
+                        <TextBlock Margin="0,6">
+                            Use mouse to snap window
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,6"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding EnableMouse}"
+                            Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-						<TextBlock Margin="0,6">
-							Mouse button for snapping window
-						</TextBlock>
-						<ComboBox
-							Width="128"
-							Margin="0,6"
-							HorizontalAlignment="Left"
-							ItemsSource="{Binding MouseButtons}"
-							SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
-					</StackPanel>
+                        <TextBlock Margin="0,6">
+                            Only use window title to snap window
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,6"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding DragByTitle}"
+                            Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-					<StackPanel Grid.Column="1" Margin="16">
-						<TextBlock
-							Margin="0,6"
-							Style="{StaticResource MaterialDesignTitleTextBlock}"
-							Text="Keyboard" />
-						<TextBlock Margin="0,6">
-							Use keyboard to snap window
-						</TextBlock>
-						<ToggleButton
-							Margin="0,6"
-							HorizontalAlignment="Left"
-							IsChecked="{Binding EnableKeyboard}"
-							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                        <TextBlock Margin="0,6">
+                            Mouse button for snapping window
+                        </TextBlock>
+                        <ComboBox
+                            Width="128"
+                            Margin="0,6"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding MouseButtons}"
+                            SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
+                    </StackPanel>
 
-						<TextBlock Margin="0,6">
-							<Run Text="Use following shortcuts to snap window" /><LineBreak />
-							<Run Text="  Ctrl + Alt + Up" /><LineBreak />
-							<Run Text="  Ctrl + Alt + Down" /><LineBreak />
-							<Run Text="  Ctrl + Alt + Left" /><LineBreak />
-							<Run Text="  Ctrl + Alt + Right" />
-						</TextBlock>
-					</StackPanel>
+                    <StackPanel Grid.Column="1" Margin="16">
+                        <TextBlock
+                            Margin="0,6"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Keyboard" />
+                        <TextBlock Margin="0,6">
+                            Use keyboard to snap window
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,6"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding EnableKeyboard}"
+                            Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-					<StackPanel
-						Grid.Row="1"
-						Grid.ColumnSpan="2"
-						Margin="16">
-						<TextBlock
-							Margin="0,6"
-							Style="{StaticResource MaterialDesignTitleTextBlock}"
-							Text="Other Settings" />
+                        <TextBlock Margin="0,6">
+                            <Run Text="Use following shortcuts to snap window" /><LineBreak />
+                            <Run Text="  Ctrl + Alt + Up" /><LineBreak />
+                            <Run Text="  Ctrl + Alt + Down" /><LineBreak />
+                            <Run Text="  Ctrl + Alt + Left" /><LineBreak />
+                            <Run Text="  Ctrl + Alt + Right" />
+                        </TextBlock>
+                    </StackPanel>
 
-						<TextBlock Margin="0,6">
-							Disable snapping for fullscreen application and games (recommended)
-						</TextBlock>
-						<ToggleButton
-							Margin="0,6"
-							HorizontalAlignment="Left"
-							IsChecked="{Binding DisableForFullscreen}"
-							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="16">
+                        <TextBlock
+                            Margin="0,6"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"
+                            Text="Other Settings" />
 
-						<TextBlock Margin="0,6">
-							Start Snap It when I start Windows
-						</TextBlock>
-						<ToggleButton
-							Margin="0,6"
-							HorizontalAlignment="Left"
-							IsChecked="{Binding IsStartupTaskActive}"
-							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                        <TextBlock Margin="0,6">
+                            Disable snapping for fullscreen application and games (recommended)
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,6"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding DisableForFullscreen}"
+                            Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-						<TextBlock Margin="0,6">
-							Run as administrator (experimental, needs to be restarted)
-						</TextBlock>
-						<ToggleButton
-							Margin="0,6"
-							HorizontalAlignment="Left"
-							IsChecked="{Binding IsRunAsAdmin}"
-							Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
-					</StackPanel>
-				</Grid>
-			</TabItem>
-			<TabItem Foreground="{DynamicResource MaterialDesignBody}">
-				<TabItem.Header>
-					<StackPanel Orientation="Horizontal">
-						<materialDesign:PackIcon Kind="WindowRestore" />
-						<TextBlock Text=" WINDOWS" />
-					</StackPanel>
-				</TabItem.Header>
-				<Grid Margin="16">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition />
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition />
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition />
-					</Grid.RowDefinitions>
+                        <TextBlock Margin="0,6">
+                            Start Snap It when I start Windows
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,6"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding IsStartupTaskActive}"
+                            Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-					<TextBlock
-						Margin="0,6"
-						Style="{StaticResource MaterialDesignTitleTextBlock}"
-						Text="Excluded Applications" />
+                        <!--<TextBlock Margin="0,6">
+                            Run as administrator (experimental, needs to be restarted)
+                        </TextBlock>
+                        <ToggleButton
+                            Margin="0,6"
+                            HorizontalAlignment="Left"
+                            IsChecked="{Binding IsRunAsAdmin}"
+                            Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />-->
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="WindowRestore" />
+                        <TextBlock Text=" WINDOWS" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Margin="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
 
-					<StackPanel Grid.Row="1">
-						<TextBlock Margin="0,6" TextWrapping="Wrap">
-							Application Title
-						</TextBlock>
+                    <TextBlock
+                        Margin="0,6"
+                        Style="{StaticResource MaterialDesignTitleTextBlock}"
+                        Text="Excluded Applications" />
 
-						<ComboBox
-							IsEditable="True"
-							ItemsSource="{Binding RunningApplications}"
-							SelectedItem="{Binding SelectedApplication, Mode=TwoWay}"
-							Text="{Binding SelectedApplication}" />
-					</StackPanel>
+                    <StackPanel Grid.Row="1">
+                        <TextBlock Margin="0,6" TextWrapping="Wrap">
+                            Application Title
+                        </TextBlock>
 
-					<StackPanel
-						Grid.Row="1"
-						Grid.Column="1"
-						Margin="0,24">
-						<Button
-							Grid.Column="1"
-							Margin="8,4"
-							Padding="0"
-							Command="{Binding ExcludeAppLayoutCommand}"
-							Style="{StaticResource MaterialDesignRaisedAccentButton}">
-							<Button.Content>
-								<materialDesign:PackIcon
-									Width="26"
-									Height="26"
-									Margin="2"
-									Kind="Add" />
-							</Button.Content>
-						</Button>
-						<Button
-							Grid.Column="1"
-							Margin="8,4"
-							Padding="0"
-							Command="{Binding IncludeAppLayoutCommand}"
-							Style="{StaticResource MaterialDesignRaisedAccentButton}">
-							<Button.Content>
-								<materialDesign:PackIcon
-									Width="22"
-									Height="22"
-									Margin="2"
-									Kind="Remove" />
-							</Button.Content>
-						</Button>
-					</StackPanel>
+                        <ComboBox
+                            IsEditable="True"
+                            ItemsSource="{Binding RunningApplications}"
+                            SelectedItem="{Binding SelectedApplication, Mode=TwoWay}"
+                            Text="{Binding SelectedApplication}" />
+                    </StackPanel>
 
-					<Grid Grid.Row="1" Grid.Column="2">
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto" />
-							<RowDefinition />
-						</Grid.RowDefinitions>
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,24">
+                        <Button
+                            Grid.Column="1"
+                            Margin="8,4"
+                            Padding="0"
+                            Command="{Binding ExcludeAppLayoutCommand}"
+                            Style="{StaticResource MaterialDesignRaisedAccentButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon
+                                    Width="26"
+                                    Height="26"
+                                    Margin="2"
+                                    Kind="Add" />
+                            </Button.Content>
+                        </Button>
+                        <Button
+                            Grid.Column="1"
+                            Margin="8,4"
+                            Padding="0"
+                            Command="{Binding IncludeAppLayoutCommand}"
+                            Style="{StaticResource MaterialDesignRaisedAccentButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon
+                                    Width="22"
+                                    Height="22"
+                                    Margin="2"
+                                    Kind="Remove" />
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
 
-						<TextBlock Margin="0,6">
-							Excluded Applications
-						</TextBlock>
-						<Border
-							Grid.Row="1"
-							BorderBrush="{StaticResource MaterialDesignBody}"
-							BorderThickness="1,0,0,0">
-							<ListBox ItemsSource="{Binding ExcludedApplications}" SelectedItem="{Binding SelectedExcludedApplication}" />
-						</Border>
-					</Grid>
-				</Grid>
-			</TabItem>
+                    <Grid Grid.Row="1" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
 
-			<TabItem Foreground="{DynamicResource MaterialDesignBody}">
-				<TabItem.Header>
-					<StackPanel Orientation="Horizontal">
-						<materialDesign:PackIcon Kind="InformationVariant" />
-						<TextBlock Text=" ABOUT" />
-					</StackPanel>
-				</TabItem.Header>
-				<Grid Margin="16">
-					<Grid.RowDefinitions>
-						<RowDefinition />
-						<RowDefinition Height="Auto" />
-					</Grid.RowDefinitions>
+                        <TextBlock Margin="0,6">
+                            Excluded Applications
+                        </TextBlock>
+                        <Border
+                            Grid.Row="1"
+                            BorderBrush="{StaticResource MaterialDesignBody}"
+                            BorderThickness="1,0,0,0">
+                            <ListBox ItemsSource="{Binding ExcludedApplications}" SelectedItem="{Binding SelectedExcludedApplication}" />
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
 
-					<StackPanel HorizontalAlignment="Left">
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="80" />
-								<ColumnDefinition />
-							</Grid.ColumnDefinitions>
+            <TabItem Foreground="{DynamicResource MaterialDesignBody}">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="InformationVariant" />
+                        <TextBlock Text=" ABOUT" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-							<Image Source="/SnapIt;component/Themes/snapit.png" Stretch="UniformToFill" />
+                    <StackPanel HorizontalAlignment="Left">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
 
-							<StackPanel Grid.Column="1" Margin="16,8,0,0">
-								<TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock}" Text="{x:Static c:Constants.AppName}" />
-								<TextBlock Text="{x:Static c:Constants.AppVersion}" />
-							</StackPanel>
-						</Grid>
+                            <Image Source="/SnapIt;component/Themes/snapit.png" Stretch="UniformToFill" />
 
-						<TextBlock
-							x:Uid="Description"
-							Margin="0,24,0,0"
-							Text="Snap It is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens."
-							TextWrapping="Wrap" />
+                            <StackPanel Grid.Column="1" Margin="16,8,0,0">
+                                <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock}" Text="{x:Static c:Constants.AppName}" />
+                                <TextBlock Text="{x:Static c:Constants.AppVersion}" />
+                            </StackPanel>
+                        </Grid>
 
-						<TextBlock>
-							<Hyperlink
-								Command="{Binding HandleLinkClick}"
-								CommandParameter="{x:Static c:Constants.AppUrl}"
-								Style="{StaticResource MaterialDesignBody1Hyperlink}">
-								<Hyperlink.Inlines>
-									<Run Text="{x:Static c:Constants.AppUrl}" />
-								</Hyperlink.Inlines>
-							</Hyperlink>
-						</TextBlock>
+                        <TextBlock
+                            x:Uid="Description"
+                            Margin="0,24,0,0"
+                            Text="Snap It is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens."
+                            TextWrapping="Wrap" />
 
-						<TextBlock
-							x:Uid="FollowMe"
-							Margin="0,24,0,0"
-							Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-							Text="Follow Me" />
+                        <TextBlock>
+                            <Hyperlink
+                                Command="{Binding HandleLinkClick}"
+                                CommandParameter="{x:Static c:Constants.AppUrl}"
+                                Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                                <Hyperlink.Inlines>
+                                    <Run Text="{x:Static c:Constants.AppUrl}" />
+                                </Hyperlink.Inlines>
+                            </Hyperlink>
+                        </TextBlock>
 
-						<StackPanel Orientation="Horizontal">
-							<Button
-								Margin="0,0,12,0"
-								Padding="0"
-								BorderThickness="0"
-								Command="{Binding HandleLinkClick}"
-								CommandParameter="{x:Static c:Constants.TwitterUrl}"
-								Foreground="#FF00ACED"
-								Style="{StaticResource MaterialDesignFlatButton}">
-								<Button.Content>
-									<materialDesign:PackIcon
-										Width="24"
-										Height="24"
-										Kind="Twitter" />
-								</Button.Content>
-							</Button>
-							<Button
-								Margin="0,0,12,0"
-								Padding="0"
-								BorderThickness="0"
-								Command="{Binding HandleLinkClick}"
-								CommandParameter="{x:Static c:Constants.LinkedinUrl}"
-								Foreground="#FF4875B4"
-								Style="{StaticResource MaterialDesignFlatButton}">
-								<Button.Content>
-									<materialDesign:PackIcon
-										Width="24"
-										Height="24"
-										Kind="Linkedin" />
-								</Button.Content>
-							</Button>
-							<Button
-								Margin="0,0,12,0"
-								Padding="0"
-								BorderThickness="0"
-								Command="{Binding HandleLinkClick}"
-								CommandParameter="{x:Static c:Constants.GithubUrl}"
-								Foreground="#f5f5f5"
-								Style="{StaticResource MaterialDesignFlatButton}">
-								<Button.Content>
-									<materialDesign:PackIcon
-										Width="24"
-										Height="24"
-										Kind="GithubCircle" />
-								</Button.Content>
-							</Button>
-						</StackPanel>
-					</StackPanel>
+                        <TextBlock
+                            x:Uid="FollowMe"
+                            Margin="0,24,0,0"
+                            Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                            Text="Follow Me" />
 
-					<StackPanel Grid.Row="1">
-						<TextBlock x:Uid="Copyright" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Margin="0,0,12,0"
+                                Padding="0"
+                                BorderThickness="0"
+                                Command="{Binding HandleLinkClick}"
+                                CommandParameter="{x:Static c:Constants.TwitterUrl}"
+                                Foreground="#FF00ACED"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.Content>
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        Kind="Twitter" />
+                                </Button.Content>
+                            </Button>
+                            <Button
+                                Margin="0,0,12,0"
+                                Padding="0"
+                                BorderThickness="0"
+                                Command="{Binding HandleLinkClick}"
+                                CommandParameter="{x:Static c:Constants.LinkedinUrl}"
+                                Foreground="#FF4875B4"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.Content>
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        Kind="Linkedin" />
+                                </Button.Content>
+                            </Button>
+                            <Button
+                                Margin="0,0,12,0"
+                                Padding="0"
+                                BorderThickness="0"
+                                Command="{Binding HandleLinkClick}"
+                                CommandParameter="{x:Static c:Constants.GithubUrl}"
+                                Foreground="#f5f5f5"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.Content>
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        Kind="GithubCircle" />
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
 
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition />
-								<ColumnDefinition />
-							</Grid.ColumnDefinitions>
-							<TextBlock HorizontalAlignment="Left">
-								<Hyperlink
-									Command="{Binding HandleLinkClick}"
-									CommandParameter="{x:Static c:Constants.CompanyUrl}"
-									Style="{StaticResource MaterialDesignBody1Hyperlink}">
-									<Hyperlink.Inlines>
-										<Run Text="{x:Static c:Constants.CompanyName}" />
-									</Hyperlink.Inlines>
-								</Hyperlink>
-							</TextBlock>
-						</Grid>
-					</StackPanel>
-				</Grid>
-			</TabItem>
-		</dragablz:TabablzControl>
-	</Grid>
+                    <StackPanel Grid.Row="1">
+                        <TextBlock x:Uid="Copyright" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock HorizontalAlignment="Left">
+                                <Hyperlink
+                                    Command="{Binding HandleLinkClick}"
+                                    CommandParameter="{x:Static c:Constants.CompanyUrl}"
+                                    Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                                    <Hyperlink.Inlines>
+                                        <Run Text="{x:Static c:Constants.CompanyName}" />
+                                    </Hyperlink.Inlines>
+                                </Hyperlink>
+                            </TextBlock>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </dragablz:TabablzControl>
+    </Grid>
 </Window>

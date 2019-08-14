@@ -5,13 +5,13 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
-  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
-  IgnorableNamespaces="uap uap3 rescap desktop">
+  IgnorableNamespaces="uap rescap desktop">
+  <!-- xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"-->
 
   <Identity
     Name="30071EnginKrmac.SnapIt"
     Publisher="CN=5CFA03AE-FF07-4595-B025-C45A2265838F"
-    Version="1.0.3.0" />
+    Version="1.0.4.0" />
 
   <Properties>
     <DisplayName>SnapIt</DisplayName>
@@ -51,11 +51,12 @@
         <desktop:Extension Category="windows.startupTask" Executable="SnapIt\SnapIt.exe" EntryPoint="Windows.FullTrustApplication">
           <desktop:StartupTask TaskId="SnapItStartupTask" Enabled="true" DisplayName="Snap It" />
         </desktop:Extension>
-        <uap3:Extension Category="windows.appExecutionAlias" Executable="SnapIt\SnapIt.exe" EntryPoint="Windows.FullTrustApplication">
+        <!-- <uap3:Extension Category="windows.appExecutionAlias" Executable="SnapIt\SnapIt.exe" EntryPoint="Windows.FullTrustApplication">
           <uap3:AppExecutionAlias>
             <desktop:ExecutionAlias Alias="SnapIt.exe" />
           </uap3:AppExecutionAlias>
         </uap3:Extension>
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="SnapIt\SnapIt.exe" />-->
       </Extensions>
     </Application>
   </Applications>
@@ -63,6 +64,5 @@
   <Capabilities>
     <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
-    <rescap:Capability Name="allowElevation" />
   </Capabilities>
 </Package>
