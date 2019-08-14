@@ -15,6 +15,8 @@
     Title="{Binding Title}"
     Width="900"
     Height="680"
+    d:DataContext="{d:DesignInstance vm:MainWindowDesignView,
+                                     IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
@@ -25,10 +27,7 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <!--
-        d:DataContext="{d:DesignInstance vm:MainWindowDesignView,
-        IsDesignTimeCreatable=True}"
-    -->
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Activated">
             <i:InvokeCommandAction Command="{Binding ActivatedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
@@ -82,110 +81,98 @@
                         <TextBlock Text=" LAYOUT" />
                     </StackPanel>
                 </TabItem.Header>
-                <Grid Margin="16">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="200" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
 
-                    <StackPanel>
-                        <TextBlock
-                            Margin="0,6"
-                            Style="{StaticResource MaterialDesignTitleTextBlock}"
-                            Text="Screens" />
+                <Grid>
+                    <Grid Margin="16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="200" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
 
-                        <ListBox
-                            HorizontalContentAlignment="Center"
-                            ItemsSource="{Binding SnapScreens}"
-                            SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <materialDesign:PackIcon
-                                            Width="60"
-                                            Height="60"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Kind="Monitor" />
-                                        <TextBlock
-                                            Margin="0,-8,0,0"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-                                            Text="{Binding DeviceNumber}" />
-                                        <StackPanel Grid.Row="1">
-                                            <TextBlock
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                Text="{Binding Resolution}" />
-                                            <TextBlock
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                Text="{Binding Primary}" />
-                                            <TextBlock
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                Text="{Binding Layout.Name}" />
-                                        </StackPanel>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemContainerStyle>
-                                <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
-                                            <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-                        </ListBox>
-                    </StackPanel>
-
-                    <GroupBox
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Style="{DynamicResource MaterialDesignCardGroupBox}">
-                        <GroupBox.HeaderTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon
-                                        Width="24"
-                                        Height="24"
-                                        VerticalAlignment="Center"
-                                        Kind="MixerSettings" />
-                                    <TextBlock
-                                        Margin="8,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-                                        Text="Options" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </GroupBox.HeaderTemplate>
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,6"
+                                Style="{StaticResource MaterialDesignTitleTextBlock}"
+                                Text="Screens" />
+
+                            <ListBox
+                                HorizontalContentAlignment="Center"
+                                ItemsSource="{Binding SnapScreens}"
+                                SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <materialDesign:PackIcon
+                                                Width="60"
+                                                Height="60"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Kind="Monitor" />
+                                            <TextBlock
+                                                Margin="0,-8,0,0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                                                Text="{Binding DeviceNumber}" />
+                                            <StackPanel Grid.Row="1">
+                                                <TextBlock
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                    Text="{Binding Resolution}" />
+                                                <TextBlock
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                    Text="{Binding Primary}" />
+                                                <TextBlock
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                    Text="{Binding Layout.Name}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemContainerStyle>
+                                    <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
+                                                <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                            </ListBox>
+                        </StackPanel>
+
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock
+                                Margin="0,6"
+                                Style="{StaticResource MaterialDesignTitleTextBlock}"
+                                Text="Layouts" />
+
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                 <Button
                                     Margin="0,0,4,0"
                                     Command="{Binding NewLayoutCommand}"
-                                    Style="{StaticResource MaterialDesignRaisedButton}">
+                                    Foreground="{DynamicResource SecondaryAccentForegroundBrush}"
+                                    Style="{StaticResource MaterialDesignFlatButton}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Add" />
@@ -200,7 +187,8 @@
                                 <Button
                                     Margin="0,0,4,0"
                                     Command="{Binding ImportLayoutCommand}"
-                                    Style="{StaticResource MaterialDesignRaisedButton}">
+                                    Foreground="{DynamicResource SecondaryAccentForegroundBrush}"
+                                    Style="{StaticResource MaterialDesignFlatButton}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Import" />
@@ -212,126 +200,91 @@
                                     </Button.Content>
                                 </Button>
                             </StackPanel>
+                            <ListBox
+                                Grid.Row="1"
+                                ItemsSource="{Binding Layouts}"
+                                SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <snapcontrols:SnapArea
+                                                Width="256"
+                                                Height="192"
+                                                LayoutArea="{Binding LayoutArea}" />
 
-                            <Grid
-                                Margin="-9,16,-9,-9"
-                                Background="{StaticResource MaterialDesignPaper}"
-                                Visibility="{Binding Path=SelectedLayout, TargetNullValue=Collapsed}">
-                                <Grid Margin="9,0,9,9">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                                                Text="{Binding Name}" />
 
-                                    <TextBox
-                                        x:Name="SelectedLayoutName"
-                                        Margin="0,6"
-                                        materialDesign:HintAssist.Hint="Layout Name"
-                                        Text="{Binding SelectedLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
-
-                                    <StackPanel
-                                        Grid.Row="1"
-                                        Margin="0,6"
-                                        Orientation="Horizontal">
-                                        <Button
-                                            Margin="0,0,4,0"
-                                            Command="{Binding DesignLayoutCommand}"
-                                            Style="{StaticResource MaterialDesignRaisedButton}">
-                                            <Button.Content>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <materialDesign:PackIcon Kind="ViewQuilt" />
-                                                    <TextBlock
-                                                        Margin="4,0,0,0"
-                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                        Text="Designer" />
+                                            <materialDesign:PopupBox
+                                                Margin="0,6"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                PopupMode="Click">
+                                                <StackPanel>
+                                                    <Button Command="{Binding DataContext.DesignLayoutCommand, RelativeSource={RelativeSource AncestorType=Window}}" Content="Open in Designer" />
+                                                    <Separator />
+                                                    <Button
+                                                        Command="{Binding DataContext.OpenRenameDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Rename" />
+                                                    <Button Command="{Binding DataContext.ExportLayoutCommand, RelativeSource={RelativeSource AncestorType=Window}}" Content="Export" />
                                                 </StackPanel>
-                                            </Button.Content>
-                                        </Button>
-
-                                        <Button
-                                            Margin="0,0,4,0"
-                                            Command="{Binding ExportLayoutCommand}"
-                                            Style="{StaticResource MaterialDesignRaisedButton}">
-                                            <Button.Content>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <materialDesign:PackIcon Kind="Export" />
-                                                    <TextBlock
-                                                        Margin="4,0,0,0"
-                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                        Text="Export" />
-                                                </StackPanel>
-                                            </Button.Content>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </Grid>
-                        </StackPanel>
-                    </GroupBox>
-
-                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            Margin="0,6"
-                            Style="{StaticResource MaterialDesignTitleTextBlock}"
-                            Text="Layouts" />
-                        <ListBox
-                            Grid.Row="1"
-                            ItemsSource="{Binding Layouts}"
-                            SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <snapcontrols:SnapArea
-                                            Width="256"
-                                            Height="192"
-                                            LayoutArea="{Binding LayoutArea}" />
-
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-                                            Text="{Binding Name}" />
-
-                                        <!--<materialDesign:PopupBox
-                                            Margin="0,6"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Top">
-                                            <StackPanel>
-                                                <TextBlock Text="Name" />
-                                                <TextBox Margin="6,0" Text="{Binding Name}" />
-                                                <Separator />
-                                                <Button Command="{Binding DesignLayoutCommand}" Content="Open in Designer" />
-                                                <Button Command="{Binding ExportLayoutCommand}" Content="Export" />
-                                            </StackPanel>
-                                        </materialDesign:PopupBox>-->
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemContainerStyle>
-                                <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="FontWeight" Value="Bold" />
-                                            <Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
-                                            <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                    <Style.Resources>
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-                                    </Style.Resources>
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-                        </ListBox>
+                                            </materialDesign:PopupBox>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemContainerStyle>
+                                    <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="FontWeight" Value="Bold" />
+                                                <Setter Property="Background" Value="{StaticResource MaterialDesignBodyLight}" />
+                                                <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                        <Style.Resources>
+                                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                                        </Style.Resources>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                            </ListBox>
+                        </Grid>
                     </Grid>
+                    <materialDesign:DialogHost IsOpen="{Binding IsRenameDialogOpen}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+                        <materialDesign:DialogHost.DialogContent>
+                            <StackPanel Width="256" Margin="16">
+                                <TextBlock>
+                                    Layout Name
+                                </TextBlock>
+                                <TextBox
+                                    Margin="0,8,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    Text="{Binding RenameLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <Button
+                                    Margin="0,8,0,0"
+                                    HorizontalAlignment="Center"
+                                    Command="materialDesign:DialogHost.CloseDialogCommand"
+                                    IsDefault="True"
+                                    Style="{StaticResource MaterialDesignFlatButton}">
+                                    <Button.CommandParameter>
+                                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                            True
+                                        </system:Boolean>
+                                    </Button.CommandParameter>
+                                    OK
+                                </Button>
+                            </StackPanel>
+                        </materialDesign:DialogHost.DialogContent>
+                    </materialDesign:DialogHost>
                 </Grid>
             </TabItem>
             <TabItem Foreground="{DynamicResource MaterialDesignBody}">

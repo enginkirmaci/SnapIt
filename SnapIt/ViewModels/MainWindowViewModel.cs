@@ -32,6 +32,8 @@ namespace SnapIt.ViewModels
         private string selectedApplication;
         private string selectedExcludedApplication;
         private ObservableCollection<string> excludedApplications;
+        private bool isRenameDialogOpen;
+        private Layout renameLayout;
 
         public string Title { get; set; } = $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}";
         public bool EnableKeyboard { get => settingService.Settings.EnableKeyboard; set { settingService.Settings.EnableKeyboard = value; ApplyChanges(); } }
@@ -49,6 +51,9 @@ namespace SnapIt.ViewModels
                 settingService.SetStartupTaskStatusAsync(value);
             }
         }
+
+        public bool IsRenameDialogOpen { get => isRenameDialogOpen; set => SetProperty(ref isRenameDialogOpen, value); }
+        public Layout RenameLayout { get => renameLayout; set => SetProperty(ref renameLayout, value); }
 
         //public bool IsRunAsAdmin
         //{
@@ -101,6 +106,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand DesignLayoutCommand { get; private set; }
         public DelegateCommand ExportLayoutCommand { get; private set; }
         public DelegateCommand ImportLayoutCommand { get; private set; }
+        public DelegateCommand<Layout> OpenRenameDialogCommand { get; private set; }
 
         public DelegateCommand ExcludeAppLayoutCommand { get; private set; }
         public DelegateCommand IncludeAppLayoutCommand { get; private set; }
@@ -206,6 +212,12 @@ namespace SnapIt.ViewModels
                 {
                     System.Windows.Forms.MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
                 }
+            });
+
+            OpenRenameDialogCommand = new DelegateCommand<Layout>((layout) =>
+            {
+                RenameLayout = layout;
+                IsRenameDialogOpen = true;
             });
 
             ExcludeAppLayoutCommand = new DelegateCommand(() =>
