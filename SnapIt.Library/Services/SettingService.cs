@@ -9,139 +9,144 @@ using Windows.ApplicationModel;
 
 namespace SnapIt.Library.Services
 {
-	public class SettingService : ISettingService
-	{
-		private readonly IFileOperationService fileOperationService;
+    public class SettingService : ISettingService
+    {
+        private readonly IFileOperationService fileOperationService;
 
-		public Settings Settings { get; private set; }
-		public ExcludedApps ExcludedApps { get; private set; }
-		public IList<Layout> Layouts { get; private set; }
-		public IList<SnapScreen> SnapScreens { get; private set; }
+        public Settings Settings { get; private set; }
+        public ExcludedApps ExcludedApps { get; private set; }
+        public IList<Layout> Layouts { get; private set; }
+        public IList<SnapScreen> SnapScreens { get; private set; }
 
-		public SettingService(
-			IFileOperationService fileOperationService)
-		{
-			this.fileOperationService = fileOperationService;
+        public SettingService(
+            IFileOperationService fileOperationService)
+        {
+            this.fileOperationService = fileOperationService;
 
-			Settings = this.fileOperationService.Load<Settings>();
-			ExcludedApps = this.fileOperationService.Load<ExcludedApps>();
-			Layouts = this.fileOperationService.GetLayouts();
-			SnapScreens = GetSnapScreens();
-		}
+            Settings = this.fileOperationService.Load<Settings>();
+            ExcludedApps = this.fileOperationService.Load<ExcludedApps>();
+            Layouts = this.fileOperationService.GetLayouts();
+            SnapScreens = GetSnapScreens();
+        }
 
-		public void Save()
-		{
-			fileOperationService.Save(Settings);
+        public void Save()
+        {
+            fileOperationService.Save(Settings);
 
-			foreach (var layout in Layouts.Where(i => !i.IsSaved))
-			{
-				SaveLayout(layout);
-			}
-		}
+            foreach (var layout in Layouts.Where(i => !i.IsSaved))
+            {
+                SaveLayout(layout);
+            }
+        }
 
-		public void SaveExcludedApps(List<string> excludedAppsNames)
-		{
-			ExcludedApps.Applications = excludedAppsNames;
+        public void SaveExcludedApps(List<string> excludedAppsNames)
+        {
+            ExcludedApps.Applications = excludedAppsNames;
 
-			fileOperationService.Save(ExcludedApps);
-		}
+            fileOperationService.Save(ExcludedApps);
+        }
 
-		public void SaveLayout(Layout layout)
-		{
-			layout.IsSaved = true;
-			fileOperationService.SaveLayout(layout);
-		}
+        public void SaveLayout(Layout layout)
+        {
+            layout.IsSaved = true;
+            fileOperationService.SaveLayout(layout);
+        }
 
-		public void ExportLayout(Layout layout, string layoutPath)
-		{
-			fileOperationService.ExportLayout(layout, layoutPath);
-		}
+        public void ExportLayout(Layout layout, string layoutPath)
+        {
+            fileOperationService.ExportLayout(layout, layoutPath);
+        }
 
-		public Layout ImportLayout(string layoutPath)
-		{
-			return fileOperationService.ImportLayout(layoutPath);
-		}
+        public void DeleteLayout(Layout layout)
+        {
+            fileOperationService.DeleteLayout(layout);
+        }
 
-		public void LinkScreenLayout(SnapScreen snapScreen, Layout layout)
-		{
-			SnapScreens.First(screen => screen.Base.DeviceName == snapScreen.Base.DeviceName).Layout = layout;
+        public Layout ImportLayout(string layoutPath)
+        {
+            return fileOperationService.ImportLayout(layoutPath);
+        }
 
-			if (Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName))
-			{
-				Settings.ScreensLayouts[snapScreen.Base.DeviceName] = layout.Guid.ToString();
-			}
-			else
-			{
-				Settings.ScreensLayouts.Add(snapScreen.Base.DeviceName, layout.Guid.ToString());
-			}
-		}
+        public void LinkScreenLayout(SnapScreen snapScreen, Layout layout)
+        {
+            SnapScreens.First(screen => screen.Base.DeviceName == snapScreen.Base.DeviceName).Layout = layout;
 
-		private IList<SnapScreen> GetSnapScreens()
-		{
-			var snapScreens = new List<SnapScreen>();
+            if (Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName))
+            {
+                Settings.ScreensLayouts[snapScreen.Base.DeviceName] = layout.Guid.ToString();
+            }
+            else
+            {
+                Settings.ScreensLayouts.Add(snapScreen.Base.DeviceName, layout.Guid.ToString());
+            }
+        }
 
-			foreach (var screen in Screen.AllScreens)
-			{
-				var snapScreen = new SnapScreen(screen);
-				var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName)
-					? Settings.ScreensLayouts[snapScreen.Base.DeviceName] : string.Empty;
+        private IList<SnapScreen> GetSnapScreens()
+        {
+            var snapScreens = new List<SnapScreen>();
 
-				if (!string.IsNullOrWhiteSpace(layoutGuid))
-				{
-					snapScreen.Layout = Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutGuid);
-				}
-				else
-				{
-					snapScreen.Layout = Layouts.FirstOrDefault();
-				}
+            foreach (var screen in Screen.AllScreens)
+            {
+                var snapScreen = new SnapScreen(screen);
+                var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName)
+                    ? Settings.ScreensLayouts[snapScreen.Base.DeviceName] : string.Empty;
 
-				snapScreens.Add(snapScreen);
-			}
+                if (!string.IsNullOrWhiteSpace(layoutGuid))
+                {
+                    snapScreen.Layout = Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutGuid);
+                }
+                else
+                {
+                    snapScreen.Layout = Layouts.FirstOrDefault();
+                }
 
-			return snapScreens;
-		}
+                snapScreens.Add(snapScreen);
+            }
 
-		public async Task<bool> GetStartupTaskStatusAsync()
-		{
-			try
-			{
-				var startupTask = await StartupTask.GetAsync("SnapItStartupTask"); // Pass the task ID you specified in the appxmanifest file
-				switch (startupTask.State)
-				{
-					case StartupTaskState.Disabled:
-					case StartupTaskState.DisabledByUser:
-					case StartupTaskState.DisabledByPolicy:
-						return false;
+            return snapScreens;
+        }
 
-					case StartupTaskState.Enabled:
-					case StartupTaskState.EnabledByPolicy:
-					default:
-						return true;
-				}
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
+        public async Task<bool> GetStartupTaskStatusAsync()
+        {
+            try
+            {
+                var startupTask = await StartupTask.GetAsync("SnapItStartupTask"); // Pass the task ID you specified in the appxmanifest file
+                switch (startupTask.State)
+                {
+                    case StartupTaskState.Disabled:
+                    case StartupTaskState.DisabledByUser:
+                    case StartupTaskState.DisabledByPolicy:
+                        return false;
 
-		public async Task SetStartupTaskStatusAsync(bool isActive)
-		{
-			try
-			{
-				var startupTask = await StartupTask.GetAsync("SnapItStartupTask");
-				if (isActive)
-				{
-					await startupTask.RequestEnableAsync();
-				}
-				else
-				{
-					startupTask.Disable();
-				}
-			}
-			catch (Exception)
-			{
-			}
-		}
-	}
+                    case StartupTaskState.Enabled:
+                    case StartupTaskState.EnabledByPolicy:
+                    default:
+                        return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task SetStartupTaskStatusAsync(bool isActive)
+        {
+            try
+            {
+                var startupTask = await StartupTask.GetAsync("SnapItStartupTask");
+                if (isActive)
+                {
+                    await startupTask.RequestEnableAsync();
+                }
+                else
+                {
+                    startupTask.Disable();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+    }
 }

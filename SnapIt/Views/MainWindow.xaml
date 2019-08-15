@@ -224,13 +224,23 @@
                                                 VerticalAlignment="Top"
                                                 PopupMode="Click">
                                                 <StackPanel>
-                                                    <Button Command="{Binding DataContext.DesignLayoutCommand, RelativeSource={RelativeSource AncestorType=Window}}" Content="Open in Designer" />
+                                                    <Button
+                                                        Command="{Binding DataContext.DesignLayoutCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Open in Designer" />
                                                     <Separator />
                                                     <Button
                                                         Command="{Binding DataContext.OpenRenameDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}"
                                                         Content="Rename" />
-                                                    <Button Command="{Binding DataContext.ExportLayoutCommand, RelativeSource={RelativeSource AncestorType=Window}}" Content="Export" />
+                                                    <Button
+                                                        Command="{Binding DataContext.DeleteLayoutCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Delete" />
+                                                    <Button
+                                                        Command="{Binding DataContext.ExportLayoutCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Export" />
                                                 </StackPanel>
                                             </materialDesign:PopupBox>
                                         </Grid>
@@ -267,7 +277,7 @@
                                 <TextBox
                                     Margin="0,8,0,0"
                                     HorizontalAlignment="Stretch"
-                                    Text="{Binding RenameLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding PopupLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <Button
                                     Margin="0,8,0,0"

@@ -5,27 +5,29 @@ using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
-	public interface ISettingService
-	{
-		Settings Settings { get; }
-		ExcludedApps ExcludedApps { get; }
-		IList<Layout> Layouts { get; }
-		IList<SnapScreen> SnapScreens { get; }
+    public interface ISettingService
+    {
+        Settings Settings { get; }
+        ExcludedApps ExcludedApps { get; }
+        IList<Layout> Layouts { get; }
+        IList<SnapScreen> SnapScreens { get; }
 
-		void Save();
+        void Save();
 
-		void SaveLayout(Layout layout);
+        void SaveLayout(Layout layout);
 
-		void SaveExcludedApps(List<string> excludedAppsNames);
+        void SaveExcludedApps(List<string> excludedAppsNames);
 
-		void ExportLayout(Layout layout, string layoutPath);
+        void ExportLayout(Layout layout, string layoutPath);
 
-		Layout ImportLayout(string layoutPath);
+        void DeleteLayout(Layout layout);
 
-		void LinkScreenLayout(SnapScreen snapScreen, Layout layout);
+        Layout ImportLayout(string layoutPath);
 
-		Task<bool> GetStartupTaskStatusAsync();
+        void LinkScreenLayout(SnapScreen snapScreen, Layout layout);
 
-		Task SetStartupTaskStatusAsync(bool isActive);
-	}
+        Task<bool> GetStartupTaskStatusAsync();
+
+        Task SetStartupTaskStatusAsync(bool isActive);
+    }
 }

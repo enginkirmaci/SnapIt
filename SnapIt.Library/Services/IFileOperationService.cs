@@ -3,18 +3,20 @@ using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
-	public interface IFileOperationService
-	{
-		void Save<T>(T config);
+    public interface IFileOperationService
+    {
+        void Save<T>(T config);
 
-		T Load<T>() where T : new();
+        T Load<T>() where T : new();
 
-		void SaveLayout(Layout layout);
+        void SaveLayout(Layout layout);
 
-		void ExportLayout(Layout layout, string layoutPath);
+        void ExportLayout(Layout layout, string layoutPath);
 
-		Layout ImportLayout(string layoutPath);
+        void DeleteLayout(Layout layout);
 
-		IList<Layout> GetLayouts();
-	}
+        Layout ImportLayout(string layoutPath);
+
+        IList<Layout> GetLayouts();
+    }
 }

@@ -33,7 +33,7 @@ namespace SnapIt.ViewModels
         private string selectedExcludedApplication;
         private ObservableCollection<string> excludedApplications;
         private bool isRenameDialogOpen;
-        private Layout renameLayout;
+        private Layout popupLayout;
 
         public string Title { get; set; } = $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}";
         public bool EnableKeyboard { get => settingService.Settings.EnableKeyboard; set { settingService.Settings.EnableKeyboard = value; ApplyChanges(); } }
@@ -53,7 +53,7 @@ namespace SnapIt.ViewModels
         }
 
         public bool IsRenameDialogOpen { get => isRenameDialogOpen; set => SetProperty(ref isRenameDialogOpen, value); }
-        public Layout RenameLayout { get => renameLayout; set => SetProperty(ref renameLayout, value); }
+        public Layout PopupLayout { get => popupLayout; set => SetProperty(ref popupLayout, value); }
 
         //public bool IsRunAsAdmin
         //{
@@ -103,10 +103,11 @@ namespace SnapIt.ViewModels
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
         public DelegateCommand NewLayoutCommand { get; private set; }
-        public DelegateCommand DesignLayoutCommand { get; private set; }
-        public DelegateCommand ExportLayoutCommand { get; private set; }
         public DelegateCommand ImportLayoutCommand { get; private set; }
+        public DelegateCommand<Layout> DesignLayoutCommand { get; private set; }
         public DelegateCommand<Layout> OpenRenameDialogCommand { get; private set; }
+        public DelegateCommand<Layout> DeleteLayoutCommand { get; private set; }
+        public DelegateCommand<Layout> ExportLayoutCommand { get; private set; }
 
         public DelegateCommand ExcludeAppLayoutCommand { get; private set; }
         public DelegateCommand IncludeAppLayoutCommand { get; private set; }
@@ -169,29 +170,6 @@ namespace SnapIt.ViewModels
                 designWindow.Show();
             });
 
-            DesignLayoutCommand = new DelegateCommand(() =>
-            {
-                var designWindow = new DesignWindow();
-                designWindow.Closing += DesignWindow_Closing;
-                designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
-                designWindow.Show();
-            });
-
-            ExportLayoutCommand = new DelegateCommand(() =>
-            {
-                var fileDialog = new SaveFileDialog
-                {
-                    DefaultExt = ".json",
-                    Filter = "Json (.json)|*.json",
-                    FileName = selectedLayout.Name
-                };
-
-                if (fileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    settingService.ExportLayout(SelectedLayout, fileDialog.FileName);
-                }
-            });
-
             ImportLayoutCommand = new DelegateCommand(() =>
             {
                 try
@@ -214,10 +192,51 @@ namespace SnapIt.ViewModels
                 }
             });
 
+            DesignLayoutCommand = new DelegateCommand<Layout>((layout) =>
+            {
+                PopupLayout = layout;
+
+                var designWindow = new DesignWindow();
+                designWindow.Closing += DesignWindow_Closing;
+                designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
+                designWindow.Show();
+            });
+
             OpenRenameDialogCommand = new DelegateCommand<Layout>((layout) =>
             {
-                RenameLayout = layout;
+                PopupLayout = layout;
                 IsRenameDialogOpen = true;
+            });
+
+            DeleteLayoutCommand = new DelegateCommand<Layout>((layout) =>
+            {
+                PopupLayout = layout;
+
+                Layouts.Remove(layout);
+
+                if (SelectedLayout == null)
+                {
+                    SelectedLayout = Layouts.FirstOrDefault();
+                }
+
+                settingService.DeleteLayout(PopupLayout);
+            });
+
+            ExportLayoutCommand = new DelegateCommand<Layout>((layout) =>
+            {
+                PopupLayout = layout;
+
+                var fileDialog = new SaveFileDialog
+                {
+                    DefaultExt = ".json",
+                    Filter = "Json (.json)|*.json",
+                    FileName = PopupLayout.Name
+                };
+
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    settingService.ExportLayout(PopupLayout, fileDialog.FileName);
+                }
             });
 
             ExcludeAppLayoutCommand = new DelegateCommand(() =>
