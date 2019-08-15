@@ -2,24 +2,26 @@
 
 namespace SnapIt.Resources
 {
-	public class Constants
-	{
-		public static readonly string AppLogo = "/SnapIt.UI;component/Themes/snapit.png";
+    public class Constants
+    {
+        public const string AppLogo = "/SnapIt.UI;component/Themes/snapit.png";
 
-		public static string AppName { get { return Application.ProductName; } }
+        public static string AppName => Application.ProductName;
 
-		public static string AppVersion { get { return string.Format("version {0}", Application.ProductVersion); } }
+        public static string AppVersion => string.Format("version {0}", Application.ProductVersion);
 
-		public static string AppUrl { get { return "enginkirmaci.com/projects/snapit"; } }
+        public const string AppUrl = "enginkirmaci.com/projects/snapit";
 
-		public static string CompanyName { get { return Application.CompanyName; } }
+        public static string CompanyName => Application.CompanyName;
 
-		public static string CompanyUrl { get { return "enginkirmaci.com"; } }
+        public const string CompanyUrl = "enginkirmaci.com";
 
-		public static string TwitterUrl { get { return "twitter.com/enginkirmaci"; } }
+        public const string TwitterUrl = "twitter.com/enginkirmaci";
 
-		public static string GithubUrl { get { return "github.com/enginkirmaci"; } }
+        public const string GithubUrl = "github.com/enginkirmaci";
 
-		public static string LinkedinUrl { get { return "linkedin.com/in/enginkirmaci/"; } }
-	}
+        public const string LinkedinUrl = "linkedin.com/in/enginkirmaci/";
+
+        public const string MainRegion = "MainRegion";
+    }
 }

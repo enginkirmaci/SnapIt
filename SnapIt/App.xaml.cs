@@ -60,6 +60,11 @@ namespace SnapIt
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterForNavigation<LayoutView>();
+            containerRegistry.RegisterForNavigation<SettingsView>();
+            containerRegistry.RegisterForNavigation<WindowsView>();
+            containerRegistry.RegisterForNavigation<AboutView>();
+
             containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
             containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
             containerRegistry.RegisterSingleton<ISnapService, SnapService>();

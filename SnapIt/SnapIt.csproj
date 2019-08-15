@@ -86,11 +86,21 @@
     </ApplicationDefinition>
     <Compile Include="DevMode.cs" />
     <Compile Include="Resources\ResourceConstants.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DesignWindowViewModel.cs" />
-    <Compile Include="ViewModels\MainWindowDesignView.cs" />
+    <Compile Include="ViewModels\LayoutViewModel.cs" />
+    <Compile Include="ViewModels\LayoutDesignView.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\WindowsViewModel.cs" />
+    <Compile Include="Views\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DesignWindow.xaml.cs">
       <DependentUpon>DesignWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LayoutView.xaml.cs">
+      <DependentUpon>LayoutView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -99,17 +109,39 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WindowsView.xaml.cs">
+      <DependentUpon>WindowsView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Themes\CustomWindowStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DesignWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Views\LayoutView.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WindowsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -170,9 +202,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dragablz">
-      <Version>0.0.3.203</Version>
-    </PackageReference>
     <PackageReference Include="DryIoc.dll">
       <Version>4.0.5</Version>
     </PackageReference>
