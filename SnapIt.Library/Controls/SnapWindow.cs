@@ -5,121 +5,122 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
-	public class SnapWindow : Window
-	{
-		private SnapArea current;
+    public class SnapWindow : Window
+    {
+        private SnapArea current;
 
-		public SnapScreen Screen { get; set; }
-		public List<Rectangle> SnapAreaBoundries { get; set; }
+        public SnapScreen Screen { get; set; }
+        public List<Rectangle> SnapAreaBoundries { get; set; }
+        public Dpi Dpi { get; set; }
 
-		//private double DpiX = 1.0;
-		//private double DpiY = 1.0;
+        public SnapWindow(SnapScreen screen)
+        {
+            Screen = screen;
 
-		public SnapWindow(SnapScreen screen)
-		{
-			Screen = screen;
+            Topmost = true;
+            AllowsTransparency = true;
+            Background = new SolidColorBrush(Colors.Transparent);
+            ResizeMode = ResizeMode.NoResize;
+            ShowInTaskbar = false;
+            Width = screen.Base.WorkingArea.Width;
+            Height = screen.Base.WorkingArea.Height;
+            Left = screen.Base.WorkingArea.X;
+            Top = screen.Base.WorkingArea.Y;
+            WindowState = WindowState.Normal;
+            WindowStyle = WindowStyle.None;
 
-			//CalculateDpi();
+            CalculateDpi();
+        }
 
-			Topmost = true;
-			AllowsTransparency = true;
-			Background = new SolidColorBrush(Colors.Transparent);
-			ResizeMode = ResizeMode.NoResize;
-			ShowInTaskbar = false;
-			Width = screen.Base.WorkingArea.Width;
-			Height = screen.Base.WorkingArea.Height;
-			Left = screen.Base.WorkingArea.X;
-			Top = screen.Base.WorkingArea.Y;
-			WindowState = WindowState.Normal;
-			WindowStyle = WindowStyle.None;
-		}
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
 
-		protected override void OnSourceInitialized(EventArgs e)
-		{
-			base.OnSourceInitialized(e);
+            var wih = new WindowInteropHelper(this);
+            var window = new ActiveWindow
+            {
+                Handle = wih.Handle
+            };
 
-			var wih = new WindowInteropHelper(this);
+            User32Test.MoveWindow(
+                window,
+                Screen.Base.WorkingArea.Left,
+                Screen.Base.WorkingArea.Top,
+                Screen.Base.WorkingArea.Width,
+                Screen.Base.WorkingArea.Height);
+        }
 
-			var window = new ActiveWindow
-			{
-				Handle = wih.Handle
-			};
+        private void CalculateDpi()
+        {
+            Screen.Base.GetDpi(DpiType.Effective, out uint x, out uint y);
 
-			User32Test.MoveWindow(
-				window,
-				Screen.Base.WorkingArea.Left,
-				Screen.Base.WorkingArea.Top,
-				Screen.Base.WorkingArea.Width,
-				Screen.Base.WorkingArea.Height);
-		}
+            Dpi = new Dpi
+            {
+                X = 96.0 / x,
+                Y = 96.0 / y
+            };
+        }
 
-		//private void CalculateDpi()
-		//{
-		//    screen.Base.GetDpi(DpiType.Effective, out uint x, out uint y);
+        public void ApplyLayout()
+        {
+            var snapArea = new SnapArea();
 
-		//    DpiX = 96.0 / x;
-		//    DpiY = 96.0 / y;
-		//}
+            if (Screen.Layout != null)
+            {
+                snapArea.ApplyLayout(Screen.Layout.LayoutArea, false, true);
+            }
 
-		public void ApplyLayout()
-		{
-			var snapArea = new SnapArea();
+            Content = snapArea;
+        }
 
-			if (Screen.Layout != null)
-			{
-				snapArea.ApplyLayout(Screen.Layout.LayoutArea, false, true);
-			}
+        public void GenerateSnapAreaBoundries()
+        {
+            if (SnapAreaBoundries == null)
+            {
+                var generated = new List<Rectangle>();
 
-			Content = snapArea;
-		}
+                var rootSnapArea = Content as SnapArea;
+                rootSnapArea.GenerateSnapAreaBoundries(ref generated, Dpi);
 
-		public void GenerateSnapAreaBoundries()
-		{
-			if (SnapAreaBoundries == null)
-			{
-				var generated = new List<Rectangle>();
+                SnapAreaBoundries = generated.OrderBy(i => i.X).ThenBy(i => i.Y).ToList();
+            }
+        }
 
-				var rootSnapArea = Content as SnapArea;
-				rootSnapArea.GenerateSnapAreaBoundries(ref generated);
+        public Rectangle SelectElementWithPoint(int x, int y)
+        {
+            if (IsVisible)
+            {
+                var Point2Window = PointFromScreen(new Point(x, y));
 
-				SnapAreaBoundries = generated.OrderBy(i => i.X).ThenBy(i => i.Y).ToList();
-			}
-		}
+                var element = InputHitTest(Point2Window);
+                if (element != null && element is SnapArea)
+                {
+                    if (current != null)
+                    {
+                        current.Background = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
+                    }
 
-		public Rectangle SelectElementWithPoint(int x, int y)
-		{
-			if (IsVisible)
-			{
-				var Point2Window = PointFromScreen(new Point(x, y));
+                    var snapArea = current = (SnapArea)element;
 
-				var element = InputHitTest(Point2Window);
-				if (element != null && element is SnapArea)
-				{
-					if (current != null)
-					{
-						current.Background = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
-					}
+                    snapArea.OnHoverStyle();
 
-					var snapArea = current = (SnapArea)element;
+                    return snapArea.ScreenSnapArea(Dpi);
+                }
+                else
+                {
+                    //TODO imporove here. moving on different screens, old one preserves the hover style
+                    if (current != null)
+                    {
+                        current.NormalStyle();
+                    }
+                }
+            }
 
-					snapArea.OnHoverStyle();
-
-					return snapArea.ScreenSnapArea();
-				}
-				else
-				{
-					//TODO imporove here. moving on different screens, old one preserves the hover style
-					if (current != null)
-					{
-						current.NormalStyle();
-					}
-				}
-			}
-
-			return Rectangle.Empty;
-		}
-	}
+            return Rectangle.Empty;
+        }
+    }
 }
