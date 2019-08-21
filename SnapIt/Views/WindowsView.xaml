@@ -20,13 +20,14 @@
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Margin="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
@@ -35,8 +36,16 @@
             Margin="0,6"
             Style="{StaticResource MaterialDesignTitleTextBlock}"
             Text="Excluded Applications" />
-
-        <StackPanel Grid.Row="1">
+        <TextBlock
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            Margin="0,0,0,6"
+            TextWrapping="Wrap">
+            <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                If you don't want to use snapping functionility for certain applications, you can add them to Excluded Applications. You can choose from application or either type application name in Application Title combobox and press &quot;+&quot; button. Please note that application title must contains application name.
+            </Hyperlink>
+        </TextBlock>
+        <StackPanel Grid.Row="2">
             <TextBlock Margin="0,6" TextWrapping="Wrap">
                 Application Title
             </TextBlock>
@@ -49,7 +58,7 @@
         </StackPanel>
 
         <StackPanel
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="1"
             Margin="0,24">
             <Button
@@ -81,7 +90,7 @@
             </Button>
         </StackPanel>
 
-        <Grid Grid.Row="1" Grid.Column="2">
+        <Grid Grid.Row="2" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />

@@ -32,6 +32,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
+        public DelegateCommand LoadedCommand { get; private set; }
 
         public MainWindowViewModel(
             IRegionManager regionManager,
@@ -55,6 +56,11 @@ namespace SnapIt.ViewModels
                     HideWindowAtStartup = false;
                     window.Hide();
                 }
+            });
+
+            LoadedCommand = new DelegateCommand(() =>
+            {
+                NavigateCommand.Execute("LayoutView");
             });
 
             CloseWindowCommand = new DelegateCommand<Window>((window) =>

@@ -40,7 +40,13 @@ namespace SnapIt.Library.Services
 
         private void InitializeLayouts()
         {
-            var layouts = new string[]{
+            var layoutsFolder = Path.Combine(rootFolder, "Layouts");
+
+            if (!Directory.Exists(layoutsFolder))
+            {
+                Directory.CreateDirectory(layoutsFolder);
+
+                var layouts = new string[]{
                 "0e217130-d44e-4057-bfe9-daf6f6e341d2",
                 "335af962-69ad-4b2e-a2ef-77cd0f1fc329",
                 "377f159c-72bd-4876-bdbe-85745e10f3cc",
@@ -54,18 +60,16 @@ namespace SnapIt.Library.Services
                 "f332538f-5f83-4c4f-8472-1155f1aef340"
             };
 
-            var layoutsFolder = Path.Combine(rootFolder, "Layouts");
-            Directory.CreateDirectory(layoutsFolder);
-
-            foreach (var layout in layouts)
-            {
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"SnapIt.Library.Layouts.{layout}.json"))
+                foreach (var layout in layouts)
                 {
-                    using (TextReader tr = new StreamReader(stream))
+                    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"SnapIt.Library.Layouts.{layout}.json"))
                     {
-                        string fileContents = tr.ReadToEnd();
+                        using (TextReader tr = new StreamReader(stream))
+                        {
+                            string fileContents = tr.ReadToEnd();
 
-                        File.WriteAllText(Path.Combine(rootFolder, $"Layouts\\{layout}.json"), fileContents);
+                            File.WriteAllText(Path.Combine(rootFolder, $"Layouts\\{layout}.json"), fileContents);
+                        }
                     }
                 }
             }

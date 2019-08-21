@@ -5,49 +5,18 @@ using System.Windows.Input;
 
 namespace SnapIt.Library.Controls
 {
-    public class Hotkey
-    {
-        public Key Key { get; }
-
-        public ModifierKeys Modifiers { get; }
-
-        public Hotkey(Key key, ModifierKeys modifiers)
-        {
-            Key = key;
-            Modifiers = modifiers;
-        }
-
-        public override string ToString()
-        {
-            var str = new StringBuilder();
-
-            if (Modifiers.HasFlag(ModifierKeys.Control))
-                str.Append("Ctrl + ");
-            if (Modifiers.HasFlag(ModifierKeys.Shift))
-                str.Append("Shift + ");
-            if (Modifiers.HasFlag(ModifierKeys.Alt))
-                str.Append("Alt + ");
-            if (Modifiers.HasFlag(ModifierKeys.Windows))
-                str.Append("Win + ");
-
-            str.Append(Key);
-
-            return str.ToString();
-        }
-    }
-
     /// <summary>
     /// Interaction logic for HotkeyEditorControl.xaml
     /// </summary>
     public partial class HotkeyEditorControl : UserControl
     {
         public static readonly DependencyProperty HotkeyProperty =
-          DependencyProperty.Register(nameof(Hotkey), typeof(Hotkey), typeof(HotkeyEditorControl),
-              new FrameworkPropertyMetadata(default(Hotkey), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+          DependencyProperty.Register(nameof(Hotkey), typeof(string), typeof(HotkeyEditorControl),
+              new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public Hotkey Hotkey
+        public string Hotkey
         {
-            get => (Hotkey)GetValue(HotkeyProperty);
+            get => (string)GetValue(HotkeyProperty);
             set => SetValue(HotkeyProperty, value);
         }
 
@@ -94,7 +63,20 @@ namespace SnapIt.Library.Controls
             if (Keyboard.Modifiers != ModifierKeys.None)
             {
                 // Set values
-                Hotkey = new Hotkey(key, Keyboard.Modifiers);
+                var str = new StringBuilder();
+
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+                    str.Append("Control + ");
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                    str.Append("Shift + ");
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+                    str.Append("Alt + ");
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Windows))
+                    str.Append("Win + ");
+
+                str.Append(key);
+
+                Hotkey = str.ToString();
             }
         }
     }

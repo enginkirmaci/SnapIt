@@ -22,5 +22,9 @@ namespace SnapIt.Library.Entities
         public bool ShowMainWindow { get; set; } = true;
         public bool IsDarkTheme { get; set; } = true;
         public Dictionary<string, string> ScreensLayouts { get; set; }
+        public string MoveUpShortcut { get; set; } = "Control + Alt + Up";
+        public string MoveDownShortcut { get; set; } = "Control + Alt + Down";
+        public string MoveLeftShortcut { get; set; } = "Control + Alt + Left";
+        public string MoveRightShortcut { get; set; } = "Control + Alt + Right";
     }
 }

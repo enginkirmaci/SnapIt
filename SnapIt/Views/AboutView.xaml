@@ -20,7 +20,7 @@
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />

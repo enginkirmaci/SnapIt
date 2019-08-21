@@ -37,12 +37,10 @@ namespace SnapIt.Library.Services
 
             var map = new Dictionary<Combination, Action>
             {
-                {Combination.FromString("LWin+Left"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Left) },
-                {Combination.FromString("LWin+Right"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Right) },
-                {Combination.FromString("Control+Alt+Left"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Left) },
-                {Combination.FromString("Control+Alt+Right"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Right) },
-                {Combination.FromString("Control+Alt+Up"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Up) },
-                {Combination.FromString("Control+Alt+Down"), ()=> MoveActiveWindowByKeyboard(MoveDirection.Down) }
+                {Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Left) },
+                {Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Right) },
+                {Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Up) },
+                {Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Down) }
             };
 
             globalHook = Hook.GlobalEvents();

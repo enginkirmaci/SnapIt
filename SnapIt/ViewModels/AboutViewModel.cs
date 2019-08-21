@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -10,15 +10,12 @@ namespace SnapIt.ViewModels
 
         public AboutViewModel()
         {
-            HandleLinkClick = new DelegateCommand<string>((url) =>
+            HandleLinkClick = new DelegateCommand<string>(async (url) =>
             {
-                //TODO change here without violating rules
-                var ps = new ProcessStartInfo("http://" + url)
-                {
-                    UseShellExecute = true,
-                    Verb = "open"
-                };
-                Process.Start(ps);
+                string uriToLaunch = $"http://{url}";
+                var uri = new Uri(uriToLaunch);
+
+                await Windows.System.Launcher.LaunchUriAsync(uri);
             });
         }
     }

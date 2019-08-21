@@ -12,8 +12,8 @@
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
     d:DataContext="{d:DesignInstance vm:LayoutDesignView,
                                      IsDesignTimeCreatable=True}"
-    d:DesignHeight="480"
-    d:DesignWidth="600"
+    d:DesignHeight="530"
+    d:DesignWidth="868"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
@@ -27,16 +27,20 @@
     <Grid>
         <Grid Margin="16">
             <Grid.RowDefinitions>
-                <RowDefinition Height="200" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <StackPanel>
+            <StackPanel Margin="0,0,0,8">
                 <TextBlock
-                    Margin="0,6"
+                    Margin="0,6,0,0"
                     Style="{StaticResource MaterialDesignTitleTextBlock}"
                     Text="Screens" />
-
+                <TextBlock Margin="0,0,0,6">
+                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                        Select screen and proceed to layout section.
+                    </Hyperlink>
+                </TextBlock>
                 <ListBox
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Top"
@@ -103,6 +107,7 @@
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
@@ -157,22 +162,30 @@
                     </Button>
                 </StackPanel>
 
+                <TextBlock Grid.Row="1" Margin="0,-6,0,6">
+                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                        Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu.
+                    </Hyperlink>
+                </TextBlock>
+
                 <ListBox
-                    Grid.Row="1"
+                    Grid.Row="2"
                     ItemsSource="{Binding Layouts}"
                     SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <snapcontrols:SnapArea
-                                    Width="256"
-                                    Height="192"
+                                    Width="188"
+                                    Height="156"
                                     LayoutArea="{Binding LayoutArea}" />
 
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    FontSize="20"
                                     Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                    Opacity="0.9"
                                     Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                                     Text="{Binding Name}" />
 

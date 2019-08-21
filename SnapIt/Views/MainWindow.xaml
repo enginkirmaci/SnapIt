@@ -30,6 +30,9 @@
         <i:EventTrigger EventName="Activated">
             <i:InvokeCommandAction Command="{Binding ActivatedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
         </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <Grid>

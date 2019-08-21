@@ -25,6 +25,7 @@ namespace SnapIt.ViewModels
             Layouts.Add(new Layout { Name = "Layout 1" });
             Layouts.Add(new Layout { Name = "Layout 2" });
             Layouts.Add(new Layout { Name = "Layout 3" });
+            Layouts.Add(new Layout { Name = "Layout 4" });
 
             SelectedLayout = Layouts.First();
             SelectedSnapScreen = SnapScreens.First();
