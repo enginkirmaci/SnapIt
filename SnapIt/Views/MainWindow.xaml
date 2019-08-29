@@ -138,16 +138,33 @@
             </materialDesign:ToggleButtonAssist.OnContent>
         </ToggleButton>
 
-        <Grid
+        <StackPanel
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
+            Orientation="Horizontal"
             WindowChrome.IsHitTestVisibleInChrome="True">
+            <Button
+                Padding="12,4"
+                materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                Command="{Binding HandleLinkClick}"
+                CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
+                ToolTip="Give Feedback">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" RenderTransform="1,0,0,1,0,1">
+                        <materialDesign:PackIcon Kind="FeedbackOutline" />
+                        <TextBlock
+                            Margin="6,0,0,0"
+                            Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                            Text="Feedback" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
             <Button
                 materialDesign:ShadowAssist.ShadowDepth="Depth0"
                 Command="{Binding CloseWindowCommand, Mode=OneWay}"
                 CommandParameter="{Binding ElementName=MainWindowView}"
                 ContentTemplate="{DynamicResource CloseBtnContentTemplate}" />
-        </Grid>
+        </StackPanel>
 
         <ContentControl
             Grid.Row="1"

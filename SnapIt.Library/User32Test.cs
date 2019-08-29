@@ -57,6 +57,8 @@ namespace SnapIt.Library
 
         public static bool MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height)
         {
+            ShowWindow(activeWindow.Handle, (int)ShowWindowCommand.SW_SHOWNORMAL); //if window maximized, restores to normal so position can be set
+
             var res = SetWindowPos(
                 activeWindow.Handle,
                 (HWND)SpecialWindowHandles.HWND_TOP,
@@ -64,7 +66,7 @@ namespace SnapIt.Library
                 Y,
                 width,
                 height,
-                SetWindowPosFlags.IgnoreZOrder);
+                SetWindowPosFlags.IgnoreZOrder | SetWindowPosFlags.ShowWindow);
 
             var msg = Marshal.GetLastWin32Error();
             if (msg != 0)

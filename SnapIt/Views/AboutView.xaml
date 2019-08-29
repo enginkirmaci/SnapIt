@@ -42,7 +42,6 @@
             </Grid>
 
             <TextBlock
-                x:Uid="Description"
                 Margin="0,24,0,0"
                 Text="Snap It is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens."
                 TextWrapping="Wrap" />
@@ -59,7 +58,29 @@
             </TextBlock>
 
             <TextBlock
-                x:Uid="FollowMe"
+                Margin="0,24,0,0"
+                Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                Text="Give Feedback" />
+            <TextBlock Text="Help me make SnapIt better. You can add new ideas and features, as well as vote other ideas and submit a bug here." TextWrapping="Wrap" />
+            <TextBlock>
+                <Hyperlink
+                    Command="{Binding HandleLinkClick}"
+                    CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
+                    Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                    <Hyperlink.Inlines>
+                        <Run Text="- New ideas or report a bug" />
+                    </Hyperlink.Inlines>
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock>
+                <Hyperlink Command="{Binding RateReviewStoreClick}" Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                    <Hyperlink.Inlines>
+                        <Run Text="- Rate and review on Microsoft Store" />
+                    </Hyperlink.Inlines>
+                </Hyperlink>
+            </TextBlock>
+
+            <TextBlock
                 Margin="0,24,0,0"
                 Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                 Text="Follow Me" />
@@ -114,7 +135,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1">
-            <TextBlock x:Uid="Copyright" />
+            <TextBlock Text="@ Copyright" />
 
             <Grid>
                 <Grid.ColumnDefinitions>

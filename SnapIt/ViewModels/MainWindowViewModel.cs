@@ -31,6 +31,7 @@ namespace SnapIt.ViewModels
 
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
+        public DelegateCommand<string> HandleLinkClick { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
         public DelegateCommand LoadedCommand { get; private set; }
 
@@ -76,6 +77,14 @@ namespace SnapIt.ViewModels
                 {
                     Application.Current.Shutdown();
                 }
+            });
+
+            HandleLinkClick = new DelegateCommand<string>(async (url) =>
+            {
+                string uriToLaunch = $"http://{url}";
+                var uri = new Uri(uriToLaunch);
+
+                await Windows.System.Launcher.LaunchUriAsync(uri);
             });
 
             NavigateCommand = new DelegateCommand<string>((navigatePath) =>

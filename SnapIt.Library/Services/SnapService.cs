@@ -66,8 +66,8 @@ namespace SnapIt.Library.Services
 
             if (ActiveWindow != ActiveWindow.Empty)
             {
-                if (settingService.Settings.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry) ||
-                IsExcludedApplication(ActiveWindow.Title))
+                if ((settingService.Settings.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry)) ||
+                    IsExcludedApplication(ActiveWindow.Title))
                 {
                     return;
                 }
