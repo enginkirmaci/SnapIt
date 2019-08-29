@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using SnapIt.Resources;
+using SnapIt.Library.Entities;
 using Windows.System;
 
 namespace SnapIt.Library.Services
@@ -60,7 +60,11 @@ namespace SnapIt.Library.Services
 
             notifyIcon.ContextMenuStrip.Items.Add("-");
             notifyIcon.ContextMenuStrip.Items.Add("Settings").Click += (s, e) => ShowDefaultWindow();
-            notifyIcon.ContextMenuStrip.Items.Add("Give feedback").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"http://{Constants.AppFeedbackUrl}"));
+
+            var feedbackMenu = new ToolStripMenuItem("Feedback");
+            notifyIcon.ContextMenuStrip.Items.Add(feedbackMenu);
+            feedbackMenu.DropDownItems.Add("Send new idea/bug").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"http://{Constants.AppFeedbackUrl}"));
+            feedbackMenu.DropDownItems.Add("Rate and review").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
 
             notifyIcon.ContextMenuStrip.Items.Add("-");
             notifyIcon.ContextMenuStrip.Items.Add("Exit").Click += (s, e) => ExitApplication();

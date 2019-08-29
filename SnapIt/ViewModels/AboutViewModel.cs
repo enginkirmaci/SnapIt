@@ -1,6 +1,7 @@
 ﻿using System;
 using Prism.Commands;
 using Prism.Mvvm;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.ViewModels
 {
@@ -13,7 +14,7 @@ namespace SnapIt.ViewModels
         {
             RateReviewStoreClick = new DelegateCommand(async () =>
             {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://review/?ProductId=9PHGBMZ7RBZX"));
+                await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
             });
 
             HandleLinkClick = new DelegateCommand<string>(async (url) =>

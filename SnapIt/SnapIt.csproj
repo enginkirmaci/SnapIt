@@ -85,7 +85,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DevMode.cs" />
-    <Compile Include="Resources\ResourceConstants.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DesignWindowViewModel.cs" />
     <Compile Include="ViewModels\LayoutViewModel.cs" />

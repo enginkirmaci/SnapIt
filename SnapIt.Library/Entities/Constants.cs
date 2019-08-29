@@ -1,9 +1,10 @@
 ﻿using System.Windows.Forms;
 
-namespace SnapIt.Resources
+namespace SnapIt.Library.Entities
 {
     public class Constants
     {
+        public const string AppStoreId = "9PHGBMZ7RBZX";
         public const string AppLogo = "/SnapIt.UI;component/Themes/snapit.png";
         public static string AppName => Application.ProductName;
         public static string AppVersion => string.Format("version {0}", Application.ProductVersion);
