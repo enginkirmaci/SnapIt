@@ -33,7 +33,7 @@ namespace SnapIt
             //else
 
             //{
-            if (!ApplicationInstance.RegisterSingleInstance())
+            if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
             {
                 MessageBox.Show("only one instance at a time");
 

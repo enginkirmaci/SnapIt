@@ -6,6 +6,7 @@
     "Areas": [
       {
         "Width": 1,
+        "Merged": true,
         "Areas": [
           {
             "Height": 1

@@ -36,6 +36,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand LoadedCommand { get; private set; }
 
         public MainWindowViewModel(
+            IWindowService windowService,
             IRegionManager regionManager,
             ISnapService snapService,
             ISettingService settingService)
@@ -98,6 +99,11 @@ namespace SnapIt.ViewModels
             if (!DevMode.IsActive)
             {
                 snapService.Initialize();
+            }
+            else if (DevMode.ShowSnapWindowOnStartup)
+            {
+                windowService.Initialize();
+                windowService.Show();
             }
         }
 
