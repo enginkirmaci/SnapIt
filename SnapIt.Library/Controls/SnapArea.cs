@@ -31,6 +31,7 @@ namespace SnapIt.Library.Controls
         private SnapArea mergedSnapArea;
 
         public bool HasMergedSnapArea { get; set; }
+        public bool IsMergedSnapArea { get; set; }
         public Border Border { get; set; }
         public SnapArea ParentSnapArea { get; set; }
         public LayoutArea LayoutArea { get; set; }
@@ -284,7 +285,13 @@ namespace SnapIt.Library.Controls
 
                 if (layoutArea.Merged)
                 {
-                    mergedSnapArea = new SnapArea();
+                    HasMergedSnapArea = true;
+
+                    mergedSnapArea = new SnapArea
+                    {
+                        IsMergedSnapArea = true,
+                        ParentSnapArea = this
+                    };
                     mergedSnapArea.SizeChanged += (s, ev) =>
                     {
                         var element = s as FrameworkElement;
@@ -486,7 +493,11 @@ namespace SnapIt.Library.Controls
         {
             if (!HasMergedSnapArea)
             {
-                mergedSnapArea = new SnapArea();
+                mergedSnapArea = new SnapArea
+                {
+                    IsMergedSnapArea = true,
+                    ParentSnapArea = this
+                };
                 mergedSnapArea.SizeChanged += (s, ev) =>
                 {
                     var element = s as FrameworkElement;

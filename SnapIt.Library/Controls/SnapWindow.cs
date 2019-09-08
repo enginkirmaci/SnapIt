@@ -104,11 +104,22 @@ namespace SnapIt.Library.Controls
                         current.Background = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
                     }
 
-                    var snapArea = current = (SnapArea)element;
+                    if (!(element as SnapArea).IsMergedSnapArea)
+                    {
+                        var snapArea = current = (SnapArea)element;
 
-                    snapArea.OnHoverStyle();
+                        snapArea.OnHoverStyle();
 
-                    return snapArea.ScreenSnapArea(Dpi);
+                        return snapArea.ScreenSnapArea(Dpi);
+                    }
+                    else
+                    {
+                        var snapArea = current = ((SnapArea)element).ParentSnapArea;
+
+                        snapArea.OnHoverStyle();
+
+                        return snapArea.ScreenSnapArea(Dpi);
+                    }
                 }
                 else
                 {
