@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using SnapIt.Library.Entities;
@@ -123,6 +124,11 @@ namespace SnapIt.Library.Controls
                 }
                 else
                 {
+                    if (element != null && element is Border)
+                    {
+                        //TODO also handle border as snaparea
+                    }
+
                     //TODO imporove here. moving on different screens, old one preserves the hover style
                     if (current != null)
                     {

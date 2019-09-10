@@ -16,7 +16,7 @@ namespace SnapIt.Library.Controls
 
         private readonly SolidColorBrush backgroundBrush = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
         private readonly SolidColorBrush transparentBackgroundBrush = new SolidColorBrush(Colors.Transparent);
-        private readonly SolidColorBrush borderBrush = new SolidColorBrush(Color.FromArgb(180, 200, 200, 200));
+        private readonly SolidColorBrush borderBrush = new SolidColorBrush(Color.FromArgb(160, 200, 200, 200));
         private readonly SolidColorBrush backgroundOnHoverBrush = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0));
         private readonly SolidColorBrush buttonBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
         private readonly SolidColorBrush solidBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
@@ -24,7 +24,8 @@ namespace SnapIt.Library.Controls
         private readonly PackIcon splitVerticallyIcon = new PackIcon { Kind = PackIconKind.ArrowSplitVertical };
         private readonly PackIcon splitHorizontallyIcon = new PackIcon { Kind = PackIconKind.ArrowSplitHorizontal };
         private readonly PackIcon removeSnapAreaIcon = new PackIcon { Kind = PackIconKind.Remove };
-        private readonly PackIcon mergeSnapAreaButtonIcon = new PackIcon { Kind = PackIconKind.StretchToPageOutline };
+        private readonly PackIcon mergeSnapAreaButtonIcon = new PackIcon { Kind = PackIconKind.ArrowExpandAll };
+        private readonly PackIcon mergedSnapAreaIcon = new PackIcon { Kind = PackIconKind.ArrowExpandAll };
 
         private StackPanel designPanel;
         private Button mergeSnapAreaButton;
@@ -59,6 +60,7 @@ namespace SnapIt.Library.Controls
                 BorderBrush = borderBrush,
                 BorderThickness = new Thickness(1)
             };
+            SetZIndex(Border, -1);
 
             Children.Add(Border);
         }
@@ -285,33 +287,18 @@ namespace SnapIt.Library.Controls
 
                 if (layoutArea.Merged)
                 {
-                    HasMergedSnapArea = true;
-
-                    mergedSnapArea = new SnapArea
-                    {
-                        IsMergedSnapArea = true,
-                        ParentSnapArea = this
-                    };
-                    mergedSnapArea.SizeChanged += (s, ev) =>
-                    {
-                        var element = s as FrameworkElement;
-
-                        var halfWidth = (element.ActualWidth / 100) * 40;
-                        var halfHeight = (element.ActualHeight / 100) * 40;
-
-                        element.Margin = new Thickness(halfWidth, halfHeight, halfWidth, halfHeight);
-                    };
-                    Children.Add(mergedSnapArea);
-                    SetZIndex(mergedSnapArea, isDesignMode ? -1 : 1);
+                    AddMergedSnapArea(isDesignMode);
 
                     if (ColumnDefinitions.Count > 0)
                     {
                         SetColumnSpan(mergedSnapArea, ColumnDefinitions.Count);
+                        SetColumnSpan(mergedSnapAreaIcon, ColumnDefinitions.Count);
                     }
 
                     if (RowDefinitions.Count > 0)
                     {
                         SetRowSpan(mergedSnapArea, RowDefinitions.Count);
+                        SetRowSpan(mergedSnapAreaIcon, RowDefinitions.Count);
                     }
                 }
             }
@@ -386,6 +373,48 @@ namespace SnapIt.Library.Controls
         {
             SetColumn(element, column);
             SetRow(element, row);
+        }
+
+        private void AddMergedSnapArea(bool isDesignMode)
+        {
+            HasMergedSnapArea = true;
+
+            mergedSnapArea = new SnapArea
+            {
+                IsMergedSnapArea = true,
+                ParentSnapArea = this,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            if (!isDesignMode)
+            {
+                mergedSnapAreaIcon.VerticalAlignment = VerticalAlignment.Center;
+                mergedSnapAreaIcon.HorizontalAlignment = HorizontalAlignment.Center;
+                mergedSnapAreaIcon.Width = 64;
+                mergedSnapAreaIcon.Height = 64;
+                mergedSnapAreaIcon.Foreground = borderBrush;
+                mergedSnapAreaIcon.Background = transparentBackgroundBrush;
+
+                SetZIndex(mergedSnapAreaIcon, -1);
+                Children.Add(mergedSnapAreaIcon);
+            }
+
+            mergedSnapArea.SizeChanged += (s, ev) =>
+            {
+                var element = s as SnapArea;
+
+                var window = Window.GetWindow(element);
+
+                element.Width = element.ParentSnapArea.ActualWidth * 0.3;
+                element.Height = element.ParentSnapArea.ActualHeight * 0.3;
+
+                element.mergedSnapAreaIcon.Width = element.mergedSnapAreaIcon.Height = 64 * (element.Width / 500);
+            };
+
+            SetZIndex(mergedSnapArea, isDesignMode ? -1 : 1);
+
+            Children.Add(mergedSnapArea);
         }
 
         private void Split(SnapArea snapArea, StackPanel designPanel, SplitDirection splitDirection)
@@ -493,22 +522,7 @@ namespace SnapIt.Library.Controls
         {
             if (!HasMergedSnapArea)
             {
-                mergedSnapArea = new SnapArea
-                {
-                    IsMergedSnapArea = true,
-                    ParentSnapArea = this
-                };
-                mergedSnapArea.SizeChanged += (s, ev) =>
-                {
-                    var element = s as FrameworkElement;
-
-                    var halfWidth = (element.ActualWidth / 100) * 40;
-                    var halfHeight = (element.ActualHeight / 100) * 40;
-
-                    element.Margin = new Thickness(halfWidth, halfHeight, halfWidth, halfHeight);
-                };
-                Children.Add(mergedSnapArea);
-                SetZIndex(mergedSnapArea, -1);
+                AddMergedSnapArea(true);
 
                 if (ColumnDefinitions.Count > 0)
                 {
@@ -521,8 +535,6 @@ namespace SnapIt.Library.Controls
                 }
 
                 mergeSnapAreaButton.Background = solidBackgroundBrush;
-
-                HasMergedSnapArea = true;
             }
             else
             {

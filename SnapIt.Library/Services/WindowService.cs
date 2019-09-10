@@ -6,108 +6,110 @@ using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
-	public class WindowService : IWindowService
-	{
-		private readonly ISettingService settingService;
-		private readonly List<SnapWindow> snapWindows;
+    public class WindowService : IWindowService
+    {
+        private readonly ISettingService settingService;
+        private readonly List<SnapWindow> snapWindows;
 
-		public event EscKeyPressedDelegate EscKeyPressed;
+        public event EscKeyPressedDelegate EscKeyPressed;
 
-		public WindowService(
-			ISettingService settingService
-			)
-		{
-			this.settingService = settingService;
+        public WindowService(
+            ISettingService settingService
+            )
+        {
+            this.settingService = settingService;
 
-			snapWindows = new List<SnapWindow>();
-		}
+            snapWindows = new List<SnapWindow>();
+        }
 
-		public bool IsVisible
-		{
-			get => snapWindows.TrueForAll(window => window.IsVisible);
-		}
+        public bool IsVisible
+        {
+            get => snapWindows.TrueForAll(window => window.IsVisible);
+        }
 
-		public void Initialize()
-		{
-			foreach (var screen in settingService.SnapScreens)
-			{
-				var window = new SnapWindow(screen);
+        public void Initialize()
+        {
+            foreach (var screen in settingService.SnapScreens)
+            {
+                var window = new SnapWindow(screen);
 
-				if (!snapWindows.Any(i => i.Screen == screen))
-				{
-					window.ApplyLayout();
-					window.KeyDown += Window_KeyDown;
+                if (!snapWindows.Any(i => i.Screen == screen))
+                {
+                    window.ApplyLayout();
+                    window.KeyDown += Window_KeyDown;
 
-					snapWindows.Add(window);
-				}
-			}
+                    snapWindows.Add(window);
+                }
 
-			snapWindows.ForEach(window =>
-			{
-				window.Opacity = 0;
-				window.Show();
-				window.GenerateSnapAreaBoundries();
-				window.Hide();
-				window.Opacity = 100;
-			});
-		}
+                //break; //TODO test
+            }
 
-		private void Window_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Key == Key.Escape) // TODO globalhook can be used instead of this
-			{
-				EscKeyPressed?.Invoke();
-			}
-		}
+            snapWindows.ForEach(window =>
+            {
+                window.Opacity = 0;
+                window.Show();
+                window.GenerateSnapAreaBoundries();
+                window.Hide();
+                window.Opacity = 100;
+            });
+        }
 
-		public void Release()
-		{
-			snapWindows.ForEach(window =>
-			{
-				window.KeyDown -= Window_KeyDown;
-				window.Close();
-			});
-			snapWindows.Clear();
-		}
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) // TODO globalhook can be used instead of this
+            {
+                EscKeyPressed?.Invoke();
+            }
+        }
 
-		public void Show()
-		{
-			snapWindows.ForEach(window =>
-			{
-				window.Show();
-				window.Activate();
-			});
-		}
+        public void Release()
+        {
+            snapWindows.ForEach(window =>
+            {
+                window.KeyDown -= Window_KeyDown;
+                window.Close();
+            });
+            snapWindows.Clear();
+        }
 
-		public void Hide()
-		{
-			snapWindows.ForEach(window => window.Hide());
-		}
+        public void Show()
+        {
+            snapWindows.ForEach(window =>
+            {
+                window.Show();
+                window.Activate();
+            });
+        }
 
-		public IList<Rectangle> SnapAreaBoundries()
-		{
-			var boundries = new List<Rectangle>();
+        public void Hide()
+        {
+            snapWindows.ForEach(window => window.Hide());
+        }
 
-			snapWindows.ForEach(window => boundries.AddRange(window.SnapAreaBoundries));
+        public IList<Rectangle> SnapAreaBoundries()
+        {
+            var boundries = new List<Rectangle>();
 
-			return boundries;
-		}
+            snapWindows.ForEach(window => boundries.AddRange(window.SnapAreaBoundries));
 
-		public Rectangle SelectElementWithPoint(int x, int y)
-		{
-			var result = new Rectangle();
+            return boundries;
+        }
 
-			foreach (var window in snapWindows)
-			{
-				var selectedArea = window.SelectElementWithPoint(x, y);
-				if (!selectedArea.Equals(Rectangle.Empty))
-				{
-					result = selectedArea;
-					break;
-				}
-			}
+        public Rectangle SelectElementWithPoint(int x, int y)
+        {
+            var result = new Rectangle();
 
-			return result;
-		}
-	}
+            foreach (var window in snapWindows)
+            {
+                var selectedArea = window.SelectElementWithPoint(x, y);
+                if (!selectedArea.Equals(Rectangle.Empty))
+                {
+                    result = selectedArea;
+                    break;
+                }
+            }
+
+            return result;
+        }
+    }
 }
