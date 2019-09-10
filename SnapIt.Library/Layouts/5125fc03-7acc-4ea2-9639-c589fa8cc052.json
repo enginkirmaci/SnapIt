@@ -1,11 +1,11 @@
 {
   "Version": "1.1",
-  "Guid": "0e217130-d44e-4057-bfe9-daf6f6e341d2",
-  "Name": "3 Part Right Wide",
+  "Guid": "5125fc03-7acc-4ea2-9639-c589fa8cc052",
+  "Name": "3 Part Center Wide",
   "LayoutArea": {
     "Areas": [
       {
-        "Width": 1,
+        "Width": 3,
         "Merged": true,
         "Areas": [
           {
@@ -22,24 +22,24 @@
             ]
           },
           {
-            "Width": 1,
-            "Column": 1,
-            "Merged": true,
-            "Areas": [
-              {
-                "Height": 1
-              },
-              {
-                "Height": 1,
-                "Row": 1
-              }
-            ]
+            "Width": 2,
+            "Column": 1
           }
         ]
       },
       {
         "Width": 1,
-        "Column": 1
+        "Column": 1,
+        "Merged": true,
+        "Areas": [
+          {
+            "Height": 1
+          },
+          {
+            "Height": 1,
+            "Row": 1
+          }
+        ]
       }
     ]
   }

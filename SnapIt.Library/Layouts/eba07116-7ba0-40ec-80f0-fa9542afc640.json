@@ -1,5 +1,5 @@
 {
-  "Version": "1.0",
+  "Version": "1.1",
   "Guid": "eba07116-7ba0-40ec-80f0-fa9542afc640",
   "Name": "2 Part Right Split",
   "LayoutArea": {
@@ -10,6 +10,7 @@
       {
         "Width": 1,
         "Column": 1,
+        "Merged": true,
         "Areas": [
           {
             "Height": 1

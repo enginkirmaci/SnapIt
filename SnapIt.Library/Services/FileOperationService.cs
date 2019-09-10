@@ -42,23 +42,23 @@ namespace SnapIt.Library.Services
         {
             var layoutsFolder = Path.Combine(rootFolder, "Layouts");
 
+            //TODO change here and think about all version of layouts will be kept, overwrite or else.
             if (!Directory.Exists(layoutsFolder))
             {
                 Directory.CreateDirectory(layoutsFolder);
 
                 var layouts = new string[]{
-                "0e217130-d44e-4057-bfe9-daf6f6e341d2",
-                "335af962-69ad-4b2e-a2ef-77cd0f1fc329",
-                "377f159c-72bd-4876-bdbe-85745e10f3cc",
-                "792fc82f-65dd-4795-a589-b6b39a21d9ef",
-                "00904f1f-4e41-4dc6-8677-6e5a2b231935",
-                "e5e6b3d7-cb2c-4e90-92b7-e7f5dbd35f95",
-                "eba07116-7ba0-40ec-80f0-fa9542afc640",
-                "effbbdbb-1fe0-4639-8f8b-3f49156d5b2c",
-                "f216a979-b3f3-427a-9c31-7977eaf91b19",
-                "f640fa94-b4ea-4755-9b6f-68bf49b85c0c",
-                "f332538f-5f83-4c4f-8472-1155f1aef340"
-            };
+                    "00904f1f-4e41-4dc6-8677-6e5a2b231935",
+                    "0e217130-d44e-4057-bfe9-daf6f6e341d2",
+                    "335af962-69ad-4b2e-a2ef-77cd0f1fc329",
+                    "377f159c-72bd-4876-bdbe-85745e10f3cc",
+                    "5125fc03-7acc-4ea2-9639-c589fa8cc052",
+                    "6089ef8c-7084-4cb5-b4c0-5881e14a0e66",
+                    "65fdbf65-0de0-4842-ae0a-b9d87705e9b0",
+                    "eba07116-7ba0-40ec-80f0-fa9542afc640",
+                    "f332538f-5f83-4c4f-8472-1155f1aef340",
+                    "f640fa94-b4ea-4755-9b6f-68bf49b85c0c"
+                };
 
                 foreach (var layout in layouts)
                 {

@@ -24,7 +24,7 @@ namespace SnapIt.ViewModels
             Layouts = new ObservableCollection<Layout>();
             Layouts.Add(new Layout { Name = "Layout 1" });
             Layouts.Add(new Layout { Name = "Layout 2" });
-            Layouts.Add(new Layout { Name = "Layout 3" });
+            Layouts.Add(new Layout { Name = "3 Part Horizontal Reverse" });
             Layouts.Add(new Layout { Name = "Layout 4" });
 
             SelectedLayout = Layouts.First();

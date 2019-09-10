@@ -174,7 +174,10 @@
                     SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid
+                                Width="188"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
                                 <snapcontrols:SnapArea
                                     Width="188"
                                     Height="156"
@@ -187,7 +190,8 @@
                                     Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
                                     Opacity="0.9"
                                     Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-                                    Text="{Binding Name}" />
+                                    Text="{Binding Name}"
+                                    TextWrapping="Wrap" />
 
                                 <materialDesign:PopupBox
                                     Margin="0,6"

@@ -1,11 +1,12 @@
 {
-  "Version": "1.0",
+  "Version": "1.1",
   "Guid": "335af962-69ad-4b2e-a2ef-77cd0f1fc329",
   "Name": "4 Part",
   "LayoutArea": {
     "Areas": [
       {
         "Width": 1,
+        "Merged": true,
         "Areas": [
           {
             "Height": 1
@@ -19,6 +20,7 @@
       {
         "Width": 1,
         "Column": 1,
+        "Merged": true,
         "Areas": [
           {
             "Height": 1
