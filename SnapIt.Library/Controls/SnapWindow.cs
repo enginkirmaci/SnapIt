@@ -98,6 +98,12 @@ namespace SnapIt.Library.Controls
                 var Point2Window = PointFromScreen(new Point(x, y));
 
                 var element = InputHitTest(Point2Window);
+
+                if (element != null && element is Border)
+                {
+                    element = (SnapArea)(element as Border).Parent;
+                }
+
                 if (element != null && element is SnapArea)
                 {
                     if (current != null)
@@ -124,11 +130,6 @@ namespace SnapIt.Library.Controls
                 }
                 else
                 {
-                    if (element != null && element is Border)
-                    {
-                        //TODO also handle border as snaparea
-                    }
-
                     //TODO imporove here. moving on different screens, old one preserves the hover style
                     if (current != null)
                     {

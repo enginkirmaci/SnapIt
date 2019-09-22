@@ -11,6 +11,7 @@ namespace SnapIt.Library.Services
 {
     public class FileOperationService : IFileOperationService
     {
+        private const string LayoutFolder = "Layoutsv11";
         private readonly string rootFolder;
 
         private readonly JsonSerializerSettings defaultJsonSerializerSettings;
@@ -40,9 +41,8 @@ namespace SnapIt.Library.Services
 
         private void InitializeLayouts()
         {
-            var layoutsFolder = Path.Combine(rootFolder, "Layouts");
+            var layoutsFolder = Path.Combine(rootFolder, LayoutFolder);
 
-            //TODO change here and think about all version of layouts will be kept, overwrite or else.
             if (!Directory.Exists(layoutsFolder))
             {
                 Directory.CreateDirectory(layoutsFolder);
@@ -68,7 +68,7 @@ namespace SnapIt.Library.Services
                         {
                             string fileContents = tr.ReadToEnd();
 
-                            File.WriteAllText(Path.Combine(rootFolder, $"Layouts\\{layout}.json"), fileContents);
+                            File.WriteAllText(Path.Combine(rootFolder, $"{LayoutFolder}\\{layout}.json"), fileContents);
                         }
                     }
                 }
@@ -134,7 +134,7 @@ namespace SnapIt.Library.Services
 
         public IList<Layout> GetLayouts()
         {
-            var folderPath = Path.Combine(rootFolder, "Layouts");
+            var folderPath = Path.Combine(rootFolder, LayoutFolder);
             var files = Directory.GetFiles(folderPath, "*.json");
             var layouts = new List<Layout>();
 
@@ -155,7 +155,7 @@ namespace SnapIt.Library.Services
 
         private string GetLayoutPath(Layout layout)
         {
-            return Path.Combine(rootFolder, $"Layouts\\{layout.Guid}.json");
+            return Path.Combine(rootFolder, $"{LayoutFolder}\\{layout.Guid}.json");
         }
     }
 }

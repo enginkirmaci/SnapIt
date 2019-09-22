@@ -2,12 +2,15 @@
 using Prism.Mvvm;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Services;
 using SnapIt.Views;
 
 namespace SnapIt.ViewModels
 {
     public class DesignWindowViewModel : BindableBase
     {
+        private readonly ISnapService snapService;
+
         public SnapScreen SnapScreen { get; set; }
         public Layout Layout { get; set; }
         public SnapArea MainSnapArea { get; set; }
@@ -18,8 +21,10 @@ namespace SnapIt.ViewModels
 
         public DelegateCommand SaveLayoutCommand { get; }
 
-        public DesignWindowViewModel()
+        public DesignWindowViewModel(ISnapService snapService)
         {
+            this.snapService = snapService;
+
             //SourceInitializedCommand = new DelegateCommand<Window>((window) =>
             //{
             //	var wih = new WindowInteropHelper(window);
@@ -37,6 +42,8 @@ namespace SnapIt.ViewModels
 
             LoadedCommand = new DelegateCommand<object>((mainSnapArea) =>
             {
+                snapService.Release();
+
                 MainSnapArea = mainSnapArea as SnapArea;
 
                 MainSnapArea.ApplyLayout(Layout.LayoutArea, true);
@@ -44,6 +51,8 @@ namespace SnapIt.ViewModels
 
             SaveLayoutCommand = new DelegateCommand(() =>
             {
+                snapService.Initialize();
+
                 Layout.GenerateLayoutArea(MainSnapArea);
 
                 Window.Close();

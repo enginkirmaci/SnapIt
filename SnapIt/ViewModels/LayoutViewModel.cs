@@ -84,12 +84,12 @@ namespace SnapIt.ViewModels
                     Name = "New layout"
                 };
 
-                Layouts.Add(layout);
-                SelectedLayout = Layouts.FirstOrDefault(i => i.Guid == layout.Guid);
+                Layouts.Insert(0, layout);
+                PopupLayout = Layouts.FirstOrDefault(i => i.Guid == layout.Guid);
 
                 var designWindow = new DesignWindow();
                 designWindow.Closing += DesignWindow_Closing;
-                designWindow.SetScreen(SelectedSnapScreen, SelectedLayout);
+                designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
                 designWindow.Show();
             });
 
@@ -111,7 +111,7 @@ namespace SnapIt.ViewModels
                 }
                 catch
                 {
-                    System.Windows.Forms.MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
+                    MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
                 }
             });
 
@@ -135,7 +135,7 @@ namespace SnapIt.ViewModels
             {
                 PopupLayout = layout;
 
-                Layouts.Remove(layout);
+                Layouts.Remove(PopupLayout);
 
                 if (SelectedLayout == null)
                 {
@@ -165,13 +165,14 @@ namespace SnapIt.ViewModels
 
         private void DesignWindow_Closing(object sender, CancelEventArgs e)
         {
-            settingService.SaveLayout(SelectedLayout);
-            settingService.LinkScreenLayout(SelectedSnapScreen, SelectedLayout);
+            settingService.SaveLayout(PopupLayout);
 
-            var position = Layouts.IndexOf(SelectedLayout);
+            var position = Layouts.IndexOf(PopupLayout);
 
-            Layouts.Remove(SelectedLayout);
-            Layouts.Insert(position, SelectedLayout);
+            Layouts.Remove(PopupLayout);
+            Layouts.Insert(position, PopupLayout);
+
+            SelectedLayout = PopupLayout;
 
             ApplyChanges();
         }

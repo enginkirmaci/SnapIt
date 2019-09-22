@@ -274,7 +274,7 @@ namespace SnapIt.Library.Controls
                     Children.Remove(designPanel);
                 }
 
-                ApplyLayout2(layoutArea, isDesignMode);
+                ApplyColumnsAndRows(layoutArea, isDesignMode);
 
                 foreach (var area in layoutArea.Areas)
                 {
@@ -287,6 +287,11 @@ namespace SnapIt.Library.Controls
 
                 if (layoutArea.Merged)
                 {
+                    if (isDesignMode)
+                    {
+                        mergeSnapAreaButton.Background = solidBackgroundBrush;
+                    }
+
                     AddMergedSnapArea(isDesignMode);
 
                     if (ColumnDefinitions.Count > 0)
@@ -304,7 +309,7 @@ namespace SnapIt.Library.Controls
             }
         }
 
-        internal void ApplyLayout2(LayoutArea layoutArea, bool isDesignMode)
+        internal void ApplyColumnsAndRows(LayoutArea layoutArea, bool isDesignMode)
         {
             if (layoutArea.Areas.Count > 0)
             {
