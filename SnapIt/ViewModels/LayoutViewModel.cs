@@ -16,6 +16,7 @@ namespace SnapIt.ViewModels
     {
         private readonly ISnapService snapService;
         private readonly ISettingService settingService;
+        private readonly IWinApiService winApiService;
 
         private ObservableCollection<SnapScreen> snapScreens;
         private SnapScreen selectedSnapScreen;
@@ -66,10 +67,12 @@ namespace SnapIt.ViewModels
 
         public LayoutViewModel(
             ISnapService snapService,
-            ISettingService settingService)
+            ISettingService settingService,
+            IWinApiService winApiService)
         {
             this.snapService = snapService;
             this.settingService = settingService;
+            this.winApiService = winApiService;
 
             Layouts = new ObservableCollection<Layout>(settingService.Layouts);
             SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
@@ -87,7 +90,7 @@ namespace SnapIt.ViewModels
                 Layouts.Insert(0, layout);
                 PopupLayout = Layouts.FirstOrDefault(i => i.Guid == layout.Guid);
 
-                var designWindow = new DesignWindow();
+                var designWindow = new DesignWindow(winApiService);
                 designWindow.Closing += DesignWindow_Closing;
                 designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
                 designWindow.Show();
@@ -119,7 +122,7 @@ namespace SnapIt.ViewModels
             {
                 PopupLayout = layout;
 
-                var designWindow = new DesignWindow();
+                var designWindow = new DesignWindow(winApiService);
                 designWindow.Closing += DesignWindow_Closing;
                 designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
                 designWindow.Show();

@@ -2,7 +2,6 @@
 using System.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
-using SnapIt.Library;
 using SnapIt.Library.Services;
 
 namespace SnapIt.ViewModels
@@ -11,6 +10,7 @@ namespace SnapIt.ViewModels
     {
         private readonly ISnapService snapService;
         private readonly ISettingService settingService;
+        private readonly IWinApiService winApiService;
 
         private ObservableCollection<string> runningApplications;
         private string selectedApplication;
@@ -27,12 +27,13 @@ namespace SnapIt.ViewModels
 
         public WindowsViewModel(
             ISnapService snapService,
-            ISettingService settingService)
+            ISettingService settingService,
+            IWinApiService winApiService)
         {
             this.snapService = snapService;
             this.settingService = settingService;
-
-            RunningApplications = new ObservableCollection<string>(User32Test.GetOpenWindowsNames());
+            this.winApiService = winApiService;
+            RunningApplications = new ObservableCollection<string>(winApiService.GetOpenWindowsNames());
             if (settingService.ExcludedApps?.Applications != null)
             {
                 ExcludedApplications = new ObservableCollection<string>(settingService.ExcludedApps.Applications);

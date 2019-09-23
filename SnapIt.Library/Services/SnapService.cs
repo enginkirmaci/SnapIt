@@ -13,6 +13,7 @@ namespace SnapIt.Library.Services
     {
         private readonly IWindowService windowService;
         private readonly ISettingService settingService;
+        private readonly IWinApiService winApiService;
 
         private ActiveWindow ActiveWindow;
         private Rectangle snapArea;
@@ -24,10 +25,12 @@ namespace SnapIt.Library.Services
 
         public SnapService(
             IWindowService windowService,
-            ISettingService settingService)
+            ISettingService settingService,
+            IWinApiService winApiService)
         {
             this.windowService = windowService;
             this.settingService = settingService;
+            this.winApiService = winApiService;
         }
 
         public void Initialize()
@@ -62,11 +65,11 @@ namespace SnapIt.Library.Services
 
         private void MoveActiveWindowByKeyboard(MoveDirection direction)
         {
-            ActiveWindow = User32Test.GetActiveWindow();
+            ActiveWindow = winApiService.GetActiveWindow();
 
             if (ActiveWindow != ActiveWindow.Empty)
             {
-                if ((settingService.Settings.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry)) ||
+                if ((settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(ActiveWindow.Boundry)) ||
                     IsExcludedApplication(ActiveWindow.Title))
                 {
                     return;
@@ -75,7 +78,7 @@ namespace SnapIt.Library.Services
                 var boundries = windowService.SnapAreaBoundries();
                 if (boundries != null)
                 {
-                    User32Test.GetWindowMargin(ActiveWindow, out Rectangle rectmargin);
+                    winApiService.GetWindowMargin(ActiveWindow, out Rectangle rectmargin);
                     var activeBoundry = boundries.FirstOrDefault(i => i.Contains(rectmargin));
                     var copyActiveBoundry = new Rectangle(activeBoundry.Left, activeBoundry.Top, activeBoundry.Right, activeBoundry.Bottom);
 
@@ -149,14 +152,14 @@ namespace SnapIt.Library.Services
             {
                 if (!isWindowDetected)
                 {
-                    ActiveWindow = User32Test.GetActiveWindow();
+                    ActiveWindow = winApiService.GetActiveWindow();
                     ActiveWindow.Dpi = DpiHelper.GetDpiFromPoint(e.X, e.Y);
 
                     if (ActiveWindow?.Title != null && IsExcludedApplication(ActiveWindow.Title))
                     {
                         isListening = false;
                     }
-                    else if (settingService.Settings.DisableForFullscreen && User32Test.IsFullscreen(ActiveWindow.Boundry))
+                    else if (settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(ActiveWindow.Boundry))
                     {
                         isListening = false;
                     }
@@ -223,7 +226,7 @@ namespace SnapIt.Library.Services
                         SendKeys.SendWait("{ESC}");
                     }
 
-                    User32Test.GetWindowMargin(ActiveWindow, out Rectangle withMargin);
+                    winApiService.GetWindowMargin(ActiveWindow, out Rectangle withMargin);
 
                     if (!withMargin.Equals(default(Rectangle)))
                     {
@@ -241,11 +244,11 @@ namespace SnapIt.Library.Services
                         rectangle.Bottom += systemMargin.Bottom;
                     }
 
-                    User32Test.MoveWindow(ActiveWindow, rectangle);
+                    winApiService.MoveWindow(ActiveWindow, rectangle);
 
                     if (!rectangle.Dpi.Equals(ActiveWindow.Dpi))
                     {
-                        User32Test.MoveWindow(ActiveWindow, rectangle);
+                        winApiService.MoveWindow(ActiveWindow, rectangle);
                     }
                 }
             }

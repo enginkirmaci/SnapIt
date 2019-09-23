@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library.Entities;
@@ -46,7 +45,7 @@ namespace SnapIt.ViewModels
             }
         }
 
-        public DelegateCommand<Window> ActivatedCommand { get; private set; }
+        public DelegateCommand LoadedCommand { get; private set; }
 
         public SettingsViewModel(
             ISnapService snapService,
@@ -54,10 +53,12 @@ namespace SnapIt.ViewModels
         {
             this.snapService = snapService;
             this.settingService = settingService;
-            ActivatedCommand = new DelegateCommand<Window>(async (mainWindow) =>
+
+            LoadedCommand = new DelegateCommand(async () =>
             {
                 IsStartupTaskActive = await settingService.GetStartupTaskStatusAsync();
             });
+
             MouseButtons = new ObservableCollection<MouseButton>
             {
                 MouseButton.Left,

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Interop;
-using SnapIt.Library;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Services;
 using SnapIt.ViewModels;
 
 namespace SnapIt.Views
@@ -13,11 +13,14 @@ namespace SnapIt.Views
     /// </summary>
     public partial class DesignWindow : Window
     {
+        private readonly IWinApiService winApiService;
         private SnapScreen snapScreen;
 
-        public DesignWindow()
+        public DesignWindow(IWinApiService winApiService)
         {
             InitializeComponent();
+
+            this.winApiService = winApiService;
         }
 
         public void SetScreen(SnapScreen snapScreen, Layout layout)
@@ -50,7 +53,7 @@ namespace SnapIt.Views
                 Handle = wih.Handle
             };
 
-            User32Test.MoveWindow(window,
+            winApiService.MoveWindow(window,
                                   snapScreen.Base.WorkingArea.Left,
                                   snapScreen.Base.WorkingArea.Top,
                                   snapScreen.Base.WorkingArea.Width,

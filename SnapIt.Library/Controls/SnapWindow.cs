@@ -7,19 +7,25 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
+using SnapIt.Library.Services;
 
 namespace SnapIt.Library.Controls
 {
     public class SnapWindow : Window
     {
+        private readonly IWinApiService winApiService;
         private SnapArea current;
 
         public SnapScreen Screen { get; set; }
         public List<Rectangle> SnapAreaBoundries { get; set; }
         public Dpi Dpi { get; set; }
 
-        public SnapWindow(SnapScreen screen)
+        public SnapWindow(
+            IWinApiService winApiService,
+            SnapScreen screen)
         {
+            this.winApiService = winApiService;
+
             Screen = screen;
 
             Topmost = true;
@@ -47,7 +53,7 @@ namespace SnapIt.Library.Controls
                 Handle = wih.Handle
             };
 
-            User32Test.MoveWindow(
+            winApiService.MoveWindow(
                 window,
                 Screen.Base.WorkingArea.Left,
                 Screen.Base.WorkingArea.Top,

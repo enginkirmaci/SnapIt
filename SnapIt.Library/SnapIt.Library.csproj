@@ -77,12 +77,13 @@
     <Compile Include="Services\INotifyIconService.cs" />
     <Compile Include="Services\ISettingService.cs" />
     <Compile Include="Services\ISnapService.cs" />
+    <Compile Include="Services\IWinApiService.cs" />
     <Compile Include="Services\IWindowService.cs" />
     <Compile Include="Services\NotifyIconService.cs" />
     <Compile Include="Services\SettingService.cs" />
     <Compile Include="Services\SnapService.cs" />
+    <Compile Include="Services\WinApiService.cs" />
     <Compile Include="Services\WindowService.cs" />
-    <Compile Include="User32Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Layouts\00904f1f-4e41-4dc6-8677-6e5a2b231935.json" />

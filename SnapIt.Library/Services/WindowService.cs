@@ -9,16 +9,18 @@ namespace SnapIt.Library.Services
     public class WindowService : IWindowService
     {
         private readonly ISettingService settingService;
+        private readonly IWinApiService winApiService;
         private readonly List<SnapWindow> snapWindows;
 
         public event EscKeyPressedDelegate EscKeyPressed;
 
         public WindowService(
-            ISettingService settingService
+            ISettingService settingService,
+            IWinApiService winApiService
             )
         {
             this.settingService = settingService;
-
+            this.winApiService = winApiService;
             snapWindows = new List<SnapWindow>();
         }
 
@@ -31,7 +33,7 @@ namespace SnapIt.Library.Services
         {
             foreach (var screen in settingService.SnapScreens)
             {
-                var window = new SnapWindow(screen);
+                var window = new SnapWindow(winApiService, screen);
 
                 if (!snapWindows.Any(i => i.Screen == screen))
                 {
