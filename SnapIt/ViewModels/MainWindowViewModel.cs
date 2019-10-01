@@ -4,6 +4,7 @@ using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 

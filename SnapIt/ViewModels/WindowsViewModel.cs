@@ -2,6 +2,7 @@
 using System.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
+using SnapIt.Library;
 using SnapIt.Library.Services;
 
 namespace SnapIt.ViewModels

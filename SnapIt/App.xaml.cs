@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using DryIoc;
 using Prism.Ioc;
+using SnapIt.Library;
 using SnapIt.Library.Applications;
 using SnapIt.Library.Services;
 using SnapIt.Views;

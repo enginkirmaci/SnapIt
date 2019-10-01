@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Prism.Commands;
 using Prism.Mvvm;
+using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 

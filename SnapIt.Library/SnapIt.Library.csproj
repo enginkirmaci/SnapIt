@@ -54,6 +54,7 @@
     <Compile Include="Controls\HotkeyEditorControl.xaml.cs">
       <DependentUpon>HotkeyEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DevMode.cs" />
     <Compile Include="Entities\Dpi.cs" />
     <Compile Include="Entities\ExcludedApps.cs" />
     <Compile Include="Entities\Constants.cs" />

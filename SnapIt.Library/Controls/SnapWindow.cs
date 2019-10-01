@@ -47,6 +47,27 @@ namespace SnapIt.Library.Controls
         {
             base.OnSourceInitialized(e);
 
+            MaximizeWindow();
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            var oldDpi = Dpi;
+
+            CalculateDpi();
+
+            if (!oldDpi.Equals(Dpi))
+            {
+                DevMode.Log("Dpi changed");
+
+                MaximizeWindow();
+            }
+        }
+
+        private void MaximizeWindow()
+        {
             var wih = new WindowInteropHelper(this);
             var window = new ActiveWindow
             {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Prism.Commands;
 using Prism.Mvvm;
+using SnapIt.Library;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
