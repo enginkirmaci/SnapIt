@@ -19,6 +19,7 @@ namespace SnapIt.Library.Services
         private Rectangle snapArea;
         private bool isWindowDetected = false;
         private bool isListening = false;
+        private bool isSnappingKeyHolding = true;
         private IKeyboardMouseEvents globalHook;
 
         public event GetStatus StatusChanged;
@@ -51,6 +52,13 @@ namespace SnapIt.Library.Services
             if (settingService.Settings.EnableKeyboard)
             {
                 globalHook.OnCombination(map);
+
+                if (settingService.Settings.EnableHoldKey)
+                {
+                    isSnappingKeyHolding = false;
+                    globalHook.KeyDown += GlobalHook_KeyDown;
+                    globalHook.KeyUp += GlobalHook_KeyUp;
+                }
             }
 
             if (settingService.Settings.EnableMouse)
@@ -61,6 +69,94 @@ namespace SnapIt.Library.Services
             }
 
             StatusChanged?.Invoke(true);
+        }
+
+        public void Release()
+        {
+            windowService.Release();
+
+            if (globalHook != null)
+            {
+                globalHook.MouseMove -= MouseMoveEvent;
+                globalHook.MouseDown -= MouseDownEvent;
+                globalHook.MouseUp -= MouseUpEvent;
+
+                if (settingService.Settings.EnableHoldKey)
+                {
+                    globalHook.KeyDown -= GlobalHook_KeyDown;
+                    globalHook.KeyUp -= GlobalHook_KeyUp;
+                }
+
+                globalHook.Dispose();
+            }
+
+            StatusChanged?.Invoke(false);
+        }
+
+        private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
+        {
+            var stop = false;
+
+            switch (settingService.Settings.HoldKey)
+            {
+                case HoldKey.Control:
+                    if (e.Control)
+                    {
+                        stop = true;
+                    }
+
+                    break;
+
+                case HoldKey.Alt:
+                    if (e.Alt)
+                    {
+                        stop = true;
+                    }
+
+                    break;
+
+                case HoldKey.Shift:
+                    if (e.Shift)
+                    {
+                        stop = true;
+                    }
+
+                    break;
+            }
+
+            if (stop)
+            {
+                isSnappingKeyHolding = false;
+
+                StopSnapping();
+            }
+        }
+
+        private void GlobalHook_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (settingService.Settings.HoldKey)
+            {
+                case HoldKey.Control:
+                    if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                    {
+                        isSnappingKeyHolding = true;
+                    }
+                    break;
+
+                case HoldKey.Alt:
+                    if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
+                    {
+                        isSnappingKeyHolding = true;
+                    }
+                    break;
+
+                case HoldKey.Shift:
+                    if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+                    {
+                        isSnappingKeyHolding = true;
+                    }
+                    break;
+            }
         }
 
         private void MoveActiveWindowByKeyboard(MoveDirection direction)
@@ -117,23 +213,13 @@ namespace SnapIt.Library.Services
 
         private void WindowService_EscKeyPressed()
         {
-            windowService.Hide();
-            isListening = false;
+            StopSnapping();
         }
 
-        public void Release()
+        private void StopSnapping()
         {
-            windowService.Release();
-
-            if (globalHook != null)
-            {
-                globalHook.MouseMove -= MouseMoveEvent;
-                globalHook.MouseDown -= MouseDownEvent;
-                globalHook.MouseUp -= MouseUpEvent;
-                globalHook.Dispose();
-            }
-
-            StatusChanged?.Invoke(false);
+            windowService.Hide();
+            isListening = false;
         }
 
         private bool IsExcludedApplication(string Title)
@@ -148,7 +234,7 @@ namespace SnapIt.Library.Services
 
         private void MouseMoveEvent(object sender, MouseEventArgs e)
         {
-            if (isListening)
+            if (isListening && isSnappingKeyHolding)
             {
                 if (!isWindowDetected)
                 {
@@ -230,13 +316,16 @@ namespace SnapIt.Library.Services
 
                     if (!withMargin.Equals(default(Rectangle)))
                     {
+                        var marginHorizontal = (ActiveWindow.Boundry.Width - withMargin.Width) / 2;
                         var systemMargin = new Rectangle
                         {
-                            Left = withMargin.Left - ActiveWindow.Boundry.Left,
-                            Top = withMargin.Top - ActiveWindow.Boundry.Top,
-                            Right = ActiveWindow.Boundry.Right - withMargin.Right,
-                            Bottom = ActiveWindow.Boundry.Bottom - withMargin.Bottom
+                            Left = marginHorizontal,
+                            Right = marginHorizontal,
+                            Top = 0,
+                            Bottom = ActiveWindow.Boundry.Height - withMargin.Height
                         };
+
+                        DevMode.Log($"\n{systemMargin}");
 
                         rectangle.Left -= systemMargin.Left;
                         rectangle.Top -= systemMargin.Top;

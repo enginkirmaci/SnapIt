@@ -63,11 +63,12 @@ namespace SnapIt.Library.Services
                 Y,
                 width,
                 height,
-                SetWindowPosFlags.IgnoreZOrder | SetWindowPosFlags.ShowWindow);
+                SetWindowPosFlags.ShowWindow);
 
             var msg = Marshal.GetLastWin32Error();
             if (msg != 0)
             {
+                DevMode.Log(msg);
             }
             return res;
         }

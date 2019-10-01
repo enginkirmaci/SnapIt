@@ -27,125 +27,146 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <StackPanel Margin="16">
-            <TextBlock
-                Margin="0,6"
-                Style="{StaticResource MaterialDesignTitleTextBlock}"
-                Text="Mouse" />
-            <TextBlock Margin="0,6" Text="Use mouse to snap window" />
+            <StackPanel Margin="16">
+                <TextBlock
+                    Margin="0,6"
+                    Style="{StaticResource MaterialDesignTitleTextBlock}"
+                    Text="Mouse" />
+                <TextBlock Margin="0,6" Text="Use mouse to snap window" />
 
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding EnableMouse}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                <ToggleButton
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    IsChecked="{Binding EnableMouse}"
+                    Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-            <TextBlock Margin="0,6,0,0" Text="Only use window title to snap window" />
-            <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
-                <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
-                    It is recommend to enable it if you choose Left mouse button for snapping
-                </Hyperlink>
-            </TextBlock>
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding DragByTitle}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                <TextBlock Margin="0,6,0,0" Text="Only use window title to snap window" />
+                <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
+                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                        It is recommend to enable it if you choose Left mouse button for snapping
+                    </Hyperlink>
+                </TextBlock>
+                <ToggleButton
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    IsChecked="{Binding DragByTitle}"
+                    Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-            <TextBlock Margin="0,6" Text="Mouse button for snapping window" />
-            <ComboBox
-                Width="128"
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                ItemsSource="{Binding MouseButtons}"
-                SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
-        </StackPanel>
+                <TextBlock Margin="0,6" Text="Mouse button for snapping window" />
+                <ComboBox
+                    Width="128"
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{Binding MouseButtons}"
+                    SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
 
-        <StackPanel Grid.Column="1" Margin="16">
-            <TextBlock
-                Margin="0,6"
-                Style="{StaticResource MaterialDesignTitleTextBlock}"
-                Text="Keyboard" />
-            <TextBlock Margin="0,6" Text="Use keyboard to snap window" />
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding EnableKeyboard}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                <TextBlock Margin="0,6,0,0" Text="Use Hold key" />
+                <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
+                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                        It enables hold key to enable mouse snapping
+                    </Hyperlink>
+                </TextBlock>
+                <ToggleButton
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    IsChecked="{Binding EnableHoldKey}"
+                    Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-            <TextBlock Margin="0,6" Text="Use following shortcuts to snap window" />
+                <TextBlock Margin="0,6" Text="Hold Key" />
+                <ComboBox
+                    Width="128"
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{Binding HoldKeys}"
+                    SelectedItem="{Binding HoldKey, Mode=TwoWay}" />
+            </StackPanel>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="92" />
-                    <ColumnDefinition Width="128" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Margin="0,6" Text="Move Up" />
-                <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveUpShortcut}" />
-            </Grid>
+            <StackPanel Grid.Column="1" Margin="16">
+                <TextBlock
+                    Margin="0,6"
+                    Style="{StaticResource MaterialDesignTitleTextBlock}"
+                    Text="Keyboard" />
+                <TextBlock Margin="0,6" Text="Use keyboard to snap window" />
+                <ToggleButton
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    IsChecked="{Binding EnableKeyboard}"
+                    Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="92" />
-                    <ColumnDefinition Width="128" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Margin="0,6" Text="Move Down" />
-                <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveDownShortcut}" />
-            </Grid>
+                <TextBlock Margin="0,6" Text="Use following shortcuts to snap window" />
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="92" />
-                    <ColumnDefinition Width="128" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Margin="0,6" Text="Move Left" />
-                <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveLeftShortcut}" />
-            </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="92" />
+                        <ColumnDefinition Width="128" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="0,6" Text="Move Up" />
+                    <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveUpShortcut}" />
+                </Grid>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="92" />
-                    <ColumnDefinition Width="128" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Margin="0,6" Text="Move Right" />
-                <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveRightShortcut}" />
-            </Grid>
-        </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="92" />
+                        <ColumnDefinition Width="128" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="0,6" Text="Move Down" />
+                    <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveDownShortcut}" />
+                </Grid>
 
-        <StackPanel
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Margin="16">
-            <TextBlock
-                Margin="0,6"
-                Style="{StaticResource MaterialDesignTitleTextBlock}"
-                Text="Other Settings" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="92" />
+                        <ColumnDefinition Width="128" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="0,6" Text="Move Left" />
+                    <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveLeftShortcut}" />
+                </Grid>
 
-            <TextBlock Margin="0,6" Text="Disable snapping for fullscreen application and games (recommended)" />
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding DisableForFullscreen}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="92" />
+                        <ColumnDefinition Width="128" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="0,6" Text="Move Right" />
+                    <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveRightShortcut}" />
+                </Grid>
+            </StackPanel>
 
-            <TextBlock Margin="0,6" Text="Start Snap It when I start Windows" />
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding IsStartupTaskActive}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+            <StackPanel
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Margin="16">
+                <TextBlock
+                    Margin="0,6"
+                    Style="{StaticResource MaterialDesignTitleTextBlock}"
+                    Text="Other Settings" />
 
-            <!--<TextBlock Margin="0,6">
+                <TextBlock Margin="0,6" Text="Disable snapping for fullscreen application and games (recommended)" />
+                <ToggleButton
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    IsChecked="{Binding DisableForFullscreen}"
+                    Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+
+                <TextBlock Margin="0,6" Text="Start Snap It when I start Windows" />
+                <ToggleButton
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    IsChecked="{Binding IsStartupTaskActive}"
+                    Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+
+                <!--<TextBlock Margin="0,6">
                             Run as administrator (experimental, needs to be restarted)
                         </TextBlock>
                         <ToggleButton
@@ -153,6 +174,7 @@
                             HorizontalAlignment="Left"
                             IsChecked="{Binding IsRunAsAdmin}"
                             Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />-->
-        </StackPanel>
-    </Grid>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

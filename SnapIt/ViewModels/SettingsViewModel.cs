@@ -14,12 +14,16 @@ namespace SnapIt.ViewModels
 
         private bool isStartupTaskActive;
         private ObservableCollection<MouseButton> mouseButtons;
+        private ObservableCollection<HoldKey> holdKeys;
 
         public bool EnableKeyboard { get => settingService.Settings.EnableKeyboard; set { settingService.Settings.EnableKeyboard = value; ApplyChanges(); } }
         public bool EnableMouse { get => settingService.Settings.EnableMouse; set { settingService.Settings.EnableMouse = value; ApplyChanges(); } }
         public bool DragByTitle { get => settingService.Settings.DragByTitle; set { settingService.Settings.DragByTitle = value; ApplyChanges(); } }
         public MouseButton MouseButton { get => settingService.Settings.MouseButton; set { settingService.Settings.MouseButton = value; ApplyChanges(); } }
         public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
+        public bool EnableHoldKey { get => settingService.Settings.EnableHoldKey; set { settingService.Settings.EnableHoldKey = value; ApplyChanges(); } }
+        public HoldKey HoldKey { get => settingService.Settings.HoldKey; set { settingService.Settings.HoldKey = value; ApplyChanges(); } }
+        public ObservableCollection<HoldKey> HoldKeys { get => holdKeys; set => SetProperty(ref holdKeys, value); }
         public bool DisableForFullscreen { get => settingService.Settings.DisableForFullscreen; set { settingService.Settings.DisableForFullscreen = value; ApplyChanges(); } }
         public string MoveUpShortcut { get => settingService.Settings.MoveUpShortcut; set { settingService.Settings.MoveUpShortcut = value; ApplyChanges(); } }
         public string MoveDownShortcut { get => settingService.Settings.MoveDownShortcut; set { settingService.Settings.MoveDownShortcut = value; ApplyChanges(); } }
@@ -65,6 +69,12 @@ namespace SnapIt.ViewModels
                 MouseButton.Left,
                 MouseButton.Middle,
                 MouseButton.Right
+            };
+
+            HoldKeys = new ObservableCollection<HoldKey> {
+                HoldKey.Control,
+                HoldKey.Alt,
+                HoldKey.Shift
             };
         }
 

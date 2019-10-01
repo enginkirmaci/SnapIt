@@ -17,6 +17,10 @@ namespace SnapIt.Library.Entities
         [JsonConverter(typeof(StringEnumConverter))]
         public MouseButton MouseButton { get; set; } = MouseButton.Left;
 
+        public bool EnableHoldKey { get; set; } = false;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public HoldKey HoldKey { get; set; } = HoldKey.Control;
+
         public bool EnableKeyboard { get; set; } = true;
         public bool DisableForFullscreen { get; set; } = true;
         public bool ShowMainWindow { get; set; } = true;

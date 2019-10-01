@@ -14,7 +14,7 @@ namespace SnapIt.Library
         public const bool ShowSnapWindowOnStartup = false;
 #endif
 
-        public static void Log(string message = null, bool showTime = false, [CallerLineNumber] int lineNumber = 0, [CallerMemberName] string caller = null)
+        public static void Log(object message = null, bool showTime = false, [CallerLineNumber] int lineNumber = 0, [CallerMemberName] string caller = null)
         {
 #if DEBUG
             if (!showTime)

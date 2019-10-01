@@ -25,6 +25,13 @@ namespace SnapIt.Library.Entities
         XButton2
     }
 
+    public enum HoldKey
+    {
+        Control,
+        Alt,
+        Shift
+    }
+
     public enum ShowWindowCommand
     {
         SW_SHOWNORMAL = 1
