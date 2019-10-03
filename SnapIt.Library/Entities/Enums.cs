@@ -29,7 +29,8 @@ namespace SnapIt.Library.Entities
     {
         Control,
         Alt,
-        Shift
+        Shift,
+        Win
     }
 
     public enum ShowWindowCommand

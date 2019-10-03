@@ -74,7 +74,8 @@ namespace SnapIt.ViewModels
             HoldKeys = new ObservableCollection<HoldKey> {
                 HoldKey.Control,
                 HoldKey.Alt,
-                HoldKey.Shift
+                HoldKey.Shift,
+                HoldKey.Win
             };
         }
 

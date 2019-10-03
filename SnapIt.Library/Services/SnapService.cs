@@ -100,7 +100,7 @@ namespace SnapIt.Library.Services
             switch (settingService.Settings.HoldKey)
             {
                 case HoldKey.Control:
-                    if (e.Control)
+                    if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
                     {
                         stop = true;
                     }
@@ -108,7 +108,7 @@ namespace SnapIt.Library.Services
                     break;
 
                 case HoldKey.Alt:
-                    if (e.Alt)
+                    if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
                     {
                         stop = true;
                     }
@@ -116,7 +116,15 @@ namespace SnapIt.Library.Services
                     break;
 
                 case HoldKey.Shift:
-                    if (e.Shift)
+                    if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+                    {
+                        stop = true;
+                    }
+
+                    break;
+
+                case HoldKey.Win:
+                    if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
                     {
                         stop = true;
                     }
@@ -126,8 +134,11 @@ namespace SnapIt.Library.Services
 
             if (stop)
             {
+                DevMode.Log(isSnappingKeyHolding);
+
                 isSnappingKeyHolding = false;
 
+                DevMode.Log(isSnappingKeyHolding);
                 StopSnapping();
             }
         }
@@ -139,22 +150,37 @@ namespace SnapIt.Library.Services
                 case HoldKey.Control:
                     if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
                     {
+                        e.Handled = true;
                         isSnappingKeyHolding = true;
                     }
+
                     break;
 
                 case HoldKey.Alt:
                     if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
                     {
+                        e.Handled = true;
                         isSnappingKeyHolding = true;
                     }
+
                     break;
 
                 case HoldKey.Shift:
                     if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
                     {
+                        e.Handled = true;
                         isSnappingKeyHolding = true;
                     }
+
+                    break;
+
+                case HoldKey.Win:
+                    if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
+                    {
+                        e.Handled = true;
+                        isSnappingKeyHolding = true;
+                    }
+
                     break;
             }
         }
