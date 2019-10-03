@@ -17,6 +17,7 @@ namespace SnapIt.Library.Entities
         [JsonConverter(typeof(StringEnumConverter))]
         public MouseButton MouseButton { get; set; } = MouseButton.Left;
 
+        public int MouseDragDelay { get; set; } = 200;
         public bool EnableHoldKey { get; set; } = false;
         [JsonConverter(typeof(StringEnumConverter))]
         public HoldKey HoldKey { get; set; } = HoldKey.Control;

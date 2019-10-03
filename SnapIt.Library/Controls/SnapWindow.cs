@@ -60,8 +60,6 @@ namespace SnapIt.Library.Controls
 
             if (!oldDpi.Equals(Dpi))
             {
-                DevMode.Log("Dpi changed");
-
                 MaximizeWindow();
             }
         }

@@ -20,6 +20,7 @@ namespace SnapIt.Library.Services
         private bool isWindowDetected = false;
         private bool isListening = false;
         private bool isSnappingKeyHolding = true;
+        private DateTime delayStartTime;
         private IKeyboardMouseEvents globalHook;
 
         public event GetStatus StatusChanged;
@@ -36,6 +37,10 @@ namespace SnapIt.Library.Services
 
         public void Initialize()
         {
+            isWindowDetected = false;
+            isListening = false;
+            isSnappingKeyHolding = true;
+
             windowService.Initialize();
             windowService.EscKeyPressed += WindowService_EscKeyPressed;
 
@@ -134,11 +139,8 @@ namespace SnapIt.Library.Services
 
             if (stop)
             {
-                DevMode.Log(isSnappingKeyHolding);
-
                 isSnappingKeyHolding = false;
 
-                DevMode.Log(isSnappingKeyHolding);
                 StopSnapping();
             }
         }
@@ -258,9 +260,19 @@ namespace SnapIt.Library.Services
             return false;
         }
 
+        private bool IsDelayDone()
+        {
+            if (settingService.Settings.EnableHoldKey)
+                return true;
+
+            var elapsedMillisecs = (DateTime.Now - delayStartTime).TotalMilliseconds;
+
+            return elapsedMillisecs > settingService.Settings.MouseDragDelay;
+        }
+
         private void MouseMoveEvent(object sender, MouseEventArgs e)
         {
-            if (isListening && isSnappingKeyHolding)
+            if (isListening && isSnappingKeyHolding && IsDelayDone())
             {
                 if (!isWindowDetected)
                 {
@@ -313,6 +325,8 @@ namespace SnapIt.Library.Services
                 snapArea = Rectangle.Empty;
                 isWindowDetected = false;
                 isListening = true;
+
+                delayStartTime = DateTime.Now;
             }
         }
 
@@ -350,8 +364,6 @@ namespace SnapIt.Library.Services
                             Top = 0,
                             Bottom = ActiveWindow.Boundry.Height - withMargin.Height
                         };
-
-                        DevMode.Log($"\n{systemMargin}");
 
                         rectangle.Left -= systemMargin.Left;
                         rectangle.Top -= systemMargin.Top;

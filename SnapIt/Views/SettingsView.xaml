@@ -9,8 +9,8 @@
     xmlns:local="clr-namespace:SnapIt.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    d:DesignHeight="480"
-    d:DesignWidth="600"
+    d:DesignHeight="600"
+    d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
@@ -27,7 +27,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -50,6 +50,22 @@
                     HorizontalAlignment="Left"
                     IsChecked="{Binding EnableMouse}"
                     Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+
+                <TextBlock Margin="0,6,0,0" Text="Delay time to activate snapping (in milliseconds)" />
+                <TextBlock
+                    Margin="0,0,0,6"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                        Delay time is disabled when hold key in use
+                    </Hyperlink>
+                </TextBlock>
+                <TextBox
+                    Width="128"
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    IsEnabled="{Binding EnableHoldKey, Converter={StaticResource InverseBoolConverter}}"
+                    Text="{Binding MouseDragDelay}" />
 
                 <TextBlock Margin="0,6,0,0" Text="Only use window title to snap window" />
                 <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
@@ -141,18 +157,16 @@
                     <TextBlock Margin="0,6" Text="Move Right" />
                     <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveRightShortcut}" />
                 </Grid>
-            </StackPanel>
 
-            <StackPanel
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                Margin="16">
                 <TextBlock
-                    Margin="0,6"
+                    Margin="0,48,0,6"
                     Style="{StaticResource MaterialDesignTitleTextBlock}"
                     Text="Other Settings" />
 
-                <TextBlock Margin="0,6" Text="Disable snapping for fullscreen application and games (recommended)" />
+                <TextBlock
+                    Margin="0,6"
+                    Text="Disable snapping for fullscreen application and games (recommended)"
+                    TextWrapping="Wrap" />
                 <ToggleButton
                     Margin="0,6"
                     HorizontalAlignment="Left"
@@ -175,6 +189,11 @@
                             IsChecked="{Binding IsRunAsAdmin}"
                             Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />-->
             </StackPanel>
+
+            <StackPanel
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Margin="16" />
         </Grid>
     </ScrollViewer>
 </UserControl>
