@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
@@ -15,6 +16,7 @@ namespace SnapIt.ViewModels
         private bool isStartupTaskActive;
         private ObservableCollection<MouseButton> mouseButtons;
         private ObservableCollection<HoldKey> holdKeys;
+        private ObservableCollection<Resource<HoldKeyBehaviour>> holdKeyBehaviours;
         private bool enableHoldKey;
 
         public bool EnableKeyboard { get => settingService.Settings.EnableKeyboard; set { settingService.Settings.EnableKeyboard = value; ApplyChanges(); } }
@@ -23,9 +25,11 @@ namespace SnapIt.ViewModels
         public MouseButton MouseButton { get => settingService.Settings.MouseButton; set { settingService.Settings.MouseButton = value; ApplyChanges(); } }
         public ObservableCollection<MouseButton> MouseButtons { get => mouseButtons; set => SetProperty(ref mouseButtons, value); }
         public int MouseDragDelay { get => settingService.Settings.MouseDragDelay; set { settingService.Settings.MouseDragDelay = value; ApplyChanges(); } }
-        public bool EnableHoldKey { get => enableHoldKey; set { settingService.Settings.EnableHoldKey = value; SetProperty(ref enableHoldKey, value); ApplyChanges(); } }
+        public bool EnableHoldKey { get { enableHoldKey = settingService.Settings.EnableHoldKey; return enableHoldKey; } set { settingService.Settings.EnableHoldKey = value; SetProperty(ref enableHoldKey, value); ApplyChanges(); } }
         public HoldKey HoldKey { get => settingService.Settings.HoldKey; set { settingService.Settings.HoldKey = value; ApplyChanges(); } }
         public ObservableCollection<HoldKey> HoldKeys { get => holdKeys; set => SetProperty(ref holdKeys, value); }
+        public Resource<HoldKeyBehaviour> HoldKeyBehaviour { get => holdKeyBehaviours.FirstOrDefault(i => i.Key == settingService.Settings.HoldKeyBehaviour); set { settingService.Settings.HoldKeyBehaviour = value.Key; ApplyChanges(); } }
+        public ObservableCollection<Resource<HoldKeyBehaviour>> HoldKeyBehaviours { get => holdKeyBehaviours; set => SetProperty(ref holdKeyBehaviours, value); }
         public bool DisableForFullscreen { get => settingService.Settings.DisableForFullscreen; set { settingService.Settings.DisableForFullscreen = value; ApplyChanges(); } }
         public string MoveUpShortcut { get => settingService.Settings.MoveUpShortcut; set { settingService.Settings.MoveUpShortcut = value; ApplyChanges(); } }
         public string MoveDownShortcut { get => settingService.Settings.MoveDownShortcut; set { settingService.Settings.MoveDownShortcut = value; ApplyChanges(); } }
@@ -78,6 +82,12 @@ namespace SnapIt.ViewModels
                 HoldKey.Alt,
                 HoldKey.Shift,
                 HoldKey.Win
+            };
+
+            HoldKeyBehaviours = new ObservableCollection<Resource<HoldKeyBehaviour>>
+            {
+                new Resource<HoldKeyBehaviour>(Library.Entities.HoldKeyBehaviour.HoldToEnable, "Hold key to enable snapping"),
+                new Resource<HoldKeyBehaviour>(Library.Entities.HoldKeyBehaviour.HoldToDisable, "Hold key to disable snapping")
             };
         }
 

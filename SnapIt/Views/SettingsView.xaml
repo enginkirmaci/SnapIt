@@ -9,6 +9,9 @@
     xmlns:local="clr-namespace:SnapIt.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:SnapIt.ViewModels"
+    d:DataContext="{d:DesignInstance vm:SettingsDesignView,
+                                     IsDesignTimeCreatable=True}"
     d:DesignHeight="600"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -81,7 +84,7 @@
 
                 <TextBlock Margin="0,6" Text="Mouse button for snapping window" />
                 <ComboBox
-                    Width="128"
+                    Width="96"
                     Margin="0,6"
                     HorizontalAlignment="Left"
                     ItemsSource="{Binding MouseButtons}"
@@ -99,13 +102,29 @@
                     IsChecked="{Binding EnableHoldKey}"
                     Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
 
-                <TextBlock Margin="0,6" Text="Hold Key" />
+                <TextBlock
+                    Margin="0,6"
+                    Text="Hold Key"
+                    Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <ComboBox
-                    Width="128"
+                    Width="96"
                     Margin="0,6"
                     HorizontalAlignment="Left"
                     ItemsSource="{Binding HoldKeys}"
-                    SelectedItem="{Binding HoldKey, Mode=TwoWay}" />
+                    SelectedItem="{Binding HoldKey, Mode=TwoWay}"
+                    Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                <TextBlock
+                    Margin="0,6"
+                    Text="Hold Key Behaviour"
+                    Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <ComboBox
+                    Width="200"
+                    Margin="0,6"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{Binding HoldKeyBehaviours}"
+                    SelectedItem="{Binding HoldKeyBehaviour, Mode=TwoWay}"
+                    Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="16">

@@ -19,7 +19,8 @@ namespace SnapIt.Library.Services
         private Rectangle snapArea;
         private bool isWindowDetected = false;
         private bool isListening = false;
-        private bool isSnappingKeyHolding = true;
+        private bool isHoldingKey = false;
+        private HoldKeyBehaviour holdKeyBehaviour = HoldKeyBehaviour.HoldToEnable;
         private DateTime delayStartTime;
         private IKeyboardMouseEvents globalHook;
 
@@ -39,7 +40,8 @@ namespace SnapIt.Library.Services
         {
             isWindowDetected = false;
             isListening = false;
-            isSnappingKeyHolding = true;
+
+            holdKeyBehaviour = settingService.Settings.HoldKeyBehaviour;
 
             windowService.Initialize();
             windowService.EscKeyPressed += WindowService_EscKeyPressed;
@@ -57,13 +59,6 @@ namespace SnapIt.Library.Services
             if (settingService.Settings.EnableKeyboard)
             {
                 globalHook.OnCombination(map);
-
-                if (settingService.Settings.EnableHoldKey)
-                {
-                    isSnappingKeyHolding = false;
-                    globalHook.KeyDown += GlobalHook_KeyDown;
-                    globalHook.KeyUp += GlobalHook_KeyUp;
-                }
             }
 
             if (settingService.Settings.EnableMouse)
@@ -71,9 +66,47 @@ namespace SnapIt.Library.Services
                 globalHook.MouseMove += MouseMoveEvent;
                 globalHook.MouseDown += MouseDownEvent;
                 globalHook.MouseUp += MouseUpEvent;
+
+                if (settingService.Settings.EnableHoldKey)
+                {
+                    globalHook.KeyDown += GlobalHook_KeyDown;
+                    globalHook.KeyUp += GlobalHook_KeyUp;
+                }
             }
 
             StatusChanged?.Invoke(true);
+        }
+
+        private bool HoldingKeyResult()
+        {
+            if (settingService.Settings.EnableHoldKey)
+            {
+                if (isHoldingKey)
+                {
+                    switch (settingService.Settings.HoldKeyBehaviour)
+                    {
+                        case HoldKeyBehaviour.HoldToEnable:
+                            return true;
+
+                        case HoldKeyBehaviour.HoldToDisable:
+                            StopSnapping();
+                            return false;
+                    }
+                }
+                else
+                {
+                    switch (settingService.Settings.HoldKeyBehaviour)
+                    {
+                        case HoldKeyBehaviour.HoldToEnable:
+                            return false;
+
+                        case HoldKeyBehaviour.HoldToDisable:
+                            return true;
+                    }
+                }
+            }
+
+            return true;
         }
 
         public void Release()
@@ -139,9 +172,7 @@ namespace SnapIt.Library.Services
 
             if (stop)
             {
-                isSnappingKeyHolding = false;
-
-                StopSnapping();
+                isHoldingKey = false;
             }
         }
 
@@ -153,7 +184,7 @@ namespace SnapIt.Library.Services
                     if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
                     {
                         e.Handled = true;
-                        isSnappingKeyHolding = true;
+                        isHoldingKey = true;
                     }
 
                     break;
@@ -162,7 +193,7 @@ namespace SnapIt.Library.Services
                     if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
                     {
                         e.Handled = true;
-                        isSnappingKeyHolding = true;
+                        isHoldingKey = true;
                     }
 
                     break;
@@ -171,7 +202,7 @@ namespace SnapIt.Library.Services
                     if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
                     {
                         e.Handled = true;
-                        isSnappingKeyHolding = true;
+                        isHoldingKey = true;
                     }
 
                     break;
@@ -180,7 +211,7 @@ namespace SnapIt.Library.Services
                     if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
                     {
                         e.Handled = true;
-                        isSnappingKeyHolding = true;
+                        isHoldingKey = true;
                     }
 
                     break;
@@ -272,7 +303,7 @@ namespace SnapIt.Library.Services
 
         private void MouseMoveEvent(object sender, MouseEventArgs e)
         {
-            if (isListening && isSnappingKeyHolding && IsDelayDone())
+            if (isListening && HoldingKeyResult() && IsDelayDone())
             {
                 if (!isWindowDetected)
                 {

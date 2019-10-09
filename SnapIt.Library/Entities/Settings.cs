@@ -22,6 +22,9 @@ namespace SnapIt.Library.Entities
         [JsonConverter(typeof(StringEnumConverter))]
         public HoldKey HoldKey { get; set; } = HoldKey.Control;
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public HoldKeyBehaviour HoldKeyBehaviour { get; set; } = HoldKeyBehaviour.HoldToEnable;
+
         public bool EnableKeyboard { get; set; } = true;
         public bool DisableForFullscreen { get; set; } = true;
         public bool ShowMainWindow { get; set; } = true;

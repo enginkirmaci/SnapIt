@@ -33,6 +33,12 @@ namespace SnapIt.Library.Entities
         Win
     }
 
+    public enum HoldKeyBehaviour
+    {
+        HoldToEnable,
+        HoldToDisable
+    }
+
     public enum ShowWindowCommand
     {
         SW_SHOWNORMAL = 1

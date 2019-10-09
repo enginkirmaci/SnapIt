@@ -58,6 +58,7 @@
     <Compile Include="Entities\Dpi.cs" />
     <Compile Include="Entities\ExcludedApps.cs" />
     <Compile Include="Entities\Constants.cs" />
+    <Compile Include="Entities\Resource.cs" />
     <Compile Include="Services\FileOperationService.cs" />
     <Compile Include="Services\IFileOperationService.cs" />
     <Compile Include="Controls\SnapArea.cs" />
