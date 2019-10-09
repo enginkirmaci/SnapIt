@@ -234,7 +234,7 @@ namespace SnapIt.Library.Services
                         newSnapArea = copyActiveBoundry;
                     }
 
-                    MoveActiveWindow(!newSnapArea.Equals(Rectangle.Empty) ? newSnapArea : copyActiveBoundry, true);
+                    MoveActiveWindow(!newSnapArea.Equals(Rectangle.Empty) ? newSnapArea : copyActiveBoundry, false);
                 }
             }
         }
@@ -337,17 +337,17 @@ namespace SnapIt.Library.Services
                 isListening = false;
                 windowService.Hide();
 
-                MoveActiveWindow(snapArea);
+                MoveActiveWindow(snapArea, e.Button == MouseButtons.Left);
             }
         }
 
-        private void MoveActiveWindow(Rectangle rectangle, bool usingKeyboard = false)
+        private void MoveActiveWindow(Rectangle rectangle, bool isLeftClick)
         {
             if (ActiveWindow != ActiveWindow.Empty)
             {
                 if (!rectangle.Equals(Rectangle.Empty))
                 {
-                    if (!usingKeyboard)
+                    if (isLeftClick)
                     {
                         SendKeys.SendWait("{ESC}");
                     }

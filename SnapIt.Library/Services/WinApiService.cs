@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,18 +10,6 @@ namespace SnapIt.Library.Services
 {
     public class WinApiService : IWinApiService
     {
-        [DllImport("user32.dll")]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
-        private string GetProcessPathFromWindowHandle(IntPtr hWnd)
-        {
-            GetWindowThreadProcessId(hWnd, out uint processId);
-
-            var process = Process.GetProcessById((int)processId);
-
-            return (process.MainModule.FileName + " : " + process.MainModule.FileVersionInfo.FileDescription);
-        }
-
         public IDictionary<IntPtr, string> GetOpenWindows()
         {
             var shellWindow = User32.GetShellWindow();
@@ -33,8 +20,13 @@ namespace SnapIt.Library.Services
                 if (hWnd == shellWindow) return true;
                 if (!User32.IsWindowVisible(hWnd)) return true;
 
-                windows[hWnd] = GetProcessPathFromWindowHandle(hWnd);
+                var length = User32.GetWindowTextLength(hWnd);
+                if (length == 0) return true;
 
+                var builder = new StringBuilder(length);
+                User32.GetWindowText(hWnd, builder, length + 1);
+
+                windows[hWnd] = builder.ToString();
                 return true;
             }, 0);
 
@@ -99,7 +91,7 @@ namespace SnapIt.Library.Services
 
             var chars = 256;
             var buff = new StringBuilder(chars);
-            if (User32.GetWindowText(activeWindow.Handle, buff, chars) > 0) // TODO Replace with GetProcessPathFromWindowHandle
+            if (User32.GetWindowText(activeWindow.Handle, buff, chars) > 0)
             {
                 activeWindow.Title = buff.ToString();
             }
