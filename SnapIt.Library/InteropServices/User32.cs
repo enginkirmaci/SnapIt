@@ -34,6 +34,9 @@ namespace SnapIt.Library.InteropServices
         public static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hWnd, out Rectangle lpRect);
 
         [DllImport("user32.dll", SetLastError = false)]

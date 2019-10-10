@@ -394,10 +394,11 @@ namespace SnapIt.Library.Services
             {
                 if (!rectangle.Equals(Rectangle.Empty))
                 {
-                    //if (isLeftClick)
-                    //{
-                    //    SendKeys.SendWait("{ESC}");
-                    //}
+                    if (isLeftClick)
+                    {
+                        winApiService.SendMessage(ActiveWindow);
+                        //SendKeys.SendWait("{ESC}");
+                    }
 
                     winApiService.GetWindowMargin(ActiveWindow, out Rectangle withMargin);
 

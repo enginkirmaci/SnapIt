@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 using SnapIt.Library.Entities;
 using SnapIt.Library.InteropServices;
 
@@ -71,6 +72,13 @@ namespace SnapIt.Library.Services
                 DevMode.Log(msg);
             }
             return res;
+        }
+
+        public void SendMessage(ActiveWindow activeWindow)
+        {
+            const uint WM_KEYDOWN = 0x100;
+
+            User32.SendMessage(activeWindow.Handle, WM_KEYDOWN, (IntPtr)Keys.Escape, (IntPtr)0);
         }
 
         public void GetWindowMargin(ActiveWindow activeWindow, out Rectangle withMargin)

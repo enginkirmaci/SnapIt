@@ -16,6 +16,8 @@ namespace SnapIt.Library.Services
 
         bool MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height);
 
+        void SendMessage(ActiveWindow activeWindow);
+
         void GetWindowMargin(ActiveWindow activeWindow, out Rectangle withMargin);
 
         ActiveWindow GetActiveWindow();
