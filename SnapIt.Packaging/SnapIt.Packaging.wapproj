@@ -59,7 +59,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>04B593F823A6330BFDD4D90BFB8A04296ED7ACF7</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>8A2D11DA4E2D081EAC35BF6EF60F897ED2B20B8A</PackageCertificateThumbprint>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <EntryPointProjectUniqueName>..\SnapIt\SnapIt.csproj</EntryPointProjectUniqueName>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>

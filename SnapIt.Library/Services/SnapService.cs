@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
 using SnapIt.Library.Entities;
@@ -21,9 +22,7 @@ namespace SnapIt.Library.Services
         private bool isListening = false;
         private bool isHoldingKey = false;
         private bool holdKeyUsed = false;
-        private HoldKeyBehaviour holdKeyBehaviour = HoldKeyBehaviour.HoldToEnable;
         private DateTime delayStartTime;
-        private DateTime holdKeyReleasedTime;
         private IKeyboardMouseEvents globalHook;
 
         public event GetStatus StatusChanged;
@@ -42,8 +41,6 @@ namespace SnapIt.Library.Services
         {
             isWindowDetected = false;
             isListening = false;
-
-            holdKeyBehaviour = settingService.Settings.HoldKeyBehaviour;
 
             windowService.Initialize();
             windowService.EscKeyPressed += WindowService_EscKeyPressed;
@@ -135,14 +132,12 @@ namespace SnapIt.Library.Services
 
         private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
         {
-            var stop = false;
-
             switch (settingService.Settings.HoldKey)
             {
                 case HoldKey.Control:
                     if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
                     {
-                        stop = true;
+                        isHoldingKey = false;
                     }
 
                     break;
@@ -150,7 +145,7 @@ namespace SnapIt.Library.Services
                 case HoldKey.Alt:
                     if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
                     {
-                        stop = true;
+                        isHoldingKey = false;
                     }
 
                     break;
@@ -158,7 +153,7 @@ namespace SnapIt.Library.Services
                 case HoldKey.Shift:
                     if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
                     {
-                        stop = true;
+                        isHoldingKey = false;
                     }
 
                     break;
@@ -166,31 +161,20 @@ namespace SnapIt.Library.Services
                 case HoldKey.Win:
                     if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
                     {
-                        stop = true;
+                        isHoldingKey = false;
+
+                        if (holdKeyUsed)
+                        {
+                            e.Handled = true;
+                        }
                     }
 
                     break;
             }
 
-            if (stop)
-            {
-                isHoldingKey = false;
-            }
-
             if (holdKeyUsed)
             {
-                holdKeyReleasedTime = DateTime.Now;
-                e.Handled = true;
                 holdKeyUsed = false;
-            }
-
-            if (holdKeyReleasedTime != null)
-            {
-                var elapsedMillisecs = (DateTime.Now - holdKeyReleasedTime).TotalMilliseconds;
-                if (elapsedMillisecs < 300)
-                {
-                    e.Handled = true;
-                }
             }
         }
 
@@ -394,12 +378,6 @@ namespace SnapIt.Library.Services
             {
                 if (!rectangle.Equals(Rectangle.Empty))
                 {
-                    if (isLeftClick)
-                    {
-                        winApiService.SendMessage(ActiveWindow);
-                        //SendKeys.SendWait("{ESC}");
-                    }
-
                     winApiService.GetWindowMargin(ActiveWindow, out Rectangle withMargin);
 
                     if (!withMargin.Equals(default(Rectangle)))
@@ -419,11 +397,31 @@ namespace SnapIt.Library.Services
                         rectangle.Bottom += systemMargin.Bottom;
                     }
 
-                    winApiService.MoveWindow(ActiveWindow, rectangle);
+                    if (isLeftClick)
+                    {
+                        //winApiService.SendMessage(ActiveWindow);
+                        //SendKeys.SendWait("{ESC}");
 
-                    if (!rectangle.Dpi.Equals(ActiveWindow.Dpi))
+                        new Thread(() =>
+                        {
+                            Thread.Sleep(100);
+
+                            winApiService.MoveWindow(ActiveWindow, rectangle);
+
+                            if (!rectangle.Dpi.Equals(ActiveWindow.Dpi))
+                            {
+                                winApiService.MoveWindow(ActiveWindow, rectangle);
+                            }
+                        }).Start();
+                    }
+                    else
                     {
                         winApiService.MoveWindow(ActiveWindow, rectangle);
+
+                        if (!rectangle.Dpi.Equals(ActiveWindow.Dpi))
+                        {
+                            winApiService.MoveWindow(ActiveWindow, rectangle);
+                        }
                     }
                 }
             }
