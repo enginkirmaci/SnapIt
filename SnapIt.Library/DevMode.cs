@@ -23,7 +23,7 @@ namespace SnapIt.Library
             }
             else
             {
-                Debug.WriteLine($"{DateTime.Now.ToLongTimeString()} -> Line: {lineNumber}, Method: {caller}, Message: {message}");
+                Debug.WriteLine($"{DateTime.Now.ToString("hh.mm.ss.ffffff")} -> Line: {lineNumber}, Method: {caller}, Message: {message}");
             }
 #endif
         }

@@ -20,8 +20,10 @@ namespace SnapIt.Library.Services
         private bool isWindowDetected = false;
         private bool isListening = false;
         private bool isHoldingKey = false;
+        private bool holdKeyUsed = false;
         private HoldKeyBehaviour holdKeyBehaviour = HoldKeyBehaviour.HoldToEnable;
         private DateTime delayStartTime;
+        private DateTime holdKeyReleasedTime;
         private IKeyboardMouseEvents globalHook;
 
         public event GetStatus StatusChanged;
@@ -174,6 +176,22 @@ namespace SnapIt.Library.Services
             {
                 isHoldingKey = false;
             }
+
+            if (holdKeyUsed)
+            {
+                holdKeyReleasedTime = DateTime.Now;
+                e.Handled = true;
+                holdKeyUsed = false;
+            }
+
+            if (holdKeyReleasedTime != null)
+            {
+                var elapsedMillisecs = (DateTime.Now - holdKeyReleasedTime).TotalMilliseconds;
+                if (elapsedMillisecs < 300)
+                {
+                    e.Handled = true;
+                }
+            }
         }
 
         private void GlobalHook_KeyDown(object sender, KeyEventArgs e)
@@ -303,6 +321,8 @@ namespace SnapIt.Library.Services
             {
                 if (!isWindowDetected)
                 {
+                    holdKeyUsed = true;
+
                     ActiveWindow = winApiService.GetActiveWindow();
                     ActiveWindow.Dpi = DpiHelper.GetDpiFromPoint(e.X, e.Y);
 
@@ -374,10 +394,10 @@ namespace SnapIt.Library.Services
             {
                 if (!rectangle.Equals(Rectangle.Empty))
                 {
-                    if (isLeftClick)
-                    {
-                        SendKeys.SendWait("{ESC}");
-                    }
+                    //if (isLeftClick)
+                    //{
+                    //    SendKeys.SendWait("{ESC}");
+                    //}
 
                     winApiService.GetWindowMargin(ActiveWindow, out Rectangle withMargin);
 
