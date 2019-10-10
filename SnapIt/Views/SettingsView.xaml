@@ -91,11 +91,6 @@
                     SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
 
                 <TextBlock Margin="0,6,0,0" Text="Use Hold key" />
-                <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
-                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
-                        It enables hold key to enable mouse snapping
-                    </Hyperlink>
-                </TextBlock>
                 <ToggleButton
                     Margin="0,6"
                     HorizontalAlignment="Left"

@@ -183,7 +183,6 @@ namespace SnapIt.Library.Services
                 case HoldKey.Control:
                     if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
                     {
-                        e.Handled = true;
                         isHoldingKey = true;
                     }
 
@@ -192,7 +191,6 @@ namespace SnapIt.Library.Services
                 case HoldKey.Alt:
                     if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
                     {
-                        e.Handled = true;
                         isHoldingKey = true;
                     }
 
@@ -201,7 +199,6 @@ namespace SnapIt.Library.Services
                 case HoldKey.Shift:
                     if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
                     {
-                        e.Handled = true;
                         isHoldingKey = true;
                     }
 
@@ -210,7 +207,6 @@ namespace SnapIt.Library.Services
                 case HoldKey.Win:
                     if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
                     {
-                        e.Handled = true;
                         isHoldingKey = true;
                     }
 
