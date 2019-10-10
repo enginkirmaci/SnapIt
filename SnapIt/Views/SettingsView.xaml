@@ -142,7 +142,10 @@
                         <ColumnDefinition Width="128" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Margin="0,6" Text="Move Up" />
-                    <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveUpShortcut}" />
+                    <Controls:HotkeyEditorControl
+                        Grid.Column="1"
+                        IsFocused="{Binding IsHotKeyControlFocused}"
+                        Text="{Binding MoveUpShortcut}" />
                 </Grid>
 
                 <Grid>
@@ -151,7 +154,10 @@
                         <ColumnDefinition Width="128" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Margin="0,6" Text="Move Down" />
-                    <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveDownShortcut}" />
+                    <Controls:HotkeyEditorControl
+                        Grid.Column="1"
+                        IsFocused="{Binding IsHotKeyControlFocused}"
+                        Text="{Binding MoveDownShortcut}" />
                 </Grid>
 
                 <Grid>
@@ -160,7 +166,10 @@
                         <ColumnDefinition Width="128" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Margin="0,6" Text="Move Left" />
-                    <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveLeftShortcut}" />
+                    <Controls:HotkeyEditorControl
+                        Grid.Column="1"
+                        IsFocused="{Binding IsHotKeyControlFocused}"
+                        Text="{Binding MoveLeftShortcut}" />
                 </Grid>
 
                 <Grid>
@@ -169,7 +178,10 @@
                         <ColumnDefinition Width="128" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Margin="0,6" Text="Move Right" />
-                    <Controls:HotkeyEditorControl Grid.Column="1" Hotkey="{Binding MoveRightShortcut}" />
+                    <Controls:HotkeyEditorControl
+                        Grid.Column="1"
+                        IsFocused="{Binding IsHotKeyControlFocused}"
+                        Text="{Binding MoveRightShortcut}" />
                 </Grid>
 
                 <TextBlock

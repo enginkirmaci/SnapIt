@@ -11,27 +11,65 @@ namespace SnapIt.Library.Controls
     public partial class HotkeyEditorControl : UserControl
     {
         public static readonly DependencyProperty HotkeyProperty =
-          DependencyProperty.Register(nameof(Hotkey), typeof(string), typeof(HotkeyEditorControl),
+          DependencyProperty.Register(nameof(Text), typeof(string), typeof(HotkeyEditorControl),
               new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public string Hotkey
+        public string Text
         {
             get => (string)GetValue(HotkeyProperty);
             set => SetValue(HotkeyProperty, value);
         }
 
+        public static readonly DependencyProperty IsFocusProperty =
+         DependencyProperty.Register(nameof(IsFocused), typeof(bool), typeof(HotkeyEditorControl),
+             new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public bool IsFocused
+        {
+            get => (bool)GetValue(IsFocusProperty);
+            set => SetValue(IsFocusProperty, value);
+        }
+
         public HotkeyEditorControl()
         {
             InitializeComponent();
+
+            HotkeyTextBox.GotFocus += HotkeyTextBox_GotFocus;
+            HotkeyTextBox.LostFocus += HotkeyTextBox_LostFocus;
+        }
+
+        private void HotkeyTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            IsFocused = false;
+        }
+
+        private void HotkeyTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            IsFocused = true;
         }
 
         private void HotkeyTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
 
-            Key key = (e.Key == Key.System ? e.SystemKey : e.Key);
+            // Get modifiers and key data
+            var modifiers = Keyboard.Modifiers;
+            var key = e.Key;
 
-            // Ignore modifier keys.
+            // When Alt is pressed, SystemKey is used instead
+            if (key == Key.System)
+            {
+                key = e.SystemKey;
+            }
+
+            // Pressing delete, backspace or escape without modifiers clears the current value
+            if (modifiers == ModifierKeys.None && (key == Key.Delete || key == Key.Back || key == Key.Escape))
+            {
+                Text = null;
+                return;
+            }
+
+            // If no actual key was pressed - return
             if (key == Key.LeftCtrl
                 || key == Key.RightCtrl
                 || key == Key.LeftAlt
@@ -47,36 +85,22 @@ namespace SnapIt.Library.Controls
                 return;
             }
 
-            // When Alt is pressed, SystemKey is used instead
-            if (key == Key.System)
+            if (modifiers != ModifierKeys.None)
             {
-                key = e.SystemKey;
-            }
-
-            // Pressing delete, backspace or escape without modifiers clears the current value
-            if (Keyboard.Modifiers == ModifierKeys.None && (key == Key.Delete || key == Key.Back || key == Key.Escape))
-            {
-                Hotkey = null;
-                return;
-            }
-
-            if (Keyboard.Modifiers != ModifierKeys.None)
-            {
-                // Set values
                 var str = new StringBuilder();
 
-                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+                if (modifiers.HasFlag(ModifierKeys.Control))
                     str.Append("Control + ");
-                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                if (modifiers.HasFlag(ModifierKeys.Shift))
                     str.Append("Shift + ");
-                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+                if (modifiers.HasFlag(ModifierKeys.Alt))
                     str.Append("Alt + ");
-                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Windows))
+                if (modifiers.HasFlag(ModifierKeys.Windows))
                     str.Append("Win + ");
 
                 str.Append(key);
 
-                Hotkey = str.ToString();
+                Text = str.ToString();
             }
         }
     }

@@ -17,7 +17,7 @@
         IsReadOnlyCaretVisible="False"
         IsUndoEnabled="False"
         PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
-        Text="{Binding Hotkey, ElementName=UserControl, Mode=OneWay}">
+        Text="{Binding Text, ElementName=UserControl, Mode=OneWay}">
         <TextBox.ContextMenu>
             <ContextMenu Visibility="Collapsed" />
         </TextBox.ContextMenu>

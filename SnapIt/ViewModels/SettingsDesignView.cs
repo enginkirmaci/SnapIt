@@ -23,7 +23,7 @@ namespace SnapIt.ViewModels
             };
             MouseButton = MouseButtons[0];
 
-            EnableHoldKey = false;
+            EnableHoldKey = true;
             HoldKeys = new ObservableCollection<HoldKey> {
                 HoldKey.Control,
                 HoldKey.Alt,

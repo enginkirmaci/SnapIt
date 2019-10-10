@@ -18,6 +18,7 @@ namespace SnapIt.ViewModels
         private ObservableCollection<HoldKey> holdKeys;
         private ObservableCollection<Resource<HoldKeyBehaviour>> holdKeyBehaviours;
         private bool enableHoldKey;
+        private bool isHotKeyControlFocused;
 
         public bool EnableKeyboard { get => settingService.Settings.EnableKeyboard; set { settingService.Settings.EnableKeyboard = value; ApplyChanges(); } }
         public bool EnableMouse { get => settingService.Settings.EnableMouse; set { settingService.Settings.EnableMouse = value; ApplyChanges(); } }
@@ -35,6 +36,28 @@ namespace SnapIt.ViewModels
         public string MoveDownShortcut { get => settingService.Settings.MoveDownShortcut; set { settingService.Settings.MoveDownShortcut = value; ApplyChanges(); } }
         public string MoveLeftShortcut { get => settingService.Settings.MoveLeftShortcut; set { settingService.Settings.MoveLeftShortcut = value; ApplyChanges(); } }
         public string MoveRightShortcut { get => settingService.Settings.MoveRightShortcut; set { settingService.Settings.MoveRightShortcut = value; ApplyChanges(); } }
+        public bool IsHotKeyControlFocused
+        {
+            get => isHotKeyControlFocused;
+            set
+            {
+                DevMode.Log($"focused => {value}");
+
+                if (!DevMode.IsActive)
+                {
+                    if (value)
+                    {
+                        snapService.Release();
+                    }
+                    else
+                    {
+                        snapService.Initialize();
+                    }
+                }
+
+                SetProperty(ref isHotKeyControlFocused, value);
+            }
+        }
 
         //public bool IsRunAsAdmin
         //{
