@@ -3,6 +3,7 @@ using System.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
+using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 
 namespace SnapIt.ViewModels
@@ -13,18 +14,26 @@ namespace SnapIt.ViewModels
         private readonly ISettingService settingService;
         private readonly IWinApiService winApiService;
 
-        private ObservableCollection<string> runningApplications;
         private string selectedApplication;
-        private string selectedExcludedApplication;
-        private ObservableCollection<string> excludedApplications;
+        private ObservableCollection<string> runningApplications;
+        private ExcludedApplication selectedExcludedApplication;
+        private ObservableCollection<ExcludedApplication> excludedApplications;
+        private bool isRunningApplicationsDialogOpen;
+        private bool isExcludeApplicationDialogOpen;
+        private ObservableCollection<MatchRule> matchRules;
 
         public ObservableCollection<string> RunningApplications { get => runningApplications; set => SetProperty(ref runningApplications, value); }
         public string SelectedApplication { get => selectedApplication; set => SetProperty(ref selectedApplication, value); }
-        public ObservableCollection<string> ExcludedApplications { get => excludedApplications; set => SetProperty(ref excludedApplications, value); }
-        public string SelectedExcludedApplication { get => selectedExcludedApplication; set => SetProperty(ref selectedExcludedApplication, value); }
+        public ObservableCollection<ExcludedApplication> ExcludedApplications { get => excludedApplications; set => SetProperty(ref excludedApplications, value); }
+        public ExcludedApplication SelectedExcludedApplication { get => selectedExcludedApplication; set => SetProperty(ref selectedExcludedApplication, value); }
+        public bool IsExcludeApplicationDialogOpen { get => isExcludeApplicationDialogOpen; set => SetProperty(ref isExcludeApplicationDialogOpen, value); }
+        public bool IsRunningApplicationsDialogOpen { get => isRunningApplicationsDialogOpen; set => SetProperty(ref isRunningApplicationsDialogOpen, value); }
+        public ObservableCollection<MatchRule> MatchRules { get => matchRules; set => SetProperty(ref matchRules, value); }
 
-        public DelegateCommand ExcludeAppLayoutCommand { get; private set; }
-        public DelegateCommand IncludeAppLayoutCommand { get; private set; }
+        public DelegateCommand NewExcludeApplicationCommand { get; private set; }
+        public DelegateCommand OpenRunningApplicationsDialogCommand { get; private set; }
+        public DelegateCommand CloseRunningApplicationsDialogCommand { get; private set; }
+        public DelegateCommand ExcludeApplicationDialogClosingCommand { get; private set; }
 
         public WindowsViewModel(
             ISnapService snapService,
@@ -35,39 +44,53 @@ namespace SnapIt.ViewModels
             this.settingService = settingService;
             this.winApiService = winApiService;
             RunningApplications = new ObservableCollection<string>(winApiService.GetOpenWindowsNames());
-            if (settingService.ExcludedApps?.Applications != null)
+            if (settingService.ExcludedApplicationSettings?.Applications != null)
             {
-                ExcludedApplications = new ObservableCollection<string>(settingService.ExcludedApps.Applications);
+                ExcludedApplications = new ObservableCollection<ExcludedApplication>(settingService.ExcludedApplicationSettings.Applications);
             }
             else
             {
-                ExcludedApplications = new ObservableCollection<string>();
+                ExcludedApplications = new ObservableCollection<ExcludedApplication>();
             }
 
-            ExcludeAppLayoutCommand = new DelegateCommand(() =>
+            NewExcludeApplicationCommand = new DelegateCommand(() =>
             {
-                ExcludedApplications.Add(SelectedApplication);
-                SelectedApplication = null;
+                var excludedApplication = new ExcludedApplication();
+
+                SelectedExcludedApplication = excludedApplication;
+
+                IsExcludeApplicationDialogOpen = true;
+            });
+
+            OpenRunningApplicationsDialogCommand = new DelegateCommand(() =>
+            {
+                IsRunningApplicationsDialogOpen = true;
+            });
+
+            CloseRunningApplicationsDialogCommand = new DelegateCommand(() =>
+            {
+                IsRunningApplicationsDialogOpen = false;
+            });
+
+            ExcludeApplicationDialogClosingCommand = new DelegateCommand(() =>
+            {
+                if (!ExcludedApplications.Contains(SelectedExcludedApplication))
+                {
+                    ExcludedApplications.Add(SelectedExcludedApplication);
+                }
+                else
+                {
+                }
 
                 settingService.SaveExcludedApps(ExcludedApplications.ToList());
                 ApplyChanges();
-            },
-            () =>
-            {
-                return !string.IsNullOrWhiteSpace(SelectedApplication);
-            }).ObservesProperty(() => SelectedApplication);
+            });
 
-            IncludeAppLayoutCommand = new DelegateCommand(() =>
-            {
-                ExcludedApplications.Remove(SelectedExcludedApplication);
-
-                settingService.SaveExcludedApps(ExcludedApplications.ToList());
-                ApplyChanges();
-            },
-            () =>
-            {
-                return SelectedExcludedApplication != null;
-            }).ObservesProperty(() => SelectedExcludedApplication);
+            MatchRules = new ObservableCollection<MatchRule> {
+                MatchRule.Contains,
+                MatchRule.Exact,
+                MatchRule.Wildcard
+            };
         }
 
         private void ApplyChanges()

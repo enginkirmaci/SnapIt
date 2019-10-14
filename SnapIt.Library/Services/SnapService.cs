@@ -281,10 +281,10 @@ namespace SnapIt.Library.Services
 
         private bool IsExcludedApplication(string Title)
         {
-            if (settingService.ExcludedApps?.Applications != null)
-            {
-                return settingService.ExcludedApps.Applications.Any(i => Title.Contains(i));
-            }
+            //if (settingService.ExcludedApplicationSettings?.Applications != null)
+            //{
+            //    return settingService.ExcludedApplicationSettings.Applications.Any(i => Title.Contains(i));
+            //}
 
             return false;
         }

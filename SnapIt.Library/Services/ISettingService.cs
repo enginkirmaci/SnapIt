@@ -8,7 +8,7 @@ namespace SnapIt.Library.Services
     public interface ISettingService
     {
         Settings Settings { get; }
-        ExcludedApps ExcludedApps { get; }
+        ExcludedApplicationSettings ExcludedApplicationSettings { get; }
         IList<Layout> Layouts { get; }
         IList<SnapScreen> SnapScreens { get; }
 
@@ -16,7 +16,7 @@ namespace SnapIt.Library.Services
 
         void SaveLayout(Layout layout);
 
-        void SaveExcludedApps(List<string> excludedAppsNames);
+        void SaveExcludedApps(List<ExcludedApplication> excludedApplications);
 
         void ExportLayout(Layout layout, string layoutPath);
 

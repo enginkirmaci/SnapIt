@@ -9,6 +9,7 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converter:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converter:InputDeviceConverter x:Key="InputDeviceConverter" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />

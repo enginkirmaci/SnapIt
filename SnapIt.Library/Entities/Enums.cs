@@ -39,6 +39,21 @@ namespace SnapIt.Library.Entities
         HoldToDisable
     }
 
+    public enum MatchRule
+    {
+        Contains,
+        Exact,
+        Wildcard
+    }
+
+    public enum InputDevice
+    {
+        None,
+        Both,
+        Mouse,
+        Keyboard
+    }
+
     public enum ShowWindowCommand
     {
         SW_SHOWNORMAL = 1

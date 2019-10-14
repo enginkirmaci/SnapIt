@@ -247,9 +247,7 @@
         <materialDesign:DialogHost IsOpen="{Binding IsRenameDialogOpen}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Width="256" Margin="16">
-                    <TextBlock>
-                        Layout Name
-                    </TextBlock>
+                    <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Layout Name" />
                     <TextBox
                         Margin="0,8,0,0"
                         HorizontalAlignment="Stretch"

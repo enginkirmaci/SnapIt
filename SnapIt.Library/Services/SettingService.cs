@@ -14,7 +14,7 @@ namespace SnapIt.Library.Services
         private readonly IFileOperationService fileOperationService;
 
         public Settings Settings { get; private set; }
-        public ExcludedApps ExcludedApps { get; private set; }
+        public ExcludedApplicationSettings ExcludedApplicationSettings { get; private set; }
         public IList<Layout> Layouts { get; private set; }
         public IList<SnapScreen> SnapScreens { get; private set; }
 
@@ -24,7 +24,7 @@ namespace SnapIt.Library.Services
             this.fileOperationService = fileOperationService;
 
             Settings = this.fileOperationService.Load<Settings>();
-            ExcludedApps = this.fileOperationService.Load<ExcludedApps>();
+            ExcludedApplicationSettings = this.fileOperationService.Load<ExcludedApplicationSettings>();
             Layouts = this.fileOperationService.GetLayouts();
             SnapScreens = GetSnapScreens();
         }
@@ -39,11 +39,11 @@ namespace SnapIt.Library.Services
             }
         }
 
-        public void SaveExcludedApps(List<string> excludedAppsNames)
+        public void SaveExcludedApps(List<ExcludedApplication> excludedApplications)
         {
-            ExcludedApps.Applications = excludedAppsNames;
+            ExcludedApplicationSettings.Applications = excludedApplications;
 
-            fileOperationService.Save(ExcludedApps);
+            fileOperationService.Save(ExcludedApplicationSettings);
         }
 
         public void SaveLayout(Layout layout)

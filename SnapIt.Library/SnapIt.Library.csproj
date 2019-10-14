@@ -56,7 +56,8 @@
     </Compile>
     <Compile Include="DevMode.cs" />
     <Compile Include="Entities\Dpi.cs" />
-    <Compile Include="Entities\ExcludedApps.cs" />
+    <Compile Include="Entities\ExcludedApplication.cs" />
+    <Compile Include="Entities\ExcludedApplicationSettings.cs" />
     <Compile Include="Entities\Constants.cs" />
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Services\FileOperationService.cs" />

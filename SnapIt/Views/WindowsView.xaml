@@ -2,14 +2,19 @@
     x:Class="SnapIt.Views.WindowsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local="clr-namespace:SnapIt.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    d:DesignHeight="480"
-    d:DesignWidth="600"
+    xmlns:vm="clr-namespace:SnapIt.ViewModels"
+    d:DataContext="{d:DesignInstance vm:WindowsDesignView,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="600"
+    d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
@@ -21,90 +26,211 @@
     mc:Ignorable="d">
 
     <Grid Margin="16">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Margin="0,6"
-            Style="{StaticResource MaterialDesignTitleTextBlock}"
-            Text="Excluded Applications" />
-        <TextBlock
-            Grid.Row="1"
-            Grid.ColumnSpan="3"
-            Margin="0,0,0,6"
-            TextWrapping="Wrap">
-            <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
-                If you don't want to use snapping functionility for certain applications, you can add them to Excluded Applications. You can choose from application or either type application name in Application Title combobox and press &quot;+&quot; button. Please note that application title must contains application name.
-            </Hyperlink>
-        </TextBlock>
-        <StackPanel Grid.Row="2">
-            <TextBlock Margin="0,6" TextWrapping="Wrap">
-                Application Title
-            </TextBlock>
-
-            <ComboBox
-                IsEditable="True"
-                ItemsSource="{Binding RunningApplications}"
-                SelectedItem="{Binding SelectedApplication, Mode=TwoWay}"
-                Text="{Binding SelectedApplication}" />
-        </StackPanel>
-
-        <StackPanel
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="0,24">
-            <Button
-                Grid.Column="1"
-                Margin="8,4"
-                Padding="0"
-                Command="{Binding ExcludeAppLayoutCommand}"
-                Style="{StaticResource MaterialDesignRaisedAccentButton}">
-                <Button.Content>
-                    <materialDesign:PackIcon
-                        Width="26"
-                        Height="26"
-                        Margin="2"
-                        Kind="Add" />
-                </Button.Content>
-            </Button>
-            <Button
-                Grid.Column="1"
-                Margin="8,4"
-                Padding="0"
-                Command="{Binding IncludeAppLayoutCommand}"
-                Style="{StaticResource MaterialDesignRaisedAccentButton}">
-                <Button.Content>
-                    <materialDesign:PackIcon
-                        Width="22"
-                        Height="22"
-                        Kind="Remove" />
-                </Button.Content>
-            </Button>
-        </StackPanel>
-
-        <Grid Grid.Row="2" Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <TextBlock Margin="0,6">
-                Excluded Applications
-            </TextBlock>
-            <Border
+        <StackPanel>
+            <TextBlock
+                Margin="0,6"
+                Style="{StaticResource MaterialDesignTitleTextBlock}"
+                Text="Excluded Applications" />
+            <TextBlock
                 Grid.Row="1"
-                BorderBrush="{StaticResource MaterialDesignBody}"
-                BorderThickness="1,0,0,0">
-                <ListBox ItemsSource="{Binding ExcludedApplications}" SelectedItem="{Binding SelectedExcludedApplication}" />
-            </Border>
-        </Grid>
+                Grid.ColumnSpan="3"
+                Margin="0,0,0,6"
+                TextWrapping="Wrap">
+                <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                    If you don't want to use snapping functionility for certain applications, you can add them to Excluded Applications.
+                </Hyperlink>
+            </TextBlock>
+            <Button
+                Height="40"
+                HorizontalAlignment="Right"
+                Command="{Binding NewExcludeApplicationCommand}"
+                FontSize="14"
+                Foreground="{DynamicResource SecondaryAccentBrush}"
+                Style="{StaticResource MaterialDesignFlatButton}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Width="22"
+                            Height="22"
+                            Kind="Add" />
+                        <TextBlock
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Text="New" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+
+        <DataGrid
+            Grid.Row="1"
+            materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+            materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserSortColumns="True"
+            IsReadOnly="True"
+            ItemsSource="{Binding ExcludedApplications}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Keyword}"
+                    Header="Keyword" />
+                <DataGridTextColumn Binding="{Binding MatchRule}" Header="Match Rule" />
+                <DataGridTextColumn
+                    Width="156"
+                    Binding="{Binding AppliedFor, Converter={StaticResource InputDeviceConverter}}"
+                    Header="Applied For" />
+                <DataGridTemplateColumn Width="56" Header="">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <materialDesign:PopupBox
+                                Margin="0,-6,0,-6"
+                                Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                PopupMode="Click">
+                                <StackPanel>
+                                    <Button
+                                        Command="{Binding DataContext.DesignLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Edit" />
+
+                                    <Button
+                                        Command="{Binding DataContext.DeleteLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Delete" />
+                                </StackPanel>
+                            </materialDesign:PopupBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <materialDesign:DialogHost
+            Grid.RowSpan="2"
+            Margin="-16"
+            IsOpen="{Binding IsExcludeApplicationDialogOpen}"
+            Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="DialogClosing">
+                    <i:InvokeCommandAction Command="{Binding ExcludeApplicationDialogClosingCommand}" CommandParameter="{Binding ElementName=myListBox, Path=SelectedItem}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Width="360" Margin="16">
+                    <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Exclude Application" />
+
+                    <Button
+                        Margin="0,16"
+                        HorizontalAlignment="Center"
+                        Command="{Binding OpenRunningApplicationsDialogCommand}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FolderSearchOutline" />
+                                <TextBlock Margin="8,0,0,0" Text="choose from running apps" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Keyword" />
+                        <TextBox
+                            Grid.Row="1"
+                            Margin="0,0,6,0"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedExcludedApplication.Keyword, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <TextBlock Grid.Column="1" Text="Match Rule" />
+                        <ComboBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            ItemsSource="{Binding MatchRules}"
+                            SelectedItem="{Binding SelectedExcludedApplication.MatchRule, Mode=TwoWay}" />
+                    </Grid>
+
+                    <TextBlock Margin="0,8" Text="Applied for" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Content="Mouse" IsChecked="{Binding SelectedExcludedApplication.Mouse}" />
+                        <CheckBox
+                            Margin="12,0,0,0"
+                            Content="Keyboard"
+                            IsChecked="{Binding SelectedExcludedApplication.Keyboard}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Margin="0,24,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,20,0"
+                            Command="materialDesign:DialogHost.CloseDialogCommand"
+                            IsDefault="True"
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <Button.CommandParameter>
+                                <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                    True
+                                </system:Boolean>
+                            </Button.CommandParameter>
+                            Save
+                        </Button>
+                        <Button
+                            Margin="20,0,0,0"
+                            Command="materialDesign:DialogHost.CloseDialogCommand"
+                            IsDefault="False"
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <Button.CommandParameter>
+                                <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                    False
+                                </system:Boolean>
+                            </Button.CommandParameter>
+                            Cancel
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <materialDesign:DialogHost
+            Grid.RowSpan="2"
+            Margin="-16"
+            IsOpen="{Binding IsRunningApplicationsDialogOpen}"
+            Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+            <materialDesign:DialogHost.DialogContent>
+                <Grid Width="360" Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Running Applications" />
+
+                    <ListBox
+                        Grid.Row="1"
+                        Margin="0,8,0,0"
+                        ItemsSource="{Binding RunningApplications}"
+                        SelectedItem="{Binding SelectedExcludedApplication.Keyword}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding CloseRunningApplicationsDialogCommand}" CommandParameter="{Binding ElementName=myListBox, Path=SelectedItem}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListBox>
+                </Grid>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
     </Grid>
 </UserControl>
