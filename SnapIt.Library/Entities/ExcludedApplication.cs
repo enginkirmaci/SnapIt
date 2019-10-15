@@ -1,25 +1,54 @@
-﻿namespace SnapIt.Library.Entities
+﻿using Newtonsoft.Json;
+
+namespace SnapIt.Library.Entities
 {
-    public class ExcludedApplication
+    public class ExcludedApplication : Bindable
     {
-        public string Keyword { get; set; }
-        public MatchRule MatchRule { get; set; } = MatchRule.Contains;
+        private InputDevice appliedFor;
+        private bool enabledForMouse = true;
+        private bool enabledForKeyboard = true;
+        private MatchRule matchRule = MatchRule.Contains;
+        private string keyword;
+
+        public string Keyword { get => keyword; set => SetProperty(ref keyword, value); }
+        public MatchRule MatchRule { get => matchRule; set => SetProperty(ref matchRule, value); }
+        [JsonIgnore]
         public InputDevice AppliedFor
         {
             get
             {
                 if (Mouse && Keyboard)
-                    return InputDevice.Both;
+                    appliedFor = InputDevice.Both;
                 else if (Mouse)
-                    return InputDevice.Mouse;
+                    appliedFor = InputDevice.Mouse;
                 else if (Keyboard)
-                    return InputDevice.Keyboard;
+                    appliedFor = InputDevice.Keyboard;
+                else
+                    appliedFor = InputDevice.None;
 
-                return InputDevice.None;
+                return appliedFor;
+            }
+            set => SetProperty(ref appliedFor, value);
+        }
+
+        public bool Mouse
+        {
+            get => enabledForMouse;
+            set
+            {
+                SetProperty(ref enabledForMouse, value);
+                OnPropertyChanged("AppliedFor");
             }
         }
 
-        public bool Mouse { get; set; } = true;
-        public bool Keyboard { get; set; } = true;
+        public bool Keyboard
+        {
+            get => enabledForKeyboard;
+            set
+            {
+                SetProperty(ref enabledForKeyboard, value);
+                OnPropertyChanged("AppliedFor");
+            }
+        }
     }
 }

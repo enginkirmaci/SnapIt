@@ -87,7 +87,7 @@
                     Width="156"
                     Binding="{Binding AppliedFor, Converter={StaticResource InputDeviceConverter}}"
                     Header="Applied For" />
-                <DataGridTemplateColumn Width="56" Header="">
+                <DataGridTemplateColumn Width="64" Header="">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <materialDesign:PopupBox
@@ -96,12 +96,12 @@
                                 PopupMode="Click">
                                 <StackPanel>
                                     <Button
-                                        Command="{Binding DataContext.DesignLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Command="{Binding DataContext.EditExcludedApplicationCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"
                                         Content="Edit" />
 
                                     <Button
-                                        Command="{Binding DataContext.DeleteLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Command="{Binding DataContext.RemoveExcludedApplicationCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"
                                         Content="Delete" />
                                 </StackPanel>
@@ -114,17 +114,18 @@
 
         <materialDesign:DialogHost
             Grid.RowSpan="2"
-            Margin="-16"
+            Margin="-32"
             IsOpen="{Binding IsExcludeApplicationDialogOpen}"
             Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="DialogClosing">
-                    <i:InvokeCommandAction Command="{Binding ExcludeApplicationDialogClosingCommand}" CommandParameter="{Binding ElementName=myListBox, Path=SelectedItem}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Width="360" Margin="16">
                     <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Exclude Application" />
+
+                    <TextBlock TextWrapping="Wrap">
+                        <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                            To exclude application, you can choose from running applications or type a keyword and matching rule. If keyword matches to application title, snapping will be disabled for that window.
+                        </Hyperlink>
+                    </TextBlock>
 
                     <Button
                         Margin="0,16"
@@ -133,10 +134,18 @@
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="FolderSearchOutline" />
-                                <TextBlock Margin="8,0,0,0" Text="choose from running apps" />
+                                <TextBlock Margin="8,0,0,0" Text="choose from running applications" />
                             </StackPanel>
                         </Button.Content>
                     </Button>
+                    <TextBlock Margin="0,0,0,12" HorizontalAlignment="Center">
+                        <Hyperlink
+                            FontSize="14"
+                            IsEnabled="False"
+                            Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                            or
+                        </Hyperlink>
+                    </TextBlock>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -177,28 +186,18 @@
                         Orientation="Horizontal">
                         <Button
                             Margin="0,0,20,0"
-                            Command="materialDesign:DialogHost.CloseDialogCommand"
+                            Command="{Binding ExcludeApplicationDialogClosingCommand}"
+                            CommandParameter="{StaticResource TrueValue}"
+                            Content="Save"
                             IsDefault="True"
-                            Style="{StaticResource MaterialDesignFlatButton}">
-                            <Button.CommandParameter>
-                                <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                                    True
-                                </system:Boolean>
-                            </Button.CommandParameter>
-                            Save
-                        </Button>
+                            Style="{StaticResource MaterialDesignFlatButton}" />
                         <Button
                             Margin="20,0,0,0"
-                            Command="materialDesign:DialogHost.CloseDialogCommand"
+                            Command="{Binding ExcludeApplicationDialogClosingCommand}"
+                            CommandParameter="{StaticResource FalseValue}"
+                            Content="Cancel"
                             IsDefault="False"
-                            Style="{StaticResource MaterialDesignFlatButton}">
-                            <Button.CommandParameter>
-                                <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                                    False
-                                </system:Boolean>
-                            </Button.CommandParameter>
-                            Cancel
-                        </Button>
+                            Style="{StaticResource MaterialDesignFlatButton}" />
                     </StackPanel>
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
@@ -207,6 +206,7 @@
         <materialDesign:DialogHost
             Grid.RowSpan="2"
             Margin="-16"
+            CloseOnClickAway="True"
             IsOpen="{Binding IsRunningApplicationsDialogOpen}"
             Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
             <materialDesign:DialogHost.DialogContent>

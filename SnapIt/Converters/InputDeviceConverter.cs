@@ -24,7 +24,7 @@ namespace SnapIt.Converters
                 }
             }
 
-            return string.Empty;
+            return "None";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

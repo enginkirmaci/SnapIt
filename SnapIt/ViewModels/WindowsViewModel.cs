@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
@@ -33,7 +34,9 @@ namespace SnapIt.ViewModels
         public DelegateCommand NewExcludeApplicationCommand { get; private set; }
         public DelegateCommand OpenRunningApplicationsDialogCommand { get; private set; }
         public DelegateCommand CloseRunningApplicationsDialogCommand { get; private set; }
-        public DelegateCommand ExcludeApplicationDialogClosingCommand { get; private set; }
+        public DelegateCommand<object> ExcludeApplicationDialogClosingCommand { get; private set; }
+        public DelegateCommand<ExcludedApplication> RemoveExcludedApplicationCommand { get; private set; }
+        public DelegateCommand<ExcludedApplication> EditExcludedApplicationCommand { get; private set; }
 
         public WindowsViewModel(
             ISnapService snapService,
@@ -72,18 +75,39 @@ namespace SnapIt.ViewModels
                 IsRunningApplicationsDialogOpen = false;
             });
 
-            ExcludeApplicationDialogClosingCommand = new DelegateCommand(() =>
+            ExcludeApplicationDialogClosingCommand = new DelegateCommand<object>((isSave) =>
             {
-                if (!ExcludedApplications.Contains(SelectedExcludedApplication))
+                IsExcludeApplicationDialogOpen = false;
+                DialogHost.CloseDialogCommand.Execute(null, null);
+
+                if ((bool)isSave)
                 {
-                    ExcludedApplications.Add(SelectedExcludedApplication);
+                    if (!ExcludedApplications.Contains(SelectedExcludedApplication))
+                    {
+                        ExcludedApplications.Add(SelectedExcludedApplication);
+                    }
+                    else
+                    {
+                    }
+
+                    settingService.SaveExcludedApps(ExcludedApplications.ToList());
+                    ApplyChanges();
                 }
-                else
-                {
-                }
+            });
+
+            RemoveExcludedApplicationCommand = new DelegateCommand<ExcludedApplication>((selected) =>
+            {
+                ExcludedApplications.Remove(selected);
 
                 settingService.SaveExcludedApps(ExcludedApplications.ToList());
                 ApplyChanges();
+            });
+
+            EditExcludedApplicationCommand = new DelegateCommand<ExcludedApplication>((selected) =>
+            {
+                SelectedExcludedApplication = selected;
+
+                IsExcludeApplicationDialogOpen = true;
             });
 
             MatchRules = new ObservableCollection<MatchRule> {

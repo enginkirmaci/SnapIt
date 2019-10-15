@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 
@@ -11,8 +10,6 @@ namespace SnapIt.Library.Services
         private readonly ISettingService settingService;
         private readonly IWinApiService winApiService;
         private readonly List<SnapWindow> snapWindows;
-
-        public event EscKeyPressedDelegate EscKeyPressed;
 
         public WindowService(
             ISettingService settingService,
@@ -38,7 +35,6 @@ namespace SnapIt.Library.Services
                 if (!snapWindows.Any(i => i.Screen == screen))
                 {
                     window.ApplyLayout();
-                    window.KeyDown += Window_KeyDown;
 
                     snapWindows.Add(window);
                 }
@@ -56,19 +52,10 @@ namespace SnapIt.Library.Services
             });
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape) // TODO globalhook can be used instead of this
-            {
-                EscKeyPressed?.Invoke();
-            }
-        }
-
         public void Release()
         {
             snapWindows.ForEach(window =>
             {
-                window.KeyDown -= Window_KeyDown;
                 window.Close();
             });
             snapWindows.Clear();

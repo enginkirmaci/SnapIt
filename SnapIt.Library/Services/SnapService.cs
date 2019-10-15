@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
@@ -24,6 +25,8 @@ namespace SnapIt.Library.Services
         private bool holdKeyUsed = false;
         private DateTime delayStartTime;
         private IKeyboardMouseEvents globalHook;
+        private List<ExcludedApplication> matchRulesForMouse;
+        private List<ExcludedApplication> matchRulesForKeyboard;
 
         public event GetStatus StatusChanged;
 
@@ -43,7 +46,6 @@ namespace SnapIt.Library.Services
             isListening = false;
 
             windowService.Initialize();
-            windowService.EscKeyPressed += WindowService_EscKeyPressed;
 
             var map = new Dictionary<Combination, Action>
             {
@@ -54,6 +56,8 @@ namespace SnapIt.Library.Services
             };
 
             globalHook = Hook.GlobalEvents();
+
+            globalHook.KeyDown += Esc_KeyDown;
 
             if (settingService.Settings.EnableKeyboard)
             {
@@ -71,6 +75,33 @@ namespace SnapIt.Library.Services
                     globalHook.KeyDown += GlobalHook_KeyDown;
                     globalHook.KeyUp += GlobalHook_KeyUp;
                 }
+            }
+
+            var defaultExcludedApplications = new List<ExcludedApplication>
+            {
+                new ExcludedApplication
+                {
+                    Keyword = "Action center",
+                    MatchRule = MatchRule.Contains,
+                    Mouse=true,
+                    Keyboard=true
+                },
+                new ExcludedApplication
+                {
+                    Keyword = "Start",
+                    MatchRule = MatchRule.Contains,
+                    Mouse=true,
+                    Keyboard=true
+                }
+            };
+
+            if (settingService.ExcludedApplicationSettings?.Applications != null)
+            {
+                matchRulesForMouse = settingService.ExcludedApplicationSettings.Applications.Where(i => i.Mouse).ToList();
+                matchRulesForKeyboard = settingService.ExcludedApplicationSettings.Applications.Where(i => i.Keyboard).ToList();
+
+                matchRulesForMouse.AddRange(defaultExcludedApplications);
+                matchRulesForKeyboard.AddRange(defaultExcludedApplications);
             }
 
             StatusChanged?.Invoke(true);
@@ -114,6 +145,8 @@ namespace SnapIt.Library.Services
 
             if (globalHook != null)
             {
+                globalHook.KeyDown -= Esc_KeyDown;
+
                 globalHook.MouseMove -= MouseMoveEvent;
                 globalHook.MouseDown -= MouseDownEvent;
                 globalHook.MouseUp -= MouseUpEvent;
@@ -128,6 +161,16 @@ namespace SnapIt.Library.Services
             }
 
             StatusChanged?.Invoke(false);
+        }
+
+        private void Esc_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DevMode.Log();
+
+                StopSnapping();
+            }
         }
 
         private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
@@ -223,7 +266,7 @@ namespace SnapIt.Library.Services
             if (ActiveWindow != ActiveWindow.Empty)
             {
                 if ((settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(ActiveWindow.Boundry)) ||
-                    IsExcludedApplication(ActiveWindow.Title))
+                    IsExcludedApplication(ActiveWindow.Title, true))
                 {
                     return;
                 }
@@ -268,23 +311,59 @@ namespace SnapIt.Library.Services
             }
         }
 
-        private void WindowService_EscKeyPressed()
-        {
-            StopSnapping();
-        }
-
         private void StopSnapping()
         {
             windowService.Hide();
             isListening = false;
         }
 
-        private bool IsExcludedApplication(string Title)
+        private const string WILDCARD = "\\*";
+        private const string WILDCARD_REPLACE = "[a-zA-Z0-9]+";
+
+        public static bool WildcardMatch(string wildcard, string input, bool caseSensitive = false)
         {
-            //if (settingService.ExcludedApplicationSettings?.Applications != null)
-            //{
-            //    return settingService.ExcludedApplicationSettings.Applications.Any(i => Title.Contains(i));
-            //}
+            var pattern = Regex.Escape(wildcard)
+                 .Replace(WILDCARD, WILDCARD_REPLACE)
+                 + "(\\s|$)";
+
+            return Regex.Match(input, pattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase).Success;
+        }
+
+        private bool IsExcludedApplication(string Title, bool isKeyboard)
+        {
+            if (settingService.ExcludedApplicationSettings?.Applications != null)
+            {
+                var matchRules = isKeyboard ? matchRulesForKeyboard : matchRulesForMouse;
+
+                if (matchRules != null)
+                {
+                    var isMatched = false;
+                    foreach (var rule in matchRules)
+                    {
+                        switch (rule.MatchRule)
+                        {
+                            case MatchRule.Contains:
+                                isMatched = Title.Contains(rule.Keyword, StringComparison.OrdinalIgnoreCase);
+                                break;
+
+                            case MatchRule.Exact:
+                                isMatched = Title == rule.Keyword;
+                                break;
+
+                            case MatchRule.Wildcard:
+                                isMatched = WildcardMatch(rule.Keyword, Title, false);
+                                break;
+                        }
+
+                        if (isMatched)
+                        {
+                            break;
+                        }
+                    }
+
+                    return isMatched;
+                }
+            }
 
             return false;
         }
@@ -310,7 +389,7 @@ namespace SnapIt.Library.Services
                     ActiveWindow = winApiService.GetActiveWindow();
                     ActiveWindow.Dpi = DpiHelper.GetDpiFromPoint(e.X, e.Y);
 
-                    if (ActiveWindow?.Title != null && IsExcludedApplication(ActiveWindow.Title))
+                    if (ActiveWindow?.Title != null && IsExcludedApplication(ActiveWindow.Title, false))
                     {
                         isListening = false;
                     }

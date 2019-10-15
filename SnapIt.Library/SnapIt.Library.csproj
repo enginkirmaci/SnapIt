@@ -60,6 +60,7 @@
     <Compile Include="Entities\ExcludedApplicationSettings.cs" />
     <Compile Include="Entities\Constants.cs" />
     <Compile Include="Entities\Resource.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Services\FileOperationService.cs" />
     <Compile Include="Services\IFileOperationService.cs" />
     <Compile Include="Controls\SnapArea.cs" />

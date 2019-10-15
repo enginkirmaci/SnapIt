@@ -3,24 +3,20 @@ using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
-	public interface IWindowService
-	{
-		bool IsVisible { get; }
+    public interface IWindowService
+    {
+        bool IsVisible { get; }
 
-		void Initialize();
+        void Initialize();
 
-		void Release();
+        void Release();
 
-		void Show();
+        void Show();
 
-		void Hide();
+        void Hide();
 
-		IList<Rectangle> SnapAreaBoundries();
+        IList<Rectangle> SnapAreaBoundries();
 
-		Rectangle SelectElementWithPoint(int x, int y);
-
-		event EscKeyPressedDelegate EscKeyPressed;
-	}
-
-	public delegate void EscKeyPressedDelegate();
+        Rectangle SelectElementWithPoint(int x, int y);
+    }
 }
