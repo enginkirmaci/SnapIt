@@ -133,7 +133,7 @@ namespace SnapIt.Library.Controls
                 {
                     if (current != null)
                     {
-                        current.Background = new SolidColorBrush(Color.FromArgb(25, 255, 255, 255));
+                        current.NormalStyle();
                     }
 
                     if (!(element as SnapArea).IsMergedSnapArea)

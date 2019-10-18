@@ -225,7 +225,7 @@
                         SelectedItem="{Binding SelectedExcludedApplication.Keyword}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding CloseRunningApplicationsDialogCommand}" CommandParameter="{Binding ElementName=myListBox, Path=SelectedItem}" />
+                                <i:InvokeCommandAction Command="{Binding CloseRunningApplicationsDialogCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ListBox>

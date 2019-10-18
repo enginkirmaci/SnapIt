@@ -55,6 +55,7 @@
       <DependentUpon>HotkeyEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="DevMode.cs" />
+    <Compile Include="Entities\ChangeLogItem.cs" />
     <Compile Include="Entities\Dpi.cs" />
     <Compile Include="Entities\ExcludedApplication.cs" />
     <Compile Include="Entities\ExcludedApplicationSettings.cs" />
