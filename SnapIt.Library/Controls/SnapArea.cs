@@ -115,7 +115,7 @@ namespace SnapIt.Library.Controls
                 }
             }
 
-            if (!hasSnapChild)
+            if (!hasSnapChild && !IsMergedSnapArea)
             {
                 rectangles.Add(ScreenSnapArea(dpi));
             }
