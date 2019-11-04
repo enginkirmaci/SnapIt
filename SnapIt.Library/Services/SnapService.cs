@@ -317,9 +317,6 @@ namespace SnapIt.Library.Services
             isListening = false;
         }
 
-        private const string WILDCARD = "\\*";
-        private const string WILDCARD_REPLACE = "[a-zA-Z0-9]+";
-
         public static bool WildcardMatch(string pattern, string input, bool caseSensitive = false)
         {
             pattern = pattern.Replace(".", @"\.");
@@ -328,12 +325,6 @@ namespace SnapIt.Library.Services
             pattern = pattern.Replace(@"\", @"\\");
             pattern = pattern.Replace(" ", @"\s");
             return new Regex(pattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase).IsMatch(input);
-
-            //var pattern = Regex.Escape(wildcard)
-            //     .Replace(WILDCARD, WILDCARD_REPLACE)
-            //     + "(\\s|$)";
-
-            //return Regex.Match(input, pattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase).Success;
         }
 
         private bool IsExcludedApplication(string Title, bool isKeyboard)
@@ -485,15 +476,13 @@ namespace SnapIt.Library.Services
 
                     if (isLeftClick)
                     {
-                        //winApiService.SendMessage(ActiveWindow);
-                        //SendKeys.SendWait("{ESC}");
-
                         new Thread(() =>
                         {
                             Thread.Sleep(100);
 
                             winApiService.MoveWindow(ActiveWindow, rectangle);
 
+                            //TODO feels like this is not working, add thread here
                             if (!rectangle.Dpi.Equals(ActiveWindow.Dpi))
                             {
                                 winApiService.MoveWindow(ActiveWindow, rectangle);
