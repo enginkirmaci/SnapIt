@@ -320,13 +320,20 @@ namespace SnapIt.Library.Services
         private const string WILDCARD = "\\*";
         private const string WILDCARD_REPLACE = "[a-zA-Z0-9]+";
 
-        public static bool WildcardMatch(string wildcard, string input, bool caseSensitive = false)
+        public static bool WildcardMatch(string pattern, string input, bool caseSensitive = false)
         {
-            var pattern = Regex.Escape(wildcard)
-                 .Replace(WILDCARD, WILDCARD_REPLACE)
-                 + "(\\s|$)";
+            pattern = pattern.Replace(".", @"\.");
+            pattern = pattern.Replace("?", ".");
+            pattern = pattern.Replace("*", ".*?");
+            pattern = pattern.Replace(@"\", @"\\");
+            pattern = pattern.Replace(" ", @"\s");
+            return new Regex(pattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase).IsMatch(input);
 
-            return Regex.Match(input, pattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase).Success;
+            //var pattern = Regex.Escape(wildcard)
+            //     .Replace(WILDCARD, WILDCARD_REPLACE)
+            //     + "(\\s|$)";
+
+            //return Regex.Match(input, pattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase).Success;
         }
 
         private bool IsExcludedApplication(string Title, bool isKeyboard)
