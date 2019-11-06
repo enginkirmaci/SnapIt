@@ -44,6 +44,17 @@ namespace SnapIt.ViewModels
                 {
                     new ChangeLogItem()
                     {
+                        Header = "v1.4.1.0",
+                        Lines = new List<string>() {
+                            "- Improvements for dpi, resolution and screen changes.",
+                            "- Added change log to about.",
+                            "- Fix for Excluded application wildcard doesn't work.",
+                            "- Merged snap area boxes excluded from keyboard snapping.",
+                            "- Minor bugfixes."
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
                         Header = "v1.3.6.0",
                         Lines = new List<string>() {
                             "- Developed new Window screen and functionality.",
