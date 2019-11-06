@@ -12,6 +12,8 @@ namespace SnapIt.Library.Services
         IList<Layout> Layouts { get; }
         IList<SnapScreen> SnapScreens { get; }
 
+        void ReInitialize();
+
         void Save();
 
         void SaveLayout(Layout layout);

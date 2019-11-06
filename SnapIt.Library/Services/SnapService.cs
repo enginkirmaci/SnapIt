@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
+using Microsoft.Win32;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Mappers;
@@ -44,6 +45,8 @@ namespace SnapIt.Library.Services
         {
             isWindowDetected = false;
             isListening = false;
+
+            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 
             windowService.Initialize();
 
@@ -107,6 +110,18 @@ namespace SnapIt.Library.Services
             StatusChanged?.Invoke(true);
         }
 
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        {
+            DevMode.Log("Resolution Change.");
+
+            Thread.Sleep(2000);
+            Release();
+
+            settingService.ReInitialize();
+
+            Initialize();
+        }
+
         private bool HoldingKeyResult()
         {
             if (settingService.Settings.EnableHoldKey)
@@ -141,6 +156,8 @@ namespace SnapIt.Library.Services
 
         public void Release()
         {
+            SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
+
             windowService.Release();
 
             if (globalHook != null)

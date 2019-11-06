@@ -50,19 +50,19 @@ namespace SnapIt.Library.Controls
             MaximizeWindow();
         }
 
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
+        //protected override void OnActivated(EventArgs e)
+        //{
+        //    base.OnActivated(e);
 
-            var oldDpi = Dpi;
+        //    var oldDpi = Dpi;
 
-            CalculateDpi();
+        //    CalculateDpi();
 
-            if (!oldDpi.Equals(Dpi))
-            {
-                MaximizeWindow();
-            }
-        }
+        //    if (!oldDpi.Equals(Dpi))
+        //    {
+        //        MaximizeWindow();
+        //    }
+        //}
 
         private void MaximizeWindow()
         {

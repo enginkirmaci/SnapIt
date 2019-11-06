@@ -29,6 +29,11 @@ namespace SnapIt.Library.Services
             SnapScreens = GetSnapScreens();
         }
 
+        public void ReInitialize()
+        {
+            SnapScreens = GetSnapScreens();
+        }
+
         public void Save()
         {
             fileOperationService.Save(Settings);
