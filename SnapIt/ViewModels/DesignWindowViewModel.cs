@@ -20,6 +20,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand<object> LoadedCommand { get; }
 
         public DelegateCommand SaveLayoutCommand { get; }
+        public DelegateCommand CloseLayoutCommand { get; }
 
         public DesignWindowViewModel(ISnapService snapService)
         {
@@ -55,6 +56,11 @@ namespace SnapIt.ViewModels
 
                 Layout.GenerateLayoutArea(MainSnapArea);
 
+                Window.Close();
+            });
+
+            CloseLayoutCommand = new DelegateCommand(() =>
+            {
                 Window.Close();
             });
         }
