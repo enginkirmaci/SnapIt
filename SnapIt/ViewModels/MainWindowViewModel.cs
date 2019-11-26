@@ -17,6 +17,7 @@ namespace SnapIt.ViewModels
 
         private bool HideWindowAtStartup = true;
         private bool isDarkTheme;
+        private string themeTitle;
 
         public string Title { get => $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}"; }
         public bool IsDarkTheme
@@ -24,12 +25,15 @@ namespace SnapIt.ViewModels
             get => isDarkTheme;
             set
             {
+                ThemeTitle = value ? "Dark" : "Light";
+
                 SetProperty(ref isDarkTheme, value);
                 settingService.Settings.IsDarkTheme = value;
                 ModifyTheme(theme => theme.SetBaseTheme(isDarkTheme ? Theme.Dark : Theme.Light));
             }
         }
 
+        public string ThemeTitle { get => themeTitle; set => SetProperty(ref themeTitle, value); }
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
         public DelegateCommand<string> HandleLinkClick { get; private set; }

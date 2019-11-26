@@ -29,7 +29,7 @@ namespace SnapIt.ViewModels
 
             SelectedLayout = Layouts.First();
             SelectedSnapScreen = SnapScreens.First();
-            SnapScreens[0].Layout = SelectedLayout;
+            SnapScreens[0].Layout = Layouts[2];
             SnapScreens[1].Layout = SelectedLayout;
         }
     }

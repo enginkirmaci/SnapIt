@@ -50,17 +50,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <DataTemplate x:Key="CloseBtnContentTemplate">
-        <Grid RenderTransform="1,0,0,1,0,1">
-            <Path
-                Width="8"
-                Height="7"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Data="M0,0 L8,7 M8,0 L0,7 Z"
-                Stroke="{StaticResource PrimaryHueDarkForegroundBrush}"
-                StrokeThickness="1.5" />
-        </Grid>
-    </DataTemplate>
 </ResourceDictionary>

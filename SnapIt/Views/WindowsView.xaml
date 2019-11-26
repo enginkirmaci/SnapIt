@@ -16,42 +16,32 @@
     d:DesignHeight="600"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
     TextElement.FontSize="14"
-    TextElement.FontWeight="Regular"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
 
-    <Grid Margin="16">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <TextBlock
-                Margin="0,6"
-                Style="{StaticResource MaterialDesignTitleTextBlock}"
-                Text="Excluded Applications" />
+            <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Excluded Applications" />
             <TextBlock
                 Grid.Row="1"
                 Grid.ColumnSpan="3"
                 Margin="0,0,0,6"
                 TextWrapping="Wrap">
-                <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
                     If you don't want to use snapping functionility for certain applications, you can add them to Excluded Applications.
                 </Hyperlink>
             </TextBlock>
             <Button
-                Height="40"
                 HorizontalAlignment="Right"
                 Command="{Binding NewExcludeApplicationCommand}"
-                FontSize="14"
-                Foreground="{DynamicResource SecondaryAccentBrush}"
-                Style="{StaticResource MaterialDesignFlatButton}">
+                Style="{StaticResource MaterialDesignIconForegroundButton2}">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon
@@ -73,6 +63,7 @@
             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
             materialDesign:DataGridAssist.ColumnHeaderPadding="8"
             AutoGenerateColumns="False"
+            Background="{x:Null}"
             CanUserAddRows="False"
             CanUserSortColumns="True"
             IsReadOnly="True"
@@ -114,15 +105,14 @@
 
         <materialDesign:DialogHost
             Grid.RowSpan="2"
-            Margin="-32"
             IsOpen="{Binding IsExcludeApplicationDialogOpen}"
-            Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+            Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Width="360" Margin="16">
-                    <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Exclude Application" />
+                    <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Exclude Application" />
 
                     <TextBlock TextWrapping="Wrap">
-                        <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                        <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
                             To exclude application, you can choose from running applications or type a keyword and matching rule. If keyword matches to application title, snapping will be disabled for that window.
                         </Hyperlink>
                     </TextBlock>
@@ -130,7 +120,8 @@
                     <Button
                         Margin="0,16"
                         HorizontalAlignment="Center"
-                        Command="{Binding OpenRunningApplicationsDialogCommand}">
+                        Command="{Binding OpenRunningApplicationsDialogCommand}"
+                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="FolderSearchOutline" />
@@ -138,11 +129,9 @@
                             </StackPanel>
                         </Button.Content>
                     </Button>
+
                     <TextBlock Margin="0,0,0,12" HorizontalAlignment="Center">
-                        <Hyperlink
-                            FontSize="14"
-                            IsEnabled="False"
-                            Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                        <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
                             or
                         </Hyperlink>
                     </TextBlock>
@@ -190,14 +179,14 @@
                             CommandParameter="{StaticResource TrueValue}"
                             Content="Save"
                             IsDefault="True"
-                            Style="{StaticResource MaterialDesignFlatButton}" />
+                            Style="{StaticResource MaterialDesignIconForegroundButton2}" />
                         <Button
                             Margin="20,0,0,0"
                             Command="{Binding ExcludeApplicationDialogClosingCommand}"
                             CommandParameter="{StaticResource FalseValue}"
                             Content="Cancel"
                             IsDefault="False"
-                            Style="{StaticResource MaterialDesignFlatButton}" />
+                            Style="{StaticResource MaterialDesignIconForegroundButton2}" />
                     </StackPanel>
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
@@ -205,10 +194,9 @@
 
         <materialDesign:DialogHost
             Grid.RowSpan="2"
-            Margin="-16"
             CloseOnClickAway="True"
             IsOpen="{Binding IsRunningApplicationsDialogOpen}"
-            Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+            Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
             <materialDesign:DialogHost.DialogContent>
                 <Grid Width="360" Margin="16">
                     <Grid.RowDefinitions>
@@ -216,7 +204,7 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Running Applications" />
+                    <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Running Applications" />
 
                     <ListBox
                         Grid.Row="1"

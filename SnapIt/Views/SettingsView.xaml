@@ -15,13 +15,9 @@
     d:DesignHeight="600"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
     TextElement.FontSize="14"
-    TextElement.FontWeight="Regular"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
 
     <i:Interaction.Triggers>
@@ -36,16 +32,9 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
 
-            <StackPanel Margin="16">
-                <TextBlock
-                    Margin="0,6"
-                    Style="{StaticResource MaterialDesignTitleTextBlock}"
-                    Text="Mouse" />
+            <StackPanel>
+                <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Mouse" />
                 <TextBlock Margin="0,6" Text="Use mouse to snap window" />
 
                 <ToggleButton
@@ -59,7 +48,7 @@
                     Margin="0,0,0,6"
                     TextWrapping="Wrap"
                     Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
                         Delay time is disabled when hold key in use
                     </Hyperlink>
                 </TextBlock>
@@ -72,7 +61,7 @@
 
                 <TextBlock Margin="0,6,0,0" Text="Only use window title to snap window" />
                 <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
-                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink}">
+                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
                         It is recommend to enable it if you choose Left mouse button for snapping
                     </Hyperlink>
                 </TextBlock>
@@ -122,11 +111,8 @@
                     Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Margin="16">
-                <TextBlock
-                    Margin="0,6"
-                    Style="{StaticResource MaterialDesignTitleTextBlock}"
-                    Text="Keyboard" />
+            <StackPanel Grid.Column="1">
+                <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Keyboard" />
                 <TextBlock Margin="0,6" Text="Use keyboard to snap window" />
                 <ToggleButton
                     Margin="0,6"
@@ -186,7 +172,7 @@
 
                 <TextBlock
                     Margin="0,48,0,6"
-                    Style="{StaticResource MaterialDesignTitleTextBlock}"
+                    Style="{StaticResource MaterialDesignHeadlineTextBlock2}"
                     Text="Other Settings" />
 
                 <TextBlock
@@ -215,11 +201,6 @@
                             IsChecked="{Binding IsRunAsAdmin}"
                             Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />-->
             </StackPanel>
-
-            <StackPanel
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                Margin="16" />
         </Grid>
     </ScrollViewer>
 </UserControl>

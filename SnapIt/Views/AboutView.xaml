@@ -15,16 +15,12 @@
     d:DesignHeight="480"
     d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
     TextElement.FontSize="14"
-    TextElement.FontWeight="Regular"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
 
-    <Grid Margin="16">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
@@ -41,7 +37,7 @@
                     <Image Source="/SnapIt;component/Themes/snapit.png" Stretch="UniformToFill" />
 
                     <StackPanel Grid.Column="1" Margin="16,8,0,0">
-                        <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock}" Text="{x:Static c:Constants.AppName}" />
+                        <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="{x:Static c:Constants.AppName}" />
                         <TextBlock Text="{x:Static c:Constants.AppVersion}" />
                     </StackPanel>
                 </Grid>
@@ -63,24 +59,26 @@
                 </TextBlock>
 
                 <TextBlock
-                    Margin="0,24,0,4"
-                    Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                    Margin="0,24,0,0"
+                    Style="{StaticResource MaterialDesignHeadlineTextBlock2}"
                     Text="Give Feedback" />
                 <TextBlock Text="Help me make SnapIt better. You can add new ideas and features, as well as vote other ideas and submit a bug here." TextWrapping="Wrap" />
-                <TextBlock Margin="0,2">
+                <TextBlock Margin="12,8">
                     <Hyperlink
                         Command="{Binding HandleLinkClick}"
                         CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
                         Style="{StaticResource MaterialDesignBody1Hyperlink}">
                         <Hyperlink.Inlines>
-                            <Run Text=" -   New ideas or report a bug" />
+                            <materialDesign:PackIcon Margin="0,-3" Kind="Idea" />
+                            <Run Text="New ideas or report a bug" />
                         </Hyperlink.Inlines>
                     </Hyperlink>
                 </TextBlock>
-                <TextBlock Margin="0,2">
+                <TextBlock Margin="12,0">
                     <Hyperlink Command="{Binding RateReviewStoreClick}" Style="{StaticResource MaterialDesignBody1Hyperlink}">
                         <Hyperlink.Inlines>
-                            <Run Text=" -   Rate and review on Microsoft Store" />
+                            <materialDesign:PackIcon Margin="0,-3" Kind="StarRate" />
+                            <Run Text="Rate and review on Microsoft Store" />
                         </Hyperlink.Inlines>
                     </Hyperlink>
                 </TextBlock>
@@ -88,7 +86,8 @@
                 <TextBlock Margin="0,24,0,0">
                     <Hyperlink
                         Command="{Binding OpenChangeLogDialog}"
-                        FontSize="15"
+                        FontSize="24"
+                        FontWeight="Light"
                         Style="{StaticResource MaterialDesignBody1Hyperlink}">
                         <Hyperlink.Inlines>
                             <Run Text="Change log" />
@@ -98,7 +97,7 @@
 
                 <TextBlock
                     Margin="0,24,0,0"
-                    Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                    Style="{StaticResource MaterialDesignHeadlineTextBlock2}"
                     Text="Follow Me" />
 
                 <StackPanel Orientation="Horizontal">
@@ -170,10 +169,9 @@
 
         <materialDesign:DialogHost
             Grid.RowSpan="2"
-            Margin="-16"
             CloseOnClickAway="True"
             IsOpen="{Binding IsChangeLogDialogOpen}"
-            Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+            Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
             <materialDesign:DialogHost.DialogContent>
                 <Grid Width="480" Margin="16">
                     <Grid.RowDefinitions>
@@ -183,7 +181,7 @@
 
                     <TextBlock
                         Margin="0,0,0,12"
-                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                        Style="{StaticResource MaterialDesignTitleTextBlock2}"
                         Text="Change Log" />
 
                     <ListBox Grid.Row="1" ItemsSource="{Binding ChangeLogs}">

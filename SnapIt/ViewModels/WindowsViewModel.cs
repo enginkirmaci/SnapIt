@@ -46,7 +46,7 @@ namespace SnapIt.ViewModels
             this.snapService = snapService;
             this.settingService = settingService;
             this.winApiService = winApiService;
-            RunningApplications = new ObservableCollection<string>(winApiService.GetOpenWindowsNames());
+
             if (settingService.ExcludedApplicationSettings?.Applications != null)
             {
                 ExcludedApplications = new ObservableCollection<ExcludedApplication>(settingService.ExcludedApplicationSettings.Applications);
@@ -68,6 +68,8 @@ namespace SnapIt.ViewModels
             OpenRunningApplicationsDialogCommand = new DelegateCommand(() =>
             {
                 IsRunningApplicationsDialogOpen = true;
+
+                RunningApplications = new ObservableCollection<string>(winApiService.GetOpenWindowsNames());
             });
 
             CloseRunningApplicationsDialogCommand = new DelegateCommand(() =>

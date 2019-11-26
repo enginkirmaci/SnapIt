@@ -11,19 +11,18 @@
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
     x:Name="MainWindowView"
     Title="{Binding Title}"
-    Width="900"
+    Width="860"
     Height="680"
     d:DataContext="{d:DesignInstance vm:LayoutDesignView,
                                      IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
+    BorderBrush="{DynamicResource MaterialDesignBodyLight}"
+    BorderThickness="1"
     FontFamily="{StaticResource MaterialDesignFont}"
     Style="{DynamicResource WindowStyle}"
     TextElement.FontSize="14"
-    TextElement.FontWeight="Regular"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
 
     <i:Interaction.Triggers>
@@ -36,139 +35,183 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-        <materialDesign:ColorZone
-            Padding="0,12,0,0"
-            DockPanel.Dock="Top"
-            Mode="PrimaryMid">
-            <DockPanel>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="24"
-                        Text="{x:Static c:Constants.AppName}" />
-
-                    <materialDesign:ColorZone Margin="0,8,0,0" Mode="PrimaryMid">
-                        <StackPanel Margin="2,2,2,0" Orientation="Horizontal">
-                            <RadioButton
-                                Height="40"
-                                Margin="4,2"
-                                Style="{StaticResource MaterialDesignTabRadioButton}"
-                                Visibility="Collapsed">
-                                <RadioButton.Content>
-                                    <materialDesign:PackIcon Kind="HomeOutline" />
-                                </RadioButton.Content>
-                            </RadioButton>
-                            <RadioButton
-                                Height="40"
-                                Margin="4,2"
-                                Command="{Binding NavigateCommand}"
-                                CommandParameter="LayoutView"
-                                IsChecked="True"
-                                Style="{StaticResource MaterialDesignTabRadioButton}">
-                                <RadioButton.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,4,0" Kind="BorderAll" />
-                                        <TextBlock Text="LAYOUT" />
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
-                            <RadioButton
-                                Height="40"
-                                Margin="4,2"
-                                Command="{Binding NavigateCommand}"
-                                CommandParameter="SettingsView"
-                                IsChecked="False"
-                                Style="{StaticResource MaterialDesignTabRadioButton}">
-                                <RadioButton.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,4,0" Kind="SettingsOutline" />
-                                        <TextBlock Text="SETTINGS" />
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
-                            <RadioButton
-                                Height="40"
-                                Margin="4,2"
-                                Command="{Binding NavigateCommand}"
-                                CommandParameter="WindowsView"
-                                IsChecked="False"
-                                Style="{StaticResource MaterialDesignTabRadioButton}">
-                                <RadioButton.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,4,0" Kind="WindowRestore" />
-                                        <TextBlock Text="WINDOWS" />
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
-                            <RadioButton
-                                Height="40"
-                                Margin="4,2"
-                                Command="{Binding NavigateCommand}"
-                                CommandParameter="AboutView"
-                                IsChecked="False"
-                                Style="{StaticResource MaterialDesignTabRadioButton}">
-                                <RadioButton.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,4,0" Kind="InformationVariant" />
-                                        <TextBlock Text="ABOUT" />
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
-                        </StackPanel>
-                    </materialDesign:ColorZone>
-                </StackPanel>
-            </DockPanel>
-        </materialDesign:ColorZone>
-
-        <ToggleButton
+        <Grid
             Margin="12"
             HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            IsChecked="{Binding IsDarkTheme}"
-            Style="{StaticResource MaterialDesignSwitchAccentToggleButton}">
-            <materialDesign:PackIcon Margin="-1,-2,0,0" Kind="WhiteBalanceSunny" />
-            <materialDesign:ToggleButtonAssist.OnContent>
-                <materialDesign:PackIcon Margin="-1,-2,0,0" Kind="Brightness2" />
-            </materialDesign:ToggleButtonAssist.OnContent>
-        </ToggleButton>
+            VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <StackPanel
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Orientation="Horizontal"
-            WindowChrome.IsHitTestVisibleInChrome="True">
-            <Button
-                Padding="12,4"
-                materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                Command="{Binding HandleLinkClick}"
-                CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
-                ToolTip="Give Feedback">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal" RenderTransform="1,0,0,1,0,1">
+            <TextBlock Margin="0,0,12,0" Text="{Binding ThemeTitle}" />
+
+            <ToggleButton
+                Grid.Column="1"
+                IsChecked="{Binding IsDarkTheme}"
+                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}">
+                <materialDesign:PackIcon Margin="-1,-1,0,0" Kind="WhiteBalanceSunny" />
+
+                <materialDesign:ToggleButtonAssist.OnContent>
+                    <materialDesign:PackIcon Margin="1,-5,0,0" Kind="Brightness2" />
+                </materialDesign:ToggleButtonAssist.OnContent>
+            </ToggleButton>
+        </Grid>
+
+        <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
+            <TextBlock Margin="18,13,0,32" Text="{x:Static c:Constants.AppName}" />
+
+            <RadioButton IsChecked="True" Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="HomeOutline" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="Home" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                Command="{Binding NavigateCommand}"
+                CommandParameter="LayoutView"
+                Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="BorderAll" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="Layout" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                Command="{Binding NavigateCommand}"
+                CommandParameter="SettingsView"
+                Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="SettingsOutline" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="Settings" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                Command="{Binding NavigateCommand}"
+                CommandParameter="WindowsView"
+                Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="WindowRestore" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="Windows" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                Command="{Binding NavigateCommand}"
+                CommandParameter="AboutView"
+                Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="InformationVariant" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="About" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+        </StackPanel>
+
+        <Grid Grid.Column="1" Background="{DynamicResource MaterialDesignBackground}">
+            <StackPanel
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Orientation="Horizontal"
+                WindowChrome.IsHitTestVisibleInChrome="True">
+                <Button
+                    Padding="12,4"
+                    materialDesign:ButtonAssist.CornerRadius="0"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                    Command="{Binding HandleLinkClick}"
+                    CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
+                    Style="{StaticResource MaterialDesignIconForegroundButton2}"
+                    ToolTip="Give Feedback">
+                    <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="FeedbackOutline" />
                         <TextBlock
                             Margin="6,0,0,0"
-                            Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                            FontSize="13"
                             Text="Feedback" />
                     </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button
-                materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                Command="{Binding CloseWindowCommand, Mode=OneWay}"
-                CommandParameter="{Binding ElementName=MainWindowView}"
-                ContentTemplate="{DynamicResource CloseBtnContentTemplate}" />
-        </StackPanel>
+                </Button>
 
-        <ContentControl
-            Grid.Row="1"
-            Margin="12"
-            prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}" />
+                <Button
+                    materialDesign:ButtonAssist.CornerRadius="0"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                    Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                    CommandParameter="{Binding ElementName=MainWindowView}"
+                    Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                    <materialDesign:PackIcon
+                        Width="18"
+                        Height="18"
+                        Kind="WindowClose" />
+                </Button>
+            </StackPanel>
+
+            <ContentControl Margin="16,48,8,8" prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}" />
+        </Grid>
     </Grid>
 </Window>

@@ -118,6 +118,10 @@
     <Compile Include="Views\WindowsView.xaml.cs">
       <DependentUpon>WindowsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Themes\CustomStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\CustomWindowStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
