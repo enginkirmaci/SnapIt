@@ -10,10 +10,7 @@
     d:DesignWidth="300"
     mc:Ignorable="d">
 
-    <Grid
-        x:Name="Area"
-        Background="{Binding Theme.OverlayBrush}"
-        Opacity="0.7">
+    <Grid x:Name="Area" Opacity="0.9">
         <Border
             x:Name="Border"
             Panel.ZIndex="-1"
@@ -26,11 +23,10 @@
             Height="64"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Panel.ZIndex="-1"
             Foreground="#FFC8C8C8"
             Kind="ArrowExpandAll" />
 
-        <Button
+        <!--<Button
             x:Name="MergeButton"
             Width="48"
             Height="48"
@@ -68,8 +64,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Panel.ZIndex="99"
-            Orientation="Horizontal"
-            Visibility="Visible">
+            Orientation="Horizontal">
             <Button
                 x:Name="SplitVertically"
                 Margin="2"
@@ -99,7 +94,7 @@
                 Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:PackIcon Kind="Remove" />
             </Button>
-        </StackPanel>
+        </StackPanel>-->
 
         <!--<Grid.Style>
             <Style TargetType="{x:Type Grid}">

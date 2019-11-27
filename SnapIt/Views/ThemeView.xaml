@@ -46,7 +46,7 @@
                 </Grid.Background>
 
                 <!--<Controls:SnapArea LayoutArea="{Binding Layout.LayoutArea}" Visibility="Hidden" />-->
-                <Controls:SnapAreaNew LayoutArea="{Binding Layout.LayoutArea}" />
+                <Controls:SnapAreaNew LayoutArea="{Binding Layout.LayoutArea}" Theme="{Binding Theme, NotifyOnSourceUpdated=True}" />
             </Grid>
         </StackPanel>
 

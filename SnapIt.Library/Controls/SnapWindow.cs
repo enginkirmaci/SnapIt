@@ -93,12 +93,17 @@ namespace SnapIt.Library.Controls
 
         public void ApplyLayout()
         {
-            var snapArea = new SnapAreaNew();
-
-            if (Screen.Layout != null)
+            var snapArea = new SnapAreaNew
             {
-                snapArea.ApplyLayout(Screen.Layout.LayoutArea, false, true);
-            }
+                Theme = new SnapAreaTheme(),
+                LayoutArea = Screen.Layout.LayoutArea
+                //,                Transparent = true
+            };
+
+            //if (Screen.Layout != null)
+            //{
+            //    snapArea.ApplyLayout(Screen.Layout.LayoutArea, false, true);
+            //}
 
             Content = snapArea;
         }
@@ -123,6 +128,11 @@ namespace SnapIt.Library.Controls
                 var Point2Window = PointFromScreen(new Point(x, y));
 
                 var element = InputHitTest(Point2Window);
+
+                //if (element != null)
+                //{
+                //    DevMode.Log(element);
+                //}
 
                 if (element != null && element is Grid)
                 {
