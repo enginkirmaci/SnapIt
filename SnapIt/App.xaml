@@ -11,6 +11,8 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converter:InverseBoolConverter x:Key="InverseBoolConverter" />
             <converter:InputDeviceConverter x:Key="InputDeviceConverter" />
+            <converter:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+
             <System:Boolean x:Key="FalseValue">False</System:Boolean>
             <System:Boolean x:Key="TrueValue">True</System:Boolean>
 

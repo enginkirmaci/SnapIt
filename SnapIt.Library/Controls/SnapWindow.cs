@@ -14,7 +14,7 @@ namespace SnapIt.Library.Controls
     public class SnapWindow : Window
     {
         private readonly IWinApiService winApiService;
-        private SnapArea current;
+        private SnapAreaNew current;
 
         public SnapScreen Screen { get; set; }
         public List<Rectangle> SnapAreaBoundries { get; set; }
@@ -93,7 +93,7 @@ namespace SnapIt.Library.Controls
 
         public void ApplyLayout()
         {
-            var snapArea = new SnapArea();
+            var snapArea = new SnapAreaNew();
 
             if (Screen.Layout != null)
             {
@@ -109,7 +109,7 @@ namespace SnapIt.Library.Controls
             {
                 var generated = new List<Rectangle>();
 
-                var rootSnapArea = Content as SnapArea;
+                var rootSnapArea = Content as SnapAreaNew;
                 rootSnapArea.GenerateSnapAreaBoundries(ref generated, Dpi);
 
                 SnapAreaBoundries = generated.OrderBy(i => i.X).ThenBy(i => i.Y).ToList();
@@ -124,21 +124,25 @@ namespace SnapIt.Library.Controls
 
                 var element = InputHitTest(Point2Window);
 
-                if (element != null && element is Border)
+                if (element != null && element is Grid)
                 {
-                    element = (SnapArea)(element as Border).Parent;
+                    element = (SnapAreaNew)(element as Grid).Parent;
+                }
+                else if (element != null && element is Border)
+                {
+                    element = (SnapAreaNew)((Grid)(element as Border).Parent).Parent;
                 }
 
-                if (element != null && element is SnapArea)
+                if (element != null && element is SnapAreaNew)
                 {
                     if (current != null)
                     {
                         current.NormalStyle();
                     }
 
-                    if (!(element as SnapArea).IsMergedSnapArea)
+                    if (!(element as SnapAreaNew).IsMergedSnapArea)
                     {
-                        var snapArea = current = (SnapArea)element;
+                        var snapArea = current = (SnapAreaNew)element;
 
                         snapArea.OnHoverStyle();
 
@@ -146,7 +150,7 @@ namespace SnapIt.Library.Controls
                     }
                     else
                     {
-                        var snapArea = current = ((SnapArea)element).ParentSnapArea;
+                        var snapArea = current = ((SnapAreaNew)element).ParentSnapArea;
 
                         snapArea.OnHoverStyle();
 
