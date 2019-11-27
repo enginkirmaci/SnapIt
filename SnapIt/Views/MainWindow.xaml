@@ -11,8 +11,10 @@
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
     x:Name="MainWindowView"
     Title="{Binding Title}"
-    Width="860"
-    Height="680"
+    Width="850"
+    Height="600"
+    MinWidth="480"
+    MinHeight="440"
     d:DataContext="{d:DesignInstance vm:LayoutDesignView,
                                      IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -109,7 +111,7 @@
             </RadioButton>
             <RadioButton
                 Command="{Binding NavigateCommand}"
-                CommandParameter="SettingsView"
+                CommandParameter="MouseSettingsView"
                 Style="{StaticResource MaterialDesignTabRadioButton2}">
                 <RadioButton.Content>
                     <Grid>
@@ -121,11 +123,33 @@
                             Width="20"
                             Height="20"
                             Margin="0,0,10,0"
-                            Kind="SettingsOutline" />
+                            Kind="Mouse" />
                         <TextBlock
                             Grid.Column="1"
                             VerticalAlignment="Bottom"
-                            Text="Settings" />
+                            Text="Mouse" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                Command="{Binding NavigateCommand}"
+                CommandParameter="KeyboardSettingsView"
+                Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="KeyboardOutline" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="Keyboard" />
                     </Grid>
                 </RadioButton.Content>
             </RadioButton>
@@ -148,6 +172,50 @@
                             Grid.Column="1"
                             VerticalAlignment="Bottom"
                             Text="Windows" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                Command="{Binding NavigateCommand}"
+                CommandParameter="ThemeView"
+                Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="PaletteOutline" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="Theme" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                Command="{Binding NavigateCommand}"
+                CommandParameter="SettingsView"
+                Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="SettingsOutline" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="Settings" />
                     </Grid>
                 </RadioButton.Content>
             </RadioButton>

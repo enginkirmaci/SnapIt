@@ -2,7 +2,7 @@
 using System.Linq;
 using SnapIt.Library.Entities;
 
-namespace SnapIt.ViewModels
+namespace SnapIt.ViewModels.DesignTime
 {
     public class WindowsDesignView
     {

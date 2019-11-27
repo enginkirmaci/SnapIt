@@ -4,16 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     xmlns:local="clr-namespace:SnapIt.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:snapcontrols="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
-    d:DataContext="{d:DesignInstance vm:LayoutDesignView,
+    d:DataContext="{d:DesignInstance design:LayoutDesignView,
                                      IsDesignTimeCreatable=True}"
-    d:DesignHeight="530"
-    d:DesignWidth="700"
+    d:DesignHeight="480"
+    d:DesignWidth="640"
     prism:ViewModelLocator.AutoWireViewModel="True"
     FontFamily="{StaticResource MaterialDesignFont}"
     TextElement.FontSize="14"
@@ -29,7 +30,7 @@
 
             <StackPanel>
                 <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Screens" />
-                <TextBlock Margin="0,0,0,6">
+                <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
                     <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
                         Select screen and proceed to layout section.
                     </Hyperlink>
@@ -112,7 +113,7 @@
 
                     <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Layouts" />
 
-                    <TextBlock Grid.Row="1">
+                    <TextBlock Grid.Row="1" TextWrapping="Wrap">
                         <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
                             Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu.
                         </Hyperlink>

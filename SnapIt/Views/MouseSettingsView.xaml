@@ -1,0 +1,115 @@
+﻿<UserControl
+    x:Class="SnapIt.Views.MouseSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:local="clr-namespace:SnapIt.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:SnapIt.ViewModels"
+    d:DataContext="{d:DesignInstance design:MouseSettingsDesignView,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="600"
+    d:DesignWidth="480"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    FontFamily="{StaticResource MaterialDesignFont}"
+    TextElement.FontSize="14"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Mouse" />
+            <TextBlock
+                Margin="0,6"
+                Text="Use mouse to snap window"
+                TextWrapping="Wrap" />
+
+            <ToggleButton
+                Margin="0,6"
+                HorizontalAlignment="Left"
+                IsChecked="{Binding EnableMouse}"
+                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+
+            <TextBlock
+                Margin="0,6,0,0"
+                Text="Delay time to activate snapping (in milliseconds)"
+                TextWrapping="Wrap" />
+            <TextBlock
+                Margin="0,0,0,6"
+                TextWrapping="Wrap"
+                Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
+                    Delay time is disabled when hold key in use
+                </Hyperlink>
+            </TextBlock>
+            <TextBox
+                Width="128"
+                Margin="0,6"
+                HorizontalAlignment="Left"
+                IsEnabled="{Binding EnableHoldKey, Converter={StaticResource InverseBoolConverter}}"
+                Text="{Binding MouseDragDelay}" />
+
+            <TextBlock
+                Margin="0,6,0,0"
+                Text="Only use window title to snap window"
+                TextWrapping="Wrap" />
+            <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
+                <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
+                    It is recommend to enable it if you choose Left mouse button for snapping
+                </Hyperlink>
+            </TextBlock>
+            <ToggleButton
+                Margin="0,6"
+                HorizontalAlignment="Left"
+                IsChecked="{Binding DragByTitle}"
+                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+
+            <TextBlock
+                Margin="0,6"
+                Text="Mouse button for snapping window"
+                TextWrapping="Wrap" />
+            <ComboBox
+                Width="96"
+                Margin="0,6"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding MouseButtons}"
+                SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
+
+            <TextBlock Margin="0,6,0,0" Text="Use Hold key" />
+            <ToggleButton
+                Margin="0,6"
+                HorizontalAlignment="Left"
+                IsChecked="{Binding EnableHoldKey}"
+                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+
+            <TextBlock
+                Margin="0,6"
+                Text="Hold Key"
+                Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <ComboBox
+                Width="96"
+                Margin="0,6"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding HoldKeys}"
+                SelectedItem="{Binding HoldKey, Mode=TwoWay}"
+                Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+            <TextBlock
+                Margin="0,6"
+                Text="Hold Key Behaviour"
+                Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <ComboBox
+                Width="200"
+                Margin="0,6"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding HoldKeyBehaviours}"
+                SelectedItem="{Binding HoldKeyBehaviour, Mode=TwoWay}"
+                Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

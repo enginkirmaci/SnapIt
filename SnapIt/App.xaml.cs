@@ -62,6 +62,8 @@ namespace SnapIt
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<LayoutView>();
+            containerRegistry.RegisterForNavigation<MouseSettingsView>();
+            containerRegistry.RegisterForNavigation<KeyboardSettingsView>();
             containerRegistry.RegisterForNavigation<SettingsView>();
             containerRegistry.RegisterForNavigation<WindowsView>();
             containerRegistry.RegisterForNavigation<AboutView>();

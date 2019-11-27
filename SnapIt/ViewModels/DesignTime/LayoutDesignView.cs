@@ -2,9 +2,8 @@
 using System.Linq;
 using Prism.Commands;
 using SnapIt.Library.Entities;
-using SnapIt.ViewModels.DesignModels;
 
-namespace SnapIt.ViewModels
+namespace SnapIt.ViewModels.DesignTime
 {
     public class LayoutDesignView
     {
@@ -33,10 +32,7 @@ namespace SnapIt.ViewModels
             SnapScreens[1].Layout = SelectedLayout;
         }
     }
-}
 
-namespace SnapIt.ViewModels.DesignModels
-{
     public class SnapScreen
     {
         public string Primary { get; set; }

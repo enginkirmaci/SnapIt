@@ -88,19 +88,26 @@
     <Compile Include="Converters\InputDeviceConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\DesignTime\KeyboardSettingsDesignView.cs" />
+    <Compile Include="ViewModels\DesignTime\MouseSettingsDesignView.cs" />
     <Compile Include="ViewModels\DesignWindowViewModel.cs" />
     <Compile Include="ViewModels\LayoutViewModel.cs" />
-    <Compile Include="ViewModels\LayoutDesignView.cs" />
+    <Compile Include="ViewModels\DesignTime\LayoutDesignView.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\SettingsDesignView.cs" />
+    <Compile Include="ViewModels\MouseSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DesignTime\SettingsDesignView.cs" />
+    <Compile Include="ViewModels\KeyboardSettingsViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\WindowsDesignView.cs" />
+    <Compile Include="ViewModels\DesignTime\WindowsDesignView.cs" />
     <Compile Include="ViewModels\WindowsViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DesignWindow.xaml.cs">
       <DependentUpon>DesignWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KeyboardSettingsView.xaml.cs">
+      <DependentUpon>KeyboardSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LayoutView.xaml.cs">
       <DependentUpon>LayoutView.xaml</DependentUpon>
@@ -111,6 +118,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\MouseSettingsView.xaml.cs">
+      <DependentUpon>MouseSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -134,11 +144,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\KeyboardSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MouseSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -225,5 +243,6 @@
       <Version>7.2.0.1367</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

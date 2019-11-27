@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using SnapIt.Library.Entities;
 
-namespace SnapIt.ViewModels
+namespace SnapIt.ViewModels.DesignTime
 {
-    public class SettingsDesignView
+    public class MouseSettingsDesignView
     {
         public MouseButton MouseButton { get; set; }
         public ObservableCollection<MouseButton> MouseButtons { get; set; }
@@ -13,7 +13,7 @@ namespace SnapIt.ViewModels
         public Resource<HoldKeyBehaviour> HoldKeyBehaviour { get; set; }
         public ObservableCollection<Resource<HoldKeyBehaviour>> HoldKeyBehaviours { get; set; }
 
-        public SettingsDesignView()
+        public MouseSettingsDesignView()
         {
             MouseButtons = new ObservableCollection<MouseButton>
             {
