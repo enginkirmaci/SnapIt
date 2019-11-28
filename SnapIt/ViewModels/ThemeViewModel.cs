@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
 
 namespace SnapIt.ViewModels
@@ -41,15 +44,20 @@ namespace SnapIt.ViewModels
 
             Theme.ThemeChanged += Theme_ThemeChanged;
 
-            LoadedCommand = new DelegateCommand<object>((snapArea) =>
+            LoadedCommand = new DelegateCommand<object>((mainSnapGrid) =>
             {
-                this.snapArea = snapArea as SnapAreaNew;
-                this.snapArea.SetPreview();
+                var grid = mainSnapGrid as DependencyObject;
+
+                snapArea = grid.FindVisualChildren<SnapAreaNew>().FirstOrDefault();
+
+                if (snapArea != null)
+                {
+                    snapArea.SetPreview();
+                }
             });
 
             Layout = new Layout
             {
-                Name = "Layout 1",
                 LayoutArea = new LayoutArea
                 {
                     Areas = new List<LayoutArea>
@@ -97,6 +105,11 @@ namespace SnapIt.ViewModels
         {
             Theme = Theme.Copy();
             Theme.ThemeChanged += Theme_ThemeChanged;
+
+            if (snapArea != null)
+            {
+                snapArea.SetPreview();
+            }
         }
 
         private void ApplyChanges()

@@ -29,7 +29,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Excluded Applications" />
+            <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Window" />
+            <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Excluded Applications" />
             <TextBlock
                 Grid.Row="1"
                 Grid.ColumnSpan="3"

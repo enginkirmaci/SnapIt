@@ -74,6 +74,7 @@
         BasedOn="{StaticResource MaterialDesignHeadlineTextBlock}"
         TargetType="{x:Type TextBlock}">
         <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="Margin" Value="0,0,0,12" />
     </Style>
 
     <Style

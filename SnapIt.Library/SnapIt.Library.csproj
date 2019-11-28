@@ -66,6 +66,7 @@
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\SnapAreaTheme.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\UIElementExtensions.cs" />
     <Compile Include="Services\FileOperationService.cs" />
     <Compile Include="Services\IFileOperationService.cs" />
     <Compile Include="Controls\SnapArea.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Entities\Layout.cs" />
     <Compile Include="Entities\LayoutArea.cs" />
     <Compile Include="Entities\Rectangle.cs" />
-    <Compile Include="Extensions\ScreenExtension.cs" />
+    <Compile Include="Extensions\ScreenExtensions.cs" />
     <Compile Include="InteropServices\DwmApi.cs" />
     <Compile Include="InteropServices\User32.cs" />
     <Compile Include="Mappers\MouseButtonMapper.cs" />

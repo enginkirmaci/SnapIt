@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
@@ -61,26 +62,6 @@ namespace SnapIt.Library.Controls
                PropertyChangedCallback = new PropertyChangedCallback(ThemePropertyChanged)
            });
 
-        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
-        {
-            if (depObj != null)
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-                {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T)
-                    {
-                        yield return (T)child;
-                    }
-
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
-                    {
-                        yield return childOfChild;
-                    }
-                }
-            }
-        }
-
         private static void ThemePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             DevMode.Log("triggered");
@@ -91,6 +72,9 @@ namespace SnapIt.Library.Controls
             if (snapArea.Theme != null)
             {
                 snapArea.Area.Background = snapArea.Theme.OverlayBrush;
+                snapArea.MergedIcon.Foreground = snapArea.Theme.BorderBrush;
+                snapArea.Border.BorderBrush = snapArea.Theme.BorderBrush;
+                snapArea.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
                 snapArea.Border.Visibility = Visibility.Visible;
 
                 if (snapArea.LayoutArea?.Areas != null && snapArea.LayoutArea.Areas.Count > 0)
@@ -100,7 +84,7 @@ namespace SnapIt.Library.Controls
                 }
             }
 
-            var areas = FindVisualChildren<SnapAreaNew>(snapArea.Area);
+            var areas = snapArea.Area.FindVisualChildren<SnapAreaNew>();
 
             foreach (var area in areas)
             {
@@ -112,6 +96,9 @@ namespace SnapIt.Library.Controls
                 if (area.LayoutArea?.Areas != null && area.LayoutArea.Areas.Count > 0)
                 {
                     area.Area.Background = transparentBrush;
+                    area.MergedIcon.Foreground = snapArea.Theme.BorderBrush;
+                    area.Border.BorderBrush = snapArea.Theme.BorderBrush;
+                    area.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
                     area.Border.Visibility = Visibility.Hidden;
                 }
             }
@@ -161,7 +148,12 @@ namespace SnapIt.Library.Controls
 
         public void SetPreview()
         {
-            ((SnapAreaNew)Area.Children[0]).Area.Background = Theme.HighlightBrush;
+            var firstSnapArea = this.FindVisualChildren<SnapAreaNew>().FirstOrDefault();
+
+            if (firstSnapArea != null)
+            {
+                firstSnapArea.Area.Background = Theme.HighlightBrush;
+            }
         }
 
         public void GetLayoutAreas(LayoutArea layoutArea)
@@ -411,18 +403,23 @@ namespace SnapIt.Library.Controls
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            MergedIcon.Visibility = Visibility.Visible;
+            mergedSnapArea.MergedIcon.Visibility = Visibility.Visible;
 
             mergedSnapArea.SizeChanged += (s, ev) =>
             {
                 var element = s as SnapAreaNew;
 
-                //var window = Window.GetWindow(element);
-
                 element.Width = element.ParentSnapArea.ActualWidth * 0.3;
                 element.Height = element.ParentSnapArea.ActualHeight * 0.3;
 
-                //element.MergedIcon.Width = element.MergedIcon.Height = 64 * (element.Width / 500);
+                var calculated = 64 * (element.Width / 500);
+
+                if (calculated < 32)
+                {
+                    calculated = 32;
+                }
+
+                element.MergedIcon.Width = element.MergedIcon.Height = calculated;
             };
 
             Area.Children.Add(mergedSnapArea);

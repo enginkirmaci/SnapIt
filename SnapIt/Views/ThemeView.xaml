@@ -12,6 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
+    x:Name="ThemeViewUserControl"
     d:DataContext="{d:DesignInstance design:ThemeDesignView,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="700"
@@ -24,96 +25,132 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MainSnapArea}" />
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=ThemeViewUserControl}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-        <StackPanel>
-            <TextBlock
-                Margin="0,0,0,6"
-                Style="{StaticResource MaterialDesignHeadlineTextBlock2}"
-                Text="Preview" />
+            <StackPanel>
+                <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Themes" />
 
-            <Grid
-                Width="420"
-                Height="240"
-                HorizontalAlignment="Left">
-                <Grid.Background>
-                    <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="Fill" />
-                </Grid.Background>
-
-                <!--<Controls:SnapArea LayoutArea="{Binding Layout.LayoutArea}" Visibility="Hidden" />-->
-                <Controls:SnapAreaNew
-                    x:Name="MainSnapArea"
-                    LayoutArea="{Binding Layout.LayoutArea}"
-                    Theme="{Binding Theme, Mode=TwoWay}" />
-            </Grid>
-        </StackPanel>
-
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Row="1">
                 <TextBlock
                     Margin="0,6"
                     Style="{StaticResource MaterialDesignTitleTextBlock2}"
-                    Text="Colors" />
+                    Text="Preview" />
+                <Grid
+                    Width="480"
+                    Height="240"
+                    HorizontalAlignment="Left">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill" />
+                    </Grid.Background>
 
-                <TextBlock Margin="0,6" Text="Snap area overlay color" />
-
-                <Expander HorizontalAlignment="Stretch">
-                    <Expander.Header>
-                        <Grid Margin="-18,-12,0,-12">
-                            <Grid>
-                                <Grid.Background>
-                                    <ImageBrush
-                                        ImageSource="/SnapIt;component/Themes/Transparency10.png"
-                                        TileMode="Tile"
-                                        Viewport="0,0,10,10"
-                                        ViewportUnits="Absolute" />
-                                </Grid.Background>
-                            </Grid>
-                            <Rectangle Fill="{Binding Theme.OverlayColor, Converter={StaticResource ColorToBrushConverter}}" />
-                        </Grid>
-                    </Expander.Header>
-                    <materialDesign:ColorPicker
-                        Height="160"
-                        Margin="2"
-                        Color="{Binding Theme.OverlayColor}" />
-                </Expander>
-
-                <TextBlock Margin="0,6" Text="Snap area highlight color" />
-
-                <Expander HorizontalAlignment="Stretch">
-                    <Expander.Header>
-                        <Grid Margin="-18,-12,0,-12">
-                            <Grid>
-                                <Grid.Background>
-                                    <ImageBrush
-                                        ImageSource="/SnapIt;component/Themes/Transparency10.png"
-                                        TileMode="Tile"
-                                        Viewport="0,0,10,10"
-                                        ViewportUnits="Absolute" />
-                                </Grid.Background>
-                            </Grid>
-                            <Rectangle Fill="{Binding Theme.HighlightColor, Converter={StaticResource ColorToBrushConverter}}" />
-                        </Grid>
-                    </Expander.Header>
-                    <materialDesign:ColorPicker
-                        Height="160"
-                        Margin="2"
-                        Color="{Binding Theme.HighlightColor}" />
-                </Expander>
+                    <Controls:SnapAreaNew LayoutArea="{Binding Layout.LayoutArea}" Theme="{Binding Theme, Mode=TwoWay}" />
+                </Grid>
             </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.ColumnSpan="2"
+                    Margin="0,6"
+                    Style="{StaticResource MaterialDesignTitleTextBlock2}"
+                    Text="Snap Area" />
+
+                <StackPanel Grid.Row="1">
+                    <TextBlock Margin="0,6" Text="Overlay color" />
+                    <Expander Width="256" HorizontalAlignment="Left">
+                        <Expander.Header>
+                            <Grid Margin="-18,-12,0,-12">
+                                <Grid>
+                                    <Grid.Background>
+                                        <ImageBrush
+                                            ImageSource="/SnapIt;component/Themes/Transparency10.png"
+                                            TileMode="Tile"
+                                            Viewport="0,0,10,10"
+                                            ViewportUnits="Absolute" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Rectangle Fill="{Binding Theme.OverlayColor, Converter={StaticResource ColorToBrushConverter}}" />
+                            </Grid>
+                        </Expander.Header>
+                        <materialDesign:ColorPicker
+                            Height="160"
+                            Margin="2"
+                            Color="{Binding Theme.OverlayColor}" />
+                    </Expander>
+
+                    <TextBlock Margin="0,6" Text="Highlight color" />
+                    <Expander Width="256" HorizontalAlignment="Left">
+                        <Expander.Header>
+                            <Grid Margin="-18,-12,0,-12">
+                                <Grid>
+                                    <Grid.Background>
+                                        <ImageBrush
+                                            ImageSource="/SnapIt;component/Themes/Transparency10.png"
+                                            TileMode="Tile"
+                                            Viewport="0,0,10,10"
+                                            ViewportUnits="Absolute" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Rectangle Fill="{Binding Theme.HighlightColor, Converter={StaticResource ColorToBrushConverter}}" />
+                            </Grid>
+                        </Expander.Header>
+                        <materialDesign:ColorPicker
+                            Height="160"
+                            Margin="2"
+                            Color="{Binding Theme.HighlightColor}" />
+                    </Expander>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBlock Margin="0,6" Text="Border color" />
+                    <Expander Width="256" HorizontalAlignment="Left">
+                        <Expander.Header>
+                            <Grid Margin="-18,-12,0,-12">
+                                <Grid>
+                                    <Grid.Background>
+                                        <ImageBrush
+                                            ImageSource="/SnapIt;component/Themes/Transparency10.png"
+                                            TileMode="Tile"
+                                            Viewport="0,0,10,10"
+                                            ViewportUnits="Absolute" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Rectangle Fill="{Binding Theme.BorderColor, Converter={StaticResource ColorToBrushConverter}}" />
+                            </Grid>
+                        </Expander.Header>
+                        <materialDesign:ColorPicker
+                            Height="160"
+                            Margin="2"
+                            Color="{Binding Theme.BorderColor}" />
+                    </Expander>
+
+                    <TextBlock Margin="0,6" Text="Border thickness" />
+                    <Slider
+                        Width="256"
+                        Margin="0,6,0,0"
+                        HorizontalAlignment="Left"
+                        Maximum="25"
+                        Minimum="0"
+                        TickFrequency="1"
+                        Value="{Binding Theme.BorderThickness}" />
+                </StackPanel>
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

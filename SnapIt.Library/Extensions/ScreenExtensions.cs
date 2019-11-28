@@ -28,7 +28,7 @@ namespace SnapIt.Library.Extensions
         private static extern IntPtr GetDpiForMonitor([In]IntPtr hmonitor, [In]DpiType dpiType, [Out]out uint dpiX, [Out]out uint dpiY);
     }
 
-    public static class ScreenExtension
+    public static class ScreenExtensions
     {
         public static void GetDpi(this Screen screen, DpiType dpiType, out uint dpiX, out uint dpiY)
         {

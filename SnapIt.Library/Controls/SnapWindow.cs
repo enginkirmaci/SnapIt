@@ -13,6 +13,7 @@ namespace SnapIt.Library.Controls
 {
     public class SnapWindow : Window
     {
+        private readonly ISettingService settingService;
         private readonly IWinApiService winApiService;
         private SnapAreaNew current;
 
@@ -21,9 +22,11 @@ namespace SnapIt.Library.Controls
         public Dpi Dpi { get; set; }
 
         public SnapWindow(
+            ISettingService settingService,
             IWinApiService winApiService,
             SnapScreen screen)
         {
+            this.settingService = settingService;
             this.winApiService = winApiService;
 
             Screen = screen;
@@ -95,9 +98,8 @@ namespace SnapIt.Library.Controls
         {
             var snapArea = new SnapAreaNew
             {
-                Theme = new SnapAreaTheme(),
+                Theme = settingService.Settings.Theme,
                 LayoutArea = Screen.Layout.LayoutArea
-                //,                Transparent = true
             };
 
             //if (Screen.Layout != null)
@@ -128,11 +130,6 @@ namespace SnapIt.Library.Controls
                 var Point2Window = PointFromScreen(new Point(x, y));
 
                 var element = InputHitTest(Point2Window);
-
-                //if (element != null)
-                //{
-                //    DevMode.Log(element);
-                //}
 
                 if (element != null && element is Grid)
                 {

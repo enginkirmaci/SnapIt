@@ -13,7 +13,7 @@
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
     d:DataContext="{d:DesignInstance design:LayoutDesignView,
                                      IsDesignTimeCreatable=True}"
-    d:DesignHeight="480"
+    d:DesignHeight="800"
     d:DesignWidth="640"
     prism:ViewModelLocator.AutoWireViewModel="True"
     FontFamily="{StaticResource MaterialDesignFont}"
@@ -29,7 +29,8 @@
             </Grid.RowDefinitions>
 
             <StackPanel>
-                <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Screens" />
+                <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Layout" />
+                <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Screens" />
                 <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
                     <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
                         Select screen and proceed to layout section.
@@ -63,7 +64,7 @@
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                                         Text="{Binding Resolution}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
@@ -111,7 +112,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Layouts" />
+                    <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Change Layouts" />
 
                     <TextBlock Grid.Row="1" TextWrapping="Wrap">
                         <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
@@ -156,27 +157,26 @@
 
                 <ListBox
                     Grid.Row="1"
+                    VerticalContentAlignment="Top"
                     ItemsSource="{Binding Layouts}"
                     SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid
-                                Width="188"
-                                Margin="-3"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
+                            <Grid Width="188">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
                                 <snapcontrols:SnapArea
                                     Width="188"
                                     Height="156"
                                     LayoutArea="{Binding LayoutArea}" />
 
                                 <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
-                                    Opacity="0.9"
-                                    Style="{StaticResource MaterialDesignHeadlineTextBlock2}"
+                                    Grid.Row="1"
+                                    Margin="0,8"
+                                    Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                                     Text="{Binding Name}"
                                     TextWrapping="Wrap" />
 

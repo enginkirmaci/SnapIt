@@ -14,8 +14,8 @@
         <Border
             x:Name="Border"
             Panel.ZIndex="-1"
-            BorderBrush="#FFC8C8C8"
-            BorderThickness="1" />
+            BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
+            BorderThickness="{Binding Theme.BorderThickness, FallbackValue=2}" />
 
         <materialDesign:PackIcon
             x:Name="MergedIcon"
@@ -23,7 +23,7 @@
             Height="64"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Foreground="#FFC8C8C8"
+            Foreground="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
             Kind="ArrowExpandAll" />
 
         <!--<Button
