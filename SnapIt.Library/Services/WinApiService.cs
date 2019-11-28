@@ -11,6 +11,9 @@ namespace SnapIt.Library.Services
 {
     public class WinApiService : IWinApiService
     {
+        private const uint SPI_GETDESKWALLPAPER = 0x73;
+        private const int MAX_PATH = 260;
+
         public IDictionary<IntPtr, string> GetOpenWindows()
         {
             var shellWindow = User32.GetShellWindow();
@@ -113,6 +116,13 @@ namespace SnapIt.Library.Services
                 activeWindow = ActiveWindow.Empty;
 
             return activeWindow;
+        }
+
+        public string GetCurrentDesktopWallpaper()
+        {
+            var currentWallpaper = new string('\0', MAX_PATH);
+            User32.SystemParametersInfo(SPI_GETDESKWALLPAPER, currentWallpaper.Length, currentWallpaper, 0);
+            return currentWallpaper.Substring(0, currentWallpaper.IndexOf('\0'));
         }
     }
 }

@@ -61,8 +61,30 @@ namespace SnapIt.Library.Controls
                PropertyChangedCallback = new PropertyChangedCallback(ThemePropertyChanged)
            });
 
+        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (T)child;
+                    }
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
         private static void ThemePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            DevMode.Log("triggered");
+
             var snapArea = (SnapAreaNew)d;
             snapArea.Theme = (SnapAreaTheme)e.NewValue;
 
@@ -75,6 +97,22 @@ namespace SnapIt.Library.Controls
                 {
                     snapArea.Area.Background = transparentBrush;
                     snapArea.Border.Visibility = Visibility.Hidden;
+                }
+            }
+
+            var areas = FindVisualChildren<SnapAreaNew>(snapArea.Area);
+
+            foreach (var area in areas)
+            {
+                area.Theme = snapArea.Theme;
+
+                area.Area.Background = area.Theme.OverlayBrush;
+                area.Border.Visibility = Visibility.Visible;
+
+                if (area.LayoutArea?.Areas != null && area.LayoutArea.Areas.Count > 0)
+                {
+                    area.Area.Background = transparentBrush;
+                    area.Border.Visibility = Visibility.Hidden;
                 }
             }
         }
@@ -120,6 +158,11 @@ namespace SnapIt.Library.Controls
 
         //    ApplyLayout(false);
         //}
+
+        public void SetPreview()
+        {
+            ((SnapAreaNew)Area.Children[0]).Area.Background = Theme.HighlightBrush;
+        }
 
         public void GetLayoutAreas(LayoutArea layoutArea)
         {

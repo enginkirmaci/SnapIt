@@ -41,5 +41,8 @@ namespace SnapIt.Library.InteropServices
 
         [DllImport("user32.dll", SetLastError = false)]
         public static extern IntPtr GetDesktopWindow();
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        public static extern int SystemParametersInfo(uint uAction, int uParam, string lpvParam, int fuWinIni);
     }
 }

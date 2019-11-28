@@ -21,5 +21,7 @@ namespace SnapIt.Library.Services
         void GetWindowMargin(ActiveWindow activeWindow, out Rectangle withMargin);
 
         ActiveWindow GetActiveWindow();
+
+        string GetCurrentDesktopWallpaper();
     }
 }
