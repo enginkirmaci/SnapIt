@@ -39,7 +39,7 @@ namespace SnapIt.Library.Services
                     snapWindows.Add(window);
                 }
 
-                //break; //TODO test
+                break; //TODO test
             }
 
             snapWindows.ForEach(window =>

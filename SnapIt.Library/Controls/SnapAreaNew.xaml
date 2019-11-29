@@ -10,10 +10,9 @@
     d:DesignWidth="300"
     mc:Ignorable="d">
 
-    <Grid x:Name="Area" Opacity="0.9">
+    <Grid x:Name="Area" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
         <Border
             x:Name="Border"
-            Panel.ZIndex="-1"
             BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
             BorderThickness="{Binding Theme.BorderThickness, FallbackValue=2}" />
 

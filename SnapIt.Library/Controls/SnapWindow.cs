@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using SnapIt.Library.Entities;
@@ -131,45 +130,56 @@ namespace SnapIt.Library.Controls
 
                 var element = InputHitTest(Point2Window);
 
-                if (element != null && element is Grid)
+                if (element != null && element is DependencyObject)
                 {
-                    element = (SnapAreaNew)(element as Grid).Parent;
+                    element = ((DependencyObject)element).FindParent<SnapAreaNew>();
                 }
-                else if (element != null && element is Border)
+
+                if (current != null)
                 {
-                    element = (SnapAreaNew)((Grid)(element as Border).Parent).Parent;
+                    if (current.IsMergedSnapArea)
+                    {
+                        var parent = current.ParentSnapArea;
+                        if (parent == null)
+                        {
+                            parent = current;
+                        }
+
+                        var children = parent.FindChildren<SnapAreaNew>();
+                        foreach (var child in children)
+                        {
+                            child.NormalStyle();
+                        }
+                    }
+                    else
+                    {
+                        current.NormalStyle();
+                    }
                 }
 
                 if (element != null && element is SnapAreaNew)
                 {
-                    if (current != null)
-                    {
-                        current.NormalStyle();
-                    }
+                    var snapArea = current = (SnapAreaNew)element;
 
-                    if (!(element as SnapAreaNew).IsMergedSnapArea)
+                    if ((element as SnapAreaNew).IsMergedSnapArea)
                     {
-                        var snapArea = current = (SnapAreaNew)element;
+                        snapArea = ((SnapAreaNew)element).ParentSnapArea;
 
-                        snapArea.OnHoverStyle();
+                        var children = snapArea.FindChildren<SnapAreaNew>();
+                        foreach (var child in children)
+                        {
+                            child.OnHoverStyle();
+                        }
 
                         return snapArea.ScreenSnapArea(Dpi);
                     }
                     else
                     {
-                        var snapArea = current = ((SnapAreaNew)element).ParentSnapArea;
+                        snapArea = (SnapAreaNew)element;
 
                         snapArea.OnHoverStyle();
 
                         return snapArea.ScreenSnapArea(Dpi);
-                    }
-                }
-                else
-                {
-                    //TODO imporove here. moving on different screens, old one preserves the hover style
-                    if (current != null)
-                    {
-                        current.NormalStyle();
                     }
                 }
             }

@@ -9,6 +9,7 @@ namespace SnapIt.Library.Entities
         private Color overlayColor;
         private Color borderColor;
         private int borderThickness;
+        private double opacity;
         private SolidColorBrush overlayBrush;
         private SolidColorBrush highlightBrush;
         private SolidColorBrush borderBrush;
@@ -59,6 +60,7 @@ namespace SnapIt.Library.Entities
         }
 
         public int BorderThickness { get => borderThickness; set { SetProperty(ref borderThickness, value); ThemeChanged?.Invoke(); } }
+        public double Opacity { get => opacity; set { SetProperty(ref opacity, value); ThemeChanged?.Invoke(); } }
 
         public delegate void ThemeChangedEvent();
 
@@ -69,7 +71,8 @@ namespace SnapIt.Library.Entities
             HighlightColor = Color.FromArgb(150, 0, 0, 0);
             OverlayColor = Color.FromArgb(25, 255, 255, 255);
             BorderColor = Color.FromArgb(255, 200, 200, 200);
-            borderThickness = 1;
+            BorderThickness = 1;
+            Opacity = 0.8;
         }
 
         public SnapAreaTheme Copy()
@@ -79,7 +82,8 @@ namespace SnapIt.Library.Entities
                 HighlightColor = HighlightColor,
                 OverlayColor = OverlayColor,
                 BorderColor = BorderColor,
-                BorderThickness = BorderThickness
+                BorderThickness = BorderThickness,
+                Opacity = Opacity
             };
         }
     }

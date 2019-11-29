@@ -23,8 +23,6 @@ namespace SnapIt.ViewModels
             get => isHotKeyControlFocused;
             set
             {
-                DevMode.Log($"focused => {value}");
-
                 if (!DevMode.IsActive)
                 {
                     if (value)

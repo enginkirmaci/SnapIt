@@ -22,12 +22,16 @@ namespace SnapIt.ViewModels
         private SnapAreaTheme theme;
         private BitmapImage backgroundImage;
         private SnapAreaNew snapArea;
+        private bool openApplyChangesBar;
 
         public Layout Layout { get; set; }
-        public SnapAreaTheme Theme { get => theme; set { SetProperty(ref theme, value); settingService.Settings.Theme = value; } }
+        public SnapAreaTheme Theme { get => theme; set { SetProperty(ref theme, value); } }
         public BitmapImage BackgroundImage { get => backgroundImage; set => SetProperty(ref backgroundImage, value); }
+        public bool OpenApplyChangesBar { get => openApplyChangesBar; set => SetProperty(ref openApplyChangesBar, value); }
 
         public DelegateCommand<object> LoadedCommand { get; }
+        public DelegateCommand ApplyChangesCommand { get; }
+        public DelegateCommand DiscardChangesCommand { get; }
 
         public ThemeViewModel(
             ISnapService snapService,
@@ -48,12 +52,27 @@ namespace SnapIt.ViewModels
             {
                 var grid = mainSnapGrid as DependencyObject;
 
-                snapArea = grid.FindVisualChildren<SnapAreaNew>().FirstOrDefault();
+                snapArea = grid.FindChildren<SnapAreaNew>().FirstOrDefault();
 
                 if (snapArea != null)
                 {
                     snapArea.SetPreview();
                 }
+            });
+
+            ApplyChangesCommand = new DelegateCommand(() =>
+            {
+                settingService.Settings.Theme = Theme;
+                ApplyChanges();
+                settingService.Save();
+                OpenApplyChangesBar = false;
+            });
+
+            DiscardChangesCommand = new DelegateCommand(() =>
+            {
+                Theme = settingService.Settings.Theme;
+                Theme_ThemeChanged();
+                OpenApplyChangesBar = false;
             });
 
             Layout = new Layout
@@ -103,6 +122,7 @@ namespace SnapIt.ViewModels
 
         private void Theme_ThemeChanged()
         {
+            OpenApplyChangesBar = true;
             Theme = Theme.Copy();
             Theme.ThemeChanged += Theme_ThemeChanged;
 

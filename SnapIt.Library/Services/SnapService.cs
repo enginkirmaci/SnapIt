@@ -112,8 +112,6 @@ namespace SnapIt.Library.Services
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
         {
-            DevMode.Log("Resolution Change.");
-
             Thread.Sleep(2000);
             Release();
 
@@ -184,8 +182,6 @@ namespace SnapIt.Library.Services
         {
             if (e.KeyCode == Keys.Escape)
             {
-                DevMode.Log();
-
                 StopSnapping();
             }
         }

@@ -85,9 +85,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
-    <Compile Include="Converters\InputDeviceConverter.cs" />
-    <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DesignTime\KeyboardSettingsDesignView.cs" />
     <Compile Include="ViewModels\DesignTime\MouseSettingsDesignView.cs" />

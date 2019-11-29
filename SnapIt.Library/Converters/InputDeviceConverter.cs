@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using SnapIt.Library.Entities;
 
-namespace SnapIt.Converters
+namespace SnapIt.Library.Converters
 {
     public class InputDeviceConverter : IValueConverter
     {
@@ -29,7 +29,7 @@ namespace SnapIt.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return Binding.DoNothing;
         }
     }
 }

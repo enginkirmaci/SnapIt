@@ -64,13 +64,12 @@ namespace SnapIt.Library.Controls
 
         private static void ThemePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            DevMode.Log("triggered");
-
             var snapArea = (SnapAreaNew)d;
             snapArea.Theme = (SnapAreaTheme)e.NewValue;
 
             if (snapArea.Theme != null)
             {
+                snapArea.Area.Opacity = snapArea.Theme.Opacity;
                 snapArea.Area.Background = snapArea.Theme.OverlayBrush;
                 snapArea.MergedIcon.Foreground = snapArea.Theme.BorderBrush;
                 snapArea.Border.BorderBrush = snapArea.Theme.BorderBrush;
@@ -84,21 +83,22 @@ namespace SnapIt.Library.Controls
                 }
             }
 
-            var areas = snapArea.Area.FindVisualChildren<SnapAreaNew>();
+            var areas = snapArea.Area.FindChildren<SnapAreaNew>();
 
             foreach (var area in areas)
             {
                 area.Theme = snapArea.Theme;
 
+                area.Area.Opacity = snapArea.Theme.Opacity;
                 area.Area.Background = area.Theme.OverlayBrush;
+                area.MergedIcon.Foreground = snapArea.Theme.BorderBrush;
+                area.Border.BorderBrush = snapArea.Theme.BorderBrush;
+                area.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
                 area.Border.Visibility = Visibility.Visible;
 
                 if (area.LayoutArea?.Areas != null && area.LayoutArea.Areas.Count > 0)
                 {
                     area.Area.Background = transparentBrush;
-                    area.MergedIcon.Foreground = snapArea.Theme.BorderBrush;
-                    area.Border.BorderBrush = snapArea.Theme.BorderBrush;
-                    area.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
                     area.Border.Visibility = Visibility.Hidden;
                 }
             }
@@ -140,15 +140,12 @@ namespace SnapIt.Library.Controls
         //public override void OnApplyTemplate()
         //{
         //    base.OnApplyTemplate();
-
-        //    DevMode.Log(Theme);
-
         //    ApplyLayout(false);
         //}
 
         public void SetPreview()
         {
-            var firstSnapArea = this.FindVisualChildren<SnapAreaNew>().FirstOrDefault();
+            var firstSnapArea = this.FindChildren<SnapAreaNew>().FirstOrDefault();
 
             if (firstSnapArea != null)
             {
