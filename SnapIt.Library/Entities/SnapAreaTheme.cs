@@ -68,8 +68,8 @@ namespace SnapIt.Library.Entities
 
         public SnapAreaTheme()
         {
-            HighlightColor = Color.FromArgb(150, 0, 0, 0);
-            OverlayColor = Color.FromArgb(25, 255, 255, 255);
+            HighlightColor = Color.FromArgb(255, 33, 33, 33);
+            OverlayColor = Color.FromArgb(255, 99, 99, 99);
             BorderColor = Color.FromArgb(255, 200, 200, 200);
             BorderThickness = 1;
             Opacity = 0.8;

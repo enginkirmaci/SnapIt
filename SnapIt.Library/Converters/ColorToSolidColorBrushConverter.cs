@@ -13,6 +13,7 @@ namespace SnapIt.Library.Converters
             {
                 return new SolidColorBrush(color);
             }
+
             return Binding.DoNothing;
         }
 
@@ -22,6 +23,7 @@ namespace SnapIt.Library.Converters
             {
                 return brush.Color;
             }
+
             return default(Color);
         }
     }

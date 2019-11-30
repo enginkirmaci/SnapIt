@@ -57,6 +57,7 @@
     <Compile Include="Controls\SnapAreaNew.xaml.cs">
       <DependentUpon>SnapAreaNew.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\EqualVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\InputDeviceConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />

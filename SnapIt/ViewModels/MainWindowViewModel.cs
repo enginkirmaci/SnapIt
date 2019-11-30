@@ -16,10 +16,14 @@ namespace SnapIt.ViewModels
         private readonly ISettingService settingService;
 
         private bool HideWindowAtStartup = true;
+        private bool isRunning;
+        private string status;
         private bool isDarkTheme;
         private string themeTitle;
 
         public string Title { get => $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}"; }
+        public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
+        public string Status { get => status; set => SetProperty(ref status, value); }
         public bool IsDarkTheme
         {
             get => isDarkTheme;
@@ -34,8 +38,10 @@ namespace SnapIt.ViewModels
         }
 
         public string ThemeTitle { get => themeTitle; set => SetProperty(ref themeTitle, value); }
+
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
+        public DelegateCommand StartStopCommand { get; private set; }
         public DelegateCommand<string> HandleLinkClick { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
         public DelegateCommand LoadedCommand { get; private set; }
@@ -50,6 +56,8 @@ namespace SnapIt.ViewModels
             this.settingService = settingService;
 
             IsDarkTheme = settingService.Settings.IsDarkTheme;
+
+            snapService.StatusChanged += SnapService_StatusChanged;
 
             ActivatedCommand = new DelegateCommand<Window>((window) =>
             {
@@ -68,6 +76,18 @@ namespace SnapIt.ViewModels
             LoadedCommand = new DelegateCommand(() =>
             {
                 NavigateCommand.Execute("ThemeView");
+            });
+
+            StartStopCommand = new DelegateCommand(() =>
+            {
+                if (IsRunning)
+                {
+                    snapService.Release();
+                }
+                else
+                {
+                    snapService.Initialize();
+                }
             });
 
             CloseWindowCommand = new DelegateCommand<Window>((window) =>
@@ -109,6 +129,20 @@ namespace SnapIt.ViewModels
             {
                 windowService.Initialize();
                 windowService.Show();
+            }
+        }
+
+        private void SnapService_StatusChanged(bool isRunning)
+        {
+            IsRunning = isRunning;
+
+            if (isRunning)
+            {
+                Status = "Stop";
+            }
+            else
+            {
+                Status = "Start";
             }
         }
 

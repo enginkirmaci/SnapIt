@@ -87,6 +87,7 @@
     </ApplicationDefinition>
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DesignTime\KeyboardSettingsDesignView.cs" />
+    <Compile Include="ViewModels\DesignTime\MainWindowDesignViewModel.cs" />
     <Compile Include="ViewModels\DesignTime\MouseSettingsDesignView.cs" />
     <Compile Include="ViewModels\DesignTime\ThemeDesignView.cs" />
     <Compile Include="ViewModels\DesignWindowViewModel.cs" />

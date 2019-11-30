@@ -27,6 +27,12 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=ThemeViewUserControl}" />
         </i:EventTrigger>
+        <i:EventTrigger EventName="PreviewMouseDown">
+            <i:InvokeCommandAction Command="{Binding IsFocusCommand}" CommandParameter="{StaticResource TrueValue}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="MouseUp">
+            <i:InvokeCommandAction Command="{Binding IsFocusCommand}" CommandParameter="{StaticResource FalseValue}" />
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <Grid>

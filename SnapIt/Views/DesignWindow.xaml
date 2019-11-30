@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:snapcontrols="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
@@ -14,8 +15,10 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
     Background="#7F000000"
+    FontFamily="{StaticResource MaterialDesignFont}"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
+    TextElement.FontSize="14"
     Topmost="True"
     WindowState="Normal"
     WindowStyle="None"
@@ -28,25 +31,47 @@
             <i:InvokeCommandAction Command="{Binding SourceInitializedCommand}" CommandParameter="{Binding ElementName=DesignWindowView}" />
         </i:EventTrigger>-->
     </i:Interaction.Triggers>
+
     <Grid>
         <snapcontrols:SnapArea x:Name="MainSnapArea" />
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Orientation="Horizontal">
-            <Button
-                Margin="0,0,4,0"
-                Background="White"
-                Command="{Binding SaveLayoutCommand}"
-                Content="Save"
-                Style="{StaticResource MaterialDesignFlatButton}" />
 
             <Button
-                Margin="4,0,0,0"
+                Margin="4,0"
+                Background="White"
+                Command="{Binding SaveLayoutCommand}"
+                Foreground="Black"
+                Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ContentSaveOutline" />
+                        <TextBlock
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="Save" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button
+                Margin="4,0"
                 Background="White"
                 Command="{Binding CloseLayoutCommand}"
-                Content="Close"
-                Style="{StaticResource MaterialDesignFlatButton}" />
+                Foreground="Black"
+                Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Close" />
+                        <TextBlock
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="Close" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
