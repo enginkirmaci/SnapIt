@@ -20,33 +20,33 @@ namespace SnapIt.Library.Controls
             set => SetValue(HotkeyProperty, value);
         }
 
-        public static readonly DependencyProperty IsFocusProperty =
-         DependencyProperty.Register(nameof(IsFocused), typeof(bool), typeof(HotkeyEditorControl),
-             new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        //public static readonly DependencyProperty IsFocusProperty =
+        // DependencyProperty.Register(nameof(IsFocused), typeof(bool), typeof(HotkeyEditorControl),
+        //     new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public bool IsFocused
-        {
-            get => (bool)GetValue(IsFocusProperty);
-            set => SetValue(IsFocusProperty, value);
-        }
+        //public bool IsFocused
+        //{
+        //    get => (bool)GetValue(IsFocusProperty);
+        //    set => SetValue(IsFocusProperty, value);
+        //}
 
         public HotkeyEditorControl()
         {
             InitializeComponent();
 
-            HotkeyTextBox.GotFocus += HotkeyTextBox_GotFocus;
-            HotkeyTextBox.LostFocus += HotkeyTextBox_LostFocus;
+            //HotkeyTextBox.GotFocus += HotkeyTextBox_GotFocus;
+            //HotkeyTextBox.LostFocus += HotkeyTextBox_LostFocus;
         }
 
-        private void HotkeyTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            IsFocused = false;
-        }
+        //private void HotkeyTextBox_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    IsFocused = false;
+        //}
 
-        private void HotkeyTextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            IsFocused = true;
-        }
+        //private void HotkeyTextBox_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    IsFocused = true;
+        //}
 
         private void HotkeyTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {

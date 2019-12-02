@@ -22,7 +22,6 @@ namespace SnapIt.Library.Controls
         public bool IsMergedSnapArea { get; set; }
         public SnapAreaNew ParentSnapArea { get; set; }
         public SplitDirection SplitDirection { get; private set; }
-
         //public bool Transparent
         //{
         //    get => (bool)GetValue(TransparentProperty);
@@ -292,9 +291,6 @@ namespace SnapIt.Library.Controls
 
             if (LayoutArea?.Areas != null && LayoutArea.Areas.Count > 0)
             {
-                //Area.Background = transparentBrush;
-                //Border.Visibility = Visibility.Hidden;
-
                 ApplyColumnsAndRows(LayoutArea, isDesignMode);
 
                 foreach (var area in LayoutArea.Areas)

@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Media;
 using Prism.Commands;
 using SnapIt.Library.Entities;
 
@@ -11,18 +13,114 @@ namespace SnapIt.ViewModels.DesignTime
         public SnapScreen SelectedSnapScreen { get; set; }
         public ObservableCollection<Layout> Layouts { get; set; }
         public Layout SelectedLayout { get; set; }
+        public SnapAreaTheme Theme { get; set; }
         public DelegateCommand DesignLayoutCommand { get; private set; }
         public DelegateCommand ExportLayoutCommand { get; private set; }
 
         public LayoutDesignView()
         {
+            Theme = new SnapAreaTheme
+            {
+                HighlightColor = Color.FromArgb(200, 33, 33, 33),
+                OverlayColor = Color.FromArgb(200, 99, 99, 99),
+                BorderColor = Color.FromArgb(150, 200, 200, 200),
+                BorderThickness = 1,
+                Opacity = 1
+            };
+
             SnapScreens = new ObservableCollection<SnapScreen>();
             SnapScreens.Add(new SnapScreen() { DeviceNumber = "1", Primary = "Primary", Resolution = "1920 x 1080" });
             SnapScreens.Add(new SnapScreen() { DeviceNumber = "2", Primary = null, Resolution = "3440 x 1440" });
 
             Layouts = new ObservableCollection<Layout>();
-            Layouts.Add(new Layout { Name = "Layout 1" });
-            Layouts.Add(new Layout { Name = "Layout 2" });
+            Layouts.Add(new Layout
+            {
+                Name = "Layout 1",
+                LayoutArea = new LayoutArea
+                {
+                    Areas = new List<LayoutArea>
+                    {
+                        new LayoutArea
+                        {
+                            Width=1
+                        },
+                        new LayoutArea
+                        {
+                            Width=3,
+                            Column=1,
+                            Merged= true,
+                            Areas = new List<LayoutArea>
+                            {
+                                new LayoutArea
+                                {
+                                    Height=1
+                                },
+                                new LayoutArea
+                                {
+                                    Height=1,
+                                    Row=1,
+                                    Areas = new List<LayoutArea>
+                                    {
+                                        new LayoutArea
+                                        {
+                                            Width=1
+                                        },
+                                        new LayoutArea
+                                        {
+                                            Width=1,
+                                            Column=1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            Layouts.Add(new Layout
+            {
+                Name = "Layout 2",
+                LayoutArea = new LayoutArea
+                {
+                    Areas = new List<LayoutArea>
+                    {
+                        new LayoutArea
+                        {
+                            Width=1
+                        },
+                        new LayoutArea
+                        {
+                            Width=3,
+                            Column=1,
+                            Merged= true,
+                            Areas = new List<LayoutArea>
+                            {
+                                new LayoutArea
+                                {
+                                    Height=1
+                                },
+                                new LayoutArea
+                                {
+                                    Height=1,
+                                    Row=1,
+                                    Areas = new List<LayoutArea>
+                                    {
+                                        new LayoutArea
+                                        {
+                                            Width=1
+                                        },
+                                        new LayoutArea
+                                        {
+                                            Width=1,
+                                            Column=1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
             Layouts.Add(new Layout { Name = "3 Part Horizontal Reverse" });
             Layouts.Add(new Layout { Name = "Layout 4" });
 

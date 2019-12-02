@@ -30,6 +30,11 @@ namespace SnapIt.Library.Extensions
         {
             var parent = VisualTreeHelper.GetParent(child);
 
+            if (parent == null)
+            {
+                return null;
+            }
+
             if (parent != null && parent is T)
             {
                 return (T)parent;

@@ -10,34 +10,12 @@ namespace SnapIt.ViewModels
         private readonly ISnapService snapService;
         private readonly ISettingService settingService;
 
-        private bool isHotKeyControlFocused;
-
         public bool EnableKeyboard { get => settingService.Settings.EnableKeyboard; set { settingService.Settings.EnableKeyboard = value; ApplyChanges(); } }
 
         public string MoveUpShortcut { get => settingService.Settings.MoveUpShortcut; set { settingService.Settings.MoveUpShortcut = value; ApplyChanges(); } }
         public string MoveDownShortcut { get => settingService.Settings.MoveDownShortcut; set { settingService.Settings.MoveDownShortcut = value; ApplyChanges(); } }
         public string MoveLeftShortcut { get => settingService.Settings.MoveLeftShortcut; set { settingService.Settings.MoveLeftShortcut = value; ApplyChanges(); } }
         public string MoveRightShortcut { get => settingService.Settings.MoveRightShortcut; set { settingService.Settings.MoveRightShortcut = value; ApplyChanges(); } }
-        public bool IsHotKeyControlFocused
-        {
-            get => isHotKeyControlFocused;
-            set
-            {
-                if (!DevMode.IsActive)
-                {
-                    if (value)
-                    {
-                        snapService.Release();
-                    }
-                    else
-                    {
-                        snapService.Initialize();
-                    }
-                }
-
-                SetProperty(ref isHotKeyControlFocused, value);
-            }
-        }
 
         public DelegateCommand LoadedCommand { get; private set; }
 

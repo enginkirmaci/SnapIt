@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Media;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
@@ -58,7 +59,7 @@ namespace SnapIt.ViewModels
 
         public bool IsRenameDialogOpen { get => isRenameDialogOpen; set => SetProperty(ref isRenameDialogOpen, value); }
         public Layout PopupLayout { get => popupLayout; set => SetProperty(ref popupLayout, value); }
-
+        public SnapAreaTheme Theme { get; set; }
         public DelegateCommand NewLayoutCommand { get; private set; }
         public DelegateCommand ImportLayoutCommand { get; private set; }
         public DelegateCommand<Layout> DesignLayoutCommand { get; private set; }
@@ -78,6 +79,14 @@ namespace SnapIt.ViewModels
             Layouts = new ObservableCollection<Layout>(settingService.Layouts);
             SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
             SelectedSnapScreen = SnapScreens.FirstOrDefault();
+            Theme = new SnapAreaTheme
+            {
+                HighlightColor = Color.FromArgb(200, 33, 33, 33),
+                OverlayColor = Color.FromArgb(200, 99, 99, 99),
+                BorderColor = Color.FromArgb(150, 200, 200, 200),
+                BorderThickness = 1,
+                Opacity = 1
+            };
 
             NewLayoutCommand = new DelegateCommand(() =>
             {

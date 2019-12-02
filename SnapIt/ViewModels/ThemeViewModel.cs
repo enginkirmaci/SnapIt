@@ -32,7 +32,6 @@ namespace SnapIt.ViewModels
         public DelegateCommand<object> LoadedCommand { get; }
         public DelegateCommand ApplyChangesCommand { get; }
         public DelegateCommand DiscardChangesCommand { get; }
-        public DelegateCommand<object> IsFocusCommand { get; }
 
         public ThemeViewModel(
             ISnapService snapService,
@@ -75,23 +74,6 @@ namespace SnapIt.ViewModels
                 ApplyChanges();
                 Theme_ThemeChanged();
                 OpenApplyChangesBar = false;
-            });
-
-            IsFocusCommand = new DelegateCommand<object>((isFocused) =>
-            {
-                if (!DevMode.IsActive)
-                {
-                    DevMode.Log(isFocused);
-
-                    if ((bool)isFocused)
-                    {
-                        snapService.Release();
-                    }
-                    else
-                    {
-                        snapService.Initialize();
-                    }
-                }
             });
 
             Layout = new Layout

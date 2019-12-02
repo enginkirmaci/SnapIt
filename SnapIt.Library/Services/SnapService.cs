@@ -84,6 +84,13 @@ namespace SnapIt.Library.Services
             {
                 new ExcludedApplication
                 {
+                    Keyword = Constants.AppName,
+                    MatchRule = MatchRule.Contains,
+                    Mouse=true,
+                    Keyboard=true
+                },
+                new ExcludedApplication
+                {
                     Keyword = "Action center",
                     MatchRule = MatchRule.Contains,
                     Mouse=true,
