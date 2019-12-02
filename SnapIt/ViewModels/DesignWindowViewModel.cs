@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using System.Windows.Media;
+using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
@@ -13,7 +14,8 @@ namespace SnapIt.ViewModels
 
         public SnapScreen SnapScreen { get; set; }
         public Layout Layout { get; set; }
-        public SnapArea MainSnapArea { get; set; }
+        public SnapAreaTheme Theme { get; set; }
+        public SnapAreaNew MainSnapArea { get; set; }
         public DesignWindow Window { get; set; }
 
         //public DelegateCommand<Window> SourceInitializedCommand { get; }
@@ -25,6 +27,15 @@ namespace SnapIt.ViewModels
         public DesignWindowViewModel(ISnapService snapService)
         {
             this.snapService = snapService;
+
+            Theme = new SnapAreaTheme
+            {
+                HighlightColor = Color.FromArgb(200, 33, 33, 33),
+                OverlayColor = Color.FromArgb(50, 99, 99, 99),
+                BorderColor = Color.FromArgb(200, 200, 200, 200),
+                //BorderThickness = 1,
+                Opacity = 1
+            };
 
             //SourceInitializedCommand = new DelegateCommand<Window>((window) =>
             //{
@@ -45,9 +56,12 @@ namespace SnapIt.ViewModels
             {
                 snapService.Release();
 
-                MainSnapArea = mainSnapArea as SnapArea;
+                MainSnapArea = mainSnapArea as SnapAreaNew;
+                MainSnapArea.LayoutArea = Layout.LayoutArea;
+                MainSnapArea.Theme = Theme;
+                //MainSnapArea.IsDesignMode = true;
 
-                MainSnapArea.ApplyLayout(Layout.LayoutArea, true);
+                //MainSnapArea.ApplyLayout(Layout.LayoutArea, true);
             });
 
             SaveLayoutCommand = new DelegateCommand(() =>

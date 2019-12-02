@@ -13,11 +13,11 @@
     Title="Snap It - Layout Designer"
     Width="600"
     Height="450"
-    d:DataContext="{d:DesignInstance design:DesignLayoutDesignView,
+    d:DataContext="{d:DesignInstance design:DesignWindowDesignView,
                                      IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
-    Background="#7F000000"
+    Background="Transparent"
     FontFamily="{StaticResource MaterialDesignFont}"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
@@ -36,7 +36,12 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <Controls:SnapArea x:Name="MainSnapArea" />
+        <Controls:SnapAreaNew
+            x:Name="MainSnapArea"
+            IsDesignMode="True"
+            IsMergeIconHidden="True"
+            LayoutArea="{Binding Layout.LayoutArea}"
+            Theme="{Binding Theme}" />
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Top"

@@ -4,32 +4,35 @@ using SnapIt.Library.Controls;
 
 namespace SnapIt.Library.Entities
 {
-	public class Layout : Bindable
-	{
-		private string name;
-		private LayoutArea layoutArea;
+    public class Layout : Bindable
+    {
+        private string name;
+        private LayoutArea layoutArea;
 
-		public string Version = "1.0";
-		public Guid Guid { get; set; }
-		[JsonIgnore]
-		public bool IsSaved { get; set; }
+        public string Version = "1.0";
+        public Guid Guid { get; set; }
+        [JsonIgnore]
+        public bool IsSaved { get; set; }
 
-		public string Name
-		{
-			get => name;
-			set
-			{
-				IsSaved = false;
-				SetProperty(ref name, value);
-			}
-		}
+        [JsonIgnore]
+        public SnapAreaTheme Theme { get; set; }
 
-		public LayoutArea LayoutArea { get => layoutArea; set => SetProperty(ref layoutArea, value); }
+        public string Name
+        {
+            get => name;
+            set
+            {
+                IsSaved = false;
+                SetProperty(ref name, value);
+            }
+        }
 
-		public void GenerateLayoutArea(SnapArea snapArea)
-		{
-			LayoutArea = new LayoutArea();
-			snapArea.GetLayoutAreas(LayoutArea);
-		}
-	}
+        public LayoutArea LayoutArea { get => layoutArea; set => SetProperty(ref layoutArea, value); }
+
+        public void GenerateLayoutArea(SnapAreaNew snapArea)
+        {
+            LayoutArea = new LayoutArea();
+            snapArea.GetLayoutAreas(LayoutArea);
+        }
+    }
 }

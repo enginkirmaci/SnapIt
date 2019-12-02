@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace SnapIt.Library
 {
-    public class DevMode
+    public static class DevMode
     {
 #if DEBUG
         public const bool IsActive = true;

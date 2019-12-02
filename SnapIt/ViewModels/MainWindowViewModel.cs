@@ -75,7 +75,7 @@ namespace SnapIt.ViewModels
 
             LoadedCommand = new DelegateCommand(() =>
             {
-                NavigateCommand.Execute("ThemeView");
+                NavigateCommand.Execute("LayoutView");
             });
 
             StartStopCommand = new DelegateCommand(() =>

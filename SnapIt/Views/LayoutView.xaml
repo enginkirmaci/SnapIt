@@ -172,7 +172,7 @@
                                     Height="156"
                                     IsMergeIconHidden="True"
                                     LayoutArea="{Binding LayoutArea}"
-                                    Theme="{Binding DataContext.Theme, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                    Theme="{Binding Theme}" />
 
                                 <TextBlock
                                     Grid.Row="1"

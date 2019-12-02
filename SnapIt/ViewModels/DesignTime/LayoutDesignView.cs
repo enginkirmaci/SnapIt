@@ -36,6 +36,7 @@ namespace SnapIt.ViewModels.DesignTime
             Layouts.Add(new Layout
             {
                 Name = "Layout 1",
+                Theme = Theme,
                 LayoutArea = new LayoutArea
                 {
                     Areas = new List<LayoutArea>
@@ -80,6 +81,7 @@ namespace SnapIt.ViewModels.DesignTime
             Layouts.Add(new Layout
             {
                 Name = "Layout 2",
+                Theme = Theme,
                 LayoutArea = new LayoutArea
                 {
                     Areas = new List<LayoutArea>
@@ -121,8 +123,16 @@ namespace SnapIt.ViewModels.DesignTime
                     }
                 }
             });
-            Layouts.Add(new Layout { Name = "3 Part Horizontal Reverse" });
-            Layouts.Add(new Layout { Name = "Layout 4" });
+            Layouts.Add(new Layout
+            {
+                Name = "3 Part Horizontal Reverse",
+                Theme = Theme
+            });
+            Layouts.Add(new Layout
+            {
+                Name = "Layout 4",
+                Theme = Theme
+            });
 
             SelectedLayout = Layouts.First();
             SelectedSnapScreen = SnapScreens.First();

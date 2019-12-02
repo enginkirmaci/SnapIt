@@ -76,9 +76,6 @@ namespace SnapIt.ViewModels
             this.settingService = settingService;
             this.winApiService = winApiService;
 
-            Layouts = new ObservableCollection<Layout>(settingService.Layouts);
-            SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
-            SelectedSnapScreen = SnapScreens.FirstOrDefault();
             Theme = new SnapAreaTheme
             {
                 HighlightColor = Color.FromArgb(200, 33, 33, 33),
@@ -87,6 +84,15 @@ namespace SnapIt.ViewModels
                 BorderThickness = 1,
                 Opacity = 1
             };
+
+            foreach (var layout in settingService.Layouts)
+            {
+                layout.Theme = Theme;
+            }
+
+            Layouts = new ObservableCollection<Layout>(settingService.Layouts);
+            SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
+            SelectedSnapScreen = SnapScreens.FirstOrDefault();
 
             NewLayoutCommand = new DelegateCommand(() =>
             {

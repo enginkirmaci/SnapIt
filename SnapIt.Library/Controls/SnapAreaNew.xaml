@@ -26,19 +26,6 @@
             Kind="ArrowExpandAll"
             Visibility="{Binding IsMergeIconHidden, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
 
-        <!--<Button
-            x:Name="MergeButton"
-            Width="48"
-            Height="48"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Panel.ZIndex="999"
-            Background="#FFC8C8C8"
-            Click="MergeButton_Click"
-            Style="{StaticResource MaterialDesignFlatButton}">
-            <materialDesign:PackIcon Kind="ArrowExpandAll" />
-        </Button>
-
         <GridSplitter
             x:Name="VerticalSplitter"
             Width="10"
@@ -51,7 +38,7 @@
 
         <GridSplitter
             x:Name="HorizantalSplitter"
-            Width="10"
+            Height="10"
             Margin="0,-5,0,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
@@ -59,51 +46,68 @@
             Background="#FF969696"
             ResizeDirection="Auto" />
 
-        <StackPanel
-            x:Name="DesignPanel"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Panel.ZIndex="99"
-            Orientation="Horizontal">
-            <Button
-                x:Name="SplitVertically"
-                Margin="2"
-                Padding="12,2"
-                Background="#FFC8C8C8"
-                Click="SplitVertically_Click"
-                Style="{StaticResource MaterialDesignFlatButton}">
-                <materialDesign:PackIcon Kind="ArrowSplitVertical" />
-            </Button>
+        <Button
+            x:Name="MergeButton"
+            Width="48"
+            Height="48"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Panel.ZIndex="999"
+            Background="White"
+            Click="MergeButton_Click"
+            Foreground="Black"
+            Style="{StaticResource MaterialDesignIconForegroundButton2}">
+            <materialDesign:PackIcon Kind="ArrowExpandAll" />
+        </Button>
 
-            <Button
-                x:Name="SplitHorizantally"
-                Margin="2"
-                Padding="12,2"
-                Background="#FFC8C8C8"
-                Click="SplitHorizantally_Click"
-                Style="{StaticResource MaterialDesignFlatButton}">
-                <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
-            </Button>
+        <Grid x:Name="DesignPanel" Panel.ZIndex="99">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="SplitVertically"
+                    Margin="2"
+                    Padding="12,2"
+                    Background="White"
+                    Click="SplitVertically_Click"
+                    Foreground="Black"
+                    Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                    <materialDesign:PackIcon Kind="ArrowSplitVertical" />
+                </Button>
 
-            <Button
-                x:Name="RemoveSnapArea"
-                Margin="2"
-                Padding="12,2"
-                Background="#FFC8C8C8"
-                Click="RemoveSnapArea_Click"
-                Style="{StaticResource MaterialDesignFlatButton}">
-                <materialDesign:PackIcon Kind="Remove" />
-            </Button>
-        </StackPanel>-->
+                <Button
+                    x:Name="SplitHorizantally"
+                    Margin="2"
+                    Padding="12,2"
+                    Background="White"
+                    Click="SplitHorizantally_Click"
+                    Foreground="Black"
+                    Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                    <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
+                </Button>
+
+                <Button
+                    x:Name="RemoveSnapArea"
+                    Margin="2"
+                    Padding="12,2"
+                    Background="White"
+                    Click="RemoveSnapArea_Click"
+                    Foreground="Black"
+                    Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                    <materialDesign:PackIcon Kind="Remove" />
+                </Button>
+            </StackPanel>
+        </Grid>
 
         <!--<Grid.Style>
             <Style TargetType="{x:Type Grid}">
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="False">
-                        <Setter Property="Background" Value="{Binding Theme.OverlayBrush}" />
+                        <Setter Property="Visibility" Value="Hidden" />
                     </Trigger>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="{Binding Theme.HighlightBrush}" />
+                        <Setter Property="Visibility" Value="Visible" />
                     </Trigger>
                 </Style.Triggers>
             </Style>

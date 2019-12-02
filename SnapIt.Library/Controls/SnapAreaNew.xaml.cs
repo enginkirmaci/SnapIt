@@ -8,13 +8,9 @@ using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
-    /// <summary>
-    /// Interaction logic for SnapAreaNew.xaml
-    /// </summary>
     public partial class SnapAreaNew : UserControl
     {
         private static readonly SolidColorBrush transparentBrush = new SolidColorBrush(Colors.Transparent);
-        private static readonly SolidColorBrush solidBackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
 
         private SnapAreaNew mergedSnapArea;
 
@@ -22,6 +18,46 @@ namespace SnapIt.Library.Controls
         public bool IsMergedSnapArea { get; set; }
         public SnapAreaNew ParentSnapArea { get; set; }
         public SplitDirection SplitDirection { get; private set; }
+
+        public bool IsDesignMode
+        {
+            get => (bool)GetValue(IsDesignModeProperty);
+            set => SetValue(IsDesignModeProperty, value);
+        }
+
+        public static readonly DependencyProperty IsDesignModeProperty
+         = DependencyProperty.Register("IsDesignMode", typeof(bool), typeof(SnapAreaNew),
+             new FrameworkPropertyMetadata()
+             {
+                 BindsTwoWayByDefault = true,
+                 PropertyChangedCallback = new PropertyChangedCallback(new PropertyChangedCallback(IsDesignModePropertyChanged))
+             });
+
+        private static void IsDesignModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapArea = (SnapAreaNew)d;
+            snapArea.IsDesignMode = (bool)e.NewValue;
+
+            //if (snapArea.IsDesignMode)
+            //{
+            //    if (snapArea.LayoutArea?.Areas == null || snapArea.LayoutArea.Areas.Count <= 0)
+            //    {
+            //        snapArea.SetDesignMode(snapArea.ParentSnapArea);
+            //    }
+
+            //    var areas = snapArea.Area.FindChildren<SnapAreaNew>();
+
+            //    foreach (var area in areas)
+            //    {
+            //        area.IsDesignMode = snapArea.IsDesignMode;
+
+            //        if (area.LayoutArea?.Areas == null || area.LayoutArea.Areas.Count <= 0)
+            //        {
+            //            area.SetDesignMode(snapArea);
+            //        }
+            //    }
+            //}
+        }
 
         public bool IsMergeIconHidden
         {
@@ -54,31 +90,6 @@ namespace SnapIt.Library.Controls
                 }
             }
         }
-
-        //public bool Transparent
-        //{
-        //    get => (bool)GetValue(TransparentProperty);
-        //    set => SetValue(TransparentProperty, value);
-        //}
-
-        //public static readonly DependencyProperty TransparentProperty
-        // = DependencyProperty.Register("Transparent", typeof(bool), typeof(SnapAreaNew),
-        //     new FrameworkPropertyMetadata()
-        //     {
-        //         BindsTwoWayByDefault = true,
-        //         PropertyChangedCallback = new PropertyChangedCallback(new PropertyChangedCallback(TransparentPropertyChanged))
-        //     });
-
-        //private static void TransparentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    var snapArea = (SnapAreaNew)d;
-        //    snapArea.Transparent = (bool)e.NewValue;
-
-        //    if (!snapArea.Transparent)
-        //    {
-        //        snapArea.Area.Background = solidBackgroundBrush;
-        //    }
-        //}
 
         public SnapAreaTheme Theme
         {
@@ -154,7 +165,16 @@ namespace SnapIt.Library.Controls
         {
             var snapArea = (SnapAreaNew)d;
             snapArea.LayoutArea = (LayoutArea)e.NewValue;
-            snapArea.ApplyLayout(false, snapArea.ParentSnapArea);
+
+            snapArea.ApplyLayout(snapArea.ParentSnapArea);
+
+            //if (snapArea.IsDesignMode)
+            //{
+            //    if (snapArea.LayoutArea?.Areas == null || snapArea.LayoutArea.Areas.Count <= 0)
+            //    {
+            //        snapArea.SetDesignMode(snapArea.ParentSnapArea);
+            //    }
+            //}
         }
 
         public SnapAreaNew()
@@ -162,11 +182,10 @@ namespace SnapIt.Library.Controls
             InitializeComponent();
 
             MergedIcon.Visibility = Visibility.Hidden;
-
-            //DesignPanel.Visibility = Visibility.Hidden;
-            //MergeButton.Visibility = Visibility.Hidden;
-            //VerticalSplitter.Visibility = Visibility.Hidden;
-            //HorizantalSplitter.Visibility = Visibility.Hidden;
+            DesignPanel.Visibility = Visibility.Hidden;
+            MergeButton.Visibility = Visibility.Hidden;
+            VerticalSplitter.Visibility = Visibility.Hidden;
+            HorizantalSplitter.Visibility = Visibility.Hidden;
         }
 
         public void SetPreview()
@@ -249,58 +268,7 @@ namespace SnapIt.Library.Controls
                dpi);
         }
 
-        //public void SetDesignMode(SnapAreaNew parent)
-        //{
-        //    Border.Visibility = Visibility.Hidden;
-
-        //    ParentSnapArea = parent;
-
-        //    if (parent != null)
-        //    {
-        //        RemoveSnapArea.Visibility = Visibility.Visible;
-        //    }
-        //    else
-        //    {
-        //        RemoveSnapArea.Visibility = Visibility.Collapsed;
-        //    }
-
-        //    DesignPanel.Visibility = Visibility.Visible;
-
-        //    Border.IsMouseDirectlyOverChanged += SnapArea_IsMouseDirectlyOverChanged;
-        //}
-
-        //private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ParentSnapArea.Area.Children.RemoveRange(0, ParentSnapArea.Area.Children.Count);
-        //    ParentSnapArea.Border.Visibility = Visibility.Visible;
-
-        //    ParentSnapArea.Area.Children.Add(ParentSnapArea.Border);
-
-        //    ParentSnapArea.SetDesignMode(ParentSnapArea.ParentSnapArea);
-
-        //    if (ParentSnapArea.Area.ColumnDefinitions.Count > 0)
-        //    {
-        //        ParentSnapArea.Area.ColumnDefinitions.RemoveRange(0, ParentSnapArea.Area.ColumnDefinitions.Count);
-        //    }
-        //    if (ParentSnapArea.Area.RowDefinitions.Count > 0)
-        //    {
-        //        ParentSnapArea.Area.RowDefinitions.RemoveRange(0, ParentSnapArea.Area.RowDefinitions.Count);
-        //    }
-        //}
-
-        //private void SnapArea_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (IsMouseOver)
-        //    {
-        //        DesignPanel.Visibility = Visibility.Visible;
-        //    }
-        //    else
-        //    {
-        //        DesignPanel.Visibility = Visibility.Hidden;
-        //    }
-        //}
-
-        private void ApplyLayout(bool isDesignMode, SnapAreaNew parent = null)
+        private void ApplyLayout(SnapAreaNew parent = null)
         {
             //if (parent != null)
             //{
@@ -315,7 +283,7 @@ namespace SnapIt.Library.Controls
 
             if (LayoutArea?.Areas != null && LayoutArea.Areas.Count > 0)
             {
-                ApplyColumnsAndRows(LayoutArea, isDesignMode);
+                ApplyColumnsAndRows(LayoutArea);
 
                 foreach (var area in LayoutArea.Areas)
                 {
@@ -323,7 +291,7 @@ namespace SnapIt.Library.Controls
                     {
                         Theme = Theme,
                         IsMergeIconHidden = IsMergeIconHidden,
-                        //Transparent = Transparent,
+                        IsDesignMode = IsDesignMode,
                         ParentSnapArea = this,
                         LayoutArea = area
                     };
@@ -350,13 +318,13 @@ namespace SnapIt.Library.Controls
                     }
                 }
             }
-            //else if (isDesignMode)
-            //{
-            //    SetDesignMode(parent);
-            //}
+            else if (IsDesignMode)
+            {
+                SetDesignMode(parent);
+            }
         }
 
-        internal void ApplyColumnsAndRows(LayoutArea layoutArea, bool isDesignMode)
+        internal void ApplyColumnsAndRows(LayoutArea layoutArea)
         {
             if (layoutArea.Areas.Count > 0)
             {
@@ -377,18 +345,18 @@ namespace SnapIt.Library.Controls
                             Area.RowDefinitions.Add(new RowDefinition());
                         }
 
-                        //if (isDesignMode)
-                        //{
-                        //    if (i != 0)
-                        //    {
-                        //        AddGridSplitter(SplitDirection.Vertically, i, j);
-                        //    }
+                        if (IsDesignMode)
+                        {
+                            if (i != 0)
+                            {
+                                AddGridSplitter(SplitDirection.Vertically, i, j);
+                            }
 
-                        //    if (j != 0)
-                        //    {
-                        //        AddGridSplitter(SplitDirection.Horizantally, i, j);
-                        //    }
-                        //}
+                            if (j != 0)
+                            {
+                                AddGridSplitter(SplitDirection.Horizantally, i, j);
+                            }
+                        }
                     }
                 }
 
@@ -419,6 +387,11 @@ namespace SnapIt.Library.Controls
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
+
+            if (IsDesignMode)
+            {
+                Panel.SetZIndex(mergedSnapArea, -1);
+            }
 
             if (!IsMergeIconHidden)
             {
@@ -461,111 +434,178 @@ namespace SnapIt.Library.Controls
             Grid.SetRow(element, row);
         }
 
-        //private void SplitVertically_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Border.IsMouseDirectlyOverChanged -= SnapArea_IsMouseDirectlyOverChanged;
+        #region Design Mode
 
-        //    Split(this, DesignPanel, SplitDirection.Vertically);
-        //}
+        private void SnapArea_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (IsMouseOver)
+            {
+                DesignPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                DesignPanel.Visibility = Visibility.Hidden;
+            }
+        }
 
-        //private void SplitHorizantally_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Border.IsMouseDirectlyOverChanged -= SnapArea_IsMouseDirectlyOverChanged;
+        public void SetDesignMode(SnapAreaNew parent)
+        {
+            Border.Visibility = Visibility.Hidden;
 
-        //    Split(this, DesignPanel, SplitDirection.Horizantally);
-        //}
+            ParentSnapArea = parent;
 
-        //private void Split(SnapAreaNew snapArea, StackPanel designPanel, SplitDirection splitDirection)
-        //{
-        //    SplitDirection = splitDirection;
-        //    Area.Children.Remove(designPanel);
+            if (parent != null)
+            {
+                RemoveSnapArea.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                RemoveSnapArea.Visibility = Visibility.Collapsed;
+            }
 
-        //    var area1 = new SnapAreaNew();
-        //    var area2 = new SnapAreaNew();
-        //    area1.SetDesignMode(snapArea);
-        //    area2.SetDesignMode(snapArea);
+            Area.IsMouseDirectlyOverChanged += SnapArea_IsMouseDirectlyOverChanged;
+        }
 
-        //    Area.Children.Add(area1);
-        //    Area.Children.Add(area2);
+        private void SplitVertically_Click(object sender, RoutedEventArgs e)
+        {
+            Area.IsMouseDirectlyOverChanged -= SnapArea_IsMouseDirectlyOverChanged;
 
-        //    switch (SplitDirection)
-        //    {
-        //        case SplitDirection.Vertically:
+            Split(this, DesignPanel, SplitDirection.Vertically);
+        }
 
-        //            Area.ColumnDefinitions.Add(new ColumnDefinition());
-        //            Area.ColumnDefinitions.Add(new ColumnDefinition());
+        private void SplitHorizantally_Click(object sender, RoutedEventArgs e)
+        {
+            Area.IsMouseDirectlyOverChanged -= SnapArea_IsMouseDirectlyOverChanged;
 
-        //            Grid.SetColumn(area2, 1);
-        //            AddGridSplitter(SplitDirection, 1, 0);
+            Split(this, DesignPanel, SplitDirection.Horizantally);
+        }
 
-        //            break;
+        private void Split(SnapAreaNew snapArea, Grid designPanel, SplitDirection splitDirection)
+        {
+            SplitDirection = splitDirection;
+            designPanel.Visibility = Visibility.Hidden;
 
-        //        case SplitDirection.Horizantally:
+            var area1 = new SnapAreaNew
+            {
+                Theme = Theme,
+                IsMergeIconHidden = IsMergeIconHidden,
+                IsDesignMode = IsDesignMode
+            };
+            var area2 = new SnapAreaNew
+            {
+                Theme = Theme,
+                IsMergeIconHidden = IsMergeIconHidden,
+                IsDesignMode = IsDesignMode
+            };
+            area1.ApplyLayout(snapArea);
+            area2.ApplyLayout(snapArea);
 
-        //            Area.RowDefinitions.Add(new RowDefinition());
-        //            Area.RowDefinitions.Add(new RowDefinition());
+            Area.Children.Add(area1);
+            Area.Children.Add(area2);
 
-        //            Grid.SetRow(area2, 1);
-        //            AddGridSplitter(SplitDirection, 0, 1);
+            switch (SplitDirection)
+            {
+                case SplitDirection.Vertically:
 
-        //            break;
-        //    }
-        //}
+                    Area.ColumnDefinitions.Add(new ColumnDefinition());
+                    Area.ColumnDefinitions.Add(new ColumnDefinition());
 
-        //private void AddGridSplitter(SplitDirection direction, int column, int row)
-        //{
-        //    MergeButton.Visibility = Visibility.Hidden;
-        //    Grid.SetColumn(MergeButton, column);
-        //    Grid.SetRow(MergeButton, row);
+                    Grid.SetColumn(area2, 1);
+                    AddGridSplitter(SplitDirection, 1, 0);
 
-        //    switch (direction)
-        //    {
-        //        case SplitDirection.Vertically:
-        //            VerticalSplitter.Visibility = Visibility.Visible;
-        //            Grid.SetColumn(VerticalSplitter, column);
-        //            Grid.SetRow(VerticalSplitter, row);
+                    break;
 
-        //            MergeButton.Margin = new Thickness(-24, 0, 0, 0);
-        //            MergeButton.HorizontalAlignment = HorizontalAlignment.Left;
-        //            MergeButton.VerticalAlignment = VerticalAlignment.Center;
+                case SplitDirection.Horizantally:
 
-        //            break;
+                    Area.RowDefinitions.Add(new RowDefinition());
+                    Area.RowDefinitions.Add(new RowDefinition());
 
-        //        case SplitDirection.Horizantally:
-        //            HorizantalSplitter.Visibility = Visibility.Visible;
-        //            Grid.SetColumn(HorizantalSplitter, column);
-        //            Grid.SetRow(HorizantalSplitter, row);
+                    Grid.SetRow(area2, 1);
+                    AddGridSplitter(SplitDirection, 0, 1);
 
-        //            MergeButton.Margin = new Thickness(0, -24, 0, 0);
-        //            MergeButton.HorizontalAlignment = HorizontalAlignment.Center;
-        //            MergeButton.VerticalAlignment = VerticalAlignment.Top;
+                    break;
+            }
+        }
 
-        //            break;
-        //    }
-        //}
+        private void AddGridSplitter(SplitDirection direction, int column, int row)
+        {
+            MergeButton.Visibility = Visibility.Visible;
+            Grid.SetColumn(MergeButton, column);
+            Grid.SetRow(MergeButton, row);
 
-        //private void MergeButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (!HasMergedSnapArea)
-        //    {
-        //        AddMergedSnapArea(true);
+            switch (direction)
+            {
+                case SplitDirection.Vertically:
+                    VerticalSplitter.Visibility = Visibility.Visible;
+                    Grid.SetColumn(VerticalSplitter, column);
+                    Grid.SetRow(VerticalSplitter, row);
 
-        //        if (Area.ColumnDefinitions.Count > 0)
-        //        {
-        //            Grid.SetColumnSpan(mergedSnapArea, Area.ColumnDefinitions.Count);
-        //        }
+                    MergeButton.Margin = new Thickness(-24, 0, 0, 0);
+                    MergeButton.HorizontalAlignment = HorizontalAlignment.Left;
+                    MergeButton.VerticalAlignment = VerticalAlignment.Center;
 
-        //        if (Area.RowDefinitions.Count > 0)
-        //        {
-        //            Grid.SetRowSpan(mergedSnapArea, Area.RowDefinitions.Count);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Area.Children.Remove(mergedSnapArea);
+                    break;
 
-        //        HasMergedSnapArea = false;
-        //    }
-        //}
+                case SplitDirection.Horizantally:
+                    HorizantalSplitter.Visibility = Visibility.Visible;
+                    Grid.SetColumn(HorizantalSplitter, column);
+                    Grid.SetRow(HorizantalSplitter, row);
+
+                    MergeButton.Margin = new Thickness(0, -24, 0, 0);
+                    MergeButton.HorizontalAlignment = HorizontalAlignment.Center;
+                    MergeButton.VerticalAlignment = VerticalAlignment.Top;
+
+                    break;
+            }
+        }
+
+        private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
+        {
+            var childSnapAreas = ParentSnapArea.Area.FindChildren<SnapAreaNew>();
+            foreach (var child in childSnapAreas.ToList())
+            {
+                ParentSnapArea.Area.Children.Remove(child);
+            }
+
+            ParentSnapArea.Border.Visibility = Visibility.Visible;
+            ParentSnapArea.MergeButton.Visibility = Visibility.Hidden;
+
+            ParentSnapArea.SetDesignMode(ParentSnapArea.ParentSnapArea);
+
+            if (ParentSnapArea.Area.ColumnDefinitions.Count > 0)
+            {
+                ParentSnapArea.Area.ColumnDefinitions.RemoveRange(0, ParentSnapArea.Area.ColumnDefinitions.Count);
+            }
+            if (ParentSnapArea.Area.RowDefinitions.Count > 0)
+            {
+                ParentSnapArea.Area.RowDefinitions.RemoveRange(0, ParentSnapArea.Area.RowDefinitions.Count);
+            }
+        }
+
+        private void MergeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!HasMergedSnapArea)
+            {
+                AddMergedSnapArea();
+
+                if (Area.ColumnDefinitions.Count > 0)
+                {
+                    Grid.SetColumnSpan(mergedSnapArea, Area.ColumnDefinitions.Count);
+                }
+
+                if (Area.RowDefinitions.Count > 0)
+                {
+                    Grid.SetRowSpan(mergedSnapArea, Area.RowDefinitions.Count);
+                }
+            }
+            else
+            {
+                Area.Children.Remove(mergedSnapArea);
+
+                HasMergedSnapArea = false;
+            }
+        }
+
+        #endregion Design Mode
     }
 }
