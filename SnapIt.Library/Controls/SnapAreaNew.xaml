@@ -23,7 +23,8 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Foreground="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
-            Kind="ArrowExpandAll" />
+            Kind="ArrowExpandAll"
+            Visibility="{Binding IsMergeIconHidden, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
 
         <!--<Button
             x:Name="MergeButton"

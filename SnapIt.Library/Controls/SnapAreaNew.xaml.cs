@@ -22,6 +22,39 @@ namespace SnapIt.Library.Controls
         public bool IsMergedSnapArea { get; set; }
         public SnapAreaNew ParentSnapArea { get; set; }
         public SplitDirection SplitDirection { get; private set; }
+
+        public bool IsMergeIconHidden
+        {
+            get => (bool)GetValue(IsMergeIconHiddenProperty);
+            set => SetValue(IsMergeIconHiddenProperty, value);
+        }
+
+        public static readonly DependencyProperty IsMergeIconHiddenProperty
+         = DependencyProperty.Register("IsMergeIconHidden", typeof(bool), typeof(SnapAreaNew),
+             new FrameworkPropertyMetadata()
+             {
+                 BindsTwoWayByDefault = true,
+                 PropertyChangedCallback = new PropertyChangedCallback(new PropertyChangedCallback(IsMergeIconHiddenPropertyChanged))
+             });
+
+        private static void IsMergeIconHiddenPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapArea = (SnapAreaNew)d;
+            snapArea.IsMergeIconHidden = (bool)e.NewValue;
+
+            if (snapArea.IsMergeIconHidden)
+            {
+                snapArea.MergedIcon.Visibility = Visibility.Hidden;
+
+                var areas = snapArea.Area.FindChildren<SnapAreaNew>();
+
+                foreach (var area in areas)
+                {
+                    area.MergedIcon.Visibility = Visibility.Hidden;
+                }
+            }
+        }
+
         //public bool Transparent
         //{
         //    get => (bool)GetValue(TransparentProperty);
@@ -135,12 +168,6 @@ namespace SnapIt.Library.Controls
             //VerticalSplitter.Visibility = Visibility.Hidden;
             //HorizantalSplitter.Visibility = Visibility.Hidden;
         }
-
-        //public override void OnApplyTemplate()
-        //{
-        //    base.OnApplyTemplate();
-        //    ApplyLayout(false);
-        //}
 
         public void SetPreview()
         {
@@ -275,9 +302,6 @@ namespace SnapIt.Library.Controls
 
         private void ApplyLayout(bool isDesignMode, SnapAreaNew parent = null)
         {
-            //Area.Background = Theme.OverlayBrush;
-            //Border.Visibility = Visibility.Visible;
-
             //if (parent != null)
             //{
             //    parent.Area.Background = transparentBrush;
@@ -298,6 +322,7 @@ namespace SnapIt.Library.Controls
                     var snapArea = new SnapAreaNew
                     {
                         Theme = Theme,
+                        IsMergeIconHidden = IsMergeIconHidden,
                         //Transparent = Transparent,
                         ParentSnapArea = this,
                         LayoutArea = area
@@ -389,14 +414,16 @@ namespace SnapIt.Library.Controls
             mergedSnapArea = new SnapAreaNew
             {
                 Theme = Theme,
-                //Transparent = Transparent,
                 IsMergedSnapArea = true,
                 ParentSnapArea = this,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            mergedSnapArea.MergedIcon.Visibility = Visibility.Visible;
+            if (!IsMergeIconHidden)
+            {
+                mergedSnapArea.MergedIcon.Visibility = Visibility.Visible;
+            }
 
             mergedSnapArea.SizeChanged += (s, ev) =>
             {

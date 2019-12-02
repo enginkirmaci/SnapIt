@@ -170,6 +170,7 @@
                                 <Controls:SnapAreaNew
                                     Width="188"
                                     Height="156"
+                                    IsMergeIconHidden="True"
                                     LayoutArea="{Binding LayoutArea}"
                                     Theme="{Binding DataContext.Theme, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
