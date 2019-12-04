@@ -98,7 +98,7 @@
         <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
             <TextBlock Margin="18,13,0,32" Text="{x:Static c:Constants.AppName}" />
 
-            <RadioButton IsChecked="True" Style="{StaticResource MaterialDesignTabRadioButton2}">
+            <RadioButton Style="{StaticResource MaterialDesignTabRadioButton2}" Visibility="Collapsed">
                 <RadioButton.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -118,8 +118,10 @@
                 </RadioButton.Content>
             </RadioButton>
             <RadioButton
+                x:Name="LayoutViewRadio"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="LayoutView"
+                IsChecked="True"
                 Style="{StaticResource MaterialDesignTabRadioButton2}">
                 <RadioButton.Content>
                     <Grid>
@@ -228,6 +230,7 @@
                 </RadioButton.Content>
             </RadioButton>
             <RadioButton
+                x:Name="SettingsViewRadio"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="SettingsView"
                 Style="{StaticResource MaterialDesignTabRadioButton2}">

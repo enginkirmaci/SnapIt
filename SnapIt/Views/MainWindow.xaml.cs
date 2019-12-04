@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using Prism.Regions;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Services;
 
 namespace SnapIt.Views
 {
@@ -19,9 +10,38 @@ namespace SnapIt.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        private IRegionManager regionManager;
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        public void SetNotifyIconService(
+            INotifyIconService notifyIconService,
+            IRegionManager regionManager)
+        {
+            this.regionManager = regionManager;
+            notifyIconService.SetView += NotifyIconService_SetView;
+        }
+
+        private void NotifyIconService_SetView(ViewType viewType)
+        {
+            LayoutViewRadio.IsChecked = false;
+            SettingsViewRadio.IsChecked = false;
+
+            switch (viewType)
+            {
+                case ViewType.LayoutView:
+                    LayoutViewRadio.IsChecked = true;
+                    regionManager.RequestNavigate(Constants.MainRegion, "LayoutView");
+                    break;
+
+                case ViewType.SettingsView:
+                    SettingsViewRadio.IsChecked = true;
+                    regionManager.RequestNavigate(Constants.MainRegion, "SettingsView");
+                    break;
+            }
         }
     }
 }

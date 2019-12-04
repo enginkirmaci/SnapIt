@@ -2,6 +2,12 @@
 
 namespace SnapIt.Library.Entities
 {
+    public enum ViewType
+    {
+        LayoutView,
+        SettingsView
+    }
+
     public enum MoveDirection
     {
         Left,

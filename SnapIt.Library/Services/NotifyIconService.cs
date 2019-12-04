@@ -17,6 +17,8 @@ namespace SnapIt.Library.Services
         private ToolStripItem startToolStrip;
         private ToolStripItem stopToolStrip;
 
+        public event SetViewEvent SetView;
+
         public NotifyIconService(ISnapService snapService)
         {
             this.snapService = snapService;
@@ -25,7 +27,7 @@ namespace SnapIt.Library.Services
         public void Initialize()
         {
             notifyIcon = new NotifyIcon();
-            notifyIcon.DoubleClick += (s, args) => ShowDefaultWindow();
+            notifyIcon.DoubleClick += (s, args) => ShowDefaultWindow(ViewType.LayoutView);
             notifyIcon.Icon = new Icon(System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream);
             notifyIcon.Visible = true;
 
@@ -59,7 +61,7 @@ namespace SnapIt.Library.Services
             stopToolStrip = notifyIcon.ContextMenuStrip.Items.Add("Stop");
 
             notifyIcon.ContextMenuStrip.Items.Add("-");
-            notifyIcon.ContextMenuStrip.Items.Add("Settings").Click += (s, e) => ShowDefaultWindow();
+            notifyIcon.ContextMenuStrip.Items.Add("Settings").Click += (s, e) => ShowDefaultWindow(ViewType.SettingsView);
 
             var feedbackMenu = new ToolStripMenuItem("Feedback");
             notifyIcon.ContextMenuStrip.Items.Add(feedbackMenu);
@@ -110,7 +112,7 @@ namespace SnapIt.Library.Services
             System.Windows.Application.Current.Shutdown();
         }
 
-        private void ShowDefaultWindow()
+        private void ShowDefaultWindow(ViewType viewType)
         {
             if (applicationWindow.IsVisible)
             {
@@ -127,6 +129,8 @@ namespace SnapIt.Library.Services
 
                 applicationWindow.Activate();
             }
+
+            SetView?.Invoke(viewType);
         }
     }
 }

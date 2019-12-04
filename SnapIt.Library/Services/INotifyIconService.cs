@@ -1,13 +1,18 @@
 ﻿using System.Windows;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
-	public interface INotifyIconService
-	{
-		void Initialize();
+    public interface INotifyIconService
+    {
+        event SetViewEvent SetView;
 
-		void SetApplicationWindow(Window window);
+        void Initialize();
 
-		void Release();
-	}
+        void SetApplicationWindow(Window window);
+
+        void Release();
+    }
+
+    public delegate void SetViewEvent(ViewType viewType);
 }

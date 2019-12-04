@@ -34,7 +34,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Image Source="/SnapIt;component/Themes/snapit.png" Stretch="UniformToFill" />
+                    <Image Margin="-1" Source="/SnapIt;component/Themes/snapit.png" />
 
                     <StackPanel Grid.Column="1" Margin="16,8,0,0">
                         <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="{x:Static c:Constants.AppName}" />

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using DryIoc;
 using Prism.Ioc;
+using Prism.Regions;
 using SnapIt.Library;
 using SnapIt.Library.Applications;
 using SnapIt.Library.Services;
@@ -49,11 +50,12 @@ namespace SnapIt
         protected override Window CreateShell()
         {
             var notifyIconService = Container.Resolve<INotifyIconService>();
+            var regionManager = Container.Resolve<IRegionManager>();
 
             notifyIconService.Initialize();
 
             var applicationWindow = Container.Resolve<MainWindow>();
-
+            applicationWindow.SetNotifyIconService(notifyIconService, regionManager);
             notifyIconService.SetApplicationWindow(applicationWindow);
 
             return applicationWindow;
