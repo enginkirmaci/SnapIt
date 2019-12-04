@@ -92,7 +92,7 @@ namespace SnapIt.ViewModels
 
             Layouts = new ObservableCollection<Layout>(settingService.Layouts);
             SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
-            SelectedSnapScreen = SnapScreens.FirstOrDefault();
+            SelectedSnapScreen = SnapScreens.FirstOrDefault(); //TODO this causes two times initialization on startup
 
             NewLayoutCommand = new DelegateCommand(() =>
             {

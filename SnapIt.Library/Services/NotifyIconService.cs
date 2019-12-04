@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using Windows.System;
 
@@ -10,18 +13,22 @@ namespace SnapIt.Library.Services
     public class NotifyIconService : INotifyIconService
     {
         private readonly ISnapService snapService;
+        private readonly ISettingService settingService;
 
         private Window applicationWindow;
-        private NotifyIcon notifyIcon;
         private ToolStripLabel statusToolStrip;
         private ToolStripItem startToolStrip;
         private ToolStripItem stopToolStrip;
+        private NotifyIcon notifyIcon;
 
         public event SetViewEvent SetView;
 
-        public NotifyIconService(ISnapService snapService)
+        public NotifyIconService(
+            ISnapService snapService,
+            ISettingService settingService)
         {
             this.snapService = snapService;
+            this.settingService = settingService;
         }
 
         public void Initialize()
@@ -61,6 +68,11 @@ namespace SnapIt.Library.Services
             stopToolStrip = notifyIcon.ContextMenuStrip.Items.Add("Stop");
 
             notifyIcon.ContextMenuStrip.Items.Add("-");
+
+            var layoutsMenu = new ToolStripMenuItem("Layouts");
+            layoutsMenu.Name = "LayoutsMenu";
+            notifyIcon.ContextMenuStrip.Items.Add(layoutsMenu);
+
             notifyIcon.ContextMenuStrip.Items.Add("Settings").Click += (s, e) => ShowDefaultWindow(ViewType.SettingsView);
 
             var feedbackMenu = new ToolStripMenuItem("Feedback");
@@ -77,6 +89,77 @@ namespace SnapIt.Library.Services
             stopToolStrip.Visible = false;
 
             snapService.StatusChanged += SnapService_StatusChanged;
+            snapService.ScreenLayoutLoaded += SnapService_ScreenLayoutLoaded;
+        }
+
+        private void SnapService_ScreenLayoutLoaded(IList<SnapScreen> snapScreens, IList<Layout> layouts)
+        {
+            var layoutsMenu = notifyIcon.ContextMenuStrip.Items["LayoutsMenu"] as ToolStripMenuItem;
+            layoutsMenu.DropDownItems.Clear();
+
+            foreach (var screen in snapScreens)
+            {
+                var screenMenu = new ToolStripMenuItem($"Display {screen.DeviceNumber} ({screen.Resolution}) - {screen.Primary}");
+                screenMenu.Name = screen.Base.DeviceName;
+
+                if (snapScreens.Count > 1)
+                {
+                    layoutsMenu.DropDownItems.Add(screenMenu);
+                }
+
+                foreach (var layout in layouts)
+                {
+                    var layoutMenuItem = new ToolStripMenuItem(layout.Name)
+                    {
+                        Tag = screen.Base.DeviceName,
+                        Name = layout.Guid.ToString(),
+                        CheckOnClick = true
+                    };
+                    layoutMenuItem.Click += LayoutItem_Click;
+
+                    if (screen.Layout == layout)
+                    {
+                        layoutMenuItem.Checked = true;
+                    }
+
+                    if (snapScreens.Count > 1)
+                    {
+                        screenMenu.DropDownItems.Add(layoutMenuItem);
+                    }
+                    else
+                    {
+                        layoutsMenu.DropDownItems.Add(layoutMenuItem);
+                    }
+                }
+            }
+        }
+
+        private void LayoutItem_Click(object sender, EventArgs e)
+        {
+            var layoutMenuItem = sender as ToolStripMenuItem;
+
+            var selectedSnapScreen = settingService.SnapScreens.FirstOrDefault();
+
+            if (settingService.SnapScreens.Count > 1)
+            {
+                var snapScreen = settingService.SnapScreens.FirstOrDefault(screen => screen.Base.DeviceName == layoutMenuItem.Tag.ToString());
+
+                if (snapScreen != null)
+                {
+                    selectedSnapScreen = snapScreen;
+                }
+            }
+
+            var selectedLayout = settingService.Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutMenuItem.Name);
+
+            settingService.LinkScreenLayout(selectedSnapScreen, selectedLayout);
+            snapService.Release();
+            snapService.Initialize();
+        }
+
+        private void ShowNotification(string title, string message, int timeout = 1000, ToolTipIcon tipIcon = ToolTipIcon.None)
+        {
+            notifyIcon.ShowBalloonTip(timeout, title, message, tipIcon);
         }
 
         private void SnapService_StatusChanged(bool isRunning)

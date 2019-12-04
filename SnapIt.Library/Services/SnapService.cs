@@ -31,6 +31,8 @@ namespace SnapIt.Library.Services
 
         public event GetStatus StatusChanged;
 
+        public event ScreenLayoutLoadedEvent ScreenLayoutLoaded;
+
         public SnapService(
             IWindowService windowService,
             ISettingService settingService,
@@ -115,6 +117,7 @@ namespace SnapIt.Library.Services
             }
 
             StatusChanged?.Invoke(true);
+            ScreenLayoutLoaded?.Invoke(settingService.SnapScreens, settingService.Layouts);
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)

@@ -26,7 +26,8 @@ namespace SnapIt.Library.Services
             Settings = this.fileOperationService.Load<Settings>();
             ExcludedApplicationSettings = this.fileOperationService.Load<ExcludedApplicationSettings>();
             Layouts = this.fileOperationService.GetLayouts();
-            SnapScreens = GetSnapScreens();
+
+            ReInitialize();
         }
 
         public void ReInitialize()
