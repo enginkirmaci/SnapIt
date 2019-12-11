@@ -152,6 +152,8 @@ namespace SnapIt.Library.Services
 
             var selectedLayout = settingService.Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutMenuItem.Name);
 
+            ShowNotification("Layout changed", $"{selectedLayout.Name} layout is set to Display {selectedSnapScreen.DeviceNumber} ({selectedSnapScreen.Resolution})");
+
             settingService.LinkScreenLayout(selectedSnapScreen, selectedLayout);
             snapService.Release();
             snapService.Initialize();

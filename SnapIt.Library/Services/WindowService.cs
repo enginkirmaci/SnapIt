@@ -39,7 +39,7 @@ namespace SnapIt.Library.Services
                     snapWindows.Add(window);
                 }
 
-                break; //TODO test
+                //break; //TODO test
             }
 
             snapWindows.ForEach(window =>
@@ -84,16 +84,18 @@ namespace SnapIt.Library.Services
             return boundries;
         }
 
-        public Rectangle SelectElementWithPoint(int x, int y)
+        public SnapAreaInfo SelectElementWithPoint(int x, int y)
         {
-            var result = new Rectangle();
+            var result = new SnapAreaInfo();
 
             foreach (var window in snapWindows)
             {
                 var selectedArea = window.SelectElementWithPoint(x, y);
                 if (!selectedArea.Equals(Rectangle.Empty))
                 {
-                    result = selectedArea;
+                    result.Rectangle = selectedArea;
+                    result.SnapWindow = window;
+
                     break;
                 }
             }

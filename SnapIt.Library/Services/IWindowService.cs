@@ -17,6 +17,6 @@ namespace SnapIt.Library.Services
 
         IList<Rectangle> SnapAreaBoundries();
 
-        Rectangle SelectElementWithPoint(int x, int y);
+        SnapAreaInfo SelectElementWithPoint(int x, int y);
     }
 }

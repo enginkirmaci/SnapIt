@@ -68,6 +68,7 @@
     <Compile Include="Entities\ExcludedApplicationSettings.cs" />
     <Compile Include="Entities\Constants.cs" />
     <Compile Include="Entities\Resource.cs" />
+    <Compile Include="Entities\SnapAreaInfo.cs" />
     <Compile Include="Entities\SnapAreaTheme.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
