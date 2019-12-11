@@ -5,7 +5,8 @@ namespace SnapIt.Library.Entities
     public enum ViewType
     {
         LayoutView,
-        SettingsView
+        SettingsView,
+        AboutView
     }
 
     public enum MoveDirection

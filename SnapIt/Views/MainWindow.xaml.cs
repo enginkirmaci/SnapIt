@@ -29,6 +29,7 @@ namespace SnapIt.Views
         {
             LayoutViewRadio.IsChecked = false;
             SettingsViewRadio.IsChecked = false;
+            AboutViewRadio.IsChecked = false;
 
             switch (viewType)
             {
@@ -40,6 +41,11 @@ namespace SnapIt.Views
                 case ViewType.SettingsView:
                     SettingsViewRadio.IsChecked = true;
                     regionManager.RequestNavigate(Constants.MainRegion, "SettingsView");
+                    break;
+
+                case ViewType.AboutView:
+                    AboutViewRadio.IsChecked = true;
+                    regionManager.RequestNavigate(Constants.MainRegion, "AboutView");
                     break;
             }
         }

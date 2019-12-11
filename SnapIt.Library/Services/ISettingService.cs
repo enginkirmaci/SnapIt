@@ -11,6 +11,7 @@ namespace SnapIt.Library.Services
         ExcludedApplicationSettings ExcludedApplicationSettings { get; }
         IList<Layout> Layouts { get; }
         IList<SnapScreen> SnapScreens { get; }
+        SnapScreen LatestActiveScreen { get; set; }
 
         void ReInitialize();
 

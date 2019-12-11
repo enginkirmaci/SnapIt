@@ -75,10 +75,14 @@ namespace SnapIt.Library.Services
 
             notifyIcon.ContextMenuStrip.Items.Add("Settings").Click += (s, e) => ShowDefaultWindow(ViewType.SettingsView);
 
+            notifyIcon.ContextMenuStrip.Items.Add("-");
+
             var feedbackMenu = new ToolStripMenuItem("Feedback");
             notifyIcon.ContextMenuStrip.Items.Add(feedbackMenu);
             feedbackMenu.DropDownItems.Add("Send new idea/bug").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"http://{Constants.AppFeedbackUrl}"));
             feedbackMenu.DropDownItems.Add("Rate and review").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
+
+            notifyIcon.ContextMenuStrip.Items.Add("About").Click += (s, e) => ShowDefaultWindow(ViewType.AboutView);
 
             notifyIcon.ContextMenuStrip.Items.Add("-");
             notifyIcon.ContextMenuStrip.Items.Add("Exit").Click += (s, e) => ExitApplication();
@@ -89,7 +93,13 @@ namespace SnapIt.Library.Services
             stopToolStrip.Visible = false;
 
             snapService.StatusChanged += SnapService_StatusChanged;
+            snapService.LayoutChanged += SnapService_LayoutChanged;
             snapService.ScreenLayoutLoaded += SnapService_ScreenLayoutLoaded;
+        }
+
+        private void SnapService_LayoutChanged(SnapScreen snapScreen, Layout layout)
+        {
+            ShowNotification("Layout changed", $"{layout.Name} layout is set to Display {snapScreen.DeviceNumber} ({snapScreen.Resolution})");
         }
 
         private void SnapService_ScreenLayoutLoaded(IList<SnapScreen> snapScreens, IList<Layout> layouts)
@@ -152,7 +162,7 @@ namespace SnapIt.Library.Services
 
             var selectedLayout = settingService.Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutMenuItem.Name);
 
-            ShowNotification("Layout changed", $"{selectedLayout.Name} layout is set to Display {selectedSnapScreen.DeviceNumber} ({selectedSnapScreen.Resolution})");
+            SnapService_LayoutChanged(selectedSnapScreen, selectedLayout);
 
             settingService.LinkScreenLayout(selectedSnapScreen, selectedLayout);
             snapService.Release();

@@ -8,5 +8,6 @@
         public string MoveDownShortcut { get; set; } = "Ctrl + Alt + Down";
         public string MoveLeftShortcut { get; set; } = "Ctrl + Alt + Left";
         public string MoveRightShortcut { get; set; } = "Ctrl + Alt + Right";
+        public string CycleLayoutsShortcut { get; set; } = "Ctrl + Alt + C";
     }
 }

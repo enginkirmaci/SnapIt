@@ -253,6 +253,7 @@
                 </RadioButton.Content>
             </RadioButton>
             <RadioButton
+                x:Name="AboutViewRadio"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="AboutView"
                 Style="{StaticResource MaterialDesignTabRadioButton2}">

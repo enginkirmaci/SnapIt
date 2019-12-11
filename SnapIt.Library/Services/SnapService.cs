@@ -31,6 +31,8 @@ namespace SnapIt.Library.Services
 
         public event GetStatus StatusChanged;
 
+        public event LayoutChangedEvent LayoutChanged;
+
         public event ScreenLayoutLoadedEvent ScreenLayoutLoaded;
 
         public SnapService(
@@ -58,7 +60,7 @@ namespace SnapIt.Library.Services
                 { Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Right) },
                 { Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Up) },
                 { Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Down) },
-                { Combination.FromString("Control+Alt+C"), ()=> CycleLayouts() }
+                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty)), ()=> CycleLayouts() }
             };
 
             globalHook = Hook.GlobalEvents();
@@ -105,6 +107,13 @@ namespace SnapIt.Library.Services
                     MatchRule = MatchRule.Contains,
                     Mouse=true,
                     Keyboard=true
+                },
+                new ExcludedApplication
+                {
+                    Keyword = "New notification",
+                    MatchRule = MatchRule.Contains,
+                    Mouse=true,
+                    Keyboard=true
                 }
             };
 
@@ -123,16 +132,15 @@ namespace SnapIt.Library.Services
 
         private void CycleLayouts()
         {
-            if (snapAreaInfo?.SnapWindow != null)
-            {
-                var snapScreen = snapAreaInfo.SnapWindow.Screen;
-                var layoutIndex = settingService.Layouts.IndexOf(snapScreen.Layout);
-                var nextLayout = settingService.Layouts.ElementAt((layoutIndex + 1) % settingService.Layouts.Count);
+            var snapScreen = settingService.LatestActiveScreen;
+            var layoutIndex = settingService.Layouts.IndexOf(snapScreen.Layout);
+            var nextLayout = settingService.Layouts.ElementAt((layoutIndex + 1) % settingService.Layouts.Count);
 
-                settingService.LinkScreenLayout(snapScreen, nextLayout);
-                Release();
-                Initialize();
-            }
+            settingService.LinkScreenLayout(snapScreen, nextLayout);
+            Release();
+            Initialize();
+
+            LayoutChanged?.Invoke(snapScreen, nextLayout);
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
@@ -459,6 +467,11 @@ namespace SnapIt.Library.Services
                 else
                 {
                     snapAreaInfo = windowService.SelectElementWithPoint(e.Location.X, e.Location.Y);
+
+                    if (snapAreaInfo?.SnapWindow?.Screen != null)
+                    {
+                        settingService.LatestActiveScreen = snapAreaInfo.SnapWindow.Screen;
+                    }
                 }
             }
         }

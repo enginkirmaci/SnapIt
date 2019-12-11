@@ -10,12 +10,16 @@ namespace SnapIt.Library.Services
 
         event ScreenLayoutLoadedEvent ScreenLayoutLoaded;
 
+        event LayoutChangedEvent LayoutChanged;
+
         void Initialize();
 
         void Release();
     }
 
     public delegate void GetStatus(bool isRunning);
+
+    public delegate void LayoutChangedEvent(SnapScreen snapScreen, Layout layout);
 
     public delegate void ScreenLayoutLoadedEvent(IList<SnapScreen> snapScreens, IList<Layout> layouts);
 }

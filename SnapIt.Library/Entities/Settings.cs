@@ -34,6 +34,7 @@ namespace SnapIt.Library.Entities
         public string MoveDownShortcut { get; set; } = "Control + Alt + Down";
         public string MoveLeftShortcut { get; set; } = "Control + Alt + Left";
         public string MoveRightShortcut { get; set; } = "Control + Alt + Right";
+        public string CycleLayoutsShortcut { get; set; } = "Control + Alt + C";
 
         public SnapAreaTheme Theme { get; set; } = new SnapAreaTheme();
     }

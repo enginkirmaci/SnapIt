@@ -42,7 +42,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="92" />
-                    <ColumnDefinition Width="128" />
+                    <ColumnDefinition Width="156" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,6" Text="Move Up" />
                 <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveUpShortcut}" />
@@ -51,7 +51,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="92" />
-                    <ColumnDefinition Width="128" />
+                    <ColumnDefinition Width="156" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,6" Text="Move Down" />
                 <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveDownShortcut}" />
@@ -60,7 +60,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="92" />
-                    <ColumnDefinition Width="128" />
+                    <ColumnDefinition Width="156" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,6" Text="Move Left" />
                 <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveLeftShortcut}" />
@@ -69,11 +69,21 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="92" />
-                    <ColumnDefinition Width="128" />
+                    <ColumnDefinition Width="156" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,6" Text="Move Right" />
                 <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveRightShortcut}" />
             </Grid>
+
+            <TextBlock
+                Margin="0,10,0,6"
+                Text="Cycle through layouts for active screen"
+                TextWrapping="Wrap" />
+
+            <Controls:HotkeyEditorControl
+                Width="156"
+                HorizontalAlignment="Left"
+                Text="{Binding CycleLayoutsShortcut}" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

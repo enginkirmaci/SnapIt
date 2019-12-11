@@ -17,6 +17,7 @@ namespace SnapIt.Library.Services
         public ExcludedApplicationSettings ExcludedApplicationSettings { get; private set; }
         public IList<Layout> Layouts { get; private set; }
         public IList<SnapScreen> SnapScreens { get; private set; }
+        public SnapScreen LatestActiveScreen { get; set; }
 
         public SettingService(
             IFileOperationService fileOperationService)
@@ -33,6 +34,11 @@ namespace SnapIt.Library.Services
         public void ReInitialize()
         {
             SnapScreens = GetSnapScreens();
+
+            if (LatestActiveScreen == null)
+            {
+                LatestActiveScreen = SnapScreens.FirstOrDefault(screen => screen.Base.Primary);
+            }
         }
 
         public void Save()
