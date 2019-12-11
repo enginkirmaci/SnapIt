@@ -44,6 +44,24 @@ namespace SnapIt.ViewModels
                 {
                     new ChangeLogItem()
                     {
+                        Header = "v2.0.2.0",
+                        Lines = new List<string>() {
+                            "- Added ability to change layout from tray icon.",
+                            "- Added new shortcut for cycling throught layouts for active screen."
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
+                        Header = "v2.0.0.0",
+                        Lines = new List<string>() {
+                            "- Redesigned overlay window and controls",
+                            "- New UI",
+                            "- Theme added so overlay window UI elements can be customized.",
+                            "- Minor bugfixes and improvements."
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
                         Header = "v1.4.1.0",
                         Lines = new List<string>() {
                             "- Improvements for dpi, resolution and screen changes.",
