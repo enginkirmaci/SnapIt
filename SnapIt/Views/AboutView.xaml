@@ -165,6 +165,17 @@
                     </Hyperlink.Inlines>
                 </Hyperlink>
             </TextBlock>
+
+            <TextBlock Grid.Column="1" HorizontalAlignment="Right">
+                <Hyperlink
+                    Command="{Binding HandleLinkClick}"
+                    CommandParameter="{x:Static c:Constants.AppPrivacyUrl}"
+                    Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                    <Hyperlink.Inlines>
+                        <Run Text="Privacy policy" />
+                    </Hyperlink.Inlines>
+                </Hyperlink>
+            </TextBlock>
         </Grid>
 
         <materialDesign:DialogHost

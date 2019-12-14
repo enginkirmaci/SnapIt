@@ -36,7 +36,7 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <Controls:SnapAreaNew
+        <Controls:SnapArea
             x:Name="MainSnapArea"
             IsDesignMode="True"
             IsMergeIconHidden="True"

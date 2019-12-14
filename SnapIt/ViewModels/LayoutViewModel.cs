@@ -45,11 +45,10 @@ namespace SnapIt.ViewModels
             get => selectedLayout;
             set
             {
+                SetProperty(ref selectedLayout, value);
+
                 if (value != null)
                 {
-                    SetProperty(ref selectedLayout, value);
-                    //SaveLayoutCommand.RaiseCanExecuteChanged();
-
                     SelectedSnapScreen.Layout = selectedLayout;
                     settingService.LinkScreenLayout(SelectedSnapScreen, SelectedLayout);
                     ApplyChanges();
@@ -100,7 +99,8 @@ namespace SnapIt.ViewModels
                 {
                     Guid = Guid.NewGuid(),
                     IsSaved = false,
-                    Name = "New layout"
+                    Name = "New layout",
+                    Theme = Theme
                 };
 
                 Layouts.Insert(0, layout);
@@ -156,12 +156,12 @@ namespace SnapIt.ViewModels
 
                 Layouts.Remove(PopupLayout);
 
-                if (SelectedLayout == null)
+                settingService.DeleteLayout(PopupLayout);
+
+                if (SelectedLayout != null && !Layouts.Contains(SelectedLayout))
                 {
                     SelectedLayout = Layouts.FirstOrDefault();
                 }
-
-                settingService.DeleteLayout(PopupLayout);
             });
 
             ExportLayoutCommand = new DelegateCommand<Layout>((layout) =>
@@ -191,7 +191,10 @@ namespace SnapIt.ViewModels
             Layouts.Remove(PopupLayout);
             Layouts.Insert(position, PopupLayout);
 
-            SelectedLayout = PopupLayout;
+            if (SelectedLayout == null)
+            {
+                SelectedLayout = PopupLayout;
+            }
 
             ApplyChanges();
         }

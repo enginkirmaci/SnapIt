@@ -10,6 +10,7 @@ namespace SnapIt.Library.Entities
         public static string AppVersion => string.Format("version {0}", Application.ProductVersion);
         public const string AppUrl = "enginkirmaci.com/projects/snapit";
         public const string AppFeedbackUrl = "enginkirmaci.com/projects/snapit/feedback";
+        public const string AppPrivacyUrl = "enginkirmaci.com/projects/snapit/privacy-policy";
         public static string CompanyName => Application.CompanyName;
         public const string CompanyUrl = "enginkirmaci.com";
         public const string TwitterUrl = "twitter.com/enginkirmaci";

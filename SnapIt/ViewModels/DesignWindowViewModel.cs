@@ -15,7 +15,7 @@ namespace SnapIt.ViewModels
         public SnapScreen SnapScreen { get; set; }
         public Layout Layout { get; set; }
         public SnapAreaTheme Theme { get; set; }
-        public SnapAreaNew MainSnapArea { get; set; }
+        public SnapArea MainSnapArea { get; set; }
         public DesignWindow Window { get; set; }
 
         //public DelegateCommand<Window> SourceInitializedCommand { get; }
@@ -56,12 +56,14 @@ namespace SnapIt.ViewModels
             {
                 snapService.Release();
 
-                MainSnapArea = mainSnapArea as SnapAreaNew;
+                MainSnapArea = mainSnapArea as SnapArea;
                 MainSnapArea.LayoutArea = Layout.LayoutArea;
                 MainSnapArea.Theme = Theme;
-                //MainSnapArea.IsDesignMode = true;
 
-                //MainSnapArea.ApplyLayout(Layout.LayoutArea, true);
+                if (MainSnapArea.LayoutArea == null)
+                {
+                    MainSnapArea.LayoutArea = new LayoutArea();
+                }
             });
 
             SaveLayoutCommand = new DelegateCommand(() =>

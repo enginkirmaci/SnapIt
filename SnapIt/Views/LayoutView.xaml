@@ -25,6 +25,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -100,133 +101,127 @@
                 </ListBox>
             </StackPanel>
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Margin="0,12,0,6">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Margin="0,12,0,6">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Change Layouts" />
 
-                    <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Change Layouts" />
+                <TextBlock Grid.Row="1" TextWrapping="Wrap">
+                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
+                        Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu.
+                    </Hyperlink>
+                </TextBlock>
 
-                    <TextBlock Grid.Row="1" TextWrapping="Wrap">
-                        <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
-                            Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu.
-                        </Hyperlink>
-                    </TextBlock>
-
-                    <StackPanel
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Orientation="Horizontal">
-                        <Button Command="{Binding NewLayoutCommand}" Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon
-                                        Width="22"
-                                        Height="22"
-                                        Kind="Add" />
-                                    <TextBlock
-                                        Margin="8,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Text="New" />
-                                </StackPanel>
-                            </Button.Content>
-                        </Button>
-                        <Button Command="{Binding ImportLayoutCommand}" Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon
-                                        Width="22"
-                                        Height="22"
-                                        Kind="Import" />
-                                    <TextBlock
-                                        Margin="8,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Text="Import" />
-                                </StackPanel>
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-                <ListBox
-                    Grid.Row="1"
-                    VerticalContentAlignment="Top"
-                    ItemsSource="{Binding Layouts}"
-                    SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Width="188">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <Controls:SnapAreaNew
-                                    Width="188"
-                                    Height="156"
-                                    IsMergeIconHidden="True"
-                                    LayoutArea="{Binding LayoutArea}"
-                                    Theme="{Binding Theme}" />
-
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal">
+                    <Button Command="{Binding NewLayoutCommand}" Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    Width="22"
+                                    Height="22"
+                                    Kind="Add" />
                                 <TextBlock
-                                    Grid.Row="1"
-                                    Margin="0,8"
-                                    Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-                                    Text="{Binding Name}"
-                                    TextWrapping="Wrap" />
-
-                                <materialDesign:PopupBox
-                                    Margin="0,6"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Top"
-                                    Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
-                                    PopupMode="Click">
-                                    <StackPanel>
-                                        <Button
-                                            Command="{Binding DataContext.DesignLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Content="Open in Designer" />
-                                        <Separator />
-                                        <Button
-                                            Command="{Binding DataContext.OpenRenameDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Content="Rename" />
-                                        <Button
-                                            Command="{Binding DataContext.DeleteLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Content="Delete" />
-                                        <Button
-                                            Command="{Binding DataContext.ExportLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Content="Export" />
-                                    </StackPanel>
-                                </materialDesign:PopupBox>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource PrimaryHueDarkBrush}" />
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="New" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding ImportLayoutCommand}" Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    Width="22"
+                                    Height="22"
+                                    Kind="Import" />
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="Import" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
             </Grid>
+
+            <ListBox
+                Grid.Row="2"
+                VerticalContentAlignment="Top"
+                ItemsSource="{Binding Layouts}"
+                SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="188">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Controls:SnapArea
+                                Width="188"
+                                Height="156"
+                                IsMergeIconHidden="True"
+                                LayoutArea="{Binding LayoutArea}"
+                                Theme="{Binding Theme}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Margin="0,8"
+                                Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                Text="{Binding Name}"
+                                TextWrapping="Wrap" />
+
+                            <materialDesign:PopupBox
+                                Margin="0,6"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                PopupMode="Click">
+                                <StackPanel>
+                                    <Button
+                                        Command="{Binding DataContext.DesignLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Open in Designer" />
+                                    <Separator />
+                                    <Button
+                                        Command="{Binding DataContext.OpenRenameDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Rename" />
+                                    <Button
+                                        Command="{Binding DataContext.DeleteLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Delete" />
+                                    <Button
+                                        Command="{Binding DataContext.ExportLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Export" />
+                                </StackPanel>
+                            </materialDesign:PopupBox>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryHueDarkBrush}" />
+                                <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
         </Grid>
         <materialDesign:DialogHost IsOpen="{Binding IsRenameDialogOpen}" Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
             <materialDesign:DialogHost.DialogContent>

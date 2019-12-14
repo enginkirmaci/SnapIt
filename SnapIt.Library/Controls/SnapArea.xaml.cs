@@ -8,15 +8,15 @@ using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
-    public partial class SnapAreaNew : UserControl
+    public partial class SnapArea : UserControl
     {
         private static readonly SolidColorBrush transparentBrush = new SolidColorBrush(Colors.Transparent);
 
-        private SnapAreaNew mergedSnapArea;
+        private SnapArea mergedSnapArea;
 
         public bool HasMergedSnapArea { get; set; }
         public bool IsMergedSnapArea { get; set; }
-        public SnapAreaNew ParentSnapArea { get; set; }
+        public SnapArea ParentSnapArea { get; set; }
         public SplitDirection SplitDirection { get; private set; }
 
         public bool IsDesignMode
@@ -26,7 +26,7 @@ namespace SnapIt.Library.Controls
         }
 
         public static readonly DependencyProperty IsDesignModeProperty
-         = DependencyProperty.Register("IsDesignMode", typeof(bool), typeof(SnapAreaNew),
+         = DependencyProperty.Register("IsDesignMode", typeof(bool), typeof(SnapArea),
              new FrameworkPropertyMetadata()
              {
                  BindsTwoWayByDefault = true,
@@ -35,28 +35,8 @@ namespace SnapIt.Library.Controls
 
         private static void IsDesignModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var snapArea = (SnapAreaNew)d;
+            var snapArea = (SnapArea)d;
             snapArea.IsDesignMode = (bool)e.NewValue;
-
-            //if (snapArea.IsDesignMode)
-            //{
-            //    if (snapArea.LayoutArea?.Areas == null || snapArea.LayoutArea.Areas.Count <= 0)
-            //    {
-            //        snapArea.SetDesignMode(snapArea.ParentSnapArea);
-            //    }
-
-            //    var areas = snapArea.Area.FindChildren<SnapAreaNew>();
-
-            //    foreach (var area in areas)
-            //    {
-            //        area.IsDesignMode = snapArea.IsDesignMode;
-
-            //        if (area.LayoutArea?.Areas == null || area.LayoutArea.Areas.Count <= 0)
-            //        {
-            //            area.SetDesignMode(snapArea);
-            //        }
-            //    }
-            //}
         }
 
         public bool IsMergeIconHidden
@@ -66,7 +46,7 @@ namespace SnapIt.Library.Controls
         }
 
         public static readonly DependencyProperty IsMergeIconHiddenProperty
-         = DependencyProperty.Register("IsMergeIconHidden", typeof(bool), typeof(SnapAreaNew),
+         = DependencyProperty.Register("IsMergeIconHidden", typeof(bool), typeof(SnapArea),
              new FrameworkPropertyMetadata()
              {
                  BindsTwoWayByDefault = true,
@@ -75,14 +55,14 @@ namespace SnapIt.Library.Controls
 
         private static void IsMergeIconHiddenPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var snapArea = (SnapAreaNew)d;
+            var snapArea = (SnapArea)d;
             snapArea.IsMergeIconHidden = (bool)e.NewValue;
 
             if (snapArea.IsMergeIconHidden)
             {
                 snapArea.MergedIcon.Visibility = Visibility.Hidden;
 
-                var areas = snapArea.Area.FindChildren<SnapAreaNew>();
+                var areas = snapArea.Area.FindChildren<SnapArea>();
 
                 foreach (var area in areas)
                 {
@@ -98,7 +78,7 @@ namespace SnapIt.Library.Controls
         }
 
         public static readonly DependencyProperty ThemeProperty
-         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapAreaNew),
+         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapArea),
            new FrameworkPropertyMetadata()
            {
                BindsTwoWayByDefault = true,
@@ -107,7 +87,7 @@ namespace SnapIt.Library.Controls
 
         private static void ThemePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var snapArea = (SnapAreaNew)d;
+            var snapArea = (SnapArea)d;
             snapArea.Theme = (SnapAreaTheme)e.NewValue;
 
             if (snapArea.Theme != null)
@@ -126,7 +106,7 @@ namespace SnapIt.Library.Controls
                 }
             }
 
-            var areas = snapArea.Area.FindChildren<SnapAreaNew>();
+            var areas = snapArea.Area.FindChildren<SnapArea>();
 
             foreach (var area in areas)
             {
@@ -154,7 +134,7 @@ namespace SnapIt.Library.Controls
         }
 
         public static readonly DependencyProperty LayoutAreaProperty
-            = DependencyProperty.Register("LayoutArea", typeof(LayoutArea), typeof(SnapAreaNew),
+            = DependencyProperty.Register("LayoutArea", typeof(LayoutArea), typeof(SnapArea),
               new FrameworkPropertyMetadata()
               {
                   BindsTwoWayByDefault = true,
@@ -163,21 +143,13 @@ namespace SnapIt.Library.Controls
 
         private static void LayoutAreaPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var snapArea = (SnapAreaNew)d;
+            var snapArea = (SnapArea)d;
             snapArea.LayoutArea = (LayoutArea)e.NewValue;
 
             snapArea.ApplyLayout(snapArea.ParentSnapArea);
-
-            //if (snapArea.IsDesignMode)
-            //{
-            //    if (snapArea.LayoutArea?.Areas == null || snapArea.LayoutArea.Areas.Count <= 0)
-            //    {
-            //        snapArea.SetDesignMode(snapArea.ParentSnapArea);
-            //    }
-            //}
         }
 
-        public SnapAreaNew()
+        public SnapArea()
         {
             InitializeComponent();
 
@@ -190,7 +162,7 @@ namespace SnapIt.Library.Controls
 
         public void SetPreview()
         {
-            var firstSnapArea = this.FindChildren<SnapAreaNew>().FirstOrDefault();
+            var firstSnapArea = this.FindChildren<SnapArea>().FirstOrDefault();
 
             if (firstSnapArea != null)
             {
@@ -202,9 +174,9 @@ namespace SnapIt.Library.Controls
         {
             foreach (var child in Area.Children)
             {
-                if (child is SnapAreaNew)
+                if (child is SnapArea)
                 {
-                    var childSnapArea = child as SnapAreaNew;
+                    var childSnapArea = child as SnapArea;
 
                     if (HasMergedSnapArea && mergedSnapArea == childSnapArea)
                     {
@@ -240,11 +212,11 @@ namespace SnapIt.Library.Controls
             var hasSnapChild = false;
             foreach (var child in Area.Children)
             {
-                if (child is SnapAreaNew)
+                if (child is SnapArea)
                 {
                     hasSnapChild = true;
 
-                    (child as SnapAreaNew).GenerateSnapAreaBoundries(ref rectangles, dpi);
+                    (child as SnapArea).GenerateSnapAreaBoundries(ref rectangles, dpi);
                 }
             }
 
@@ -268,26 +240,15 @@ namespace SnapIt.Library.Controls
                dpi);
         }
 
-        private void ApplyLayout(SnapAreaNew parent = null)
+        private void ApplyLayout(SnapArea parent = null)
         {
-            //if (parent != null)
-            //{
-            //    parent.Area.Background = transparentBrush;
-            //    parent.Border.Visibility = Visibility.Hidden;
-            //    //DesignPanel.Visibility = Visibility.Hidden;
-            //    //MergedIcon.Visibility = Visibility.Hidden;
-            //    //MergeButton.Visibility = Visibility.Hidden;
-            //    //VerticalSplitter.Visibility = Visibility.Hidden;
-            //    //HorizantalSplitter.Visibility = Visibility.Hidden;
-            //}
-
             if (LayoutArea?.Areas != null && LayoutArea.Areas.Count > 0)
             {
                 ApplyColumnsAndRows(LayoutArea);
 
                 foreach (var area in LayoutArea.Areas)
                 {
-                    var snapArea = new SnapAreaNew
+                    var snapArea = new SnapArea
                     {
                         Theme = Theme,
                         IsMergeIconHidden = IsMergeIconHidden,
@@ -298,7 +259,6 @@ namespace SnapIt.Library.Controls
 
                     Area.Children.Add(snapArea);
                     SetColumnRow(snapArea, area.Column, area.Row);
-                    //snapArea.ApplyLayout(isDesignMode, this);
                 }
 
                 if (LayoutArea.Merged)
@@ -379,7 +339,7 @@ namespace SnapIt.Library.Controls
         {
             HasMergedSnapArea = true;
 
-            mergedSnapArea = new SnapAreaNew
+            mergedSnapArea = new SnapArea
             {
                 Theme = Theme,
                 IsMergedSnapArea = true,
@@ -400,7 +360,7 @@ namespace SnapIt.Library.Controls
 
             mergedSnapArea.SizeChanged += (s, ev) =>
             {
-                var element = s as SnapAreaNew;
+                var element = s as SnapArea;
 
                 element.Width = element.ParentSnapArea.ActualWidth * 0.3;
                 element.Height = element.ParentSnapArea.ActualHeight * 0.3;
@@ -448,7 +408,7 @@ namespace SnapIt.Library.Controls
             }
         }
 
-        public void SetDesignMode(SnapAreaNew parent)
+        public void SetDesignMode(SnapArea parent)
         {
             Border.Visibility = Visibility.Hidden;
 
@@ -480,18 +440,18 @@ namespace SnapIt.Library.Controls
             Split(this, DesignPanel, SplitDirection.Horizantally);
         }
 
-        private void Split(SnapAreaNew snapArea, Grid designPanel, SplitDirection splitDirection)
+        private void Split(SnapArea snapArea, Grid designPanel, SplitDirection splitDirection)
         {
             SplitDirection = splitDirection;
             designPanel.Visibility = Visibility.Hidden;
 
-            var area1 = new SnapAreaNew
+            var area1 = new SnapArea
             {
                 Theme = Theme,
                 IsMergeIconHidden = IsMergeIconHidden,
                 IsDesignMode = IsDesignMode
             };
-            var area2 = new SnapAreaNew
+            var area2 = new SnapArea
             {
                 Theme = Theme,
                 IsMergeIconHidden = IsMergeIconHidden,
@@ -561,7 +521,7 @@ namespace SnapIt.Library.Controls
 
         private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
         {
-            var childSnapAreas = ParentSnapArea.Area.FindChildren<SnapAreaNew>();
+            var childSnapAreas = ParentSnapArea.Area.FindChildren<SnapArea>();
             foreach (var child in childSnapAreas.ToList())
             {
                 ParentSnapArea.Area.Children.Remove(child);

@@ -71,6 +71,7 @@ namespace SnapIt.Library.Services
 
         public void DeleteLayout(Layout layout)
         {
+            Layouts.Remove(layout);
             fileOperationService.DeleteLayout(layout);
         }
 

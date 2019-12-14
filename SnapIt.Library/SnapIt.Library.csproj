@@ -54,8 +54,8 @@
     <Compile Include="Controls\HotkeyEditorControl.xaml.cs">
       <DependentUpon>HotkeyEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SnapAreaNew.xaml.cs">
-      <DependentUpon>SnapAreaNew.xaml</DependentUpon>
+    <Compile Include="Controls\SnapArea.xaml.cs">
+      <DependentUpon>SnapArea.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\EqualVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
@@ -74,7 +74,6 @@
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Services\FileOperationService.cs" />
     <Compile Include="Services\IFileOperationService.cs" />
-    <Compile Include="Controls\SnapArea.cs" />
     <Compile Include="Controls\SnapScreen.cs" />
     <Compile Include="Controls\SnapWindow.cs" />
     <Compile Include="Entities\ActiveWindow.cs" />
@@ -139,7 +138,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SnapAreaNew.xaml">
+    <Page Include="Controls\SnapArea.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
