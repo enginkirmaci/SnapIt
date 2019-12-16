@@ -341,22 +341,17 @@ namespace SnapIt.Library.Services
                             break;
 
                         case MoveDirection.Up:
-                            activeBoundry.Top -= rectmargin.Width / 2;
-                            activeBoundry.Bottom -= rectmargin.Width / 2;
+                            activeBoundry.Top -= rectmargin.Height / 2;
+                            activeBoundry.Bottom -= rectmargin.Height / 2;
                             break;
 
                         case MoveDirection.Down:
-                            activeBoundry.Top += activeBoundry.Height + rectmargin.Width / 2;
-                            activeBoundry.Bottom += activeBoundry.Height + rectmargin.Width / 2;
+                            activeBoundry.Top += activeBoundry.Height + rectmargin.Height / 2;
+                            activeBoundry.Bottom += activeBoundry.Height + rectmargin.Height / 2;
                             break;
                     }
 
                     var newSnapArea = boundries.FirstOrDefault(i => i.Dpi.Equals(activeWindow.Dpi) ? i.Contains(activeBoundry) : i.ContainsDpiAwareness(activeBoundry));
-
-                    if (newSnapArea.Equals(Rectangle.Empty))
-                    {
-                        newSnapArea = copyActiveBoundry;
-                    }
 
                     MoveActiveWindow(!newSnapArea.Equals(Rectangle.Empty) ? newSnapArea : copyActiveBoundry, false);
                 }
