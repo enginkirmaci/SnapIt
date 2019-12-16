@@ -322,26 +322,32 @@ namespace SnapIt.Library.Services
                 {
                     winApiService.GetWindowMargin(activeWindow, out Rectangle rectmargin);
                     var activeBoundry = boundries.FirstOrDefault(i => i.Contains(rectmargin));
-                    var copyActiveBoundry = new Rectangle(activeBoundry.Left, activeBoundry.Top, activeBoundry.Right, activeBoundry.Bottom);
-
                     activeWindow.Dpi = DpiHelper.GetDpiFromPoint(activeBoundry.Left, activeBoundry.Right);
+
+                    var copyActiveBoundry = !activeBoundry.Equals(Rectangle.Empty) ?
+                        new Rectangle(activeBoundry.Left, activeBoundry.Top, activeBoundry.Right, activeBoundry.Bottom, activeBoundry.Dpi) :
+                        boundries.First();
 
                     switch (direction)
                     {
                         case MoveDirection.Left:
-                            activeBoundry.Left -= 1;
+                            activeBoundry.Left -= rectmargin.Width / 2;
+                            activeBoundry.Right -= rectmargin.Width / 2;
                             break;
 
                         case MoveDirection.Right:
-                            activeBoundry.Left += activeBoundry.Width + 1;
+                            activeBoundry.Left += activeBoundry.Width + rectmargin.Width / 2;
+                            activeBoundry.Right += activeBoundry.Width + rectmargin.Width / 2;
                             break;
 
                         case MoveDirection.Up:
-                            activeBoundry.Top -= 1;
+                            activeBoundry.Top -= rectmargin.Width / 2;
+                            activeBoundry.Bottom -= rectmargin.Width / 2;
                             break;
 
                         case MoveDirection.Down:
-                            activeBoundry.Top += activeBoundry.Height + 1;
+                            activeBoundry.Top += activeBoundry.Height + rectmargin.Width / 2;
+                            activeBoundry.Bottom += activeBoundry.Height + rectmargin.Width / 2;
                             break;
                     }
 

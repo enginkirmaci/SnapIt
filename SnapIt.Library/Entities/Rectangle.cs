@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace SnapIt.Library.Entities
 {
@@ -34,25 +35,24 @@ namespace SnapIt.Library.Entities
         public int Y { get { return Top; } }
         public int Width { get { return Right - Left; } }
         public int Height { get { return Bottom - Top; } }
+        public Point Center { get { return new Point((Left + Right) / 2, (Top + Bottom) / 2); } }
 
         public static Rectangle Empty { get { return new Rectangle(); } }
 
         public bool Contains(Rectangle rectangle)
         {
-            return Left <= rectangle.Left && rectangle.Left < Right && Top <= rectangle.Top && rectangle.Top < Bottom;
+            return Left <= rectangle.Center.X && rectangle.Center.X <= Right && Top <= rectangle.Center.Y && rectangle.Center.Y <= Bottom;
         }
 
         public bool ContainsDpiAwareness(Rectangle rectangle)
         {
-            var temp = new Rectangle(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom, rectangle.Dpi);
+            var center = new Point
+            {
+                X = (int)(rectangle.Center.X / (rectangle.Dpi.X * Dpi.X)),
+                Y = (int)(rectangle.Center.Y / (rectangle.Dpi.Y * Dpi.Y))
+            };
 
-            temp.Left = (int)(temp.Left / (temp.Dpi.X * Dpi.X));
-            temp.Right = (int)(temp.Right / (temp.Dpi.X * Dpi.X));
-
-            temp.Top = (int)(temp.Top / (temp.Dpi.Y * Dpi.Y));
-            temp.Bottom = (int)(temp.Bottom / (temp.Dpi.Y * Dpi.Y));
-
-            return Left <= temp.Left && temp.Left < Right && Top <= temp.Top && temp.Top < Bottom;
+            return Left <= center.X && center.X <= Right && Top <= center.Y && center.Y <= Bottom;
         }
 
         public override string ToString()
