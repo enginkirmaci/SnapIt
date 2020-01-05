@@ -29,6 +29,8 @@ namespace SnapIt.Library.Services
         private List<ExcludedApplication> matchRulesForMouse;
         private List<ExcludedApplication> matchRulesForKeyboard;
 
+        public bool IsRunning { get; set; }
+
         public event GetStatus StatusChanged;
 
         public event LayoutChangedEvent LayoutChanged;
@@ -54,23 +56,25 @@ namespace SnapIt.Library.Services
 
             windowService.Initialize();
 
-            var map = new Dictionary<Combination, Action>
-            {
-                { Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Left) },
-                { Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Right) },
-                { Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Up) },
-                { Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty)), ()=> MoveActiveWindowByKeyboard(MoveDirection.Down) },
-                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty)), ()=> CycleLayouts() }
-            };
-
             globalHook = Hook.GlobalEvents();
 
             globalHook.KeyDown += Esc_KeyDown;
 
+            var map = new Dictionary<Combination, Action>
+            {
+                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty)), ()=> CycleLayouts() },
+                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
+            };
+
             if (settingService.Settings.EnableKeyboard)
             {
-                globalHook.OnCombination(map);
+                map.Add(Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty)), () => MoveActiveWindowByKeyboard(MoveDirection.Left));
+                map.Add(Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty)), () => MoveActiveWindowByKeyboard(MoveDirection.Right));
+                map.Add(Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty)), () => MoveActiveWindowByKeyboard(MoveDirection.Up));
+                map.Add(Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty)), () => MoveActiveWindowByKeyboard(MoveDirection.Down));
             }
+
+            globalHook.OnCombination(map);
 
             if (settingService.Settings.EnableMouse)
             {
@@ -126,8 +130,51 @@ namespace SnapIt.Library.Services
                 matchRulesForKeyboard.AddRange(defaultExcludedApplications);
             }
 
+            IsRunning = true;
             StatusChanged?.Invoke(true);
             ScreenLayoutLoaded?.Invoke(settingService.SnapScreens, settingService.Layouts);
+        }
+
+        public void Release()
+        {
+            SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
+
+            windowService.Release();
+
+            if (globalHook != null)
+            {
+                globalHook.KeyDown -= Esc_KeyDown;
+
+                globalHook.MouseMove -= MouseMoveEvent;
+                globalHook.MouseDown -= MouseDownEvent;
+                globalHook.MouseUp -= MouseUpEvent;
+
+                if (settingService.Settings.EnableHoldKey)
+                {
+                    globalHook.KeyDown -= GlobalHook_KeyDown;
+                    globalHook.KeyUp -= GlobalHook_KeyUp;
+                }
+
+                globalHook.Dispose();
+
+                globalHook = Hook.GlobalEvents();
+
+                var map = new Dictionary<Combination, Action>
+                {
+                    { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
+                };
+
+                globalHook.OnCombination(map);
+            }
+
+            IsRunning = false;
+            StatusChanged?.Invoke(false);
+        }
+
+        public void OnExit()
+        {
+            Release();
+            globalHook.Dispose();
         }
 
         private void CycleLayouts()
@@ -141,6 +188,19 @@ namespace SnapIt.Library.Services
             Initialize();
 
             LayoutChanged?.Invoke(snapScreen, nextLayout);
+        }
+
+        private void StartStop()
+        {
+            DevMode.Log(IsRunning);
+            if (IsRunning)
+            {
+                Release();
+            }
+            else
+            {
+                Initialize();
+            }
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
@@ -183,32 +243,6 @@ namespace SnapIt.Library.Services
             }
 
             return true;
-        }
-
-        public void Release()
-        {
-            SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
-
-            windowService.Release();
-
-            if (globalHook != null)
-            {
-                globalHook.KeyDown -= Esc_KeyDown;
-
-                globalHook.MouseMove -= MouseMoveEvent;
-                globalHook.MouseDown -= MouseDownEvent;
-                globalHook.MouseUp -= MouseUpEvent;
-
-                if (settingService.Settings.EnableHoldKey)
-                {
-                    globalHook.KeyDown -= GlobalHook_KeyDown;
-                    globalHook.KeyUp -= GlobalHook_KeyUp;
-                }
-
-                globalHook.Dispose();
-            }
-
-            StatusChanged?.Invoke(false);
         }
 
         private void Esc_KeyDown(object sender, KeyEventArgs e)

@@ -4,10 +4,11 @@
     {
         public bool EnableKeyboard { get; set; } = true;
 
-        public string MoveUpShortcut { get; set; } = "Ctrl + Alt + Up";
-        public string MoveDownShortcut { get; set; } = "Ctrl + Alt + Down";
-        public string MoveLeftShortcut { get; set; } = "Ctrl + Alt + Left";
-        public string MoveRightShortcut { get; set; } = "Ctrl + Alt + Right";
-        public string CycleLayoutsShortcut { get; set; } = "Ctrl + Alt + C";
+        public string MoveUpShortcut { get; set; } = "Control + Alt + Up";
+        public string MoveDownShortcut { get; set; } = "Control + Alt + Down";
+        public string MoveLeftShortcut { get; set; } = "Control + Alt + Left";
+        public string MoveRightShortcut { get; set; } = "Control + Alt + Right";
+        public string CycleLayoutsShortcut { get; set; } = "Control + Alt + C";
+        public string StartStopShortcut { get; set; } = "Control + Alt + S";
     }
 }

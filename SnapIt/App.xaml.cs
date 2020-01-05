@@ -86,7 +86,8 @@ namespace SnapIt
             if (Container != null)
             {
                 Container.Resolve<INotifyIconService>().Release();
-                Container.Resolve<ISnapService>().Release();
+                var snapService = Container.Resolve<ISnapService>();
+                snapService.OnExit();
             }
         }
     }

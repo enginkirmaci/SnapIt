@@ -15,6 +15,8 @@ namespace SnapIt.Library.Services
         void Initialize();
 
         void Release();
+
+        void OnExit();
     }
 
     public delegate void GetStatus(bool isRunning);

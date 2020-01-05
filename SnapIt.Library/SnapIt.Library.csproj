@@ -117,9 +117,6 @@
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.17763.1000-preview</Version>
     </PackageReference>
-    <PackageReference Include="MouseKeyHook">
-      <Version>5.6.0</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.2</Version>
     </PackageReference>
@@ -148,6 +145,12 @@
     <EmbeddedResource Include="Layouts\5125fc03-7acc-4ea2-9639-c589fa8cc052.json" />
     <EmbeddedResource Include="Layouts\6089ef8c-7084-4cb5-b4c0-5881e14a0e66.json" />
     <EmbeddedResource Include="Layouts\65fdbf65-0de0-4842-ae0a-b9d87705e9b0.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\globalmousekeyhook\MouseKeyHook\MouseKeyHook.csproj">
+      <Project>{f52aa97e-180a-40ed-8f2b-09080171d6c7}</Project>
+      <Name>MouseKeyHook</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
