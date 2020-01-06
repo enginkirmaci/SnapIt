@@ -55,7 +55,7 @@ namespace SnapIt
             notifyIconService.Initialize();
 
             var applicationWindow = Container.Resolve<MainWindow>();
-            applicationWindow.SetNotifyIconService(notifyIconService, regionManager);
+            applicationWindow.Initialize(notifyIconService, regionManager);
             notifyIconService.SetApplicationWindow(applicationWindow);
 
             return applicationWindow;
@@ -86,8 +86,7 @@ namespace SnapIt
             if (Container != null)
             {
                 Container.Resolve<INotifyIconService>().Release();
-                var snapService = Container.Resolve<ISnapService>();
-                snapService.OnExit();
+                Container.Resolve<ISnapService>().Release();
             }
         }
     }

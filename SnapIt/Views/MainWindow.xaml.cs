@@ -17,7 +17,7 @@ namespace SnapIt.Views
             InitializeComponent();
         }
 
-        public void SetNotifyIconService(
+        public void Initialize(
             INotifyIconService notifyIconService,
             IRegionManager regionManager)
         {

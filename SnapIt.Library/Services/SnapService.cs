@@ -62,8 +62,8 @@ namespace SnapIt.Library.Services
 
             var map = new Dictionary<Combination, Action>
             {
-                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty)), ()=> CycleLayouts() },
-                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
+                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty)), ()=> CycleLayouts() }
+                //{ Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
             };
 
             if (settingService.Settings.EnableKeyboard)
@@ -156,25 +156,10 @@ namespace SnapIt.Library.Services
                 }
 
                 globalHook.Dispose();
-
-                globalHook = Hook.GlobalEvents();
-
-                var map = new Dictionary<Combination, Action>
-                {
-                    { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
-                };
-
-                globalHook.OnCombination(map);
             }
 
             IsRunning = false;
             StatusChanged?.Invoke(false);
-        }
-
-        public void OnExit()
-        {
-            Release();
-            globalHook.Dispose();
         }
 
         private void CycleLayouts()
@@ -188,19 +173,6 @@ namespace SnapIt.Library.Services
             Initialize();
 
             LayoutChanged?.Invoke(snapScreen, nextLayout);
-        }
-
-        private void StartStop()
-        {
-            DevMode.Log(IsRunning);
-            if (IsRunning)
-            {
-                Release();
-            }
-            else
-            {
-                Initialize();
-            }
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
