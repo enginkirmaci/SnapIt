@@ -44,6 +44,14 @@ namespace SnapIt.ViewModels
                 {
                     new ChangeLogItem()
                     {
+                        Header = "v2.0.6.0",
+                        Lines = new List<string>() {
+                            "- Fixed adding/editing layout causing errors.",
+                            "- Improved keyboard snapping."
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
                         Header = "v2.0.2.0",
                         Lines = new List<string>() {
                             "- Added ability to change layout from tray icon.",
