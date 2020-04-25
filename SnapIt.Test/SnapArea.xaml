@@ -1,0 +1,77 @@
+﻿<UserControl
+    x:Class="SnapIt.Test.SnapArea"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SnapIt.Test"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="400"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Border
+            x:Name="Border"
+            BorderBrush="#FFC8C8C8"
+            BorderThickness="1" />
+        <Grid x:Name="Area" Background="#7F696969">
+
+            <GridSplitter
+                x:Name="VerticalSplitter"
+                Width="10"
+                Margin="-5,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"
+                Panel.ZIndex="10"
+                Background="#FF969696"
+                ResizeDirection="Auto" />
+
+            <GridSplitter
+                x:Name="HorizantalSplitter"
+                Height="10"
+                Margin="0,-5,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Panel.ZIndex="10"
+                Background="#FF969696"
+                ResizeDirection="Auto" />
+
+            <Grid x:Name="DesignPanel" Panel.ZIndex="99">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Vertical">
+                    <Button
+                        x:Name="SplitVertically"
+                        Margin="2"
+                        Padding="12,2"
+                        Background="White"
+                        Click="SplitVertically_Click"
+                        Foreground="Black">
+                        Vertical
+                    </Button>
+
+                    <Button
+                        x:Name="SplitHorizantally"
+                        Margin="2"
+                        Padding="12,2"
+                        Background="White"
+                        Click="SplitHorizantally_Click"
+                        Foreground="Black">
+                        Horizantal
+                    </Button>
+
+                    <Button
+                        x:Name="RemoveSnapArea"
+                        Margin="2"
+                        Padding="12,2"
+                        Background="White"
+                        Click="RemoveSnapArea_Click"
+                        Foreground="Black">
+                        Remove
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
