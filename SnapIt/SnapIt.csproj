@@ -237,7 +237,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DryIoc.dll">
-      <Version>4.0.5</Version>
+      <Version>4.1.4</Version>
     </PackageReference>
     <PackageReference Include="MaterialDesignColors">
       <Version>1.2.0</Version>
@@ -249,7 +249,7 @@
       <Version>10.0.17763.1000</Version>
     </PackageReference>
     <PackageReference Include="Prism.DryIoc">
-      <Version>7.2.0.1367</Version>
+      <Version>7.2.0.1422</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
