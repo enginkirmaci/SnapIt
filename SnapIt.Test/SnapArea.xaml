@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SnapIt.Test"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="userControl"
     d:DesignHeight="400"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -15,27 +16,12 @@
             BorderBrush="#FFC8C8C8"
             BorderThickness="1" />
         <Grid x:Name="Area" Background="#7F696969">
-
-            <GridSplitter
-                x:Name="VerticalSplitter"
-                Width="10"
-                Margin="-5,0,0,0"
+            <TextBlock
                 HorizontalAlignment="Left"
-                VerticalAlignment="Stretch"
-                Panel.ZIndex="10"
-                Background="#FF969696"
-                ResizeDirection="Auto" />
-
-            <GridSplitter
-                x:Name="HorizantalSplitter"
-                Height="10"
-                Margin="0,-5,0,0"
-                HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                Panel.ZIndex="10"
-                Background="#FF969696"
-                ResizeDirection="Auto" />
-
+                FontWeight="Bold"
+                Foreground="White"
+                Text="{Binding LayoutArea.Name, ElementName=userControl}" />
             <Grid x:Name="DesignPanel" Panel.ZIndex="99">
                 <StackPanel
                     HorizontalAlignment="Center"

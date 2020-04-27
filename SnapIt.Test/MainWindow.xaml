@@ -6,10 +6,8 @@
     xmlns:local="clr-namespace:SnapIt.Test"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow"
-    Width="1600"
+    Width="1200"
     Height="600"
-    d:DesignHeight="400"
-    d:DesignWidth="400"
     Background="#99A3A3A3"
     WindowStyle="SingleBorderWindow"
     mc:Ignorable="d">

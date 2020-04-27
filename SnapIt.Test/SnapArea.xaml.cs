@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
 
 namespace SnapIt.Test
 {
@@ -12,31 +11,32 @@ namespace SnapIt.Test
     /// </summary>
     public partial class SnapArea : UserControl
     {
-        public bool HasMergedSnapArea { get; set; }
-        public bool IsMergedSnapArea { get; set; }
-        public SnapArea ParentSnapArea { get; set; }
-        public LayoutArea LayoutArea { get; set; }
-        public SplitDirection SplitDirection { get; private set; }
-
-        public bool IsDesignMode
+        public LayoutArea LayoutArea
         {
-            get => (bool)GetValue(IsDesignModeProperty);
-            set => SetValue(IsDesignModeProperty, value);
+            get => (LayoutArea)GetValue(LayoutAreaProperty);
+            set => SetValue(LayoutAreaProperty, value);
         }
 
-        public static readonly DependencyProperty IsDesignModeProperty
-         = DependencyProperty.Register("IsDesignMode", typeof(bool), typeof(SnapArea),
-             new FrameworkPropertyMetadata()
-             {
-                 BindsTwoWayByDefault = true,
-                 PropertyChangedCallback = new PropertyChangedCallback(new PropertyChangedCallback(IsDesignModePropertyChanged))
-             });
+        public static readonly DependencyProperty LayoutAreaProperty
+            = DependencyProperty.Register("LayoutArea", typeof(LayoutArea), typeof(SnapArea),
+              new FrameworkPropertyMetadata()
+              {
+                  BindsTwoWayByDefault = true,
+                  PropertyChangedCallback = new PropertyChangedCallback(LayoutAreaPropertyChanged)
+              });
 
-        private static void IsDesignModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void LayoutAreaPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var snapArea = (SnapArea)d;
-            snapArea.IsDesignMode = (bool)e.NewValue;
+            snapArea.LayoutArea = (LayoutArea)e.NewValue;
         }
+
+        private static SnapArea Root { get; set; }
+
+        public bool HasMergedSnapArea { get; set; }
+        public bool IsMergedSnapArea { get; set; }
+        //public LayoutArea LayoutArea { get; set; }
+        public SplitDirection SplitDirection { get; private set; }
 
         public List<LayoutArea> Areas { get; set; }
 
@@ -44,32 +44,145 @@ namespace SnapIt.Test
         {
             InitializeComponent();
 
+            if (Root == null)
+            {
+                Root = this;
+            }
+
             DesignPanel.Visibility = Visibility.Hidden;
-            VerticalSplitter.Visibility = Visibility.Hidden;
-            HorizantalSplitter.Visibility = Visibility.Hidden;
         }
 
-        public void ApplyLayout(SnapArea parent = null)
+        public void ApplyLayout()
         {
+            Root.Area.Children.Clear();
+
             if (Areas != null && Areas.Count > 0)
             {
                 ApplyColumnsAndRows();
 
+                FindAndFixMissingAreas();
+
                 foreach (var area in Areas)
                 {
-                    AddSnapArea(this, area);
-
-                    break;
+                    AddSnapArea(area);
                 }
             }
-            else if (IsDesignMode)
+            else
             {
-                SetDesignMode(parent);
+                SetDesignMode();
+            }
+        }
+
+        private void FindAndFixMissingAreas()
+        {
+            var highestColumn = Areas.Max(area => area.Column);
+            var highestRow = Areas.Max(area => area.Row);
+
+            for (var j = 0; j <= highestRow; j++)
+            {
+                for (var i = 0; i <= highestColumn; i++)
+                {
+                    var found = Areas.FirstOrDefault(a => a.IsAt(i, j));
+
+                    if (found == null)
+                    {
+                        found = Areas.FirstOrDefault(a => a.IsAt(i - 1, j));
+                        if (found != null)
+                        {
+                            var testArea = found.Copy();
+                            testArea.ColumnSpan++;
+                            var hasCollision = Areas.Where(a => a != found).Any(a => a.HasCollision(testArea));
+
+                            if (!hasCollision)
+                            {
+                                found.ColumnSpan++;
+                            }
+                            else
+                            {
+                                found = null;
+                            }
+                        }
+                    }
+
+                    if (found == null)
+                    {
+                        found = Areas.FirstOrDefault(a => a.IsAt(i, j - 1));
+                        if (found != null)
+                        {
+                            var testArea = found.Copy();
+                            testArea.RowSpan++;
+                            var hasCollision = Areas.Where(a => a != found).Any(a => a.HasCollision(testArea));
+
+                            if (!hasCollision)
+                            {
+                                found.RowSpan++;
+                            }
+                            else
+                            {
+                                found = null;
+                            }
+                        }
+                    }
+
+                    if (found == null)
+                    {
+                        found = Areas.FirstOrDefault(a => a.IsAt(i + 1, j));
+                        if (found != null)
+                        {
+                            var testArea = found.Copy();
+                            testArea.Column--;
+                            var hasCollision = Areas.Where(a => a != found).Any(a => a.HasCollision(testArea));
+
+                            if (!hasCollision)
+                            {
+                                found.Column--;
+                            }
+                            else
+                            {
+                                found = null;
+                            }
+                        }
+                    }
+
+                    if (found == null)
+                    {
+                        found = Areas.FirstOrDefault(a => a.IsAt(i, j + 1));
+                        if (found != null)
+                        {
+                            var testArea = found.Copy();
+                            testArea.Row--;
+                            var hasCollision = Areas.Where(a => a != found).Any(a => a.HasCollision(testArea));
+
+                            if (!hasCollision)
+                            {
+                                found.Row--;
+                            }
+                            else
+                            {
+                                found = null;
+                            }
+                        }
+                    }
+
+                    if (found == null)
+                    {
+                        Areas.Add(new LayoutArea
+                        {
+                            Column = i,
+                            Row = j,
+                            ColumnSpan = 1,
+                            RowSpan = 1
+                        });
+                    }
+                }
             }
         }
 
         internal void ApplyColumnsAndRows()
         {
+            Area.ColumnDefinitions.Clear();
+            Area.RowDefinitions.Clear();
+
             if (Areas.Count > 0)
             {
                 var highestColumn = Areas.Max(area => area.Column);
@@ -128,11 +241,9 @@ namespace SnapIt.Test
             }
         }
 
-        public void SetDesignMode(SnapArea parent)
+        public void SetDesignMode()
         {
-            ParentSnapArea = parent;
-
-            if (parent != null)
+            if (this != Root)
             {
                 RemoveSnapArea.Visibility = Visibility.Visible;
             }
@@ -146,89 +257,150 @@ namespace SnapIt.Test
 
         private void SplitVertically_Click(object sender, RoutedEventArgs e)
         {
-            Split(this, SplitDirection.Vertically);
+            Split(SplitDirection.Vertically);
         }
 
         private void SplitHorizantally_Click(object sender, RoutedEventArgs e)
         {
-            Split(this, SplitDirection.Horizantally);
+            Split(SplitDirection.Horizontally);
         }
 
-        private SnapArea AddSnapArea(SnapArea root, LayoutArea area)
+        private SnapArea AddSnapArea(LayoutArea area)
         {
             var snapArea = new SnapArea
             {
-                IsDesignMode = IsDesignMode,
-                ParentSnapArea = root,
                 LayoutArea = area
             };
-            snapArea.SetDesignMode(this);
+            snapArea.SetDesignMode();
 
-            root.Area.Children.Add(snapArea);
+            Root.Area.Children.Add(snapArea);
             SetColumnRow(snapArea, area.Column, area.Row, area.ColumnSpan, area.RowSpan);
 
             return snapArea;
         }
 
-        private void Split(SnapArea snapArea, SplitDirection splitDirection)
+        private void Split(SplitDirection splitDirection)
         {
             SplitDirection = splitDirection;
+
+            var originalLayout = LayoutArea.Copy();
 
             switch (SplitDirection)
             {
                 case SplitDirection.Vertically:
-                    var newLayout = snapArea.LayoutArea;
-                    newLayout.Column++;
-                    var newSnapArea = AddSnapArea(ParentSnapArea, snapArea.LayoutArea);
+                    var verticalLayout = LayoutArea.Copy();
+
+                    Root.Areas.Add(verticalLayout);
+
+                    if (LayoutArea.ColumnSpan > 1)
+                    {
+                        LayoutArea.ColumnSpan /= 2;
+                        verticalLayout.ColumnSpan -= LayoutArea.ColumnSpan;
+                        verticalLayout.Column += LayoutArea.ColumnSpan;
+                    }
+                    else
+                    {
+                        var horizontalAfter = new LayoutArea
+                        {
+                            Column = LayoutArea.Column + 1,
+                            ColumnSpan = Root.Areas.Max(a => a.Column) + 1,
+                            Row = originalLayout.Row,
+                            RowSpan = originalLayout.RowSpan
+                        };
+                        var verticalMiddle = new LayoutArea
+                        {
+                            Column = originalLayout.Column,
+                            ColumnSpan = originalLayout.ColumnSpan,
+                            Row = 0,
+                            RowSpan = Root.Areas.Max(a => a.Row) + 1
+                        };
+                        var horizontalintersects = Root.Areas.Where(a => a.HasCollision(horizontalAfter));
+                        var verticalIntersects = Root.Areas.Where(a => a.HasCollision(verticalMiddle));
+
+                        verticalLayout.Column++;
+
+                        foreach (var area in Root.Areas)
+                        {
+                            if (area != verticalLayout &&
+                                area.Column > originalLayout.Column && area.Column < Root.Areas.Max(a => a.Column) + 1)
+                            {
+                                area.Column++;
+                            }
+                        }
+
+                        foreach (var area in verticalIntersects)
+                        {
+                            if (area != LayoutArea && area != verticalLayout)
+                            {
+                                area.ColumnSpan++;
+                            }
+                        }
+                    }
+
+                    Root.ApplyLayout();
 
                     break;
 
-                case SplitDirection.Horizantally:
+                case SplitDirection.Horizontally:
+                    var horizontalLayout = LayoutArea.Copy();
 
-                    break;
-            }
-        }
+                    Root.Areas.Add(horizontalLayout);
 
-        private void AddGridSplitter(SplitDirection direction, int column, int row)
-        {
-            switch (direction)
-            {
-                case SplitDirection.Vertically:
-                    VerticalSplitter.Visibility = Visibility.Visible;
-                    Grid.SetColumn(VerticalSplitter, column);
-                    Grid.SetRow(VerticalSplitter, row);
+                    if (LayoutArea.RowSpan > 1)
+                    {
+                        LayoutArea.RowSpan /= 2;
+                        horizontalLayout.RowSpan -= LayoutArea.RowSpan;
+                        horizontalLayout.Row += LayoutArea.RowSpan;
+                    }
+                    else
+                    {
+                        var horizontalMiddle = new LayoutArea
+                        {
+                            Column = 0,
+                            ColumnSpan = Root.Areas.Max(a => a.Column) + 1,
+                            Row = originalLayout.Row,
+                            RowSpan = originalLayout.RowSpan
+                        };
+                        var verticalAfter = new LayoutArea
+                        {
+                            Column = originalLayout.Column,
+                            ColumnSpan = originalLayout.ColumnSpan,
+                            Row = LayoutArea.Row + 1,
+                            RowSpan = Root.Areas.Max(a => a.Row) + 1
+                        };
+                        var horizontalintersects = Root.Areas.Where(a => a.HasCollision(horizontalMiddle));
+                        var verticalIntersects = Root.Areas.Where(a => a.HasCollision(verticalAfter));
 
-                    break;
+                        horizontalLayout.Row++;
 
-                case SplitDirection.Horizantally:
-                    HorizantalSplitter.Visibility = Visibility.Visible;
-                    Grid.SetColumn(HorizantalSplitter, column);
-                    Grid.SetRow(HorizantalSplitter, row);
+                        foreach (var area in Root.Areas)
+                        {
+                            if (area != horizontalLayout &&
+                                area.Row > originalLayout.Row && area.Row < Root.Areas.Max(a => a.Row) + 1)
+                            {
+                                area.Row++;
+                            }
+                        }
 
+                        foreach (var area in horizontalintersects)
+                        {
+                            if (area != LayoutArea && area != horizontalLayout)
+                            {
+                                area.RowSpan++;
+                            }
+                        }
+                    }
+
+                    Root.ApplyLayout();
                     break;
             }
         }
 
         private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
         {
-            var childSnapAreas = ParentSnapArea.Area.FindChildren<SnapArea>();
-            foreach (var child in childSnapAreas.ToList())
-            {
-                ParentSnapArea.Area.Children.Remove(child);
-            }
+            Root.Areas.Remove(LayoutArea);
 
-            ParentSnapArea.Border.Visibility = Visibility.Visible;
-
-            ParentSnapArea.SetDesignMode(ParentSnapArea.ParentSnapArea);
-
-            if (ParentSnapArea.Area.ColumnDefinitions.Count > 0)
-            {
-                ParentSnapArea.Area.ColumnDefinitions.RemoveRange(0, ParentSnapArea.Area.ColumnDefinitions.Count);
-            }
-            if (ParentSnapArea.Area.RowDefinitions.Count > 0)
-            {
-                ParentSnapArea.Area.RowDefinitions.RemoveRange(0, ParentSnapArea.Area.RowDefinitions.Count);
-            }
+            Root.ApplyLayout();
         }
 
         #endregion Design Mode
