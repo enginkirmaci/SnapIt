@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using SnapIt.Library.Entities;
+using SnapIt.GridSplitter.Entities;
 
-namespace SnapIt.Test
+namespace SnapIt.GridSplitter
 {
     /// <summary>
     /// Interaction logic for SnapArea.xaml

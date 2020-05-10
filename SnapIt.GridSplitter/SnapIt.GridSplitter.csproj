@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5B3FE18F-DF50-416D-8B0E-8B1701D0D45E}</ProjectGuid>
+    <ProjectGuid>{1EB45BC7-B136-4DDA-AB3B-76291A718CB2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>SnapIt.Test</RootNamespace>
-    <AssemblyName>SnapIt.Test</AssemblyName>
+    <RootNamespace>SnapIt.GridSplitter</RootNamespace>
+    <AssemblyName>SnapIt.GridSplitter</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -58,35 +58,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\SnapArea.xaml.cs">
-      <DependentUpon>SnapArea.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SnapBorder.cs" />
-    <Compile Include="Controls\SnapControl.xaml.cs">
-      <DependentUpon>SnapControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Library\Bindable.cs" />
     <Compile Include="Library\DependencyObjectExtensions.cs" />
     <Compile Include="Library\Enums.cs" />
     <Compile Include="Library\Layout.cs" />
     <Compile Include="Library\LayoutArea.cs" />
-    <Compile Include="Library\SweepLine.cs" />
-    <Compile Include="Window1.xaml.cs">
-      <DependentUpon>Window1.xaml</DependentUpon>
+    <Compile Include="SnapArea.xaml.cs">
+      <DependentUpon>SnapArea.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\SnapArea.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SnapControl.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Window1.xaml">
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="SnapArea.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

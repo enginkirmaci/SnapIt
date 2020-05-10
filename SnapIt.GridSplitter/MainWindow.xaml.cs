@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using SnapIt.Library.Entities;
+using SnapIt.GridSplitter.Entities;
 
-namespace SnapIt.Test
+namespace SnapIt.GridSplitter
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
