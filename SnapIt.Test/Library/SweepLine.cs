@@ -4,45 +4,35 @@ using System.Linq;
 
 namespace SnapIt.Test.Library
 {
-    public class XComparer : IComparer<Line>
+    public class XComparer : IComparer<SnapLine>
     {
-        public int Compare(Line x, Line y)
+        public int Compare(SnapLine x, SnapLine y)
         {
             return x.Start.X.CompareTo(y.Start.X);
         }
     }
 
-    public class SweepLine
+    public static class SweepLine
     {
-        public static List<Rectangle> GetRectangles(List<Line> lines)
+        public static IEnumerable<Rectangle> GetRectangles(IEnumerable<SnapLine> lines)
         {
-            //List<Line> lines = new List<Line>();
-            //lines.Add(new Line() { Start = new Point(0.5, 12.5), End = new Point(10, 12.5) });
-            //lines.Add(new Line() { Start = new Point(2.5, 9.5), End = new Point(15.8, 9.5) });
-            //lines.Add(new Line() { Start = new Point(6, 8.5), End = new Point(16.3, 8.5) });
-            //lines.Add(new Line() { Start = new Point(3.5, 8.5), End = new Point(3.5, 12.5) });
-            //lines.Add(new Line() { Start = new Point(7, 4.2), End = new Point(7, 13.8) });
-            //lines.Add(new Line() { Start = new Point(10, 5.8), End = new Point(10, 14.2) });
-            //lines.Add(new Line() { Start = new Point(15.6, 0), End = new Point(15.6, 16) });
-            //lines.Add(new Line() { Start = new Point(1.6, 20), End = new Point(15.6, 20) });
+            var activeVertical = new List<SnapLine>();
 
-            var activeVertical = new List<Line>();
+            var sweepSet = new SortedList<double, List<SnapLine>>();
 
-            SortedList<double, List<Line>> sweepSet = new SortedList<double, List<Line>>();
-
-            foreach (Line oneLine in lines.Where(x => x.Start.X == x.End.X))
+            foreach (SnapLine oneLine in lines.Where(x => x.Start.X == x.End.X))
             {
-                if (!sweepSet.ContainsKey(oneLine.Start.Y)) sweepSet.Add(oneLine.Start.Y, new List<Line>());
+                if (!sweepSet.ContainsKey(oneLine.Start.Y)) sweepSet.Add(oneLine.Start.Y, new List<SnapLine>());
                 sweepSet[oneLine.Start.Y].Add(oneLine);
 
-                if (!sweepSet.ContainsKey(oneLine.End.Y)) sweepSet.Add(oneLine.End.Y, new List<Line>());
+                if (!sweepSet.ContainsKey(oneLine.End.Y)) sweepSet.Add(oneLine.End.Y, new List<SnapLine>());
                 sweepSet[oneLine.End.Y].Add(oneLine);
             }
 
             var linesHorizontal = lines.Where(x => x.Start.Y == x.End.Y).OrderBy(x => x.Start.Y).ToList();
 
-            List<Rectangle> rectangles = new List<Rectangle>();
-            List<Rectangle> completedRectangles = new List<Rectangle>();
+            var rectangles = new List<Rectangle>();
+            var completedRectangles = new List<Rectangle>();
             var xComp = new XComparer();
 
             int horIndex = 0;
@@ -55,7 +45,7 @@ namespace SnapIt.Test.Library
                 //add lines which are influencing
                 if (sweepSet.ContainsKey(y))
                 {
-                    foreach (Line oneLine in sweepSet[y].Where(x => x.Start.Y == y))
+                    foreach (SnapLine oneLine in sweepSet[y].Where(x => x.Start.Y == y))
                     {
                         int index = activeVertical.BinarySearch(oneLine, xComp);
                         if (index < 0) index = ~index;
@@ -81,14 +71,14 @@ namespace SnapIt.Test.Library
                         completedRectangles.AddRange(rectangles);
                         rectangles.Clear();
 
-                        rectangles.Add(new Rectangle(new Point(activeVertical[minIndex].Start.X, verValue), new Point(activeVertical[maxIndex].Start.X, verValue)));
+                        rectangles.Add(new Rectangle(new SnapPoint(activeVertical[minIndex].Start.X, verValue), new SnapPoint(activeVertical[maxIndex].Start.X, verValue)));
                     }
                     else rectangles.Clear();
                 }
                 //Cleanup lines which end
                 if (sweepSet.ContainsKey(y))
                 {
-                    foreach (Line oneLine in sweepSet[y].Where(x => x.End.Y == y))
+                    foreach (SnapLine oneLine in sweepSet[y].Where(x => x.End.Y == y))
                     {
                         activeVertical.Remove(oneLine);
                     }
@@ -109,7 +99,7 @@ namespace SnapIt.Test.Library
             return completedRectangles;
         }
 
-        private static int GetMinIndex(List<Line> Lines, Line Horizontal)
+        private static int GetMinIndex(List<SnapLine> Lines, SnapLine Horizontal)
         {
             var xComp = new XComparer();
             int minIndex = Lines.BinarySearch(Horizontal, xComp);
@@ -117,18 +107,18 @@ namespace SnapIt.Test.Library
             return minIndex;
         }
 
-        private static int GetMaxIndex(List<Line> Lines, Line Horizontal)
+        private static int GetMaxIndex(List<SnapLine> Lines, SnapLine Horizontal)
         {
             var xComp = new XComparer();
-            int maxIndex = Lines.BinarySearch(new Line() { Start = Horizontal.End }, xComp);
+            int maxIndex = Lines.BinarySearch(new SnapLine() { Start = Horizontal.End }, xComp);
             if (maxIndex < 0) maxIndex = ~maxIndex - 1;
             return maxIndex;
         }
     }
 
-    public class Point
+    public class SnapPoint
     {
-        public Point(double X, double Y)
+        public SnapPoint(double X, double Y)
         {
             this.X = X;
             this.Y = Y;
@@ -138,10 +128,10 @@ namespace SnapIt.Test.Library
         public double Y { get; set; }
     }
 
-    public class Line
+    public class SnapLine
     {
-        public Point Start { get; set; }
-        public Point End { get; set; }
+        public SnapPoint Start { get; set; }
+        public SnapPoint End { get; set; }
 
         public override string ToString()
         {
@@ -154,13 +144,13 @@ namespace SnapIt.Test.Library
         public Rectangle()
         { }
 
-        public Rectangle(Point TopRight, Point BottomLeft)
+        public Rectangle(SnapPoint TopRight, SnapPoint BottomLeft)
         {
             this.TopRight = TopRight;
             this.BottomLeft = BottomLeft;
         }
 
-        public Point TopRight { get; set; }
-        public Point BottomLeft { get; set; }
+        public SnapPoint TopRight { get; set; }
+        public SnapPoint BottomLeft { get; set; }
     }
 }

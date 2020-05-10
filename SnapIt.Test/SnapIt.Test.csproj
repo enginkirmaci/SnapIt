@@ -65,6 +65,7 @@
     <Compile Include="Controls\SnapControl.xaml.cs">
       <DependentUpon>SnapControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\FrameworkElementExtensions.cs" />
     <Compile Include="Library\Bindable.cs" />
     <Compile Include="Library\DependencyObjectExtensions.cs" />
     <Compile Include="Library\Enums.cs" />

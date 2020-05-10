@@ -7,6 +7,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
+using SnapIt.Test.Extensions;
+using SnapIt.Test.Library;
 
 namespace SnapIt.Test.Controls
 {
@@ -120,13 +122,7 @@ namespace SnapIt.Test.Controls
 
                     //////////////////////////////////////////////////
 
-                    //var borders = Parent.FindChildren<SnapBorder>();
-                    //foreach (var border in borders)
-                    //{
-                    //    border.Background = new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
-                    //}
-
-                    var thisRect = GetRect();
+                    var thisRect = this.GetRect();
 
                     thisRect = SplitDirection == SplitDirection.Vertically ?
                         new Rect(thisRect.X - THICKNESS, thisRect.Y + 1, ActualWidth + THICKNESS * 2, ActualHeight - 2) :
@@ -136,8 +132,6 @@ namespace SnapIt.Test.Controls
                     var nearBorders = GetCollisions(thisRect, splitDirection);
                     foreach (var near in nearBorders.Where(b => b.IsDraggable))
                     {
-                        //near.Background = new SolidColorBrush(Colors.Red);
-
                         if (SplitDirection == SplitDirection.Horizontally)
                         {
                             if (Margin.Top > near.Margin.Top) //top
@@ -175,18 +169,26 @@ namespace SnapIt.Test.Controls
             }
         }
 
-        public Library.Line GetLine()
+        public void SetPos(Point point, Size size, SplitDirection splitDirection)
+        {
+            Width = size.Width;
+            Height = size.Height;
+            Margin = new Thickness(point.X, point.Y, 0, 0);
+            SplitDirection = splitDirection;
+        }
+
+        public SnapLine GetLine()
         {
             return SplitDirection == SplitDirection.Horizontally ?
-                new Library.Line
+                new SnapLine
                 {
-                    Start = new Library.Point(Margin.Left, Margin.Top),
-                    End = new Library.Point(Margin.Left + ActualWidth, Margin.Top)
+                    Start = new SnapPoint(Margin.Left, Margin.Top),
+                    End = new SnapPoint(Margin.Left + ActualWidth, Margin.Top)
                 } :
-                new Library.Line
+                new SnapLine
                 {
-                    Start = new Library.Point(Margin.Left, Margin.Top),
-                    End = new Library.Point(Margin.Left, Margin.Top + ActualHeight)
+                    Start = new SnapPoint(Margin.Left, Margin.Top),
+                    End = new SnapPoint(Margin.Left, Margin.Top + ActualHeight)
                 };
         }
 
@@ -219,11 +221,6 @@ namespace SnapIt.Test.Controls
             result.Remove(this);
 
             return result;
-        }
-
-        private Rect GetRect()
-        {
-            return new Rect(new Point(Margin.Left, Margin.Top), new Size(ActualWidth, ActualHeight));
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 using SnapIt.Test.Library;
 
 namespace SnapIt.Test.Controls
@@ -71,14 +72,28 @@ namespace SnapIt.Test.Controls
             RightBorder.Margin = new Thickness(MainGrid.ActualWidth, 0, 0, 0);
         }
 
+        public void AddBorder(SnapBorder snapBorder)
+        {
+            MainGrid.Children.Add(snapBorder);
+            GenerateSnapAreas();
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var lines = new List<Line>{
-                TopBorder.GetLine(),
-                BottomBorder.GetLine(),
-                LeftBorder.GetLine(),
-                RightBorder.GetLine()
-            };
+            GenerateSnapAreas();
+        }
+
+        private void GenerateSnapAreas()
+        {
+            var areas = this.FindChildren<SnapArea>();
+            foreach (var area in areas)
+            {
+                MainGrid.Children.Remove(area);
+            }
+
+            var borders = this.FindChildren<SnapBorder>();
+
+            var lines = borders.Select(b => b.GetLine()).ToList();
 
             var rectangles = SweepLine.GetRectangles(lines);
 
@@ -88,7 +103,8 @@ namespace SnapIt.Test.Controls
                 {
                     Margin = new Thickness(rectangle.TopRight.X, rectangle.TopRight.Y, 0, 0),
                     Width = rectangle.BottomLeft.X - rectangle.TopRight.X,
-                    Height = rectangle.BottomLeft.Y - rectangle.TopRight.Y
+                    Height = rectangle.BottomLeft.Y - rectangle.TopRight.Y,
+                    SnapControl = this
                 });
             }
         }
