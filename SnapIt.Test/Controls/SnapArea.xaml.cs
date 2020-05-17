@@ -19,22 +19,36 @@ namespace SnapIt.Test.Controls
 
         private void SplitVertically_Click(object sender, RoutedEventArgs e)
         {
-            var rect = this.GetRect();
-
-            var point = new Point(
-                (rect.TopLeft.X + rect.BottomRight.X) / 2,
-                -10);
-
-            var size = new Size(double.NaN, SnapControl.ActualHeight + 20);
-
-            var newBorder = new SnapBorder();
-            newBorder.SetPos(point, size, SplitDirection.Vertically);
-
-            SnapControl.AddBorder(newBorder);
+            Split(SplitDirection.Vertical);
         }
 
         private void SplitHorizantally_Click(object sender, RoutedEventArgs e)
         {
+            Split(SplitDirection.Horizontal);
+        }
+
+        private void Split(SplitDirection direction)
+        {
+            Point point;
+            Size size;
+
+            var rect = this.GetRect();
+
+            if (direction == SplitDirection.Vertical)
+            {
+                point = new Point((rect.TopLeft.X + rect.BottomRight.X) / 2, rect.TopLeft.Y);
+                size = new Size(double.NaN, rect.Height);
+            }
+            else
+            {
+                point = new Point(rect.TopLeft.X, (rect.TopLeft.Y + rect.BottomRight.Y) / 2);
+                size = new Size(rect.Width, double.NaN);
+            }
+
+            var newBorder = new SnapBorder();
+            newBorder.SetPos(point, size, direction);
+
+            SnapControl.AddBorder(newBorder);
         }
 
         private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)

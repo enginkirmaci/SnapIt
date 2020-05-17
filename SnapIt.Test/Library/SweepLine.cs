@@ -69,11 +69,11 @@ namespace SnapIt.Test.Library
                             oneRec.BottomLeft.Y = verValue;
                         }
                         completedRectangles.AddRange(rectangles);
-                        rectangles.Clear();
+                        //rectangles.Clear();
 
                         rectangles.Add(new Rectangle(new SnapPoint(activeVertical[minIndex].Start.X, verValue), new SnapPoint(activeVertical[maxIndex].Start.X, verValue)));
                     }
-                    else rectangles.Clear();
+                    //else rectangles.Clear();
                 }
                 //Cleanup lines which end
                 if (sweepSet.ContainsKey(y))
@@ -96,7 +96,7 @@ namespace SnapIt.Test.Library
                 }
             }
 
-            return completedRectangles;
+            return rectangles;
         }
 
         private static int GetMinIndex(List<SnapLine> Lines, SnapLine Horizontal)

@@ -1,10 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using SliceRectangleSample;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
-using SnapIt.Test.Library;
 
 namespace SnapIt.Test.Controls
 {
@@ -17,6 +17,7 @@ namespace SnapIt.Test.Controls
         private SnapBorder BottomBorder;
         private SnapBorder LeftBorder;
         private SnapBorder RightBorder;
+        private SnapBorder snapBorder;
 
         public SnapControl()
         {
@@ -24,7 +25,7 @@ namespace SnapIt.Test.Controls
 
             TopBorder = new SnapBorder()
             {
-                SplitDirection = SplitDirection.Horizontally,
+                SplitDirection = SplitDirection.Horizontal,
                 IsDraggable = false,
                 Width = MainGrid.ActualWidth,
                 Margin = new Thickness(0, 0, 0, 0)
@@ -32,7 +33,7 @@ namespace SnapIt.Test.Controls
 
             BottomBorder = new SnapBorder()
             {
-                SplitDirection = SplitDirection.Horizontally,
+                SplitDirection = SplitDirection.Horizontal,
                 IsDraggable = false,
                 Width = MainGrid.ActualWidth,
                 Margin = new Thickness(0, MainGrid.ActualHeight, 0, 0)
@@ -40,7 +41,7 @@ namespace SnapIt.Test.Controls
 
             LeftBorder = new SnapBorder()
             {
-                SplitDirection = SplitDirection.Vertically,
+                SplitDirection = SplitDirection.Vertical,
                 IsDraggable = false,
                 Height = MainGrid.ActualHeight,
                 Margin = new Thickness(0, 0, 0, 0)
@@ -48,7 +49,7 @@ namespace SnapIt.Test.Controls
 
             RightBorder = new SnapBorder()
             {
-                SplitDirection = SplitDirection.Vertically,
+                SplitDirection = SplitDirection.Vertical,
                 IsDraggable = false,
                 Height = MainGrid.ActualHeight,
                 Margin = new Thickness(MainGrid.ActualWidth, 0, 0, 0)
@@ -58,6 +59,15 @@ namespace SnapIt.Test.Controls
             MainGrid.Children.Add(BottomBorder);
             MainGrid.Children.Add(LeftBorder);
             MainGrid.Children.Add(RightBorder);
+
+            snapBorder = new SnapBorder()
+            {
+                SplitDirection = SplitDirection.Vertical,
+                Height = MainGrid.ActualHeight,
+                Margin = new Thickness(MainGrid.ActualWidth * 0.4, 0, 0, 0)
+            };
+
+            MainGrid.Children.Add(snapBorder);
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -70,6 +80,9 @@ namespace SnapIt.Test.Controls
             LeftBorder.Height = MainGrid.ActualHeight;
             RightBorder.Height = MainGrid.ActualHeight;
             RightBorder.Margin = new Thickness(MainGrid.ActualWidth, 0, 0, 0);
+
+            snapBorder.Height = MainGrid.ActualHeight;
+            snapBorder.Margin = new Thickness(MainGrid.ActualWidth * 0.4, 0, 0, 0);
         }
 
         public void AddBorder(SnapBorder snapBorder)
@@ -85,25 +98,39 @@ namespace SnapIt.Test.Controls
 
         private void GenerateSnapAreas()
         {
-            var areas = this.FindChildren<SnapArea>();
-            foreach (var area in areas)
-            {
-                MainGrid.Children.Remove(area);
-            }
+            MainAreas.Children.Clear();
 
             var borders = this.FindChildren<SnapBorder>();
 
-            var lines = borders.Select(b => b.GetLine()).ToList();
+            Settings settings = new Settings
+            {
+                Size = new System.Drawing.Size((int)ActualWidth, (int)ActualHeight),
+                Segments = new List<Segment>()
+            };
 
-            var rectangles = SweepLine.GetRectangles(lines);
+            foreach (var border in borders)
+            {
+                var line = border.GetLine();
+
+                settings.Segments.Add(new Segment
+                {
+                    Location = new System.Drawing.Point((int)line.Start.X, (int)line.Start.Y),
+                    EndLocation = new System.Drawing.Point((int)line.End.X, (int)line.End.Y),
+                    Orientation = border.SplitDirection
+                });
+            }
+
+            settings.Calculate();
+
+            var rectangles = settings.GetRectangles();
 
             foreach (var rectangle in rectangles)
             {
-                MainGrid.Children.Add(new SnapArea()
+                MainAreas.Children.Add(new SnapArea()
                 {
-                    Margin = new Thickness(rectangle.TopRight.X, rectangle.TopRight.Y, 0, 0),
-                    Width = rectangle.BottomLeft.X - rectangle.TopRight.X,
-                    Height = rectangle.BottomLeft.Y - rectangle.TopRight.Y,
+                    Margin = new Thickness(rectangle.TopLeft.X, rectangle.TopLeft.Y, 0, 0),
+                    Width = rectangle.Width,
+                    Height = rectangle.Height,
                     SnapControl = this
                 });
             }

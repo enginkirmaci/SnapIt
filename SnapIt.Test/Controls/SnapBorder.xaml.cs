@@ -12,7 +12,10 @@ using SnapIt.Test.Library;
 
 namespace SnapIt.Test.Controls
 {
-    public class SnapBorder : Border
+    /// <summary>
+    /// Interaction logic for SnapBorder.xaml
+    /// </summary>
+    public partial class SnapBorder : UserControl
     {
         private const int THICKNESS = 16;
 
@@ -24,11 +27,14 @@ namespace SnapIt.Test.Controls
 
         public SnapBorder()
         {
+            InitializeComponent();
+
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
-            Background = new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
-            BorderBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
-            BorderThickness = new Thickness(1);
+
+            Border.Background = new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
+            Border.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
+            Border.BorderThickness = new Thickness(1);
         }
 
         protected override void OnRender(DrawingContext dc)
@@ -37,20 +43,23 @@ namespace SnapIt.Test.Controls
 
             if (IsDraggable)
             {
-                if (SplitDirection == SplitDirection.Horizontally)
+                if (SplitDirection == SplitDirection.Horizontal)
                 {
-                    Cursor = Cursors.SizeNS;
-                    Height = THICKNESS;
+                    Border.Cursor = Cursors.SizeNS;
+                    Border.Height = THICKNESS;
+                    Border.HorizontalAlignment = HorizontalAlignment.Stretch;
                 }
                 else
                 {
-                    Cursor = Cursors.SizeWE;
-                    Width = THICKNESS;
+                    Border.Cursor = Cursors.SizeWE;
+                    Border.Width = THICKNESS;
+                    Border.VerticalAlignment = VerticalAlignment.Stretch;
                 }
             }
             else
             {
-                BorderThickness = new Thickness(1, 1, 0, 0);
+                Border.BorderThickness = new Thickness(0, 0, 0, 0);
+                BorderControls.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -68,6 +77,8 @@ namespace SnapIt.Test.Controls
 
                 Opacity = 0.6;
 
+                Cursor = Border.Cursor;
+
                 e.Handled = true;
             }
         }
@@ -82,6 +93,7 @@ namespace SnapIt.Test.Controls
 
         private void StopDragging()
         {
+            Cursor = Cursors.Arrow;
             isInDrag = false;
             ReleaseMouseCapture();
             Opacity = 1;
@@ -99,7 +111,7 @@ namespace SnapIt.Test.Controls
 
                 if (!IsCollided(p))
                 {
-                    if (SplitDirection == SplitDirection.Horizontally)
+                    if (SplitDirection == SplitDirection.Horizontal)
                     {
                         if (Math.Abs(Margin.Top - p.Y) > THICKNESS - 1)
                         {
@@ -124,15 +136,15 @@ namespace SnapIt.Test.Controls
 
                     var thisRect = this.GetRect();
 
-                    thisRect = SplitDirection == SplitDirection.Vertically ?
+                    thisRect = SplitDirection == SplitDirection.Vertical ?
                         new Rect(thisRect.X - THICKNESS, thisRect.Y + 1, ActualWidth + THICKNESS * 2, ActualHeight - 2) :
                         new Rect(thisRect.X + 1, thisRect.Y - THICKNESS, ActualWidth - 2, ActualHeight + THICKNESS * 2);
-                    var splitDirection = SplitDirection == SplitDirection.Horizontally ? SplitDirection.Vertically : SplitDirection.Horizontally;
+                    var splitDirection = SplitDirection == SplitDirection.Horizontal ? SplitDirection.Vertical : SplitDirection.Horizontal;
 
                     var nearBorders = GetCollisions(thisRect, splitDirection);
                     foreach (var near in nearBorders.Where(b => b.IsDraggable))
                     {
-                        if (SplitDirection == SplitDirection.Horizontally)
+                        if (SplitDirection == SplitDirection.Horizontal)
                         {
                             if (Margin.Top > near.Margin.Top) //top
                             {
@@ -179,16 +191,16 @@ namespace SnapIt.Test.Controls
 
         public SnapLine GetLine()
         {
-            return SplitDirection == SplitDirection.Horizontally ?
+            return SplitDirection == SplitDirection.Horizontal ?
                 new SnapLine
                 {
                     Start = new SnapPoint(Margin.Left, Margin.Top),
-                    End = new SnapPoint(Margin.Left + ActualWidth, Margin.Top)
+                    End = new SnapPoint(Margin.Left + Width, Margin.Top)
                 } :
                 new SnapLine
                 {
                     Start = new SnapPoint(Margin.Left, Margin.Top),
-                    End = new SnapPoint(Margin.Left, Margin.Top + ActualHeight)
+                    End = new SnapPoint(Margin.Left, Margin.Top + Height)
                 };
         }
 
