@@ -18,6 +18,10 @@ namespace SnapIt.Test.Controls
         private SnapBorder LeftBorder;
         private SnapBorder RightBorder;
         private SnapBorder snapBorder;
+        private SnapBorder snapBorder1;
+        private SnapBorder snapBorder2;
+        private SnapBorder snapBorder3;
+        private SnapBorder snapBorder4;
 
         public SnapControl()
         {
@@ -25,34 +29,22 @@ namespace SnapIt.Test.Controls
 
             TopBorder = new SnapBorder()
             {
-                SplitDirection = SplitDirection.Horizontal,
-                IsDraggable = false,
-                Width = MainGrid.ActualWidth,
-                Margin = new Thickness(0, 0, 0, 0)
+                IsDraggable = false
             };
 
             BottomBorder = new SnapBorder()
             {
-                SplitDirection = SplitDirection.Horizontal,
-                IsDraggable = false,
-                Width = MainGrid.ActualWidth,
-                Margin = new Thickness(0, MainGrid.ActualHeight, 0, 0)
+                IsDraggable = false
             };
 
             LeftBorder = new SnapBorder()
             {
-                SplitDirection = SplitDirection.Vertical,
-                IsDraggable = false,
-                Height = MainGrid.ActualHeight,
-                Margin = new Thickness(0, 0, 0, 0)
+                IsDraggable = false
             };
 
             RightBorder = new SnapBorder()
             {
-                SplitDirection = SplitDirection.Vertical,
-                IsDraggable = false,
-                Height = MainGrid.ActualHeight,
-                Margin = new Thickness(MainGrid.ActualWidth, 0, 0, 0)
+                IsDraggable = false
             };
 
             MainGrid.Children.Add(TopBorder);
@@ -60,29 +52,32 @@ namespace SnapIt.Test.Controls
             MainGrid.Children.Add(LeftBorder);
             MainGrid.Children.Add(RightBorder);
 
-            snapBorder = new SnapBorder()
-            {
-                SplitDirection = SplitDirection.Vertical,
-                Height = MainGrid.ActualHeight,
-                Margin = new Thickness(MainGrid.ActualWidth * 0.4, 0, 0, 0)
-            };
-
+            snapBorder = new SnapBorder();
+            snapBorder1 = new SnapBorder();
+            snapBorder2 = new SnapBorder();
+            snapBorder3 = new SnapBorder();
+            snapBorder4 = new SnapBorder();
             MainGrid.Children.Add(snapBorder);
+            MainGrid.Children.Add(snapBorder1);
+            MainGrid.Children.Add(snapBorder2);
+            MainGrid.Children.Add(snapBorder3);
+            MainGrid.Children.Add(snapBorder4);
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
 
-            TopBorder.Width = MainGrid.ActualWidth;
-            BottomBorder.Width = MainGrid.ActualWidth;
-            BottomBorder.Margin = new Thickness(0, MainGrid.ActualHeight, 0, 0);
-            LeftBorder.Height = MainGrid.ActualHeight;
-            RightBorder.Height = MainGrid.ActualHeight;
-            RightBorder.Margin = new Thickness(MainGrid.ActualWidth, 0, 0, 0);
+            TopBorder.SetPos(new Point(0, -SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
+            BottomBorder.SetPos(new Point(0, MainGrid.ActualHeight - SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
+            LeftBorder.SetPos(new Point(-SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
+            RightBorder.SetPos(new Point(MainGrid.ActualWidth - SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
 
-            snapBorder.Height = MainGrid.ActualHeight;
-            snapBorder.Margin = new Thickness(MainGrid.ActualWidth * 0.4, 0, 0, 0);
+            snapBorder.SetPos(new Point(150, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
+            snapBorder1.SetPos(new Point(500, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
+            snapBorder2.SetPos(new Point(150, 100), new Size(350, 0), SplitDirection.Horizontal);
+            snapBorder3.SetPos(new Point(275, 100), new Size(0, MainGrid.ActualHeight - 100), SplitDirection.Vertical);
+            snapBorder4.SetPos(new Point(275, 0), new Size(0, 100), SplitDirection.Vertical);
         }
 
         public void AddBorder(SnapBorder snapBorder)

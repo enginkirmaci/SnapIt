@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using SnapIt.Library.Entities;
-using SnapIt.Test.Extensions;
 
 namespace SnapIt.Test.Controls
 {
@@ -53,6 +52,13 @@ namespace SnapIt.Test.Controls
 
         private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
         {
+        }
+
+        public Rect GetRect()
+        {
+            return new Rect(
+                new Point(Margin.Left, Margin.Top),
+                new Size(ActualWidth, ActualHeight));
         }
     }
 }

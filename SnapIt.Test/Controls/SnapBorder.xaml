@@ -8,16 +8,20 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <Grid Background="Aqua">
+    <Grid>
         <Border
             x:Name="Border"
             HorizontalAlignment="Center"
             VerticalAlignment="Center" />
+        <Border
+            x:Name="ReferenceBorder"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top" />
         <Grid x:Name="BorderControls">
             <Button
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Content="   asd   " />
+                Content="    Remove    " />
         </Grid>
     </Grid>
 </UserControl>
