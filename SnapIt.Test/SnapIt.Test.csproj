@@ -69,6 +69,7 @@
       <DependentUpon>SnapControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\FrameworkElementExtensions.cs" />
+    <Compile Include="Extensions\SnapBorderExtensions.cs" />
     <Compile Include="FindRectangle\Intersection.cs" />
     <Compile Include="FindRectangle\Rectangle.cs" />
     <Compile Include="FindRectangle\Segment.cs" />

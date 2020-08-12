@@ -17,11 +17,11 @@
             x:Name="ReferenceBorder"
             HorizontalAlignment="Left"
             VerticalAlignment="Top" />
-        <Grid x:Name="BorderControls">
+        <!--<Grid x:Name="BorderControls">
             <Button
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Content="    Remove    " />
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>
