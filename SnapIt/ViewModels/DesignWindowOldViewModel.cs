@@ -8,15 +8,15 @@ using SnapIt.Views;
 
 namespace SnapIt.ViewModels
 {
-    public class DesignWindowViewModel : BindableBase
+    public class DesignWindowOldViewModel : BindableBase
     {
         private readonly ISnapService snapService;
 
         public SnapScreen SnapScreen { get; set; }
         public Layout Layout { get; set; }
         public SnapAreaTheme Theme { get; set; }
-        public SnapArea MainSnapArea { get; set; }
-        public DesignWindow Window { get; set; }
+        public SnapAreaOld MainSnapArea { get; set; }
+        public DesignWindowOld Window { get; set; }
 
         //public DelegateCommand<Window> SourceInitializedCommand { get; }
         public DelegateCommand<object> LoadedCommand { get; }
@@ -24,7 +24,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand SaveLayoutCommand { get; }
         public DelegateCommand CloseLayoutCommand { get; }
 
-        public DesignWindowViewModel(ISnapService snapService)
+        public DesignWindowOldViewModel(ISnapService snapService)
         {
             this.snapService = snapService;
 
@@ -56,7 +56,7 @@ namespace SnapIt.ViewModels
             {
                 snapService.Release();
 
-                MainSnapArea = mainSnapArea as SnapArea;
+                MainSnapArea = mainSnapArea as SnapAreaOld;
                 MainSnapArea.LayoutArea = Layout.LayoutArea;
                 MainSnapArea.Theme = Theme;
 

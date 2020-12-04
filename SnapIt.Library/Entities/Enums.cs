@@ -19,8 +19,8 @@ namespace SnapIt.Library.Entities
 
     public enum SplitDirection
     {
-        Vertically,
-        Horizantally
+        Vertical,
+        Horizontal
     }
 
     public enum MouseButton

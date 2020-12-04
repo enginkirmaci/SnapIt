@@ -163,7 +163,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Controls:SnapArea
+                            <Controls:SnapAreaOld
                                 Width="188"
                                 Height="156"
                                 IsMergeIconHidden="True"

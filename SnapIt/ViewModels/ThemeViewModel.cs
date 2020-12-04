@@ -21,7 +21,7 @@ namespace SnapIt.ViewModels
 
         private SnapAreaTheme theme;
         private BitmapImage backgroundImage;
-        private SnapArea snapArea;
+        private SnapAreaOld snapArea;
         private bool openApplyChangesBar;
 
         public Layout Layout { get; set; }
@@ -52,7 +52,7 @@ namespace SnapIt.ViewModels
             {
                 var grid = mainSnapGrid as DependencyObject;
 
-                snapArea = grid.FindChildren<SnapArea>().FirstOrDefault();
+                snapArea = grid.FindChildren<SnapAreaOld>().FirstOrDefault();
 
                 if (snapArea != null)
                 {

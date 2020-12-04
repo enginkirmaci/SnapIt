@@ -29,7 +29,7 @@ namespace SnapIt.Library.Entities
 
         public LayoutArea LayoutArea { get => layoutArea; set => SetProperty(ref layoutArea, value); }
 
-        public void GenerateLayoutArea(SnapArea snapArea)
+        public void GenerateLayoutArea(SnapAreaOld snapArea)
         {
             LayoutArea = new LayoutArea();
             snapArea.GetLayoutAreas(LayoutArea);

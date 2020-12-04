@@ -95,6 +95,8 @@ namespace SnapIt.ViewModels
 
             NewLayoutCommand = new DelegateCommand(() =>
             {
+                ////////////// OLD LAYOUT DESIGNER //////////////
+
                 var layout = new Layout
                 {
                     Guid = Guid.NewGuid(),
@@ -106,7 +108,7 @@ namespace SnapIt.ViewModels
                 Layouts.Insert(0, layout);
                 PopupLayout = Layouts.FirstOrDefault(i => i.Guid == layout.Guid);
 
-                var designWindow = new DesignWindow(winApiService);
+                var designWindow = new DesignWindowOld(winApiService);
                 designWindow.Closing += DesignWindow_Closing;
                 designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
                 designWindow.Show();
@@ -138,7 +140,7 @@ namespace SnapIt.ViewModels
             {
                 PopupLayout = layout;
 
-                var designWindow = new DesignWindow(winApiService);
+                var designWindow = new DesignWindowOld(winApiService);
                 designWindow.Closing += DesignWindow_Closing;
                 designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
                 designWindow.Show();

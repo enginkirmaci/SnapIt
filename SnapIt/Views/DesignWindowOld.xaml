@@ -1,12 +1,11 @@
 ﻿<Window
-    x:Class="SnapIt.Views.DesignWindow"
+    x:Class="SnapIt.Views.DesignWindowOld"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:local="clr-namespace:SnapIt.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
@@ -14,7 +13,7 @@
     Title="Snap It - Layout Designer"
     Width="600"
     Height="450"
-    d:DataContext="{d:DesignInstance design:DesignWindowDesignView,
+    d:DataContext="{d:DesignInstance design:DesignWindowOldDesignView,
                                      IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
@@ -35,16 +34,14 @@
             <i:InvokeCommandAction Command="{Binding SourceInitializedCommand}" CommandParameter="{Binding ElementName=DesignWindowView}" />
         </i:EventTrigger>-->
     </i:Interaction.Triggers>
+
     <Grid>
         <Controls:SnapAreaOld
-            x:Name="MainSnapAreaOld"
+            x:Name="MainSnapArea"
             IsDesignMode="True"
             IsMergeIconHidden="True"
             LayoutArea="{Binding Layout.LayoutArea}"
             Theme="{Binding Theme}" />
-
-        <Controls:SnapControl />
-
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Top"

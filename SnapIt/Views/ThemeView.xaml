@@ -52,7 +52,7 @@
                             <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill" />
                         </Grid.Background>
 
-                        <Controls:SnapArea LayoutArea="{Binding Layout.LayoutArea}" Theme="{Binding Theme, Mode=TwoWay}" />
+                        <Controls:SnapAreaOld LayoutArea="{Binding Layout.LayoutArea}" Theme="{Binding Theme, Mode=TwoWay}" />
                     </Grid>
                 </StackPanel>
 

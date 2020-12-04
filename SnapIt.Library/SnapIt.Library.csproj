@@ -57,6 +57,15 @@
     <Compile Include="Controls\SnapArea.xaml.cs">
       <DependentUpon>SnapArea.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SnapAreaOld.xaml.cs">
+      <DependentUpon>SnapAreaOld.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SnapBorder.xaml.cs">
+      <DependentUpon>SnapBorder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SnapControl.xaml.cs">
+      <DependentUpon>SnapControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\EqualVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\InputDeviceConverter.cs" />
@@ -70,8 +79,17 @@
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\SnapAreaInfo.cs" />
     <Compile Include="Entities\SnapAreaTheme.cs" />
+    <Compile Include="Entities\SweepLine.cs" />
+    <Compile Include="Extensions\SnapBorderExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="FindRectangle\Intersection.cs" />
+    <Compile Include="FindRectangle\Rectangle.cs" />
+    <Compile Include="FindRectangle\Segment.cs" />
+    <Compile Include="FindRectangle\SegmentPoint.cs" />
+    <Compile Include="FindRectangle\SegmentPointConnections.cs" />
+    <Compile Include="FindRectangle\Settings.cs" />
+    <Compile Include="FindRectangle\sSize.cs" />
     <Compile Include="Services\FileOperationService.cs" />
     <Compile Include="Services\IFileOperationService.cs" />
     <Compile Include="Controls\SnapScreen.cs" />
@@ -142,6 +160,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SnapArea.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SnapAreaOld.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SnapBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SnapControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
