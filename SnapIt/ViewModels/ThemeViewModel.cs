@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media.Imaging;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace SnapIt.ViewModels
 {
@@ -90,7 +90,7 @@ namespace SnapIt.ViewModels
                         {
                             Width=3,
                             Column=1,
-                            Merged= true,
+                            //Merged= true,
                             Areas = new List<LayoutArea>
                             {
                                 new LayoutArea

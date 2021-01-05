@@ -1,22 +1,22 @@
-﻿using System.Windows.Media;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 using SnapIt.Views;
+using System.Windows.Media;
 
 namespace SnapIt.ViewModels
 {
-    public class DesignWindowOldViewModel : BindableBase
+    public class DesignWindowViewModel : BindableBase
     {
         private readonly ISnapService snapService;
 
         public SnapScreen SnapScreen { get; set; }
         public Layout Layout { get; set; }
         public SnapAreaTheme Theme { get; set; }
-        public SnapAreaOld MainSnapArea { get; set; }
-        public DesignWindowOld Window { get; set; }
+        public SnapArea MainSnapArea { get; set; }
+        public DesignWindow Window { get; set; }
 
         //public DelegateCommand<Window> SourceInitializedCommand { get; }
         public DelegateCommand<object> LoadedCommand { get; }
@@ -24,7 +24,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand SaveLayoutCommand { get; }
         public DelegateCommand CloseLayoutCommand { get; }
 
-        public DesignWindowOldViewModel(ISnapService snapService)
+        public DesignWindowViewModel(ISnapService snapService)
         {
             this.snapService = snapService;
 
@@ -33,37 +33,22 @@ namespace SnapIt.ViewModels
                 HighlightColor = Color.FromArgb(200, 33, 33, 33),
                 OverlayColor = Color.FromArgb(50, 99, 99, 99),
                 BorderColor = Color.FromArgb(200, 200, 200, 200),
-                //BorderThickness = 1,
                 Opacity = 1
             };
-
-            //SourceInitializedCommand = new DelegateCommand<Window>((window) =>
-            //{
-            //	var wih = new WindowInteropHelper(window);
-            //	var activeWindow = new ActiveWindow
-            //	{
-            //		Handle = wih.Handle
-            //	};
-
-            //	User32Test.MoveWindow(activeWindow,
-            //						  SnapScreen.Base.WorkingArea.Left,
-            //						  SnapScreen.Base.WorkingArea.Top,
-            //						  SnapScreen.Base.WorkingArea.Width,
-            //						  SnapScreen.Base.WorkingArea.Height);
-            //});
 
             LoadedCommand = new DelegateCommand<object>((mainSnapArea) =>
             {
                 snapService.Release();
 
-                MainSnapArea = mainSnapArea as SnapAreaOld;
-                MainSnapArea.LayoutArea = Layout.LayoutArea;
-                MainSnapArea.Theme = Theme;
+                MainSnapArea = mainSnapArea as SnapArea;
+                //TODO here
+                //MainSnapArea.LayoutArea = Layout.LayoutArea;
+                //MainSnapArea.Theme = Theme;
 
-                if (MainSnapArea.LayoutArea == null)
-                {
-                    MainSnapArea.LayoutArea = new LayoutArea();
-                }
+                //if (MainSnapArea.LayoutArea == null)
+                //{
+                //    MainSnapArea.LayoutArea = new LayoutArea();
+                //}
             });
 
             SaveLayoutCommand = new DelegateCommand(() =>

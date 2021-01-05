@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Prism.Commands;
+using SnapIt.Library.Entities;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
-using Prism.Commands;
-using SnapIt.Library.Entities;
 
 namespace SnapIt.ViewModels.DesignTime
 {
@@ -49,7 +49,7 @@ namespace SnapIt.ViewModels.DesignTime
                         {
                             Width=3,
                             Column=1,
-                            Merged= true,
+                            //Merged= true,
                             Areas = new List<LayoutArea>
                             {
                                 new LayoutArea
@@ -94,7 +94,7 @@ namespace SnapIt.ViewModels.DesignTime
                         {
                             Width=3,
                             Column=1,
-                            Merged= true,
+                            //Merged= true,
                             Areas = new List<LayoutArea>
                             {
                                 new LayoutArea

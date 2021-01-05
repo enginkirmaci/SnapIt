@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using SnapIt.Library.Entities;
+using System.Windows;
 using System.Windows.Controls;
-using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Controls
 {
@@ -10,6 +10,35 @@ namespace SnapIt.Library.Controls
     public partial class SnapArea : UserControl
     {
         public SnapControl SnapControl { get; set; }
+
+        public SnapAreaTheme Theme
+        {
+            get => (SnapAreaTheme)GetValue(ThemeProperty);
+            set => SetValue(ThemeProperty, value);
+        }
+
+        public static readonly DependencyProperty ThemeProperty
+         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapAreaOld),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(ThemePropertyChanged)
+           });
+
+        private static void ThemePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapArea = (SnapArea)d;
+            snapArea.Theme = (SnapAreaTheme)e.NewValue;
+
+            if (snapArea.Theme != null)
+            {
+                snapArea.Area.Opacity = snapArea.Theme.Opacity;
+                snapArea.Area.Background = snapArea.Theme.OverlayBrush;
+                snapArea.Border.BorderBrush = snapArea.Theme.BorderBrush;
+                snapArea.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
+                snapArea.Border.Visibility = Visibility.Visible;
+            }
+        }
 
         public SnapArea()
         {

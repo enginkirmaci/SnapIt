@@ -22,8 +22,7 @@ namespace SnapIt.Library.Controls
         public SplitDirection SplitDirection { get; set; }
         public bool IsDraggable { get; set; } = true;
 
-        private bool isInDrag = false;
-        private Point anchorPoint;
+        private Point _positionInBlock;
 
         public SnapBorder()
         {
@@ -39,43 +38,37 @@ namespace SnapIt.Library.Controls
             ReferenceBorder.Background = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
         }
 
-        protected override void OnRender(DrawingContext dc)
-        {
-            base.OnRender(dc);
-        }
-
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
 
             if (IsDraggable)
             {
-                isInDrag = true;
-
-                anchorPoint = e.GetPosition(null);
+                _positionInBlock = Mouse.GetPosition(this);
 
                 CaptureMouse();
 
                 Opacity = 0.6;
 
                 Cursor = Border.Cursor;
-
-                e.Handled = true;
             }
         }
 
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            base.OnMouseLeftButtonUp(e);
+            base.OnMouseUp(e);
 
             StopDragging();
-            e.Handled = true;
         }
 
         private void StopDragging()
         {
             Cursor = Cursors.Arrow;
-            isInDrag = false;
             ReleaseMouseCapture();
             Opacity = 1;
         }
@@ -84,37 +77,18 @@ namespace SnapIt.Library.Controls
         {
             base.OnMouseMove(e);
 
-            if (isInDrag)
+            if (IsMouseCaptured)
             {
-                var currentPoint = e.GetPosition(null);
+                // get the parent container
+                var container = VisualTreeHelper.GetParent(this) as UIElement;
 
-                var p = new Point(currentPoint.X - anchorPoint.X + Margin.Left, currentPoint.Y - anchorPoint.Y + Margin.Top);
+                // get the position within the container
+                var mousePosition = e.GetPosition(container);
+
+                var p = new Point(mousePosition.X - _positionInBlock.X, mousePosition.Y - _positionInBlock.Y);
 
                 if (!IsCollided(p))
                 {
-                    if (SplitDirection == SplitDirection.Horizontal)
-                    {
-                        if (Math.Abs(Margin.Top - p.Y) > THICKNESS - 1)
-                        {
-                            return;
-                        }
-
-                        Margin = new Thickness(Margin.Left, p.Y, 0, 0);
-                    }
-                    else
-                    {
-                        if (Math.Abs(Margin.Left - p.X) > THICKNESS - 1)
-                        {
-                            return;
-                        }
-
-                        Margin = new Thickness(p.X, Margin.Top, 0, 0);
-                    }
-
-                    anchorPoint = currentPoint;
-
-                    //////////////////////////////////////////////////
-
                     var thisRect = this.GetRect();
 
                     foreach (var col in Parent.FindChildren<SnapBorder>())
@@ -133,13 +107,13 @@ namespace SnapIt.Library.Controls
                     {
                         if (SplitDirection == SplitDirection.Vertical && near.SplitDirection == SplitDirection.Horizontal)
                         {
-                            if (Margin.Left >= near.Margin.Left + near.ActualWidth - THICKNESS) //left
+                            if (Margin.Left >= near.Margin.Left + near.Width - THICKNESS) //left
                             {
-                                near.Width = Math.Abs(Margin.Left - near.Margin.Left + THICKNESSHALF);
+                                near.Width = Math.Abs(p.X - near.Margin.Left + THICKNESSHALF);
                             }
                             else if (Margin.Left < near.Margin.Left) //right
                             {
-                                var newWidth = Margin.Left - near.Margin.Left + THICKNESSHALF;
+                                var newWidth = p.X - near.Margin.Left + THICKNESSHALF;
 
                                 //try catch here
                                 near.Width -= newWidth;
@@ -148,19 +122,30 @@ namespace SnapIt.Library.Controls
                         }
                         else if (SplitDirection == SplitDirection.Horizontal && near.SplitDirection == SplitDirection.Vertical)
                         {
-                            if (Margin.Top >= near.Margin.Top + near.ActualHeight - THICKNESS) //top
+                            if (Margin.Top >= near.Margin.Top + near.Height - THICKNESS) //top
                             {
-                                near.Height = Math.Abs(Margin.Top - near.Margin.Top + THICKNESSHALF);
+                                near.Height = Math.Abs(p.Y - near.Margin.Top + THICKNESSHALF);
                             }
                             else if (Margin.Top < near.Margin.Top)  //bottom
                             {
-                                var newHeight = Margin.Top - near.Margin.Top + THICKNESSHALF;
+                                var newHeight = p.Y - near.Margin.Top + THICKNESSHALF;
 
                                 //try catch here
                                 near.Height -= newHeight;
                                 near.Margin = new Thickness(near.Margin.Left, near.Margin.Top + newHeight, 0, 0);
                             }
                         }
+                    }
+
+                    //////////////////////////////////////////////////
+
+                    if (SplitDirection == SplitDirection.Horizontal)
+                    {
+                        Margin = new Thickness(Margin.Left, p.Y, 0, 0);
+                    }
+                    else
+                    {
+                        Margin = new Thickness(p.X, Margin.Top, 0, 0);
                     }
                 }
                 else

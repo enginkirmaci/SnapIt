@@ -92,7 +92,7 @@
     <Compile Include="ViewModels\DesignTime\MainWindowDesignViewModel.cs" />
     <Compile Include="ViewModels\DesignTime\MouseSettingsDesignView.cs" />
     <Compile Include="ViewModels\DesignTime\ThemeDesignView.cs" />
-    <Compile Include="ViewModels\DesignWindowOldViewModel.cs" />
+    <Compile Include="ViewModels\DesignWindowViewModel.cs" />
     <Compile Include="ViewModels\LayoutViewModel.cs" />
     <Compile Include="ViewModels\DesignTime\LayoutDesignView.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -108,9 +108,6 @@
     </Compile>
     <Compile Include="Views\DesignWindow.xaml.cs">
       <DependentUpon>DesignWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DesignWindowOld.xaml.cs">
-      <DependentUpon>DesignWindowOld.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\KeyboardSettingsView.xaml.cs">
       <DependentUpon>KeyboardSettingsView.xaml</DependentUpon>
@@ -152,10 +149,6 @@
     <Page Include="Views\DesignWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DesignWindowOld.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\KeyboardSettingsView.xaml">
       <SubType>Designer</SubType>

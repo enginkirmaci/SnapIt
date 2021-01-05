@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
@@ -201,7 +201,7 @@ namespace SnapIt.Library.Controls
                         layoutArea.Areas = new List<LayoutArea>();
                     }
 
-                    layoutArea.Merged = HasMergedSnapArea;
+                    //layoutArea.Merged = HasMergedSnapArea;
                     layoutArea.Areas.Add(childLayoutArea);
                 }
             }
@@ -261,7 +261,7 @@ namespace SnapIt.Library.Controls
                     SetColumnRow(snapArea, area.Column, area.Row);
                 }
 
-                if (LayoutArea.Merged)
+                //if (LayoutArea.Merged)
                 {
                     AddMergedSnapArea();
 

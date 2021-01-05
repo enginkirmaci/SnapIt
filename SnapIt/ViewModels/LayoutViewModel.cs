@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
-using System.Windows.Media;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 using SnapIt.Views;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Forms;
+using System.Windows.Media;
 
 namespace SnapIt.ViewModels
 {
@@ -108,7 +108,7 @@ namespace SnapIt.ViewModels
                 Layouts.Insert(0, layout);
                 PopupLayout = Layouts.FirstOrDefault(i => i.Guid == layout.Guid);
 
-                var designWindow = new DesignWindowOld(winApiService);
+                var designWindow = new DesignWindow(winApiService);
                 designWindow.Closing += DesignWindow_Closing;
                 designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
                 designWindow.Show();
@@ -140,7 +140,7 @@ namespace SnapIt.ViewModels
             {
                 PopupLayout = layout;
 
-                var designWindow = new DesignWindowOld(winApiService);
+                var designWindow = new DesignWindow(winApiService);
                 designWindow.Closing += DesignWindow_Closing;
                 designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
                 designWindow.Show();

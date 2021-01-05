@@ -59,44 +59,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\SnapArea.xaml.cs">
-      <DependentUpon>SnapArea.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SnapBorder.xaml.cs">
-      <DependentUpon>SnapBorder.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SnapControl.xaml.cs">
-      <DependentUpon>SnapControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Extensions\SnapBorderExtensions.cs" />
-    <Compile Include="FindRectangle\Intersection.cs" />
-    <Compile Include="FindRectangle\Rectangle.cs" />
-    <Compile Include="FindRectangle\Segment.cs" />
-    <Compile Include="FindRectangle\SegmentPoint.cs" />
-    <Compile Include="FindRectangle\SegmentPointConnections.cs" />
-    <Compile Include="FindRectangle\Settings.cs" />
-    <Compile Include="FindRectangle\sSize.cs" />
-    <Compile Include="Library\Bindable.cs" />
-    <Compile Include="Library\DependencyObjectExtensions.cs" />
-    <Compile Include="Library\Enums.cs" />
-    <Compile Include="Library\Layout.cs" />
-    <Compile Include="Library\LayoutArea.cs" />
-    <Compile Include="Library\SweepLine.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\SnapArea.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SnapBorder.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SnapControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -132,6 +97,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SnapIt.Library\SnapIt.Library.csproj">
+      <Project>{6ae4f0c8-0283-4d08-838e-072e6d55f878}</Project>
+      <Name>SnapIt.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,6 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SnapIt.Library.Controls;
+using System;
 
 namespace SnapIt.Library.Entities
 {
@@ -29,10 +29,11 @@ namespace SnapIt.Library.Entities
 
         public LayoutArea LayoutArea { get => layoutArea; set => SetProperty(ref layoutArea, value); }
 
-        public void GenerateLayoutArea(SnapAreaOld snapArea)
+        public void GenerateLayoutArea(SnapArea snapArea)
         {
-            LayoutArea = new LayoutArea();
-            snapArea.GetLayoutAreas(LayoutArea);
+            //TODO here
+            //LayoutArea = new LayoutArea();
+            //snapArea.GetLayoutAreas(LayoutArea);
         }
     }
 }

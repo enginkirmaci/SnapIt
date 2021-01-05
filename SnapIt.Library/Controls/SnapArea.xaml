@@ -4,18 +4,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SnapIt.Library.Controls"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     HorizontalAlignment="Left"
     VerticalAlignment="Top"
-    d:DesignHeight="400"
-    d:DesignWidth="400"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
     mc:Ignorable="d">
     <Grid>
         <Border
             x:Name="Border"
-            BorderBrush="#FFC8C8C8"
-            BorderThickness="1" />
-        <Grid x:Name="Area" Background="#7F696969">
+            BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
+            BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
+        <Grid x:Name="Area" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
             <TextBlock
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -26,15 +27,16 @@
                 <StackPanel
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Orientation="Vertical">
+                    Orientation="Horizontal">
                     <Button
                         x:Name="SplitVertically"
                         Margin="2"
                         Padding="12,2"
                         Background="White"
                         Click="SplitVertically_Click"
-                        Foreground="Black">
-                        Vertical
+                        Foreground="Black"
+                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                        <materialDesign:PackIcon Kind="ArrowSplitVertical" />
                     </Button>
 
                     <Button
@@ -43,8 +45,9 @@
                         Padding="12,2"
                         Background="White"
                         Click="SplitHorizantally_Click"
-                        Foreground="Black">
-                        Horizantal
+                        Foreground="Black"
+                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                        <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
                     </Button>
 
                     <Button
@@ -53,8 +56,9 @@
                         Padding="12,2"
                         Background="White"
                         Click="RemoveSnapArea_Click"
-                        Foreground="Black">
-                        Remove
+                        Foreground="Black"
+                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                        <materialDesign:PackIcon Kind="Remove" />
                     </Button>
                 </StackPanel>
             </Grid>

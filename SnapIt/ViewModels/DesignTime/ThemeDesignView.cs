@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using SnapIt.Library.Entities;
+﻿using SnapIt.Library.Entities;
+using System.Collections.Generic;
 
 namespace SnapIt.ViewModels.DesignTime
 {
@@ -29,7 +29,7 @@ namespace SnapIt.ViewModels.DesignTime
                         {
                             Width=3,
                             Column=1,
-                            Merged= true,
+                            //Merged= true,
                             Areas = new List<LayoutArea>
                             {
                                 new LayoutArea

@@ -37,11 +37,11 @@
     </i:Interaction.Triggers>
     <Grid>
         <Controls:SnapAreaOld
-            x:Name="MainSnapAreaOld"
             IsDesignMode="True"
             IsMergeIconHidden="True"
             LayoutArea="{Binding Layout.LayoutArea}"
-            Theme="{Binding Theme}" />
+            Theme="{Binding Theme}"
+            Visibility="Hidden" />
 
         <Controls:SnapControl />
 
