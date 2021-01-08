@@ -1,6 +1,6 @@
-﻿using SnapIt.Library.Entities;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Controls
 {
@@ -18,7 +18,7 @@ namespace SnapIt.Library.Controls
         }
 
         public static readonly DependencyProperty ThemeProperty
-         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapAreaOld),
+         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapArea),
            new FrameworkPropertyMetadata()
            {
                BindsTwoWayByDefault = true,
@@ -34,15 +34,18 @@ namespace SnapIt.Library.Controls
             {
                 snapArea.Area.Opacity = snapArea.Theme.Opacity;
                 snapArea.Area.Background = snapArea.Theme.OverlayBrush;
-                snapArea.Border.BorderBrush = snapArea.Theme.BorderBrush;
-                snapArea.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
-                snapArea.Border.Visibility = Visibility.Visible;
+                //snapArea.Border.BorderBrush = snapArea.Theme.BorderBrush;
+                //snapArea.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
+                //snapArea.Border.Visibility = Visibility.Visible;
             }
         }
 
         public SnapArea()
         {
             InitializeComponent();
+
+            DesignPanel.Visibility = Visibility.Hidden;
+            Area.IsMouseDirectlyOverChanged += SnapArea_IsMouseDirectlyOverChanged;
         }
 
         private void SplitVertically_Click(object sender, RoutedEventArgs e)
@@ -73,15 +76,27 @@ namespace SnapIt.Library.Controls
                 size = new Size(rect.Width, double.NaN);
             }
 
-            var newBorder = new SnapBorder();
+            var newBorder = new SnapBorder(new SnapAreaTheme());
             newBorder.SetPos(point, size, direction);
 
             SnapControl.AddBorder(newBorder);
         }
 
-        private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
+        private void SnapArea_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            if (IsMouseOver)
+            {
+                DesignPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                DesignPanel.Visibility = Visibility.Hidden;
+            }
         }
+
+        //private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
+        //{
+        //}
 
         public Rect GetRect()
         {

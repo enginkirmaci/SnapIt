@@ -27,22 +27,22 @@ namespace SnapIt.Library.Controls
         {
             InitializeComponent();
 
-            TopBorder = new SnapBorder()
+            TopBorder = new SnapBorder(new SnapAreaTheme())
             {
                 IsDraggable = false
             };
 
-            BottomBorder = new SnapBorder()
+            BottomBorder = new SnapBorder(new SnapAreaTheme())
             {
                 IsDraggable = false
             };
 
-            LeftBorder = new SnapBorder()
+            LeftBorder = new SnapBorder(new SnapAreaTheme())
             {
                 IsDraggable = false
             };
 
-            RightBorder = new SnapBorder()
+            RightBorder = new SnapBorder(new SnapAreaTheme())
             {
                 IsDraggable = false
             };
@@ -52,11 +52,11 @@ namespace SnapIt.Library.Controls
             MainGrid.Children.Add(LeftBorder);
             MainGrid.Children.Add(RightBorder);
 
-            snapBorder = new SnapBorder();
-            snapBorder1 = new SnapBorder();
-            snapBorder2 = new SnapBorder();
-            snapBorder3 = new SnapBorder();
-            snapBorder4 = new SnapBorder();
+            snapBorder = new SnapBorder(new SnapAreaTheme());
+            snapBorder1 = new SnapBorder(new SnapAreaTheme());
+            snapBorder2 = new SnapBorder(new SnapAreaTheme());
+            snapBorder3 = new SnapBorder(new SnapAreaTheme());
+            snapBorder4 = new SnapBorder(new SnapAreaTheme());
             MainGrid.Children.Add(snapBorder);
             MainGrid.Children.Add(snapBorder1);
             MainGrid.Children.Add(snapBorder2);
@@ -119,6 +119,7 @@ namespace SnapIt.Library.Controls
 
             var rectangles = settings.GetRectangles();
 
+            var theme = new SnapAreaTheme();
             foreach (var rectangle in rectangles)
             {
                 MainAreas.Children.Add(new SnapArea()
@@ -126,7 +127,8 @@ namespace SnapIt.Library.Controls
                     Margin = new Thickness(rectangle.TopLeft.X, rectangle.TopLeft.Y, 0, 0),
                     Width = rectangle.Width,
                     Height = rectangle.Height,
-                    SnapControl = this
+                    SnapControl = this,
+                    Theme = theme
                 });
             }
         }

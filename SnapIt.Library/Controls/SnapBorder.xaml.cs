@@ -14,28 +14,36 @@ namespace SnapIt.Library.Controls
     /// </summary>
     public partial class SnapBorder : UserControl
     {
-        public const int THICKNESS = 16;
-        public const int THICKNESSHALF = 8;
+        public const int THICKNESS = 12;
+        public const int THICKNESSHALF = 6;
         //public const int MAXSIZE = 40;
         //public const int MAXSIZEHALF = 20;
 
         public SplitDirection SplitDirection { get; set; }
         public bool IsDraggable { get; set; } = true;
 
+        public SnapAreaTheme Theme { get; set; }
+
         private Point _positionInBlock;
 
-        public SnapBorder()
+        public SnapBorder(SnapAreaTheme theme)
         {
             InitializeComponent();
+
+            Theme = theme;
 
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
 
-            Border.Background = new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
-            Border.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
-            Border.BorderThickness = new Thickness(1);
+            Border.Background = Theme.OverlayBrush;
+            ReferenceBorder.Background = Theme.BorderBrush;
+            ReferenceBorder.Opacity = Theme.Opacity;
+            Opacity = Theme.Opacity;
+        }
 
-            ReferenceBorder.Background = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
+        public override string ToString()
+        {
+            return $"{ActualWidth}x{ActualHeight}, {Margin}";
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -53,7 +61,7 @@ namespace SnapIt.Library.Controls
 
                 CaptureMouse();
 
-                Opacity = 0.6;
+                Border.Background = Theme.HighlightBrush;
 
                 Cursor = Border.Cursor;
             }
@@ -70,7 +78,7 @@ namespace SnapIt.Library.Controls
         {
             Cursor = Cursors.Arrow;
             ReleaseMouseCapture();
-            Opacity = 1;
+            Border.Background = Theme.OverlayBrush;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -91,17 +99,17 @@ namespace SnapIt.Library.Controls
                 {
                     var thisRect = this.GetRect();
 
-                    foreach (var col in Parent.FindChildren<SnapBorder>())
-                    {
-                        col.Border.Background = new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
-                    }
+                    //foreach (var col in Parent.FindChildren<SnapBorder>())
+                    //{
+                    //    col.Border.Background = new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
+                    //}
 
                     var nearBorders = this.GetCollisions(thisRect);
 
-                    foreach (var col in nearBorders)
-                    {
-                        col.Border.Background = new SolidColorBrush(Colors.Red);
-                    }
+                    //foreach (var col in nearBorders)
+                    //{
+                    //    col.Border.Background = new SolidColorBrush(Colors.Red);
+                    //}
 
                     foreach (var near in nearBorders.Where(b => b.IsDraggable))
                     {
@@ -115,7 +123,6 @@ namespace SnapIt.Library.Controls
                             {
                                 var newWidth = p.X - near.Margin.Left + THICKNESSHALF;
 
-                                //try catch here
                                 near.Width -= newWidth;
                                 near.Margin = new Thickness(near.Margin.Left + newWidth, near.Margin.Top, 0, 0);
                             }
@@ -130,7 +137,6 @@ namespace SnapIt.Library.Controls
                             {
                                 var newHeight = p.Y - near.Margin.Top + THICKNESSHALF;
 
-                                //try catch here
                                 near.Height -= newHeight;
                                 near.Margin = new Thickness(near.Margin.Left, near.Margin.Top + newHeight, 0, 0);
                             }
@@ -177,7 +183,7 @@ namespace SnapIt.Library.Controls
             {
                 if (border != this && thisRect.IntersectsWith(border.GetRect()))
                 {
-                    border.Border.Background = new SolidColorBrush(Colors.Blue);
+                    //border.Border.Background = new SolidColorBrush(Colors.Blue);
 
                     isCollided = true;
                     break;
@@ -227,6 +233,7 @@ namespace SnapIt.Library.Controls
             }
             else
             {
+                ReferenceBorder.Visibility = Visibility.Collapsed;
                 if (SplitDirection == SplitDirection.Vertical)
                 {
                     Width = THICKNESS;
@@ -251,8 +258,6 @@ namespace SnapIt.Library.Controls
                     ReferenceBorder.HorizontalAlignment = HorizontalAlignment.Stretch;
                     ReferenceBorder.Margin = new Thickness(0, ActualHeight / 2, 0, 0);
                 }
-
-                //BorderControls.Visibility = Visibility.Collapsed;
             }
         }
 
