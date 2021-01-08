@@ -21,15 +21,16 @@ namespace SnapIt.Library.Controls
 
         public SplitDirection SplitDirection { get; set; }
         public bool IsDraggable { get; set; } = true;
-
+        public SnapControl SnapControl { get; }
         public SnapAreaTheme Theme { get; set; }
+        public LayoutLine LayoutLine { get; internal set; }
 
         private Point _positionInBlock;
 
-        public SnapBorder(SnapAreaTheme theme)
+        public SnapBorder(SnapControl snapControl, SnapAreaTheme theme)
         {
             InitializeComponent();
-
+            SnapControl = snapControl;
             Theme = theme;
 
             HorizontalAlignment = HorizontalAlignment.Left;
@@ -79,6 +80,8 @@ namespace SnapIt.Library.Controls
             Cursor = Cursors.Arrow;
             ReleaseMouseCapture();
             Border.Background = Theme.OverlayBrush;
+
+            SnapControl.GenerateSnapAreas();
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -261,19 +264,33 @@ namespace SnapIt.Library.Controls
             }
         }
 
-        public SnapLine GetLine()
+        public LayoutLine GetLine()
         {
-            return SplitDirection == SplitDirection.Vertical ?
-                new SnapLine
+            //point, size, direction
+
+            var line = SplitDirection == SplitDirection.Vertical ?
+                new LayoutLine
                 {
-                    Start = new SnapPoint(Margin.Left + ReferenceBorder.Margin.Left, Margin.Top + ReferenceBorder.Margin.Top),
-                    End = new SnapPoint(Margin.Left + ReferenceBorder.Margin.Left, Margin.Top + ReferenceBorder.Margin.Top + Height)
+                    Start = new LayoutPoint(Margin.Left + ReferenceBorder.Margin.Left, Margin.Top + ReferenceBorder.Margin.Top),
+                    End = new LayoutPoint(Margin.Left + ReferenceBorder.Margin.Left, Margin.Top + ReferenceBorder.Margin.Top + Height)
                 } :
-                new SnapLine
+                new LayoutLine
                 {
-                    Start = new SnapPoint(Margin.Left + ReferenceBorder.Margin.Left, Margin.Top + ReferenceBorder.Margin.Top),
-                    End = new SnapPoint(Margin.Left + ReferenceBorder.Margin.Left + Width, Margin.Top + ReferenceBorder.Margin.Top)
+                    Start = new LayoutPoint(Margin.Left + ReferenceBorder.Margin.Left, Margin.Top + ReferenceBorder.Margin.Top),
+                    End = new LayoutPoint(Margin.Left + ReferenceBorder.Margin.Left + Width, Margin.Top + ReferenceBorder.Margin.Top)
                 };
+
+            line.Point = new Point
+            {
+                X = line.Start.X,
+                Y = line.Start.Y
+            };
+            line.SplitDirection = SplitDirection;
+            line.Size = new Size(
+                Math.Abs(line.Start.X - line.End.X),
+                Math.Abs(line.Start.Y - line.End.Y));
+
+            return line;
         }
     }
 }

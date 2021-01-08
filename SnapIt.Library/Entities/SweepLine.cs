@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using Newtonsoft.Json;
 
 namespace SnapIt.Library.Entities
 {
-    public class XComparer : IComparer<SnapLine>
+    public class XComparer : IComparer<LayoutLine>
     {
-        public int Compare(SnapLine x, SnapLine y)
+        public int Compare(LayoutLine x, LayoutLine y)
         {
             return x.Start.X.CompareTo(y.Start.X);
         }
@@ -14,25 +16,25 @@ namespace SnapIt.Library.Entities
 
     public static class SweepLine
     {
-        public static IEnumerable<SnapRectangle> GetRectangles(IEnumerable<SnapLine> lines)
+        public static IEnumerable<LayoutRectangle> GetRectangles(IEnumerable<LayoutLine> lines)
         {
-            var activeVertical = new List<SnapLine>();
+            var activeVertical = new List<LayoutLine>();
 
-            var sweepSet = new SortedList<double, List<SnapLine>>();
+            var sweepSet = new SortedList<double, List<LayoutLine>>();
 
-            foreach (SnapLine oneLine in lines.Where(x => x.Start.X == x.End.X))
+            foreach (LayoutLine oneLine in lines.Where(x => x.Start.X == x.End.X))
             {
-                if (!sweepSet.ContainsKey(oneLine.Start.Y)) sweepSet.Add(oneLine.Start.Y, new List<SnapLine>());
+                if (!sweepSet.ContainsKey(oneLine.Start.Y)) sweepSet.Add(oneLine.Start.Y, new List<LayoutLine>());
                 sweepSet[oneLine.Start.Y].Add(oneLine);
 
-                if (!sweepSet.ContainsKey(oneLine.End.Y)) sweepSet.Add(oneLine.End.Y, new List<SnapLine>());
+                if (!sweepSet.ContainsKey(oneLine.End.Y)) sweepSet.Add(oneLine.End.Y, new List<LayoutLine>());
                 sweepSet[oneLine.End.Y].Add(oneLine);
             }
 
             var linesHorizontal = lines.Where(x => x.Start.Y == x.End.Y).OrderBy(x => x.Start.Y).ToList();
 
-            var rectangles = new List<SnapRectangle>();
-            var completedRectangles = new List<SnapRectangle>();
+            var rectangles = new List<LayoutRectangle>();
+            var completedRectangles = new List<LayoutRectangle>();
             var xComp = new XComparer();
 
             int horIndex = 0;
@@ -45,7 +47,7 @@ namespace SnapIt.Library.Entities
                 //add lines which are influencing
                 if (sweepSet.ContainsKey(y))
                 {
-                    foreach (SnapLine oneLine in sweepSet[y].Where(x => x.Start.Y == y))
+                    foreach (LayoutLine oneLine in sweepSet[y].Where(x => x.Start.Y == y))
                     {
                         int index = activeVertical.BinarySearch(oneLine, xComp);
                         if (index < 0) index = ~index;
@@ -62,7 +64,7 @@ namespace SnapIt.Library.Entities
                         double minX = activeVertical[minIndex].Start.X;
                         double maxX = activeVertical[maxIndex].Start.X;
 
-                        foreach (SnapRectangle oneRec in rectangles)
+                        foreach (LayoutRectangle oneRec in rectangles)
                         {
                             if (minX > oneRec.TopRight.X) oneRec.TopRight.X = minX;
                             if (maxX < oneRec.BottomLeft.X) oneRec.BottomLeft.X = maxX;
@@ -71,14 +73,14 @@ namespace SnapIt.Library.Entities
                         completedRectangles.AddRange(rectangles);
                         //rectangles.Clear();
 
-                        rectangles.Add(new SnapRectangle(new SnapPoint(activeVertical[minIndex].Start.X, verValue), new SnapPoint(activeVertical[maxIndex].Start.X, verValue)));
+                        rectangles.Add(new LayoutRectangle(new LayoutPoint(activeVertical[minIndex].Start.X, verValue), new LayoutPoint(activeVertical[maxIndex].Start.X, verValue)));
                     }
                     //else rectangles.Clear();
                 }
                 //Cleanup lines which end
                 if (sweepSet.ContainsKey(y))
                 {
-                    foreach (SnapLine oneLine in sweepSet[y].Where(x => x.End.Y == y))
+                    foreach (LayoutLine oneLine in sweepSet[y].Where(x => x.End.Y == y))
                     {
                         activeVertical.Remove(oneLine);
                     }
@@ -99,7 +101,7 @@ namespace SnapIt.Library.Entities
             return rectangles;
         }
 
-        private static int GetMinIndex(List<SnapLine> Lines, SnapLine Horizontal)
+        private static int GetMinIndex(List<LayoutLine> Lines, LayoutLine Horizontal)
         {
             var xComp = new XComparer();
             int minIndex = Lines.BinarySearch(Horizontal, xComp);
@@ -107,18 +109,18 @@ namespace SnapIt.Library.Entities
             return minIndex;
         }
 
-        private static int GetMaxIndex(List<SnapLine> Lines, SnapLine Horizontal)
+        private static int GetMaxIndex(List<LayoutLine> Lines, LayoutLine Horizontal)
         {
             var xComp = new XComparer();
-            int maxIndex = Lines.BinarySearch(new SnapLine() { Start = Horizontal.End }, xComp);
+            int maxIndex = Lines.BinarySearch(new LayoutLine() { Start = Horizontal.End }, xComp);
             if (maxIndex < 0) maxIndex = ~maxIndex - 1;
             return maxIndex;
         }
     }
 
-    public class SnapPoint
+    public class LayoutPoint
     {
-        public SnapPoint(double X, double Y)
+        public LayoutPoint(double X, double Y)
         {
             this.X = X;
             this.Y = Y;
@@ -128,10 +130,17 @@ namespace SnapIt.Library.Entities
         public double Y { get; set; }
     }
 
-    public class SnapLine
+    public class LayoutLine
     {
-        public SnapPoint Start { get; set; }
-        public SnapPoint End { get; set; }
+        [JsonIgnore]
+        public LayoutPoint Start { get; set; }
+
+        [JsonIgnore]
+        public LayoutPoint End { get; set; }
+
+        public Point Point { get; set; }
+        public Size Size { get; set; }
+        public SplitDirection SplitDirection { get; set; }
 
         public override string ToString()
         {
@@ -139,18 +148,18 @@ namespace SnapIt.Library.Entities
         }
     }
 
-    public class SnapRectangle
+    public class LayoutRectangle
     {
-        public SnapRectangle()
+        public LayoutRectangle()
         { }
 
-        public SnapRectangle(SnapPoint TopRight, SnapPoint BottomLeft)
+        public LayoutRectangle(LayoutPoint TopRight, LayoutPoint BottomLeft)
         {
             this.TopRight = TopRight;
             this.BottomLeft = BottomLeft;
         }
 
-        public SnapPoint TopRight { get; set; }
-        public SnapPoint BottomLeft { get; set; }
+        public LayoutPoint TopRight { get; set; }
+        public LayoutPoint BottomLeft { get; set; }
     }
 }

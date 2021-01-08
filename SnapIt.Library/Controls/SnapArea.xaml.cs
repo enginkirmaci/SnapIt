@@ -76,7 +76,7 @@ namespace SnapIt.Library.Controls
                 size = new Size(rect.Width, double.NaN);
             }
 
-            var newBorder = new SnapBorder(new SnapAreaTheme());
+            var newBorder = new SnapBorder(SnapControl, new SnapAreaTheme());
             newBorder.SetPos(point, size, direction);
 
             SnapControl.AddBorder(newBorder);

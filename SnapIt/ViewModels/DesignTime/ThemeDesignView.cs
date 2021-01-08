@@ -17,36 +17,36 @@ namespace SnapIt.ViewModels.DesignTime
             Layout = new Layout
             {
                 Name = "Layout 1",
-                LayoutArea = new LayoutArea
+                LayoutArea = new LayoutAreaOld
                 {
-                    Areas = new List<LayoutArea>
+                    Areas = new List<LayoutAreaOld>
                     {
-                        new LayoutArea
+                        new LayoutAreaOld
                         {
                             Width=1
                         },
-                        new LayoutArea
+                        new LayoutAreaOld
                         {
                             Width=3,
                             Column=1,
                             //Merged= true,
-                            Areas = new List<LayoutArea>
+                            Areas = new List<LayoutAreaOld>
                             {
-                                new LayoutArea
+                                new LayoutAreaOld
                                 {
                                     Height=1
                                 },
-                                new LayoutArea
+                                new LayoutAreaOld
                                 {
                                     Height=1,
                                     Row=1,
-                                    Areas = new List<LayoutArea>
+                                    Areas = new List<LayoutAreaOld>
                                     {
-                                        new LayoutArea
+                                        new LayoutAreaOld
                                         {
                                             Width=1
                                         },
-                                        new LayoutArea
+                                        new LayoutAreaOld
                                         {
                                             Width=1,
                                             Column=1

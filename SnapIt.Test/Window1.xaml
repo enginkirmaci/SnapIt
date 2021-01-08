@@ -11,6 +11,16 @@
     Background="DarkSeaGreen"
     mc:Ignorable="d">
     <Grid>
-        <Controls:SnapControl Margin="50" ClipToBounds="True" />
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Orientation="Horizontal">
+            <Button x:Name="Save" Click="Save_Click">Save Layout</Button>
+            <Button x:Name="Load" Click="Load_Click">Load Layout</Button>
+        </StackPanel>
+        <Controls:SnapControl
+            x:Name="SnapControl"
+            Margin="50"
+            ClipToBounds="True" />
     </Grid>
 </Window>

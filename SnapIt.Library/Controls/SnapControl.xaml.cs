@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.FindRectangle;
+using SnapIt.Library.Services;
 
 namespace SnapIt.Library.Controls
 {
@@ -17,67 +19,50 @@ namespace SnapIt.Library.Controls
         private SnapBorder BottomBorder;
         private SnapBorder LeftBorder;
         private SnapBorder RightBorder;
-        private SnapBorder snapBorder;
-        private SnapBorder snapBorder1;
-        private SnapBorder snapBorder2;
-        private SnapBorder snapBorder3;
-        private SnapBorder snapBorder4;
+
+        public SnapAreaTheme Theme { get; set; }
+        //public List<LayoutLine> SnapLines { get; set; }
+        //public List<LayoutArea> LayoutAreas { get; set; }
+
+        public Layout Layout
+        {
+            get => (Layout)GetValue(LayoutProperty);
+            set => SetValue(LayoutProperty, value);
+        }
+
+        public static readonly DependencyProperty LayoutProperty
+         = DependencyProperty.Register("Layout", typeof(Layout), typeof(SnapControl),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(LayoutPropertyChanged)
+           });
+
+        private static void LayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapControl = (SnapControl)d;
+            var layout = (Layout)e.NewValue;
+
+            snapControl.LoadLayout(layout);
+        }
 
         public SnapControl()
         {
             InitializeComponent();
 
-            TopBorder = new SnapBorder(new SnapAreaTheme())
-            {
-                IsDraggable = false
-            };
+            Theme = new SnapAreaTheme();
 
-            BottomBorder = new SnapBorder(new SnapAreaTheme())
-            {
-                IsDraggable = false
-            };
+            TopBorder = new SnapBorder(this, Theme) { IsDraggable = false };
+            BottomBorder = new SnapBorder(this, Theme) { IsDraggable = false };
+            LeftBorder = new SnapBorder(this, Theme) { IsDraggable = false };
+            RightBorder = new SnapBorder(this, Theme) { IsDraggable = false };
 
-            LeftBorder = new SnapBorder(new SnapAreaTheme())
-            {
-                IsDraggable = false
-            };
-
-            RightBorder = new SnapBorder(new SnapAreaTheme())
-            {
-                IsDraggable = false
-            };
-
-            MainGrid.Children.Add(TopBorder);
-            MainGrid.Children.Add(BottomBorder);
-            MainGrid.Children.Add(LeftBorder);
-            MainGrid.Children.Add(RightBorder);
-
-            snapBorder = new SnapBorder(new SnapAreaTheme());
-            snapBorder1 = new SnapBorder(new SnapAreaTheme());
-            snapBorder2 = new SnapBorder(new SnapAreaTheme());
-            snapBorder3 = new SnapBorder(new SnapAreaTheme());
-            snapBorder4 = new SnapBorder(new SnapAreaTheme());
-            MainGrid.Children.Add(snapBorder);
-            MainGrid.Children.Add(snapBorder1);
-            MainGrid.Children.Add(snapBorder2);
-            MainGrid.Children.Add(snapBorder3);
-            MainGrid.Children.Add(snapBorder4);
+            this.SizeChanged += SnapControl_SizeChanged;
         }
 
-        protected override void OnRender(DrawingContext drawingContext)
+        private void SnapControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            base.OnRender(drawingContext);
-
-            TopBorder.SetPos(new Point(0, -SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
-            BottomBorder.SetPos(new Point(0, MainGrid.ActualHeight - SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
-            LeftBorder.SetPos(new Point(-SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
-            RightBorder.SetPos(new Point(MainGrid.ActualWidth - SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
-
-            snapBorder.SetPos(new Point(150, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
-            snapBorder1.SetPos(new Point(500, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
-            snapBorder2.SetPos(new Point(150, 100), new Size(350, 0), SplitDirection.Horizontal);
-            snapBorder3.SetPos(new Point(275, 100), new Size(0, MainGrid.ActualHeight - 100), SplitDirection.Vertical);
-            snapBorder4.SetPos(new Point(275, 0), new Size(0, 100), SplitDirection.Vertical);
+            AdoptToScreen();
         }
 
         public void AddBorder(SnapBorder snapBorder)
@@ -86,12 +71,7 @@ namespace SnapIt.Library.Controls
             GenerateSnapAreas();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            GenerateSnapAreas();
-        }
-
-        private void GenerateSnapAreas()
+        public void GenerateSnapAreas()
         {
             MainAreas.Children.Clear();
 
@@ -103,9 +83,12 @@ namespace SnapIt.Library.Controls
                 Segments = new List<Segment>()
             };
 
-            foreach (var border in borders)
+            Layout.LayoutLines = new List<LayoutLine>();
+            foreach (var border in borders.Where(b => b.IsDraggable))
             {
                 var line = border.GetLine();
+
+                Layout.LayoutLines.Add(line);
 
                 settings.Segments.Add(new Segment
                 {
@@ -119,18 +102,107 @@ namespace SnapIt.Library.Controls
 
             var rectangles = settings.GetRectangles();
 
-            var theme = new SnapAreaTheme();
+            Layout.LayoutAreas = new List<LayoutArea>();
+
             foreach (var rectangle in rectangles)
             {
+                Layout.LayoutAreas.Add(rectangle.GetLayoutArea());
+
                 MainAreas.Children.Add(new SnapArea()
                 {
                     Margin = new Thickness(rectangle.TopLeft.X, rectangle.TopLeft.Y, 0, 0),
                     Width = rectangle.Width,
                     Height = rectangle.Height,
                     SnapControl = this,
-                    Theme = theme
+                    Theme = Theme
                 });
             }
+        }
+
+        public void SaveLayout()
+        {
+            Layout.Guid = Guid.NewGuid();
+            Layout.IsSaved = false;
+            Layout.Name = "New layout";
+            Layout.Size = new Size(ActualWidth, ActualHeight);
+
+            FileOperationService fileOperationService = new FileOperationService();
+            fileOperationService.SaveLayout(Layout);
+        }
+
+        public void LoadLayout(Layout layout)
+        {
+            MainGrid.Children.Clear();
+            //MainAreas.Children.Clear();
+
+            MainGrid.Children.Add(TopBorder);
+            MainGrid.Children.Add(BottomBorder);
+            MainGrid.Children.Add(LeftBorder);
+            MainGrid.Children.Add(RightBorder);
+
+            foreach (var layoutLine in layout.LayoutLines)
+            {
+                var snapBorder = new SnapBorder(this, Theme)
+                {
+                    LayoutLine = layoutLine
+                };
+                MainGrid.Children.Add(snapBorder);
+
+                snapBorder.SetPos(layoutLine.Point, layoutLine.Size, layoutLine.SplitDirection);
+            }
+
+            //foreach (var layoutArea in layout.LayoutAreas)
+            //{
+            //    MainAreas.Children.Add(new SnapArea()
+            //    {
+            //        Margin = layoutArea.Margin,
+            //        Width = layoutArea.Width,
+            //        Height = layoutArea.Height,
+            //        SnapControl = this,
+            //        Theme = Theme
+            //    });
+            //}
+
+            AdoptToScreen();
+        }
+
+        private void AdoptToScreen()
+        {
+            TopBorder.SetPos(new Point(0, -SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
+            BottomBorder.SetPos(new Point(0, MainGrid.ActualHeight - SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
+            LeftBorder.SetPos(new Point(-SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
+            RightBorder.SetPos(new Point(MainGrid.ActualWidth - SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
+
+            var factorX = ActualWidth / Layout.Size.Width;
+            var factorY = ActualHeight / Layout.Size.Height;
+
+            FindRectangle.Settings settings = new FindRectangle.Settings
+            {
+                Size = new System.Drawing.Size((int)ActualWidth, (int)ActualHeight),
+                Segments = new List<Segment>()
+            };
+
+            var borders = this.FindChildren<SnapBorder>();
+            foreach (var border in borders.Where(b => b.IsDraggable))
+            {
+                if (border.LayoutLine != null)
+                {
+                    var newPoint = new Point
+                    {
+                        X = border.LayoutLine.Point.X * factorX,
+                        Y = border.LayoutLine.Point.Y * factorY
+                    };
+                    var newSize = new Size
+                    {
+                        Width = border.LayoutLine.Size.Width * factorX,
+                        Height = border.LayoutLine.Size.Height * factorY
+                    };
+
+                    border.SetPos(newPoint, newSize, border.LayoutLine.SplitDirection);
+                }
+            }
+
+            GenerateSnapAreas();
         }
     }
 }

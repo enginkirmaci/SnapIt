@@ -11,7 +11,7 @@ namespace SnapIt.Library.Services
 {
     public class FileOperationService : IFileOperationService
     {
-        private const string LayoutFolder = "Layoutsv11";
+        private const string LayoutFolder = "Layoutsv20";
         private readonly string rootFolder;
 
         private readonly JsonSerializerSettings defaultJsonSerializerSettings;

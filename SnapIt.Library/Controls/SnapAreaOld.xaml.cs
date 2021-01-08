@@ -127,14 +127,14 @@ namespace SnapIt.Library.Controls
             }
         }
 
-        public LayoutArea LayoutArea
+        public LayoutAreaOld LayoutArea
         {
-            get => (LayoutArea)GetValue(LayoutAreaProperty);
+            get => (LayoutAreaOld)GetValue(LayoutAreaProperty);
             set => SetValue(LayoutAreaProperty, value);
         }
 
         public static readonly DependencyProperty LayoutAreaProperty
-            = DependencyProperty.Register("LayoutArea", typeof(LayoutArea), typeof(SnapAreaOld),
+            = DependencyProperty.Register("LayoutArea", typeof(LayoutAreaOld), typeof(SnapAreaOld),
               new FrameworkPropertyMetadata()
               {
                   BindsTwoWayByDefault = true,
@@ -144,7 +144,7 @@ namespace SnapIt.Library.Controls
         private static void LayoutAreaPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var snapArea = (SnapAreaOld)d;
-            snapArea.LayoutArea = (LayoutArea)e.NewValue;
+            snapArea.LayoutArea = (LayoutAreaOld)e.NewValue;
 
             snapArea.ApplyLayout(snapArea.ParentSnapArea);
         }
@@ -170,7 +170,7 @@ namespace SnapIt.Library.Controls
             }
         }
 
-        public void GetLayoutAreas(LayoutArea layoutArea)
+        public void GetLayoutAreas(LayoutAreaOld layoutArea)
         {
             foreach (var child in Area.Children)
             {
@@ -186,7 +186,7 @@ namespace SnapIt.Library.Controls
                     var column = Grid.GetColumn(childSnapArea);
                     var row = Grid.GetRow(childSnapArea);
 
-                    var childLayoutArea = new LayoutArea
+                    var childLayoutArea = new LayoutAreaOld
                     {
                         Column = column,
                         Row = row,
@@ -198,7 +198,7 @@ namespace SnapIt.Library.Controls
 
                     if (layoutArea.Areas == null)
                     {
-                        layoutArea.Areas = new List<LayoutArea>();
+                        layoutArea.Areas = new List<LayoutAreaOld>();
                     }
 
                     //layoutArea.Merged = HasMergedSnapArea;
@@ -284,7 +284,7 @@ namespace SnapIt.Library.Controls
             }
         }
 
-        internal void ApplyColumnsAndRows(LayoutArea layoutArea)
+        internal void ApplyColumnsAndRows(LayoutAreaOld layoutArea)
         {
             if (layoutArea.Areas.Count > 0)
             {

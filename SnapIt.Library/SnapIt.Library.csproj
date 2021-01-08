@@ -76,6 +76,7 @@
     <Compile Include="Entities\ExcludedApplication.cs" />
     <Compile Include="Entities\ExcludedApplicationSettings.cs" />
     <Compile Include="Entities\Constants.cs" />
+    <Compile Include="Entities\LayoutArea.cs" />
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\SnapAreaInfo.cs" />
     <Compile Include="Entities\SnapAreaTheme.cs" />
@@ -99,7 +100,7 @@
     <Compile Include="Entities\Settings.cs" />
     <Compile Include="Entities\Enums.cs" />
     <Compile Include="Entities\Layout.cs" />
-    <Compile Include="Entities\LayoutArea.cs" />
+    <Compile Include="Entities\LayoutAreaOld.cs" />
     <Compile Include="Entities\Rectangle.cs" />
     <Compile Include="Extensions\ScreenExtensions.cs" />
     <Compile Include="InteropServices\DwmApi.cs" />

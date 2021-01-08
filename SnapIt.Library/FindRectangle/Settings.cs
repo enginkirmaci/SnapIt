@@ -60,11 +60,11 @@ namespace SnapIt.Library.FindRectangle
             segments = new List<Segment>();
             Points = new Dictionary<Point, SegmentPoint>();
 
-            // add segments representing the edges
-            //segments.Add(new Segment { Location = new Point(0, 0), EndLocation = new Point(Size.Width, 0), Orientation = SplitDirection.Horizontal });
-            //segments.Add(new Segment { Location = new Point(0, Size.Height), EndLocation = new Point(Size.Width, Size.Height), Orientation = SplitDirection.Horizontal });
-            //segments.Add(new Segment { Location = new Point(0, 0), EndLocation = new Point(0, Size.Height), Orientation = SplitDirection.Vertical });
-            //segments.Add(new Segment { Location = new Point(Size.Width, 0), EndLocation = new Point(Size.Width, Size.Height), Orientation = SplitDirection.Vertical });
+            //add segments representing the edges
+            segments.Add(new Segment { Location = new Point(0, 0), EndLocation = new Point(Size.Width, 0), Orientation = SplitDirection.Horizontal });
+            segments.Add(new Segment { Location = new Point(0, Size.Height), EndLocation = new Point(Size.Width, Size.Height), Orientation = SplitDirection.Horizontal });
+            segments.Add(new Segment { Location = new Point(0, 0), EndLocation = new Point(0, Size.Height), Orientation = SplitDirection.Vertical });
+            segments.Add(new Segment { Location = new Point(Size.Width, 0), EndLocation = new Point(Size.Width, Size.Height), Orientation = SplitDirection.Vertical });
 
             // add the rest of the segments
             segments.AddRange(Segments);

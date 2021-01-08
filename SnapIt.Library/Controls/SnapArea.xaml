@@ -16,12 +16,7 @@
             BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
             BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />-->
         <Grid x:Name="Area" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
-            <TextBlock
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                FontWeight="Bold"
-                Foreground="White"
-                Text="{Binding LayoutArea.Name, ElementName=userControl}" />
+
             <Grid x:Name="DesignPanel" Panel.ZIndex="99">
                 <StackPanel
                     HorizontalAlignment="Center"
