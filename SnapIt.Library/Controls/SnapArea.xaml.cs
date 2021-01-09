@@ -4,9 +4,6 @@ using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Controls
 {
-    /// <summary>
-    /// Interaction logic for SnapArea.xaml
-    /// </summary>
     public partial class SnapArea : UserControl
     {
         public SnapControl SnapControl { get; set; }
@@ -34,75 +31,38 @@ namespace SnapIt.Library.Controls
             {
                 snapArea.Area.Opacity = snapArea.Theme.Opacity;
                 snapArea.Area.Background = snapArea.Theme.OverlayBrush;
-                //snapArea.Border.BorderBrush = snapArea.Theme.BorderBrush;
-                //snapArea.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
-                //snapArea.Border.Visibility = Visibility.Visible;
+                snapArea.Border.BorderBrush = snapArea.Theme.BorderBrush;
+                snapArea.Border.BorderThickness = new Thickness(snapArea.Theme.BorderThickness);
             }
         }
 
         public SnapArea()
         {
             InitializeComponent();
-
-            DesignPanel.Visibility = Visibility.Hidden;
-            Area.IsMouseDirectlyOverChanged += SnapArea_IsMouseDirectlyOverChanged;
         }
 
-        private void SplitVertically_Click(object sender, RoutedEventArgs e)
+        public void NormalStyle()
         {
-            Split(SplitDirection.Vertical);
+            Area.Background = Theme.OverlayBrush;
         }
 
-        private void SplitHorizantally_Click(object sender, RoutedEventArgs e)
+        public void OnHoverStyle()
         {
-            Split(SplitDirection.Horizontal);
+            Area.Background = Theme.HighlightBrush;
         }
 
-        private void Split(SplitDirection direction)
+        public Rectangle ScreenSnapArea(Dpi dpi)
         {
-            Point point;
-            Size size;
+            var topLeft = PointToScreen(new Point(0, 0));
 
-            var rect = this.GetRect();
+            var bottomRight = PointToScreen(new Point(ActualWidth, ActualHeight));
 
-            if (direction == SplitDirection.Vertical)
-            {
-                point = new Point((rect.TopLeft.X + rect.BottomRight.X) / 2, rect.TopLeft.Y);
-                size = new Size(double.NaN, rect.Height);
-            }
-            else
-            {
-                point = new Point(rect.TopLeft.X, (rect.TopLeft.Y + rect.BottomRight.Y) / 2);
-                size = new Size(rect.Width, double.NaN);
-            }
-
-            var newBorder = new SnapBorder(SnapControl, new SnapAreaTheme());
-            newBorder.SetPos(point, size, direction);
-
-            SnapControl.AddBorder(newBorder);
-        }
-
-        private void SnapArea_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (IsMouseOver)
-            {
-                DesignPanel.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                DesignPanel.Visibility = Visibility.Hidden;
-            }
-        }
-
-        //private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
-        //{
-        //}
-
-        public Rect GetRect()
-        {
-            return new Rect(
-                new Point(Margin.Left, Margin.Top),
-                new Size(ActualWidth, ActualHeight));
+            return new Rectangle(
+               (int)topLeft.X,
+               (int)topLeft.Y,
+               (int)bottomRight.X,
+               (int)bottomRight.Y,
+               dpi);
         }
     }
 }

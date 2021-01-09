@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.FindRectangle;
-using SnapIt.Library.Services;
 
 namespace SnapIt.Library.Controls
 {
@@ -17,7 +15,59 @@ namespace SnapIt.Library.Controls
         private SnapBorder LeftBorder;
         private SnapBorder RightBorder;
 
-        public SnapAreaTheme Theme { get; set; }
+        //public SnapAreaTheme Theme { get; set; }
+        public SnapAreaTheme Theme
+        {
+            get => (SnapAreaTheme)GetValue(ThemeProperty);
+            set => SetValue(ThemeProperty, value);
+        }
+
+        public static readonly DependencyProperty ThemeProperty
+         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapControl),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(ThemePropertyChanged)
+           });
+
+        private static void ThemePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapControl = (SnapControl)d;
+            snapControl.Theme = (SnapAreaTheme)e.NewValue;
+
+            if (snapControl.Theme != null)
+            {
+                var snapAreas = snapControl.FindChildren<SnapArea>();
+                foreach (var snapArea in snapAreas)
+                {
+                    snapArea.Theme = snapControl.Theme;
+                }
+            }
+        }
+
+        public bool IsDesignMode
+        {
+            get => (bool)GetValue(IsDesignModeProperty);
+            set => SetValue(IsDesignModeProperty, value);
+        }
+
+        public static readonly DependencyProperty IsDesignModeProperty
+         = DependencyProperty.Register("IsDesignMode", typeof(bool), typeof(SnapControl),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(IsDesignModePropertyChanged)
+           });
+
+        private static void IsDesignModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapControl = (SnapControl)d;
+
+            if ((bool)e.NewValue)
+            {
+                snapControl.MainGrid.Visibility = Visibility.Visible;
+            }
+        }
 
         public Layout Layout
         {
@@ -47,6 +97,8 @@ namespace SnapIt.Library.Controls
 
             Theme = new SnapAreaTheme();
 
+            MainGrid.Visibility = Visibility.Collapsed;
+
             TopBorder = new SnapBorder(this, Theme) { IsDraggable = false };
             BottomBorder = new SnapBorder(this, Theme) { IsDraggable = false };
             LeftBorder = new SnapBorder(this, Theme) { IsDraggable = false };
@@ -66,63 +118,16 @@ namespace SnapIt.Library.Controls
             GenerateSnapAreas();
         }
 
-        public void GenerateSnapAreas()
+        public void SetLayoutSize()
         {
-            MainAreas.Children.Clear();
-
-            var borders = this.FindChildren<SnapBorder>();
-
-            FindRectangle.Settings settings = new FindRectangle.Settings
-            {
-                Size = new System.Drawing.Size((int)ActualWidth, (int)ActualHeight),
-                Segments = new List<Segment>()
-            };
-
-            Layout.LayoutLines = new List<LayoutLine>();
-            foreach (var border in borders.Where(b => b.IsDraggable))
-            {
-                var line = border.GetLine();
-
-                Layout.LayoutLines.Add(line);
-
-                settings.Segments.Add(new Segment
-                {
-                    Location = new System.Drawing.Point((int)line.Start.X, (int)line.Start.Y),
-                    EndLocation = new System.Drawing.Point((int)line.End.X, (int)line.End.Y),
-                    Orientation = line.SplitDirection
-                });
-            }
-
-            settings.Calculate();
-
-            var rectangles = settings.GetRectangles();
-
-            Layout.LayoutAreas = new List<LayoutArea>();
-
-            foreach (var rectangle in rectangles)
-            {
-                Layout.LayoutAreas.Add(rectangle.GetLayoutArea());
-
-                MainAreas.Children.Add(new SnapArea()
-                {
-                    Margin = new Thickness(rectangle.TopLeft.X, rectangle.TopLeft.Y, 0, 0),
-                    Width = rectangle.Width,
-                    Height = rectangle.Height,
-                    SnapControl = this,
-                    Theme = Theme
-                });
-            }
+            Layout.Size = new Size(ActualWidth, ActualHeight);
         }
 
         public void SaveLayout()
         {
-            Layout.Guid = Guid.NewGuid();
-            Layout.IsSaved = false;
-            Layout.Name = "New layout";
-            Layout.Size = new Size(ActualWidth, ActualHeight);
-
-            FileOperationService fileOperationService = new FileOperationService();
-            fileOperationService.SaveLayout(Layout);
+            //Layout.Guid = Guid.NewGuid();
+            //Layout.IsSaved = false;
+            //Layout.Name = "New layout";
         }
 
         public void LoadLayout(Layout layout)
@@ -158,12 +163,6 @@ namespace SnapIt.Library.Controls
             var factorX = ActualWidth / Layout.Size.Width;
             var factorY = ActualHeight / Layout.Size.Height;
 
-            FindRectangle.Settings settings = new FindRectangle.Settings
-            {
-                Size = new System.Drawing.Size((int)ActualWidth, (int)ActualHeight),
-                Segments = new List<Segment>()
-            };
-
             var borders = this.FindChildren<SnapBorder>();
             foreach (var border in borders.Where(b => b.IsDraggable))
             {
@@ -185,6 +184,74 @@ namespace SnapIt.Library.Controls
             }
 
             GenerateSnapAreas();
+        }
+
+        public void GenerateSnapAreas()
+        {
+            MainAreas.Children.Clear();
+
+            var borders = this.FindChildren<SnapBorder>();
+
+            FindRectangle.Settings settings = new FindRectangle.Settings
+            {
+                Size = new System.Drawing.Size((int)ActualWidth, (int)ActualHeight),
+                Segments = new List<Segment>()
+            };
+
+            var newLayoutLines = new List<LayoutLine>();
+
+            foreach (var border in borders.Where(b => b.IsDraggable))
+            {
+                var line = border.GetLine();
+
+                newLayoutLines.Add(line);
+
+                settings.Segments.Add(new Segment
+                {
+                    Location = new System.Drawing.Point((int)line.Start.X, (int)line.Start.Y),
+                    EndLocation = new System.Drawing.Point((int)line.End.X, (int)line.End.Y),
+                    Orientation = line.SplitDirection
+                });
+            }
+
+            if (IsDesignMode)
+            {
+                Layout.LayoutLines = newLayoutLines;
+            }
+
+            settings.Calculate();
+
+            var rectangles = settings.GetRectangles();
+
+            foreach (var rectangle in rectangles)
+            {
+                if (IsDesignMode)
+                {
+                    var snapArea = new SnapAreaEditor()
+                    {
+                        Margin = new Thickness(rectangle.TopLeft.X, rectangle.TopLeft.Y, 0, 0),
+                        Width = rectangle.Width,
+                        Height = rectangle.Height,
+                        SnapControl = this,
+                        Theme = Theme
+                    };
+
+                    MainAreas.Children.Add(snapArea);
+                }
+                else
+                {
+                    var snapArea = new SnapArea()
+                    {
+                        Margin = new Thickness(rectangle.TopLeft.X, rectangle.TopLeft.Y, 0, 0),
+                        Width = rectangle.Width,
+                        Height = rectangle.Height,
+                        SnapControl = this,
+                        Theme = Theme
+                    };
+
+                    MainAreas.Children.Add(snapArea);
+                }
+            }
         }
     }
 }

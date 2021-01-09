@@ -21,6 +21,6 @@
         <Controls:SnapControl
             x:Name="SnapControl"
             Margin="50"
-            ClipToBounds="True" />
+            IsDesignMode="True" />
     </Grid>
 </Window>

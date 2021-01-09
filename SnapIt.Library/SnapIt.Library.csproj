@@ -54,11 +54,11 @@
     <Compile Include="Controls\HotkeyEditorControl.xaml.cs">
       <DependentUpon>HotkeyEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SnapAreaEditor.xaml.cs">
+      <DependentUpon>SnapAreaEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SnapArea.xaml.cs">
       <DependentUpon>SnapArea.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SnapAreaOld.xaml.cs">
-      <DependentUpon>SnapAreaOld.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SnapBorder.xaml.cs">
       <DependentUpon>SnapBorder.xaml</DependentUpon>
@@ -76,7 +76,6 @@
     <Compile Include="Entities\ExcludedApplication.cs" />
     <Compile Include="Entities\ExcludedApplicationSettings.cs" />
     <Compile Include="Entities\Constants.cs" />
-    <Compile Include="Entities\LayoutArea.cs" />
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\SnapAreaInfo.cs" />
     <Compile Include="Entities\SnapAreaTheme.cs" />
@@ -160,13 +159,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SnapArea.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Controls\SnapAreaEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\SnapAreaOld.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Controls\SnapArea.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SnapBorder.xaml">
       <SubType>Designer</SubType>

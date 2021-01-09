@@ -1,15 +1,15 @@
-﻿using Prism.Commands;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace SnapIt.ViewModels
 {
@@ -78,46 +78,54 @@ namespace SnapIt.ViewModels
 
             Layout = new Layout
             {
-                LayoutArea = new LayoutAreaOld
+                Name = "Layout 1",
+                Size = new Size(1436, 700.8),
+                LayoutLines = new List<LayoutLine>
                 {
-                    Areas = new List<LayoutAreaOld>
+                    new LayoutLine
                     {
-                        new LayoutAreaOld
-                        {
-                            Width=1
-                        },
-                        new LayoutAreaOld
-                        {
-                            Width=3,
-                            Column=1,
-                            //Merged= true,
-                            Areas = new List<LayoutAreaOld>
-                            {
-                                new LayoutAreaOld
-                                {
-                                    Height=1
-                                },
-                                new LayoutAreaOld
-                                {
-                                    Height=1,
-                                    Row=1,
-                                    Areas = new List<LayoutAreaOld>
-                                    {
-                                        new LayoutAreaOld
-                                        {
-                                            Width=1
-                                        },
-                                        new LayoutAreaOld
-                                        {
-                                            Width=1,
-                                            Column=1
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        Point=new Point(259.904414003044,0),
+                        Size = new Size(0,700.8)
+                    },
+                     new LayoutLine
+                    {
+                        Point=new Point( 1230.4596651446,0),
+                        Size = new Size(0,700.8 )
+                    },
+                     new LayoutLine
+                    {
+                        Point=new Point(259.904414003044,471.072897196262 ),
+                        Size = new Size(970.555251141553,0 ),
+                        SplitDirection = SplitDirection.Horizontal
+                    },
+                     new LayoutLine
+                    {
+                        Point=new Point(455.331811263318,471.072897196262 ),
+                        Size = new Size(0,229.727102803738 )
+                    },
+                     new LayoutLine
+                    {
+                        Point=new Point(567.733637747336,0 ),
+                        Size = new Size( 0,471.072897196262)
+                    },
+                     new LayoutLine
+                    {
+                        Point=new Point(567,235.5 ),
+                        Size = new Size(663,0 ),
+                        SplitDirection = SplitDirection.Horizontal
+                    },
+                     new LayoutLine
+                    {
+                        Point=new Point(898.5,235 ),
+                        Size = new Size( 0,236)
+                    },
+                     new LayoutLine
+                    {
+                        Point=new Point(842.5,471 ),
+                        Size = new Size( 0,229)
                     }
-                }
+                },
+                Theme = Theme
             };
         }
 

@@ -1,7 +1,4 @@
-﻿using System.Windows;
-using SnapIt.Library.Entities;
-
-namespace SnapIt.Library.FindRectangle
+﻿namespace SnapIt.Library.FindRectangle
 {
     public class Rectangle
     {
@@ -16,16 +13,6 @@ namespace SnapIt.Library.FindRectangle
             BottomRight = bottomRight;
             Width = width;
             Height = height;
-        }
-
-        public LayoutArea GetLayoutArea()
-        {
-            return new LayoutArea
-            {
-                Margin = new Thickness(TopLeft.X, TopLeft.Y, 0, 0),
-                Width = Width,
-                Height = Height
-            };
         }
 
         public override string ToString()

@@ -4,22 +4,25 @@ using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 using SnapIt.Views;
-using System.Windows.Media;
 
 namespace SnapIt.ViewModels
 {
     public class DesignWindowViewModel : BindableBase
     {
         private readonly ISnapService snapService;
+        private Layout layout;
+
+        public Layout Layout { get => layout; set => SetProperty(ref layout, value); }
 
         public SnapScreen SnapScreen { get; set; }
-        public Layout Layout { get; set; }
         public SnapAreaTheme Theme { get; set; }
-        public SnapArea MainSnapArea { get; set; }
+        public SnapControl SnapControl { get; set; }
         public DesignWindow Window { get; set; }
 
         //public DelegateCommand<Window> SourceInitializedCommand { get; }
         public DelegateCommand<object> LoadedCommand { get; }
+
+        public DelegateCommand<object> ClosingCommand { get; }
 
         public DelegateCommand SaveLayoutCommand { get; }
         public DelegateCommand CloseLayoutCommand { get; }
@@ -28,34 +31,24 @@ namespace SnapIt.ViewModels
         {
             this.snapService = snapService;
 
-            Theme = new SnapAreaTheme
-            {
-                HighlightColor = Color.FromArgb(200, 33, 33, 33),
-                OverlayColor = Color.FromArgb(50, 99, 99, 99),
-                BorderColor = Color.FromArgb(200, 200, 200, 200),
-                Opacity = 1
-            };
+            Theme = new SnapAreaTheme();
 
-            LoadedCommand = new DelegateCommand<object>((mainSnapArea) =>
+            LoadedCommand = new DelegateCommand<object>((snapControl) =>
             {
                 snapService.Release();
 
-                MainSnapArea = mainSnapArea as SnapArea;
-                //TODO here
-                //MainSnapArea.LayoutArea = Layout.LayoutArea;
-                //MainSnapArea.Theme = Theme;
+                SnapControl = snapControl as SnapControl;
+            });
 
-                //if (MainSnapArea.LayoutArea == null)
-                //{
-                //    MainSnapArea.LayoutArea = new LayoutArea();
-                //}
+            ClosingCommand = new DelegateCommand<object>((snapControl) =>
+            {
+                SnapControl = snapControl as SnapControl;
+                SnapControl.SetLayoutSize();
             });
 
             SaveLayoutCommand = new DelegateCommand(() =>
             {
                 snapService.Initialize();
-
-                Layout.GenerateLayoutArea(MainSnapArea);
 
                 Window.Close();
             });
