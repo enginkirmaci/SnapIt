@@ -6,8 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     Title="Window1"
-    Width="640"
-    Height="480"
+    Width="973.6"
+    Height="545.6"
     Background="DarkSeaGreen"
     mc:Ignorable="d">
     <Grid>

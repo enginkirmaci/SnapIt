@@ -69,6 +69,8 @@ namespace SnapIt.Library.FindRectangle
             // add the rest of the segments
             segments.AddRange(Segments);
 
+            FixPoints(segments);
+
             segments.Sort((a, b) =>
             {
                 int result = a.Location.X.CompareTo(b.Location.X);
@@ -117,6 +119,41 @@ namespace SnapIt.Library.FindRectangle
                     }
                 }
             }
+        }
+
+        private void FixPoints(List<Segment> segments)
+        {
+            var pointXs = new List<int?>();
+            var pointYs = new List<int?>();
+
+            pointXs.AddRange(segments.Select(o => (int?)o.Location.X));
+            pointYs.AddRange(segments.Select(o => (int?)o.Location.Y));
+            pointXs.AddRange(segments.Select(o => (int?)o.EndLocation.X));
+            pointYs.AddRange(segments.Select(o => (int?)o.EndLocation.Y));
+
+            var tolerance = 4;
+
+            foreach (var segment in segments.Skip(4))
+            {
+                var locationX = pointXs.FirstOrDefault(p => NumberInRange(segment.Location.X, p.Value, tolerance));
+                var locationY = pointYs.FirstOrDefault(p => NumberInRange(segment.Location.Y, p.Value, tolerance));
+
+                segment.Location = new Point(
+                    locationX != null ? locationX.Value : segment.Location.X,
+                    locationY != null ? locationY.Value : segment.Location.Y);
+
+                var endLocationX = pointXs.FirstOrDefault(p => NumberInRange(segment.EndLocation.X, p.Value, tolerance));
+                var endLocationY = pointYs.FirstOrDefault(p => NumberInRange(segment.EndLocation.Y, p.Value, tolerance));
+
+                segment.EndLocation = new Point(
+                    endLocationX != null ? endLocationX.Value : segment.EndLocation.X,
+                    endLocationY != null ? endLocationY.Value : segment.EndLocation.Y);
+            }
+        }
+
+        private bool NumberInRange(int value, int compare, int tolerance)
+        {
+            return value - tolerance < compare && compare < value + tolerance;
         }
 
         private void CalculateRectangles()

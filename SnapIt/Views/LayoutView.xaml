@@ -1,16 +1,13 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.LayoutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
-    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
-    xmlns:local="clr-namespace:SnapIt.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:vm="clr-namespace:SnapIt.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     d:DataContext="{d:DesignInstance design:LayoutDesignView,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="800"
@@ -163,12 +160,17 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Controls:SnapAreaOld
+                            <!--<Controls:SnapAreaOld
                                 Width="188"
                                 Height="156"
                                 IsMergeIconHidden="True"
                                 LayoutArea="{Binding LayoutArea}"
-                                Theme="{Binding Theme}" />
+                                Theme="{Binding Theme}" />-->
+
+                            <Controls:SnapControl
+                                Width="188"
+                                Height="156"
+                                Layout="{Binding Mode=OneWay}" />
 
                             <TextBlock
                                 Grid.Row="1"

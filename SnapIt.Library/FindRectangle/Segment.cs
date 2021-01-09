@@ -8,5 +8,10 @@ namespace SnapIt.Library.FindRectangle
         public Point Location { get; set; }
         public Point EndLocation { get; set; }
         public SplitDirection Orientation { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Location} x {EndLocation}";
+        }
     }
 }

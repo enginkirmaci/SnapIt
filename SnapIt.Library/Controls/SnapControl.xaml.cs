@@ -10,9 +10,6 @@ using SnapIt.Library.Services;
 
 namespace SnapIt.Library.Controls
 {
-    /// <summary>
-    /// Interaction logic for SnapControl.xaml
-    /// </summary>
     public partial class SnapControl : UserControl
     {
         private SnapBorder TopBorder;
@@ -21,8 +18,6 @@ namespace SnapIt.Library.Controls
         private SnapBorder RightBorder;
 
         public SnapAreaTheme Theme { get; set; }
-        //public List<LayoutLine> SnapLines { get; set; }
-        //public List<LayoutArea> LayoutAreas { get; set; }
 
         public Layout Layout
         {
@@ -57,7 +52,7 @@ namespace SnapIt.Library.Controls
             LeftBorder = new SnapBorder(this, Theme) { IsDraggable = false };
             RightBorder = new SnapBorder(this, Theme) { IsDraggable = false };
 
-            this.SizeChanged += SnapControl_SizeChanged;
+            SizeChanged += SnapControl_SizeChanged;
         }
 
         private void SnapControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -94,7 +89,7 @@ namespace SnapIt.Library.Controls
                 {
                     Location = new System.Drawing.Point((int)line.Start.X, (int)line.Start.Y),
                     EndLocation = new System.Drawing.Point((int)line.End.X, (int)line.End.Y),
-                    Orientation = border.SplitDirection
+                    Orientation = line.SplitDirection
                 });
             }
 
@@ -133,7 +128,6 @@ namespace SnapIt.Library.Controls
         public void LoadLayout(Layout layout)
         {
             MainGrid.Children.Clear();
-            //MainAreas.Children.Clear();
 
             MainGrid.Children.Add(TopBorder);
             MainGrid.Children.Add(BottomBorder);
@@ -150,18 +144,6 @@ namespace SnapIt.Library.Controls
 
                 snapBorder.SetPos(layoutLine.Point, layoutLine.Size, layoutLine.SplitDirection);
             }
-
-            //foreach (var layoutArea in layout.LayoutAreas)
-            //{
-            //    MainAreas.Children.Add(new SnapArea()
-            //    {
-            //        Margin = layoutArea.Margin,
-            //        Width = layoutArea.Width,
-            //        Height = layoutArea.Height,
-            //        SnapControl = this,
-            //        Theme = Theme
-            //    });
-            //}
 
             AdoptToScreen();
         }
