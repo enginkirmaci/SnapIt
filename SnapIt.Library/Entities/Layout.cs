@@ -8,10 +8,12 @@ namespace SnapIt.Library.Entities
     public class Layout : Bindable
     {
         private string name;
-        private LayoutAreaOld layoutArea;
 
         public string Version = "2.0";
         public Guid Guid { get; set; }
+        [JsonIgnore]
+        public bool IsNew { get; set; }
+
         [JsonIgnore]
         public bool IsSaved { get; set; }
 
@@ -30,9 +32,6 @@ namespace SnapIt.Library.Entities
 
         public Size Size { get; set; }
         public List<LayoutLine> LayoutLines { get; set; }
-
-        //TODO remove after refactoring
-        //public LayoutAreaOld LayoutArea { get => layoutArea; set => SetProperty(ref layoutArea, value); }
 
         public Layout()
         {

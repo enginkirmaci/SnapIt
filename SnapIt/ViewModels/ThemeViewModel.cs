@@ -21,8 +21,8 @@ namespace SnapIt.ViewModels
 
         private SnapAreaTheme theme;
         private BitmapImage backgroundImage;
-        private SnapAreaOld snapArea;
         private bool openApplyChangesBar;
+        private SnapArea snapArea;
 
         public Layout Layout { get; set; }
         public SnapAreaTheme Theme { get => theme; set { SetProperty(ref theme, value); } }
@@ -52,11 +52,11 @@ namespace SnapIt.ViewModels
             {
                 var grid = mainSnapGrid as DependencyObject;
 
-                snapArea = grid.FindChildren<SnapAreaOld>().FirstOrDefault();
+                snapArea = grid.FindChildren<SnapArea>().FirstOrDefault();
 
                 if (snapArea != null)
                 {
-                    snapArea.SetPreview();
+                    snapArea.OnHoverStyle();
                 }
             });
 
@@ -79,50 +79,24 @@ namespace SnapIt.ViewModels
             Layout = new Layout
             {
                 Name = "Layout 1",
-                Size = new Size(1436, 700.8),
+                Size = new Size(500, 200),
                 LayoutLines = new List<LayoutLine>
                 {
                     new LayoutLine
                     {
-                        Point=new Point(259.904414003044,0),
-                        Size = new Size(0,700.8)
+                        Point=new Point(150,0),
+                        Size = new Size(0,200)
                     },
                      new LayoutLine
                     {
-                        Point=new Point( 1230.4596651446,0),
-                        Size = new Size(0,700.8 )
-                    },
-                     new LayoutLine
-                    {
-                        Point=new Point(259.904414003044,471.072897196262 ),
-                        Size = new Size(970.555251141553,0 ),
+                        Point=new Point(150,100),
+                        Size = new Size(350,0),
                         SplitDirection = SplitDirection.Horizontal
                     },
                      new LayoutLine
                     {
-                        Point=new Point(455.331811263318,471.072897196262 ),
-                        Size = new Size(0,229.727102803738 )
-                    },
-                     new LayoutLine
-                    {
-                        Point=new Point(567.733637747336,0 ),
-                        Size = new Size( 0,471.072897196262)
-                    },
-                     new LayoutLine
-                    {
-                        Point=new Point(567,235.5 ),
-                        Size = new Size(663,0 ),
-                        SplitDirection = SplitDirection.Horizontal
-                    },
-                     new LayoutLine
-                    {
-                        Point=new Point(898.5,235 ),
-                        Size = new Size( 0,236)
-                    },
-                     new LayoutLine
-                    {
-                        Point=new Point(842.5,471 ),
-                        Size = new Size( 0,229)
+                        Point=new Point(325,100),
+                        Size = new Size(0,100)
                     }
                 },
                 Theme = Theme
@@ -137,7 +111,7 @@ namespace SnapIt.ViewModels
 
             if (snapArea != null)
             {
-                snapArea.SetPreview();
+                snapArea.OnHoverStyle();
             }
         }
 

@@ -27,15 +27,9 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding ClosingCommand}" CommandParameter="{Binding ElementName=SnapControl}" />
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
-        <!--<i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=SnapControl}" />
-        </i:EventTrigger>
-        <i:EventTrigger EventName="SourceInitialized">
-            <i:InvokeCommandAction Command="{Binding SourceInitializedCommand}" CommandParameter="{Binding ElementName=DesignWindowView}" />
-        </i:EventTrigger>-->
     </i:Interaction.Triggers>
     <Grid>
 

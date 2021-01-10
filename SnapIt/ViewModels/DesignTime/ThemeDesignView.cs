@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using SnapIt.Library.Entities;
 
 namespace SnapIt.ViewModels.DesignTime
@@ -6,7 +7,7 @@ namespace SnapIt.ViewModels.DesignTime
     public class ThemeDesignView
     {
         public Layout Layout { get; set; }
-        public SnapAreaTheme Theme { get; set; }
+        public SnapAreaTheme Theme { get; set; } = new SnapAreaTheme();
         public bool OpenApplyChangesBar { get; set; }
 
         public ThemeDesignView()
@@ -17,50 +18,24 @@ namespace SnapIt.ViewModels.DesignTime
             Layout = new Layout
             {
                 Name = "Layout 1",
-                Size = new System.Windows.Size(1436, 700.8),
+                Size = new Size(500, 200),
                 LayoutLines = new List<LayoutLine>
                 {
                     new LayoutLine
                     {
-                        Point=new System.Windows.Point(259.904414003044,0),
-                        Size = new System.Windows.Size(0,700.8)
+                        Point=new Point(150,0),
+                        Size = new Size(0,200)
                     },
                      new LayoutLine
                     {
-                        Point=new System.Windows.Point( 1230.4596651446,0),
-                        Size = new System.Windows.Size(0,700.8 )
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(259.904414003044,471.072897196262 ),
-                        Size = new System.Windows.Size(970.555251141553,0 ),
+                        Point=new Point(150,100),
+                        Size = new Size(350,0),
                         SplitDirection = SplitDirection.Horizontal
                     },
                      new LayoutLine
                     {
-                        Point=new System.Windows.Point(455.331811263318,471.072897196262 ),
-                        Size = new System.Windows.Size(0,229.727102803738 )
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(567.733637747336,0 ),
-                        Size = new System.Windows.Size( 0,471.072897196262)
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(567,235.5 ),
-                        Size = new System.Windows.Size(663,0 ),
-                        SplitDirection = SplitDirection.Horizontal
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(898.5,235 ),
-                        Size = new System.Windows.Size( 0,236)
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(842.5,471 ),
-                        Size = new System.Windows.Size( 0,229)
+                        Point=new Point(325,100),
+                        Size = new Size(0,100)
                     }
                 },
                 Theme = Theme

@@ -92,27 +92,6 @@ namespace SnapIt.ViewModels
             SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
             SelectedSnapScreen = SnapScreens.FirstOrDefault(); //TODO this causes two times initialization on startup
 
-            NewLayoutCommand = new DelegateCommand(() =>
-            {
-                ////////////// OLD LAYOUT DESIGNER //////////////
-
-                var layout = new Layout
-                {
-                    Guid = Guid.NewGuid(),
-                    IsSaved = false,
-                    Name = "New layout",
-                    Theme = Theme
-                };
-
-                Layouts.Insert(0, layout);
-                PopupLayout = Layouts.FirstOrDefault(i => i.Guid == layout.Guid);
-
-                var designWindow = new DesignWindow(winApiService);
-                designWindow.Closed += DesignWindow_Closed;
-                designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
-                designWindow.Show();
-            });
-
             ImportLayoutCommand = new DelegateCommand(() =>
             {
                 try
@@ -133,16 +112,6 @@ namespace SnapIt.ViewModels
                 {
                     MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
                 }
-            });
-
-            DesignLayoutCommand = new DelegateCommand<Layout>((layout) =>
-            {
-                PopupLayout = layout;
-
-                var designWindow = new DesignWindow(winApiService);
-                designWindow.Closed += DesignWindow_Closed;
-                designWindow.SetScreen(SelectedSnapScreen, PopupLayout);
-                designWindow.Show();
             });
 
             OpenRenameDialogCommand = new DelegateCommand<Layout>((layout) =>
@@ -181,16 +150,61 @@ namespace SnapIt.ViewModels
                     settingService.ExportLayout(PopupLayout, fileDialog.FileName);
                 }
             });
+
+            NewLayoutCommand = new DelegateCommand(() =>
+            {
+                var layout = new Layout
+                {
+                    Guid = Guid.NewGuid(),
+                    IsNew = true,
+                    IsSaved = false,
+                    Name = "New layout",
+                    Theme = Theme
+                };
+
+                //Layouts.Insert(0, layout);
+                PopupLayout = layout; // Layouts.FirstOrDefault(i => i.Guid == layout.Guid);
+
+                var designWindow = new DesignWindow();
+                designWindow.Closed += DesignWindow_Closed;
+                designWindow.SetViewModel(SelectedSnapScreen, PopupLayout);
+                designWindow.Show();
+            });
+
+            DesignLayoutCommand = new DelegateCommand<Layout>((layout) =>
+            {
+                PopupLayout = layout;
+
+                var designWindow = new DesignWindow();
+                designWindow.Closed += DesignWindow_Closed;
+                designWindow.SetViewModel(SelectedSnapScreen, PopupLayout);
+                designWindow.Show();
+            });
         }
 
         private void DesignWindow_Closed(object sender, EventArgs e)
         {
-            settingService.SaveLayout(PopupLayout);
+            //settingService.SaveLayout(PopupLayout);
 
-            var position = Layouts.IndexOf(PopupLayout);
+            //var position = Layouts.IndexOf(PopupLayout);
 
-            Layouts.Remove(PopupLayout);
-            Layouts.Insert(position, PopupLayout);
+            //Layouts.Remove(PopupLayout);
+            //Layouts.Insert(position, PopupLayout);
+
+            if (PopupLayout.IsNew)
+            {
+                PopupLayout.IsNew = false;
+
+                settingService.Layouts.Insert(0, PopupLayout);
+                Layouts = new ObservableCollection<Layout>(settingService.Layouts);
+            }
+            else if (!PopupLayout.IsSaved)
+            {
+                var position = Layouts.IndexOf(PopupLayout);
+
+                Layouts.Remove(PopupLayout);
+                Layouts.Insert(position, PopupLayout);
+            }
 
             if (SelectedLayout == null)
             {

@@ -41,15 +41,16 @@
                         Margin="0,6"
                         Style="{StaticResource MaterialDesignTitleTextBlock2}"
                         Text="Preview" />
-                    <Grid
-                        Width="480"
-                        Height="240"
-                        HorizontalAlignment="Left">
+                    <Grid HorizontalAlignment="Left">
                         <Grid.Background>
                             <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill" />
                         </Grid.Background>
 
-                        <Controls:SnapControl Layout="{Binding Layout}" Theme="{Binding Theme, Mode=TwoWay}" />
+                        <Controls:SnapControl
+                            Width="480"
+                            Height="240"
+                            Layout="{Binding Layout}"
+                            Theme="{Binding Theme, Mode=TwoWay}" />
                     </Grid>
                 </StackPanel>
 

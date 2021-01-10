@@ -123,13 +123,6 @@ namespace SnapIt.Library.Controls
             Layout.Size = new Size(ActualWidth, ActualHeight);
         }
 
-        public void SaveLayout()
-        {
-            //Layout.Guid = Guid.NewGuid();
-            //Layout.IsSaved = false;
-            //Layout.Name = "New layout";
-        }
-
         public void LoadLayout(Layout layout)
         {
             MainGrid.Children.Clear();
@@ -160,26 +153,29 @@ namespace SnapIt.Library.Controls
             LeftBorder.SetPos(new Point(-SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
             RightBorder.SetPos(new Point(MainGrid.ActualWidth - SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
 
-            var factorX = ActualWidth / Layout.Size.Width;
-            var factorY = ActualHeight / Layout.Size.Height;
-
-            var borders = this.FindChildren<SnapBorder>();
-            foreach (var border in borders.Where(b => b.IsDraggable))
+            if (Layout != null)
             {
-                if (border.LayoutLine != null)
-                {
-                    var newPoint = new Point
-                    {
-                        X = border.LayoutLine.Point.X * factorX,
-                        Y = border.LayoutLine.Point.Y * factorY
-                    };
-                    var newSize = new Size
-                    {
-                        Width = border.LayoutLine.Size.Width * factorX,
-                        Height = border.LayoutLine.Size.Height * factorY
-                    };
+                var factorX = ActualWidth / Layout.Size.Width;
+                var factorY = ActualHeight / Layout.Size.Height;
 
-                    border.SetPos(newPoint, newSize, border.LayoutLine.SplitDirection);
+                var borders = this.FindChildren<SnapBorder>();
+                foreach (var border in borders.Where(b => b.IsDraggable))
+                {
+                    if (border.LayoutLine != null)
+                    {
+                        var newPoint = new Point
+                        {
+                            X = border.LayoutLine.Point.X * factorX,
+                            Y = border.LayoutLine.Point.Y * factorY
+                        };
+                        var newSize = new Size
+                        {
+                            Width = border.LayoutLine.Size.Width * factorX,
+                            Height = border.LayoutLine.Size.Height * factorY
+                        };
+
+                        border.SetPos(newPoint, newSize, border.LayoutLine.SplitDirection);
+                    }
                 }
             }
 
@@ -214,7 +210,7 @@ namespace SnapIt.Library.Controls
                 });
             }
 
-            if (IsDesignMode)
+            if (IsDesignMode && Layout != null)
             {
                 Layout.LayoutLines = newLayoutLines;
             }

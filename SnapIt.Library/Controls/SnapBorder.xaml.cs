@@ -19,10 +19,37 @@ namespace SnapIt.Library.Controls
         //public const int MAXSIZE = 40;
         //public const int MAXSIZEHALF = 20;
 
+        public SnapAreaTheme Theme
+        {
+            get => (SnapAreaTheme)GetValue(ThemeProperty);
+            set => SetValue(ThemeProperty, value);
+        }
+
+        public static readonly DependencyProperty ThemeProperty
+         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapBorder),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(ThemePropertyChanged)
+           });
+
+        private static void ThemePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapBorder = (SnapBorder)d;
+            snapBorder.Theme = (SnapAreaTheme)e.NewValue;
+
+            if (snapBorder.Theme != null)
+            {
+                snapBorder.Border.Background = snapBorder.Theme.OverlayBrush;
+                snapBorder.ReferenceBorder.Background = snapBorder.Theme.BorderBrush;
+                snapBorder.ReferenceBorder.Opacity = snapBorder.Theme.Opacity;
+                snapBorder.Opacity = snapBorder.Theme.Opacity;
+            }
+        }
+
         public SplitDirection SplitDirection { get; set; }
         public bool IsDraggable { get; set; } = true;
         public SnapControl SnapControl { get; }
-        public SnapAreaTheme Theme { get; set; }
         public LayoutLine LayoutLine { get; internal set; }
 
         private Point _positionInBlock;
@@ -35,11 +62,6 @@ namespace SnapIt.Library.Controls
 
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
-
-            Border.Background = Theme.OverlayBrush;
-            ReferenceBorder.Background = Theme.BorderBrush;
-            ReferenceBorder.Opacity = Theme.Opacity;
-            Opacity = Theme.Opacity;
         }
 
         public override string ToString()
