@@ -279,5 +279,10 @@ namespace SnapIt.Library.Controls
                 Cursor = desired_cursor;
             }
         }
+
+        private void RemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+            SnapControl.RemoveOverlay(this);
+        }
     }
 }

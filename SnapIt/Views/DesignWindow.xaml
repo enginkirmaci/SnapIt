@@ -36,7 +36,8 @@
         <Controls:SnapControl
             x:Name="SnapControl"
             IsDesignMode="True"
-            Layout="{Binding Layout}" />
+            Layout="{Binding Layout}"
+            Theme="{Binding Theme, Mode=TwoWay}" />
 
         <materialDesign:Card
             Margin="0,20,20,0"
@@ -50,6 +51,18 @@
                 IsExpanded="True">
                 <StackPanel Margin="24,8,24,16">
                     <TextBlock Margin="0,0,0,6">
+                        Designer Opacity
+                    </TextBlock>
+                    <Slider
+                        Width="150"
+                        Height="20"
+                        HorizontalAlignment="Left"
+                        Maximum="1"
+                        Minimum="0"
+                        TickFrequency="0.1"
+                        Value="{Binding Theme.Opacity}" />
+                    <Separator Style="{StaticResource MaterialDesignLightSeparator}" />
+                    <TextBlock Margin="0,0,0,6">
                         Layout Name
                     </TextBlock>
                     <TextBox
@@ -58,7 +71,6 @@
                         HorizontalAlignment="Left"
                         Text="{Binding Layout.Name}" />
                     <Button
-                        Margin="0,0,0,6"
                         Padding="6,4"
                         HorizontalAlignment="Left"
                         Command="{Binding AddOverlayLayoutCommand}"

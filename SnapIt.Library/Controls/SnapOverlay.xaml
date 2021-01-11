@@ -28,8 +28,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Foreground="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
-                Kind="ArrowExpandAll"
-                Visibility="{Binding IsMergeIconHidden, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                Kind="ArrowExpandAll" />
         </Grid>
 
         <Grid x:Name="FullOverlay" Background="{Binding Theme.HighlightBrush, FallbackValue=#FF212121}">

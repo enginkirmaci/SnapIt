@@ -38,10 +38,21 @@ namespace SnapIt.Library.Controls
 
             if (snapControl.Theme != null)
             {
-                var snapAreas = snapControl.FindChildren<SnapArea>();
-                foreach (var snapArea in snapAreas)
+                if (snapControl.IsDesignMode)
                 {
-                    snapArea.Theme = snapControl.Theme;
+                    var snapAreas = snapControl.FindChildren<SnapAreaEditor>();
+                    foreach (var snapArea in snapAreas)
+                    {
+                        snapArea.Theme = snapControl.Theme;
+                    }
+                }
+                else
+                {
+                    var snapAreas = snapControl.FindChildren<SnapArea>();
+                    foreach (var snapArea in snapAreas)
+                    {
+                        snapArea.Theme = snapControl.Theme;
+                    }
                 }
             }
         }
@@ -142,6 +153,12 @@ namespace SnapIt.Library.Controls
             MainOverlay.Children.Add(overlayEditor);
 
             GenerateSnapOverlays();
+        }
+
+        public void RemoveOverlay(SnapOverlayEditor snapOverlayEditor)
+        {
+            Layout.LayoutOverlays.Remove(snapOverlayEditor.LayoutOverlay);
+            MainOverlay.Children.Remove(snapOverlayEditor);
         }
 
         public void SetLayoutSize()

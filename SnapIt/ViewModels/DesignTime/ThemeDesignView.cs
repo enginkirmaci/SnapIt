@@ -13,7 +13,6 @@ namespace SnapIt.ViewModels.DesignTime
         public ThemeDesignView()
         {
             OpenApplyChangesBar = true;
-            Theme = new SnapAreaTheme();
 
             Layout = new Layout
             {

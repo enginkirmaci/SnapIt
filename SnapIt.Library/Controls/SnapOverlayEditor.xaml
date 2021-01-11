@@ -1,9 +1,9 @@
 ﻿<UserControl
     x:Class="SnapIt.Library.Controls.SnapOverlayEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     HorizontalAlignment="Left"
     VerticalAlignment="Top"
@@ -28,34 +28,31 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Foreground="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
-                Kind="ArrowExpandAll"
-                Visibility="{Binding IsMergeIconHidden, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                Kind="ArrowExpandAll" />
         </Grid>
 
-        <Grid x:Name="FullOverlay">
+        <Grid x:Name="FullOverlay" Background="{Binding Theme.HighlightBrush, FallbackValue=#FF212121}">
             <Border
                 x:Name="FullOverlayBorder"
                 BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
                 BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
 
-            <Grid
-                x:Name="DesignPanel"
+            <Button
+                x:Name="RemoveButton"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Panel.ZIndex="99">
-                <Button
-                    x:Name="MergeButton"
-                    Width="48"
-                    Height="48"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Panel.ZIndex="999"
-                    Background="White"
-                    Foreground="Black"
-                    Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                    <materialDesign:PackIcon Kind="Remove" />
-                </Button>
-            </Grid>
+                Click="RemoveButton_Click"
+                Foreground="White"
+                Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="DeleteOutline" />
+                        <TextBlock
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="Remove" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
         </Grid>
     </Grid>
 </UserControl>

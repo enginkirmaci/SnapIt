@@ -14,20 +14,13 @@ namespace SnapIt.ViewModels
         private readonly ISnapService snapService;
 
         private Layout layout;
+        private SnapAreaTheme theme;
         private string _currentName;
 
-        public Layout Layout
-        {
-            get => layout; set
-            {
-                SetProperty(ref layout, value);
-                _currentName = layout.Name;
-            }
-        }
-
+        public Layout Layout { get => layout; set { SetProperty(ref layout, value); _currentName = layout.Name; } }
+        public SnapAreaTheme Theme { get => theme; set { SetProperty(ref theme, value); } }
         public DesignWindow Window { get; set; }
         public SnapScreen SnapScreen { get; set; }
-        public SnapAreaTheme Theme { get; set; }
 
         public DelegateCommand LoadedCommand { get; }
         public DelegateCommand SaveLayoutCommand { get; }
@@ -43,6 +36,7 @@ namespace SnapIt.ViewModels
             this.snapService = snapService;
 
             Theme = new SnapAreaTheme();
+            Theme.ThemeChanged += Theme_ThemeChanged;
 
             LoadedCommand = new DelegateCommand(LoadedCommandExecute);
             SaveLayoutCommand = new DelegateCommand(SaveLayoutCommandExecute);
@@ -99,6 +93,12 @@ namespace SnapIt.ViewModels
             Layout.IsSaved = true;
 
             Window.Close();
+        }
+
+        private void Theme_ThemeChanged()
+        {
+            Theme = Theme.Copy();
+            Theme.ThemeChanged += Theme_ThemeChanged;
         }
     }
 }
