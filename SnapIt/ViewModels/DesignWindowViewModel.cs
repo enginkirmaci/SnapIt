@@ -14,8 +14,16 @@ namespace SnapIt.ViewModels
         private readonly ISnapService snapService;
 
         private Layout layout;
+        private string _currentName;
 
-        public Layout Layout { get => layout; set => SetProperty(ref layout, value); }
+        public Layout Layout
+        {
+            get => layout; set
+            {
+                SetProperty(ref layout, value);
+                _currentName = layout.Name;
+            }
+        }
 
         public DesignWindow Window { get; set; }
         public SnapScreen SnapScreen { get; set; }
@@ -24,6 +32,8 @@ namespace SnapIt.ViewModels
         public DelegateCommand LoadedCommand { get; }
         public DelegateCommand SaveLayoutCommand { get; }
         public DelegateCommand CloseLayoutCommand { get; }
+        public DelegateCommand AddOverlayLayoutCommand { get; }
+        public DelegateCommand ClearLayoutCommand { get; }
 
         public DesignWindowViewModel(
             IWinApiService winApiService,
@@ -37,6 +47,18 @@ namespace SnapIt.ViewModels
             LoadedCommand = new DelegateCommand(LoadedCommandExecute);
             SaveLayoutCommand = new DelegateCommand(SaveLayoutCommandExecute);
             CloseLayoutCommand = new DelegateCommand(CloseLayoutCommandExecute);
+            AddOverlayLayoutCommand = new DelegateCommand(AddOverlayLayoutCommandExecute);
+            ClearLayoutCommand = new DelegateCommand(ClearLayoutCommandExecute);
+        }
+
+        private void AddOverlayLayoutCommandExecute()
+        {
+            Window.SnapControl.AddOverlay();
+        }
+
+        private void ClearLayoutCommandExecute()
+        {
+            Window.SnapControl.ClearLayout();
         }
 
         private void LoadedCommandExecute()
@@ -73,6 +95,8 @@ namespace SnapIt.ViewModels
         private void CloseLayoutCommandExecute()
         {
             Window.SnapControl.SetLayoutSize();
+            Layout.Name = _currentName;
+            Layout.IsSaved = true;
 
             Window.Close();
         }

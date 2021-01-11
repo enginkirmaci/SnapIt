@@ -11,5 +11,6 @@
     <Grid>
         <Grid x:Name="MainAreas" />
         <Grid x:Name="MainGrid" />
+        <Grid x:Name="MainOverlay" />
     </Grid>
 </UserControl>

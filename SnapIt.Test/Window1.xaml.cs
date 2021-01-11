@@ -1,5 +1,6 @@
-﻿using System.Windows;
-using SnapIt.Library.Services;
+﻿using System.Collections.Generic;
+using System.Windows;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Test
 {
@@ -11,20 +12,41 @@ namespace SnapIt.Test
         public Window1()
         {
             InitializeComponent();
-            SnapControl.Layout = new Library.Entities.Layout();
-        }
-
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            SnapControl.SaveLayout();
+            SnapControl.Layout = new Layout();
         }
 
         private void Load_Click(object sender, RoutedEventArgs e)
         {
-            FileOperationService fileOperationService = new FileOperationService();
-            var layout = fileOperationService.ImportLayout(@"C:\Users\Engin\AppData\Local\SnapIt.Test\Layoutsv20\test.json");
+            SnapControl.Layout = new Layout
+            {
+                Name = "Layout 1",
+                Size = new Size(500, 200),
+                LayoutLines = new List<LayoutLine>
+                    {
+                        new LayoutLine
+                        {
+                            Point=new Point(150,0),
+                            Size = new Size(0,200)
+                        },
+                         new LayoutLine
+                        {
+                            Point=new Point(150,100),
+                            Size = new Size(350,0),
+                            SplitDirection = SplitDirection.Horizontal
+                        },
+                         new LayoutLine
+                        {
+                            Point=new Point(325,100),
+                            Size = new Size(0,100)
+                        }
+                    },
+                Theme = new SnapAreaTheme()
+            };
+        }
 
-            SnapControl.Layout = layout;
+        private void AddOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            SnapControl.AddOverlay();
         }
     }
 }

@@ -39,24 +39,24 @@ namespace SnapIt.ViewModels.DesignTime
                     Name = "Layout 1",
                     Size = new System.Windows.Size(500, 200),
                     LayoutLines = new List<LayoutLine>
-                {
-                    new LayoutLine
                     {
-                        Point=new System.Windows.Point(150,0),
-                        Size = new System.Windows.Size(0,200)
+                        new LayoutLine
+                        {
+                            Point=new System.Windows.Point(150,0),
+                            Size = new System.Windows.Size(0,200)
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(150,100),
+                            Size = new System.Windows.Size(350,0),
+                            SplitDirection = SplitDirection.Horizontal
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(325,100),
+                            Size = new System.Windows.Size(0,100)
+                        }
                     },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(150,100),
-                        Size = new System.Windows.Size(350,0),
-                        SplitDirection = SplitDirection.Horizontal
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(325,100),
-                        Size = new System.Windows.Size(0,100)
-                    }
-                },
                     Theme = Theme
                 },
                 new Layout

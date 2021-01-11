@@ -14,7 +14,8 @@ namespace SnapIt.Library.Controls
     {
         private readonly ISettingService settingService;
         private readonly IWinApiService winApiService;
-        private SnapArea current;
+        private SnapArea currentArea;
+        private SnapOverlay currentOverlay;
 
         public SnapScreen Screen { get; set; }
         public List<Rectangle> SnapAreaBoundries { get; set; }
@@ -125,57 +126,43 @@ namespace SnapIt.Library.Controls
 
                 var element = InputHitTest(Point2Window);
 
+                DependencyObject dependencyObject = null;
                 if (element != null && element is DependencyObject)
                 {
-                    element = ((DependencyObject)element).FindParent<SnapArea>();
+                    dependencyObject = ((DependencyObject)element).FindParent<SnapArea>();
+                    if (dependencyObject == null)
+                    {
+                        dependencyObject = ((DependencyObject)element).FindParent<SnapOverlay>();
+                    }
                 }
 
-                if (current != null)
+                if (currentArea != null)
                 {
-                    //if (current.IsMergedSnapArea)
-                    //{
-                    //    var parent = current.ParentSnapArea;
-                    //    if (parent == null)
-                    //    {
-                    //        parent = current;
-                    //    }
-
-                    //    var children = parent.FindChildren<SnapAreaOld>();
-                    //    foreach (var child in children)
-                    //    {
-                    //        child.NormalStyle();
-                    //    }
-                    //}
-                    //else
-                    //{
-                    current.NormalStyle();
-                    //}
+                    currentArea.NormalStyle();
+                }
+                if (currentOverlay != null)
+                {
+                    currentOverlay.NormalStyle();
                 }
 
-                if (element != null && element is SnapArea)
+                if (dependencyObject != null)
                 {
-                    var snapArea = current = (SnapArea)element;
+                    if (dependencyObject is SnapArea)
+                    {
+                        var snapArea = currentArea = (SnapArea)dependencyObject;
 
-                    //if ((element as SnapAreaOld).IsMergedSnapArea)
-                    //{
-                    //    snapArea = ((SnapAreaOld)element).ParentSnapArea;
+                        snapArea.OnHoverStyle();
 
-                    //    var children = snapArea.FindChildren<SnapAreaOld>();
-                    //    foreach (var child in children)
-                    //    {
-                    //        child.OnHoverStyle();
-                    //    }
+                        return snapArea.ScreenSnapArea(Dpi);
+                    }
+                    if (dependencyObject is SnapOverlay)
+                    {
+                        var snapOverlay = currentOverlay = (SnapOverlay)dependencyObject;
 
-                    //    return snapArea.ScreenSnapArea(Dpi);
-                    //}
-                    //else
-                    //{
-                    snapArea = (SnapArea)element;
+                        snapOverlay.OnHoverStyle();
 
-                    snapArea.OnHoverStyle();
-
-                    return snapArea.ScreenSnapArea(Dpi);
-                    //}
+                        return snapOverlay.ScreenSnapArea(Dpi);
+                    }
                 }
             }
 

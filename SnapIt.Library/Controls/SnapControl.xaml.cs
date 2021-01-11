@@ -10,6 +10,7 @@ namespace SnapIt.Library.Controls
 {
     public partial class SnapControl : UserControl
     {
+        private double _overlayMargin = 0;
         private SnapBorder TopBorder;
         private SnapBorder BottomBorder;
         private SnapBorder LeftBorder;
@@ -118,14 +119,47 @@ namespace SnapIt.Library.Controls
             GenerateSnapAreas();
         }
 
+        public void AddOverlay()
+        {
+            var overlayEditor = new SnapOverlayEditor(this, Theme);
+
+            var scale = 0.4;
+            var size = new Size
+            {
+                Width = ActualWidth * scale,
+                Height = ActualHeight * scale
+            };
+            var point = new Point
+            {
+                X = ((ActualWidth - size.Width) / 2) + _overlayMargin,
+                Y = ((ActualHeight - size.Height) / 2) + _overlayMargin
+            };
+
+            _overlayMargin += 20;
+
+            overlayEditor.SetPos(point, size);
+
+            MainOverlay.Children.Add(overlayEditor);
+
+            GenerateSnapOverlays();
+        }
+
         public void SetLayoutSize()
         {
             Layout.Size = new Size(ActualWidth, ActualHeight);
         }
 
+        public void ClearLayout()
+        {
+            Layout.LayoutLines = new List<LayoutLine>();
+
+            LoadLayout(Layout);
+        }
+
         public void LoadLayout(Layout layout)
         {
             MainGrid.Children.Clear();
+            MainOverlay.Children.Clear();
 
             MainGrid.Children.Add(TopBorder);
             MainGrid.Children.Add(BottomBorder);
@@ -138,9 +172,45 @@ namespace SnapIt.Library.Controls
                 {
                     LayoutLine = layoutLine
                 };
-                MainGrid.Children.Add(snapBorder);
 
-                snapBorder.SetPos(layoutLine.Point, layoutLine.Size, layoutLine.SplitDirection);
+                //snapBorder.SetPos(layoutLine.Point, layoutLine.Size, layoutLine.SplitDirection);
+
+                MainGrid.Children.Add(snapBorder);
+            }
+
+            if (IsDesignMode)
+            {
+                if (layout.LayoutOverlays != null)
+                {
+                    foreach (var layoutOverlay in layout.LayoutOverlays)
+                    {
+                        var overlayEditor = new SnapOverlayEditor(this, Theme)
+                        {
+                            LayoutOverlay = layoutOverlay
+                        };
+
+                        //overlayEditor.SetPos(layoutOverlay.Point, layoutOverlay.Size);
+
+                        MainOverlay.Children.Add(overlayEditor);
+                    }
+                }
+            }
+            else
+            {
+                if (layout.LayoutOverlays != null)
+                {
+                    foreach (var layoutOverlay in layout.LayoutOverlays)
+                    {
+                        var overlay = new SnapOverlay(this, Theme)
+                        {
+                            LayoutOverlay = layoutOverlay
+                        };
+
+                        //overlayEditor.SetPos(layoutOverlay.Point, layoutOverlay.Size);
+
+                        MainOverlay.Children.Add(overlay);
+                    }
+                }
             }
 
             AdoptToScreen();
@@ -177,9 +247,76 @@ namespace SnapIt.Library.Controls
                         border.SetPos(newPoint, newSize, border.LayoutLine.SplitDirection);
                     }
                 }
+
+                if (IsDesignMode)
+                {
+                    var overlays = this.FindChildren<SnapOverlayEditor>();
+                    foreach (var overlay in overlays)
+                    {
+                        if (overlay.LayoutOverlay != null)
+                        {
+                            var newPoint = new Point
+                            {
+                                X = overlay.LayoutOverlay.Point.X * factorX,
+                                Y = overlay.LayoutOverlay.Point.Y * factorY
+                            };
+                            var newSize = new Size
+                            {
+                                Width = overlay.LayoutOverlay.Size.Width * factorX,
+                                Height = overlay.LayoutOverlay.Size.Height * factorY
+                            };
+
+                            overlay.SetPos(newPoint, newSize);
+                        }
+                    }
+                }
+                else
+                {
+                    var overlays = this.FindChildren<SnapOverlay>();
+                    foreach (var overlay in overlays)
+                    {
+                        if (overlay.LayoutOverlay != null)
+                        {
+                            var newPoint = new Point
+                            {
+                                X = overlay.LayoutOverlay.Point.X * factorX,
+                                Y = overlay.LayoutOverlay.Point.Y * factorY
+                            };
+                            var newSize = new Size
+                            {
+                                Width = overlay.LayoutOverlay.Size.Width * factorX,
+                                Height = overlay.LayoutOverlay.Size.Height * factorY
+                            };
+
+                            overlay.SetPos(newPoint, newSize);
+                        }
+                    }
+                }
             }
 
             GenerateSnapAreas();
+        }
+
+        public void GenerateSnapOverlays()
+        {
+            if (IsDesignMode)
+            {
+                var overlays = this.FindChildren<SnapOverlayEditor>();
+
+                var newLayoutOverlays = new List<LayoutOverlay>();
+
+                foreach (var overlay in overlays)
+                {
+                    var line = overlay.GetOverlay();
+
+                    newLayoutOverlays.Add(line);
+                }
+
+                if (Layout != null)
+                {
+                    Layout.LayoutOverlays = newLayoutOverlays;
+                }
+            }
         }
 
         public void GenerateSnapAreas()

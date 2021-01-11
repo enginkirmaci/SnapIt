@@ -66,6 +66,12 @@
     <Compile Include="Controls\SnapControl.xaml.cs">
       <DependentUpon>SnapControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SnapOverlay.xaml.cs">
+      <DependentUpon>SnapOverlay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SnapOverlayEditor.xaml.cs">
+      <DependentUpon>SnapOverlayEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\EqualVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\InputDeviceConverter.cs" />
@@ -76,6 +82,7 @@
     <Compile Include="Entities\ExcludedApplication.cs" />
     <Compile Include="Entities\ExcludedApplicationSettings.cs" />
     <Compile Include="Entities\Constants.cs" />
+    <Compile Include="Entities\LayoutOverlay.cs" />
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\SnapAreaInfo.cs" />
     <Compile Include="Entities\SnapAreaTheme.cs" />
@@ -99,7 +106,6 @@
     <Compile Include="Entities\Settings.cs" />
     <Compile Include="Entities\Enums.cs" />
     <Compile Include="Entities\Layout.cs" />
-    <Compile Include="Entities\LayoutAreaOld.cs" />
     <Compile Include="Entities\Rectangle.cs" />
     <Compile Include="Extensions\ScreenExtensions.cs" />
     <Compile Include="InteropServices\DwmApi.cs" />
@@ -172,6 +178,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SnapControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SnapOverlay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SnapOverlayEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

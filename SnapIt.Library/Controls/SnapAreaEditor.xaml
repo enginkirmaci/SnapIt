@@ -38,17 +38,6 @@
                         Style="{StaticResource MaterialDesignIconForegroundButton2}">
                         <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
                     </Button>
-
-                    <!--<Button
-                        x:Name="RemoveSnapArea"
-                        Margin="2"
-                        Padding="12,2"
-                        Background="White"
-                        Click="RemoveSnapArea_Click"
-                        Foreground="Black"
-                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                        <materialDesign:PackIcon Kind="Remove" />
-                    </Button>-->
                 </StackPanel>
             </Grid>
         </Grid>

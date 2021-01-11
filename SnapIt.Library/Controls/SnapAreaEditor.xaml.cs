@@ -4,9 +4,6 @@ using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Controls
 {
-    /// <summary>
-    /// Interaction logic for SnapArea.xaml
-    /// </summary>
     public partial class SnapAreaEditor : UserControl
     {
         public SnapControl SnapControl { get; set; }
@@ -90,10 +87,6 @@ namespace SnapIt.Library.Controls
                 DesignPanel.Visibility = Visibility.Hidden;
             }
         }
-
-        //private void RemoveSnapArea_Click(object sender, RoutedEventArgs e)
-        //{
-        //}
 
         public Rect GetRect()
         {

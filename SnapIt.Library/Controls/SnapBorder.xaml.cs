@@ -3,21 +3,15 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
-    /// <summary>
-    /// Interaction logic for SnapBorder.xaml
-    /// </summary>
     public partial class SnapBorder : UserControl
     {
         public const int THICKNESS = 12;
         public const int THICKNESSHALF = 6;
-        //public const int MAXSIZE = 40;
-        //public const int MAXSIZEHALF = 20;
 
         public SnapAreaTheme Theme
         {
@@ -69,11 +63,6 @@ namespace SnapIt.Library.Controls
             return $"{ActualWidth}x{ActualHeight}, {Margin}";
         }
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-        }
-
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
@@ -112,11 +101,8 @@ namespace SnapIt.Library.Controls
 
             if (IsMouseCaptured)
             {
-                // get the parent container
-                var container = VisualTreeHelper.GetParent(this) as UIElement;
-
                 // get the position within the container
-                var mousePosition = e.GetPosition(container);
+                var mousePosition = e.GetPosition(SnapControl);
 
                 var p = new Point(mousePosition.X - _positionInBlock.X, mousePosition.Y - _positionInBlock.Y);
 
@@ -288,8 +274,6 @@ namespace SnapIt.Library.Controls
 
         public LayoutLine GetLine()
         {
-            //point, size, direction
-
             var line = SplitDirection == SplitDirection.Vertical ?
                 new LayoutLine
                 {

@@ -32,6 +32,7 @@ namespace SnapIt.Library.Entities
 
         public Size Size { get; set; }
         public List<LayoutLine> LayoutLines { get; set; }
+        public List<LayoutOverlay> LayoutOverlays { get; set; }
 
         public Layout()
         {
