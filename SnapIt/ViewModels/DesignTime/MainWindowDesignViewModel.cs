@@ -6,6 +6,7 @@
         public bool IsDarkTheme { get; set; }
         public bool IsRunning { get; set; }
         public string Status { get; set; }
+        public bool IsVersion3000MessageShown { get; set; }
 
         public MainWindowDesignViewModel()
         {
@@ -13,6 +14,7 @@
             Status = "Stop";
             ThemeTitle = "Light";
             IsDarkTheme = false;
+            IsVersion3000MessageShown = false;
         }
     }
 }

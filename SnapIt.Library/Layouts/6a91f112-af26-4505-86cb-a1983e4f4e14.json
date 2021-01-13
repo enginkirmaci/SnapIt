@@ -1,0 +1,23 @@
+{
+  "Version": "2.0",
+  "Guid": "6a91f112-af26-4505-86cb-a1983e4f4e14",
+  "Name": "2 Part Left Split",
+  "Size": "1536,824",
+  "LayoutLines": [
+    {
+      "Point": "768,0",
+      "Size": "0,824"
+    },
+    {
+      "Point": "0,412",
+      "Size": "768,0",
+      "SplitDirection": 1
+    }
+  ],
+  "LayoutOverlays": [
+    {
+      "Point": "0,0",
+      "Size": "768,824"
+    }
+  ]
+}

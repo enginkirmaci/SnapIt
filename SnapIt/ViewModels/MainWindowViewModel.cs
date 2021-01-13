@@ -21,7 +21,7 @@ namespace SnapIt.ViewModels
         private bool isDarkTheme;
         private string themeTitle;
 
-        public string Title { get => $"{Constants.AppName} {System.Windows.Forms.Application.ProductVersion}"; }
+        public string Title { get => Constants.AppTitle; }
         public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
         public string Status { get => status; set => SetProperty(ref status, value); }
         public bool IsDarkTheme
@@ -38,6 +38,7 @@ namespace SnapIt.ViewModels
         }
 
         public string ThemeTitle { get => themeTitle; set => SetProperty(ref themeTitle, value); }
+        public bool IsVersion3000MessageShown { get => settingService.Settings.IsVersion3000MessageShown; set { settingService.Settings.IsVersion3000MessageShown = value; } }
 
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
@@ -59,17 +60,30 @@ namespace SnapIt.ViewModels
 
             snapService.StatusChanged += SnapService_StatusChanged;
 
+            if (!DevMode.IsActive)
+            {
+                snapService.Initialize();
+            }
+            else if (DevMode.ShowSnapWindowOnStartup)
+            {
+                windowService.Initialize();
+                windowService.Show();
+            }
+
             ActivatedCommand = new DelegateCommand<Window>((window) =>
             {
-                if (settingService.Settings.ShowMainWindow)
+                if (IsVersion3000MessageShown)
                 {
-                    settingService.Settings.ShowMainWindow = false;
-                    HideWindowAtStartup = false;
-                }
-                else if (!DevMode.IsActive && HideWindowAtStartup)
-                {
-                    HideWindowAtStartup = false;
-                    window.Hide();
+                    if (settingService.Settings.ShowMainWindow)
+                    {
+                        settingService.Settings.ShowMainWindow = false;
+                        HideWindowAtStartup = false;
+                    }
+                    else if (!DevMode.IsActive && HideWindowAtStartup)
+                    {
+                        HideWindowAtStartup = false;
+                        window.Hide();
+                    }
                 }
             });
 
@@ -120,16 +134,6 @@ namespace SnapIt.ViewModels
                     this.regionManager.RequestNavigate(Constants.MainRegion, navigatePath);
                 }
             });
-
-            if (!DevMode.IsActive)
-            {
-                snapService.Initialize();
-            }
-            else if (DevMode.ShowSnapWindowOnStartup)
-            {
-                windowService.Initialize();
-                windowService.Show();
-            }
         }
 
         private void SnapService_StatusChanged(bool isRunning)

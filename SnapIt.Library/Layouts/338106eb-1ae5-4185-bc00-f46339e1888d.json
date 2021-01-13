@@ -1,0 +1,31 @@
+{
+  "Version": "2.0",
+  "Guid": "338106eb-1ae5-4185-bc00-f46339e1888d",
+  "Name": "3 Part Horizontal Reverse",
+  "Size": "1536,824",
+  "LayoutLines": [
+    {
+      "Point": "512,0",
+      "Size": "0,824"
+    },
+    {
+      "Point": "1024,0",
+      "Size": "0,824"
+    },
+    {
+      "Point": "1024,412",
+      "Size": "512,0",
+      "SplitDirection": 1
+    }
+  ],
+  "LayoutOverlays": [
+    {
+      "Point": "1024,0",
+      "Size": "512,824"
+    },
+    {
+      "Point": "512,0",
+      "Size": "1024,824"
+    }
+  ]
+}
