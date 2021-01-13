@@ -80,7 +80,7 @@ namespace SnapIt.ViewModels
         private void SaveLayoutCommandExecute()
         {
             Window.SnapControl.SetLayoutSize();
-            Layout.IsSaved = false;
+            Layout.Status = LayoutStatus.NotSaved;
             snapService.Initialize();
 
             Window.Close();
@@ -90,7 +90,8 @@ namespace SnapIt.ViewModels
         {
             Window.SnapControl.SetLayoutSize();
             Layout.Name = _currentName;
-            Layout.IsSaved = true;
+            Layout.Status = LayoutStatus.Ignored;
+            snapService.Initialize();
 
             Window.Close();
         }

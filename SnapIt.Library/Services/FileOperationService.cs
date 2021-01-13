@@ -48,7 +48,6 @@ namespace SnapIt.Library.Services
                 Directory.CreateDirectory(layoutsFolder);
 
                 var layouts = new string[]{
-                    "044ebc92-3d3a-4f8c-856b-00251a1c1584",
                     "097d074b-0eed-4878-a035-b2eb76a324ce",
                     "1ff17736-c6cf-49be-b63e-a5affefd31d9",
                     "338106eb-1ae5-4185-bc00-f46339e1888d",
@@ -143,7 +142,7 @@ namespace SnapIt.Library.Services
             foreach (var file in files)
             {
                 var layout = JsonConvert.DeserializeObject<Layout>(File.ReadAllText(file));
-                layout.IsSaved = true;
+                layout.Status = LayoutStatus.Saved;
                 layouts.Add(layout);
             }
 

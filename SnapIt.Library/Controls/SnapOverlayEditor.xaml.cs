@@ -7,13 +7,10 @@ namespace SnapIt.Library.Controls
 {
     public partial class SnapOverlayEditor : UserControl
     {
-        private enum HitType
-        {
-            None, Body, UL, UR, LR, LL, L, R, T, B
-        };
+        private const double GAP = 12;
 
         private Point _lastPointInContiner;
-        private HitType _mouseHitType = HitType.None;
+        private ResizeHitType _mouseHitType = ResizeHitType.None;
 
         public SnapControl SnapControl { get; }
 
@@ -57,19 +54,22 @@ namespace SnapIt.Library.Controls
             SnapControl = snapControl;
             Theme = theme;
 
+            DesignPanel.Visibility = Visibility.Hidden;
             FullOverlay.Visibility = Visibility.Hidden;
+            FullOverlay.PreviewKeyDown += FullOverlay_PreviewKeyDown;
+            FullOverlay.Focusable = true;
 
             SizeChanged += SnapOverlayEditor_SizeChanged;
         }
 
         private void SnapOverlayEditor_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var factor = 0.4;
+            var factor = 0.3;
             MiniOverlay.Width = Width * factor;
             MiniOverlay.Height = Height * factor;
 
             var iconFactor = 0.2;
-            MergedIcon.Height = MergedIcon.Width = MiniOverlay.Width * iconFactor;
+            MergedIcon.Width = MergedIcon.Height = MiniOverlay.Height * iconFactor;
         }
 
         public LayoutOverlay GetOverlay()
@@ -89,16 +89,29 @@ namespace SnapIt.Library.Controls
             Height = size.Height;
         }
 
+        private bool isEscapeKeyPressed = false;
+
+        private void FullOverlay_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            isEscapeKeyPressed = e.Key == Key.Escape;
+            Cursor = Cursors.Arrow;
+            MiniOverlay.Visibility = Visibility.Visible;
+            FullOverlay.Visibility = Visibility.Hidden;
+            DesignPanel.Visibility = Visibility.Hidden;
+        }
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
+
+            if (isEscapeKeyPressed) { return; }
 
             _lastPointInContiner = Mouse.GetPosition(SnapControl);
 
             _mouseHitType = SetHitType(Mouse.GetPosition(this));
             SetMouseCursor();
 
-            if (_mouseHitType == HitType.None) { return; }
+            if (_mouseHitType == ResizeHitType.None) { return; }
 
             CaptureMouse();
 
@@ -120,16 +133,23 @@ namespace SnapIt.Library.Controls
         {
             base.OnMouseLeave(e);
 
+            isEscapeKeyPressed = false;
+
             MiniOverlay.Visibility = Visibility.Visible;
             FullOverlay.Visibility = Visibility.Hidden;
+            DesignPanel.Visibility = Visibility.Hidden;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
 
+            Keyboard.Focus(FullOverlay);
+            if (isEscapeKeyPressed) { return; }
+
             MiniOverlay.Visibility = Visibility.Hidden;
             FullOverlay.Visibility = Visibility.Visible;
+            DesignPanel.Visibility = Visibility.Visible;
 
             if (!IsMouseCaptured)
             {
@@ -149,49 +169,49 @@ namespace SnapIt.Library.Controls
 
                 switch (_mouseHitType)
                 {
-                    case HitType.Body:
+                    case ResizeHitType.Body:
                         new_x += offset_x;
                         new_y += offset_y;
                         break;
 
-                    case HitType.UL:
+                    case ResizeHitType.UL:
                         new_x += offset_x;
                         new_y += offset_y;
                         new_width -= offset_x;
                         new_height -= offset_y;
                         break;
 
-                    case HitType.UR:
+                    case ResizeHitType.UR:
                         new_y += offset_y;
                         new_width += offset_x;
                         new_height -= offset_y;
                         break;
 
-                    case HitType.LR:
+                    case ResizeHitType.LR:
                         new_width += offset_x;
                         new_height += offset_y;
                         break;
 
-                    case HitType.LL:
+                    case ResizeHitType.LL:
                         new_x += offset_x;
                         new_width -= offset_x;
                         new_height += offset_y;
                         break;
 
-                    case HitType.L:
+                    case ResizeHitType.L:
                         new_x += offset_x;
                         new_width -= offset_x;
                         break;
 
-                    case HitType.R:
+                    case ResizeHitType.R:
                         new_width += offset_x;
                         break;
 
-                    case HitType.B:
+                    case ResizeHitType.B:
                         new_height += offset_y;
                         break;
 
-                    case HitType.T:
+                    case ResizeHitType.T:
                         new_y += offset_y;
                         new_height -= offset_y;
                         break;
@@ -209,35 +229,34 @@ namespace SnapIt.Library.Controls
             }
         }
 
-        private HitType SetHitType(Point point)
+        private ResizeHitType SetHitType(Point point)
         {
             double left = 0;
             double top = 0;
             double right = left + this.Width;
             double bottom = top + this.Height;
-            if (point.X < left) return HitType.None;
-            if (point.X > right) return HitType.None;
-            if (point.Y < top) return HitType.None;
-            if (point.Y > bottom) return HitType.None;
+            if (point.X < left) return ResizeHitType.None;
+            if (point.X > right) return ResizeHitType.None;
+            if (point.Y < top) return ResizeHitType.None;
+            if (point.Y > bottom) return ResizeHitType.None;
 
-            const double GAP = 10;
             if (point.X - left < GAP)
             {
                 // Left edge.
-                if (point.Y - top < GAP) return HitType.UL;
-                if (bottom - point.Y < GAP) return HitType.LL;
-                return HitType.L;
+                if (point.Y - top < GAP) return ResizeHitType.UL;
+                if (bottom - point.Y < GAP) return ResizeHitType.LL;
+                return ResizeHitType.L;
             }
             if (right - point.X < GAP)
             {
                 // Right edge.
-                if (point.Y - top < GAP) return HitType.UR;
-                if (bottom - point.Y < GAP) return HitType.LR;
-                return HitType.R;
+                if (point.Y - top < GAP) return ResizeHitType.UR;
+                if (bottom - point.Y < GAP) return ResizeHitType.LR;
+                return ResizeHitType.R;
             }
-            if (point.Y - top < GAP) return HitType.T;
-            if (bottom - point.Y < GAP) return HitType.B;
-            return HitType.Body;
+            if (point.Y - top < GAP) return ResizeHitType.T;
+            if (bottom - point.Y < GAP) return ResizeHitType.B;
+            return ResizeHitType.Body;
         }
 
         private void SetMouseCursor()
@@ -245,31 +264,31 @@ namespace SnapIt.Library.Controls
             Cursor desired_cursor = Cursors.Arrow;
             switch (_mouseHitType)
             {
-                case HitType.None:
+                case ResizeHitType.None:
                     desired_cursor = Cursors.Arrow;
                     break;
 
-                case HitType.Body:
+                case ResizeHitType.Body:
                     desired_cursor = Cursors.ScrollAll;
                     break;
 
-                case HitType.UL:
-                case HitType.LR:
+                case ResizeHitType.UL:
+                case ResizeHitType.LR:
                     desired_cursor = Cursors.SizeNWSE;
                     break;
 
-                case HitType.LL:
-                case HitType.UR:
+                case ResizeHitType.LL:
+                case ResizeHitType.UR:
                     desired_cursor = Cursors.SizeNESW;
                     break;
 
-                case HitType.T:
-                case HitType.B:
+                case ResizeHitType.T:
+                case ResizeHitType.B:
                     desired_cursor = Cursors.SizeNS;
                     break;
 
-                case HitType.L:
-                case HitType.R:
+                case ResizeHitType.L:
+                case ResizeHitType.R:
                     desired_cursor = Cursors.SizeWE;
                     break;
             }

@@ -14,8 +14,11 @@ namespace SnapIt.Library.Entities
         [JsonIgnore]
         public bool IsNew { get; set; }
 
+        //[JsonIgnore]
+        //public bool IsSaved { get; set; }
+
         [JsonIgnore]
-        public bool IsSaved { get; set; }
+        public LayoutStatus Status { get; set; }
 
         [JsonIgnore]
         public SnapAreaTheme Theme { get; set; }
@@ -25,7 +28,7 @@ namespace SnapIt.Library.Entities
             get => name;
             set
             {
-                IsSaved = false;
+                Status = LayoutStatus.NotSaved;
                 SetProperty(ref name, value);
             }
         }

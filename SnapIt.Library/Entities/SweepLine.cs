@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SnapIt.Library.Entities
 {
@@ -140,6 +141,7 @@ namespace SnapIt.Library.Entities
 
         public Point Point { get; set; }
         public Size Size { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public SplitDirection SplitDirection { get; set; }
 
         public override string ToString()

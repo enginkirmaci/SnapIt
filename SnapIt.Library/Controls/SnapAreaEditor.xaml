@@ -12,34 +12,65 @@
     mc:Ignorable="d">
     <Grid>
         <Grid x:Name="Area" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
-            <Grid x:Name="DesignPanel" Panel.ZIndex="99">
-                <StackPanel
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <Button
-                        x:Name="SplitVertically"
-                        Margin="2"
-                        Padding="12,2"
-                        Background="White"
-                        Click="SplitVertically_Click"
-                        Foreground="Black"
-                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                        <materialDesign:PackIcon Kind="ArrowSplitVertical" />
-                    </Button>
+            <Grid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Click="SplitVertically_Click">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ArrowSplitVertical" />
+                                <TextBlock Margin="8,-1,0,0" Text="Split Vertically" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Click="SplitHorizantally_Click">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
+                                <TextBlock Margin="8,-1,0,0" Text="Split Horizantally" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </ContextMenu>
+            </Grid.ContextMenu>
+        </Grid>
 
-                    <Button
-                        x:Name="SplitHorizantally"
-                        Margin="2"
-                        Padding="12,2"
-                        Background="White"
-                        Click="SplitHorizantally_Click"
-                        Foreground="Black"
-                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                        <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
-                    </Button>
-                </StackPanel>
-            </Grid>
+        <Grid
+            x:Name="DesignPanel"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Panel.ZIndex="99">
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    x:Name="SplitVertically"
+                    Height="36"
+                    Margin="2"
+                    HorizontalAlignment="Center"
+                    Click="SplitVertically_Click"
+                    Foreground="White"
+                    Style="{StaticResource MaterialDesignOutlinedButton}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon VerticalAlignment="Bottom" Kind="ArrowSplitVertical" />
+                            <TextBlock Margin="8,0,0,0" Text="Split Vertically" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button
+                    x:Name="SplitHorizantally"
+                    Height="36"
+                    Margin="2"
+                    HorizontalAlignment="Center"
+                    Click="SplitHorizantally_Click"
+                    Foreground="White"
+                    Style="{StaticResource MaterialDesignOutlinedButton}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon VerticalAlignment="Bottom" Kind="ArrowSplitHorizontal" />
+                            <TextBlock Margin="8,0,0,0" Text="Split Horizantally" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

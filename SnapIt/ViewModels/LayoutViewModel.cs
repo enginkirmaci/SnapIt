@@ -157,7 +157,7 @@ namespace SnapIt.ViewModels
                 {
                     Guid = Guid.NewGuid(),
                     IsNew = true,
-                    IsSaved = false,
+                    Status = LayoutStatus.NotSaved,
                     Name = "New layout",
                     Theme = Theme
                 };
@@ -184,34 +184,30 @@ namespace SnapIt.ViewModels
 
         private void DesignWindow_Closed(object sender, EventArgs e)
         {
-            //settingService.SaveLayout(PopupLayout);
-
-            //var position = Layouts.IndexOf(PopupLayout);
-
-            //Layouts.Remove(PopupLayout);
-            //Layouts.Insert(position, PopupLayout);
-
-            if (PopupLayout.IsNew)
+            if (PopupLayout.Status == LayoutStatus.NotSaved)
             {
-                PopupLayout.IsNew = false;
+                if (PopupLayout.IsNew)
+                {
+                    PopupLayout.IsNew = false;
 
-                settingService.Layouts.Insert(0, PopupLayout);
-                Layouts = new ObservableCollection<Layout>(settingService.Layouts);
+                    settingService.Layouts.Insert(0, PopupLayout);
+                    Layouts = new ObservableCollection<Layout>(settingService.Layouts);
+                }
+                else
+                {
+                    var position = Layouts.IndexOf(PopupLayout);
+
+                    Layouts.Remove(PopupLayout);
+                    Layouts.Insert(position, PopupLayout);
+                }
+
+                if (SelectedLayout == null)
+                {
+                    SelectedLayout = PopupLayout;
+                }
+
+                ApplyChanges();
             }
-            else if (!PopupLayout.IsSaved)
-            {
-                var position = Layouts.IndexOf(PopupLayout);
-
-                Layouts.Remove(PopupLayout);
-                Layouts.Insert(position, PopupLayout);
-            }
-
-            if (SelectedLayout == null)
-            {
-                SelectedLayout = PopupLayout;
-            }
-
-            ApplyChanges();
         }
 
         private void ApplyChanges()

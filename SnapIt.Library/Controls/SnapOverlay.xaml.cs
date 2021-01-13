@@ -75,12 +75,12 @@ namespace SnapIt.Library.Controls
 
         private void SnapOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var factor = 0.4;
+            var factor = 0.3;
             MiniOverlay.Width = Width * factor;
             MiniOverlay.Height = Height * factor;
 
             var iconFactor = 0.2;
-            MergedIcon.Height = MergedIcon.Width = MiniOverlay.Width * iconFactor;
+            MergedIcon.Width = MergedIcon.Height = MiniOverlay.Height * iconFactor;
         }
 
         public Rectangle ScreenSnapArea(Dpi dpi)

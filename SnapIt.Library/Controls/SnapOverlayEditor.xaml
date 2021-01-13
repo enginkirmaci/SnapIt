@@ -10,46 +10,64 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
-
-    <Grid x:Name="Overlay" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
-        <Grid
-            x:Name="MiniOverlay"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Background="{Binding Theme.OverlayBrush, FallbackValue=#FF636363}">
-            <Border
-                x:Name="Border"
-                BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
-                BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
-            <materialDesign:PackIcon
-                x:Name="MergedIcon"
-                Width="64"
-                Height="64"
+    <Grid>
+        <Grid x:Name="Overlay" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
+            <Grid
+                x:Name="MiniOverlay"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Foreground="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
-                Kind="ArrowExpandAll" />
+                Background="{Binding Theme.OverlayBrush, FallbackValue=#FF636363}">
+                <Border
+                    x:Name="Border"
+                    BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
+                    BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
+                <materialDesign:PackIcon
+                    x:Name="MergedIcon"
+                    Width="64"
+                    Height="64"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
+                    Kind="ArrowExpandAll" />
+            </Grid>
+
+            <Grid x:Name="FullOverlay" Background="{Binding Theme.HighlightBrush, FallbackValue=#FF212121}">
+                <Grid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="RemoveButton_Click">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="DeleteOutline" />
+                                    <TextBlock Margin="8,-1,0,0" Text="Remove Overlay" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                        </MenuItem>
+                    </ContextMenu>
+                </Grid.ContextMenu>
+
+                <Border
+                    x:Name="FullOverlayBorder"
+                    BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
+                    BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
+            </Grid>
         </Grid>
 
-        <Grid x:Name="FullOverlay" Background="{Binding Theme.HighlightBrush, FallbackValue=#FF212121}">
-            <Border
-                x:Name="FullOverlayBorder"
-                BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
-                BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
-
+        <Grid
+            x:Name="DesignPanel"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Panel.ZIndex="99">
             <Button
                 x:Name="RemoveButton"
+                Height="36"
                 HorizontalAlignment="Center"
                 Click="RemoveButton_Click"
                 Foreground="White"
-                Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                Style="{StaticResource MaterialDesignOutlinedButton}">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DeleteOutline" />
-                        <TextBlock
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="Remove" />
+                        <materialDesign:PackIcon VerticalAlignment="Bottom" Kind="DeleteOutline" />
+                        <TextBlock Margin="8,0,0,0" Text="Remove" />
                     </StackPanel>
                 </Button.Content>
             </Button>

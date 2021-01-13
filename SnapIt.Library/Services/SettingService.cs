@@ -45,7 +45,7 @@ namespace SnapIt.Library.Services
         {
             fileOperationService.Save(Settings);
 
-            foreach (var layout in Layouts.Where(i => !i.IsSaved))
+            foreach (var layout in Layouts.Where(i => i.Status == LayoutStatus.NotSaved))
             {
                 SaveLayout(layout);
             }
@@ -60,7 +60,7 @@ namespace SnapIt.Library.Services
 
         public void SaveLayout(Layout layout)
         {
-            layout.IsSaved = true;
+            layout.Status = LayoutStatus.Saved;
             fileOperationService.SaveLayout(layout);
         }
 
