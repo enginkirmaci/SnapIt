@@ -11,11 +11,9 @@ namespace SnapIt.Library.Entities
 
         public string Version = "2.0";
         public Guid Guid { get; set; }
+
         [JsonIgnore]
         public bool IsNew { get; set; }
-
-        //[JsonIgnore]
-        //public bool IsSaved { get; set; }
 
         [JsonIgnore]
         public LayoutStatus Status { get; set; }
@@ -40,6 +38,7 @@ namespace SnapIt.Library.Entities
         public Layout()
         {
             LayoutLines = new List<LayoutLine>();
+            LayoutOverlays = new List<LayoutOverlay>();
         }
     }
 }

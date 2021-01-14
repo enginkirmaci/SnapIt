@@ -10,13 +10,17 @@ namespace SnapIt.Library.Controls
 {
     public partial class SnapControl : UserControl
     {
-        private double _overlayMargin = 0;
-        private SnapBorder TopBorder;
-        private SnapBorder BottomBorder;
-        private SnapBorder LeftBorder;
-        private SnapBorder RightBorder;
+        private readonly SnapBorder topBorder;
+        private readonly SnapBorder bottomBorder;
+        private readonly SnapBorder leftBorder;
+        private readonly SnapBorder rightBorder;
 
-        //public SnapAreaTheme Theme { get; set; }
+        private double overlayMargin = 0;
+        private bool firstLoad = true;
+        private string currentName;
+        private List<LayoutLine> currentLayoutLines;
+        private List<LayoutOverlay> currentLayoutOverlays;
+
         public SnapAreaTheme Theme
         {
             get => (SnapAreaTheme)GetValue(ThemeProperty);
@@ -111,10 +115,10 @@ namespace SnapIt.Library.Controls
 
             MainGrid.Visibility = Visibility.Collapsed;
 
-            TopBorder = new SnapBorder(this, Theme) { IsDraggable = false };
-            BottomBorder = new SnapBorder(this, Theme) { IsDraggable = false };
-            LeftBorder = new SnapBorder(this, Theme) { IsDraggable = false };
-            RightBorder = new SnapBorder(this, Theme) { IsDraggable = false };
+            topBorder = new SnapBorder(this, Theme) { IsDraggable = false };
+            bottomBorder = new SnapBorder(this, Theme) { IsDraggable = false };
+            leftBorder = new SnapBorder(this, Theme) { IsDraggable = false };
+            rightBorder = new SnapBorder(this, Theme) { IsDraggable = false };
 
             SizeChanged += SnapControl_SizeChanged;
         }
@@ -142,11 +146,11 @@ namespace SnapIt.Library.Controls
             };
             var point = new Point
             {
-                X = ((ActualWidth - size.Width) / 2) + _overlayMargin,
-                Y = ((ActualHeight - size.Height) / 2) + _overlayMargin
+                X = ((ActualWidth - size.Width) / 2) + overlayMargin,
+                Y = ((ActualHeight - size.Height) / 2) + overlayMargin
             };
 
-            _overlayMargin += 20;
+            overlayMargin += 20;
 
             overlayEditor.SetPos(point, size);
 
@@ -174,22 +178,52 @@ namespace SnapIt.Library.Controls
             Layout.Size = new Size(ActualWidth, ActualHeight);
         }
 
+        public void Prepare(LayoutStatus status)
+        {
+            switch (status)
+            {
+                case LayoutStatus.Saved:
+                    Layout.Size = new Size(ActualWidth, ActualHeight);
+                    Layout.Status = LayoutStatus.NotSaved;
+
+                    break;
+
+                case LayoutStatus.Ignored:
+                    Layout.Name = currentName;
+                    Layout.Size = new Size(ActualWidth, ActualHeight);
+                    Layout.LayoutLines = currentLayoutLines;
+                    Layout.LayoutOverlays = currentLayoutOverlays;
+                    Layout.Status = LayoutStatus.Ignored;
+
+                    break;
+            }
+        }
+
         public void ClearLayout()
         {
             Layout.LayoutLines = new List<LayoutLine>();
+            Layout.LayoutOverlays = new List<LayoutOverlay>();
 
             LoadLayout(Layout);
         }
 
         public void LoadLayout(Layout layout)
         {
+            if (firstLoad)
+            {
+                firstLoad = false;
+                currentName = layout.Name;
+                currentLayoutLines = new List<LayoutLine>(layout.LayoutLines);
+                currentLayoutOverlays = new List<LayoutOverlay>(layout.LayoutOverlays);
+            };
+
             MainGrid.Children.Clear();
             MainOverlay.Children.Clear();
 
-            MainGrid.Children.Add(TopBorder);
-            MainGrid.Children.Add(BottomBorder);
-            MainGrid.Children.Add(LeftBorder);
-            MainGrid.Children.Add(RightBorder);
+            MainGrid.Children.Add(topBorder);
+            MainGrid.Children.Add(bottomBorder);
+            MainGrid.Children.Add(leftBorder);
+            MainGrid.Children.Add(rightBorder);
 
             foreach (var layoutLine in layout.LayoutLines)
             {
@@ -237,10 +271,10 @@ namespace SnapIt.Library.Controls
 
         private void AdoptToScreen()
         {
-            TopBorder.SetPos(new Point(0, -SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
-            BottomBorder.SetPos(new Point(0, MainGrid.ActualHeight - SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
-            LeftBorder.SetPos(new Point(-SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
-            RightBorder.SetPos(new Point(MainGrid.ActualWidth - SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
+            topBorder.SetPos(new Point(0, -SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
+            bottomBorder.SetPos(new Point(0, MainGrid.ActualHeight - SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
+            leftBorder.SetPos(new Point(-SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
+            rightBorder.SetPos(new Point(MainGrid.ActualWidth - SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
 
             if (Layout != null)
             {

@@ -15,9 +15,8 @@ namespace SnapIt.ViewModels
 
         private Layout layout;
         private SnapAreaTheme theme;
-        private string _currentName;
 
-        public Layout Layout { get => layout; set { SetProperty(ref layout, value); _currentName = layout.Name; } }
+        public Layout Layout { get => layout; set { SetProperty(ref layout, value); } }
         public SnapAreaTheme Theme { get => theme; set { SetProperty(ref theme, value); } }
         public DesignWindow Window { get; set; }
         public SnapScreen SnapScreen { get; set; }
@@ -79,8 +78,8 @@ namespace SnapIt.ViewModels
 
         private void SaveLayoutCommandExecute()
         {
-            Window.SnapControl.SetLayoutSize();
-            Layout.Status = LayoutStatus.NotSaved;
+            Window.SnapControl.Prepare(LayoutStatus.Saved);
+
             snapService.Initialize();
 
             Window.Close();
@@ -88,9 +87,8 @@ namespace SnapIt.ViewModels
 
         private void CloseLayoutCommandExecute()
         {
-            Window.SnapControl.SetLayoutSize();
-            Layout.Name = _currentName;
-            Layout.Status = LayoutStatus.Ignored;
+            Window.SnapControl.Prepare(LayoutStatus.Ignored);
+
             snapService.Initialize();
 
             Window.Close();
