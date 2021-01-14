@@ -157,7 +157,15 @@ namespace SnapIt.Library.Controls
 
         public void RemoveOverlay(SnapOverlayEditor snapOverlayEditor)
         {
-            Layout.LayoutOverlays.Remove(snapOverlayEditor.LayoutOverlay);
+            if (snapOverlayEditor.LayoutOverlay != null)
+            {
+                var layout = Layout.LayoutOverlays.FirstOrDefault(l => l.Point == snapOverlayEditor.LayoutOverlay.Point && l.Size == snapOverlayEditor.LayoutOverlay.Size);
+                if (layout != null)
+                {
+                    Layout.LayoutOverlays.Remove(layout);
+                }
+            }
+
             MainOverlay.Children.Remove(snapOverlayEditor);
         }
 
@@ -190,8 +198,6 @@ namespace SnapIt.Library.Controls
                     LayoutLine = layoutLine
                 };
 
-                //snapBorder.SetPos(layoutLine.Point, layoutLine.Size, layoutLine.SplitDirection);
-
                 MainGrid.Children.Add(snapBorder);
             }
 
@@ -205,8 +211,6 @@ namespace SnapIt.Library.Controls
                         {
                             LayoutOverlay = layoutOverlay
                         };
-
-                        //overlayEditor.SetPos(layoutOverlay.Point, layoutOverlay.Size);
 
                         MainOverlay.Children.Add(overlayEditor);
                     }
@@ -222,8 +226,6 @@ namespace SnapIt.Library.Controls
                         {
                             LayoutOverlay = layoutOverlay
                         };
-
-                        //overlayEditor.SetPos(layoutOverlay.Point, layoutOverlay.Size);
 
                         MainOverlay.Children.Add(overlay);
                     }
