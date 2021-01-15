@@ -219,6 +219,7 @@ namespace SnapIt.Library.Controls
                     Margin = new Thickness(Margin.Left - THICKNESSHALF, Margin.Top, 0, 0);
 
                     Border.Cursor = Cursors.SizeWE;
+                    ReferenceBorder.Cursor = Cursors.SizeWE;
                     Border.Width = THICKNESS;
                     Border.VerticalAlignment = VerticalAlignment.Stretch;
 
@@ -234,6 +235,7 @@ namespace SnapIt.Library.Controls
                     Margin = new Thickness(Margin.Left, Margin.Top - THICKNESSHALF, 0, 0);
 
                     Border.Cursor = Cursors.SizeNS;
+                    ReferenceBorder.Cursor = Cursors.SizeNS;
                     Border.Height = THICKNESS;
                     Border.HorizontalAlignment = HorizontalAlignment.Stretch;
 

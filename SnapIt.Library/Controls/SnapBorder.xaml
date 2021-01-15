@@ -16,5 +16,6 @@
             x:Name="ReferenceBorder"
             HorizontalAlignment="Left"
             VerticalAlignment="Top" />
+        <Grid x:Name="Main" />
     </Grid>
 </UserControl>
