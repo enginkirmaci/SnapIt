@@ -1,14 +1,15 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Controls
 {
     public partial class SnapOverlay : UserControl
     {
-        public SnapControl SnapControl { get; }
-
         public LayoutOverlay LayoutOverlay { get; internal set; }
+
+        public SnapFullOverlay SnapFullOverlay { get; }
 
         public SnapAreaTheme Theme
         {
@@ -32,23 +33,18 @@ namespace SnapIt.Library.Controls
             if (snapOverlayEditor.Theme != null)
             {
                 snapOverlayEditor.Overlay.Opacity = snapOverlayEditor.Theme.Opacity;
-                snapOverlayEditor.MiniOverlay.Background = snapOverlayEditor.Theme.OverlayBrush;
-                snapOverlayEditor.FullOverlay.Background = snapOverlayEditor.Theme.HighlightBrush;
+                snapOverlayEditor.Overlay.Background = snapOverlayEditor.Theme.OverlayBrush;
                 snapOverlayEditor.Border.BorderBrush = snapOverlayEditor.Theme.BorderBrush;
                 snapOverlayEditor.Border.BorderThickness = new Thickness(snapOverlayEditor.Theme.BorderThickness);
-                snapOverlayEditor.FullOverlayBorder.BorderBrush = snapOverlayEditor.Theme.BorderBrush;
-                snapOverlayEditor.FullOverlayBorder.BorderThickness = new Thickness(snapOverlayEditor.Theme.BorderThickness);
             }
         }
 
-        public SnapOverlay(SnapControl snapControl, SnapAreaTheme theme)
+        public SnapOverlay(SnapAreaTheme theme, SnapFullOverlay snapFullOverlay)
         {
             InitializeComponent();
 
-            SnapControl = snapControl;
             Theme = theme;
-
-            FullOverlay.Visibility = Visibility.Hidden;
+            SnapFullOverlay = snapFullOverlay;
 
             SizeChanged += SnapOverlay_SizeChanged;
         }
@@ -63,38 +59,35 @@ namespace SnapIt.Library.Controls
 
         public void NormalStyle()
         {
-            MiniOverlay.Visibility = Visibility.Visible;
-            FullOverlay.Visibility = Visibility.Hidden;
+            Overlay.Background = Theme.OverlayBrush;
+            Border.Visibility = Visibility.Visible;
+            MergedIcon.Visibility = Visibility.Visible;
+
+            SnapFullOverlay.NormalStyle();
         }
 
         public void OnHoverStyle()
         {
-            MiniOverlay.Visibility = Visibility.Hidden;
-            FullOverlay.Visibility = Visibility.Visible;
+            Overlay.Background = Brushes.Transparent;
+            Border.Visibility = Visibility.Hidden;
+            MergedIcon.Visibility = Visibility.Hidden;
+
+            SnapFullOverlay.OnHoverStyle();
         }
 
         private void SnapOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var factor = 0.3;
-            MiniOverlay.Width = Width * factor;
-            MiniOverlay.Height = Height * factor;
+            Overlay.Width = Width * factor;
+            Overlay.Height = Height * factor;
 
             var iconFactor = 0.2;
-            MergedIcon.Width = MergedIcon.Height = MiniOverlay.Height * iconFactor;
+            MergedIcon.Width = MergedIcon.Height = Overlay.Height * iconFactor;
         }
 
         public Rectangle ScreenSnapArea(Dpi dpi)
         {
-            var topLeft = PointToScreen(new Point(0, 0));
-
-            var bottomRight = PointToScreen(new Point(ActualWidth, ActualHeight));
-
-            return new Rectangle(
-               (int)topLeft.X,
-               (int)topLeft.Y,
-               (int)bottomRight.X,
-               (int)bottomRight.Y,
-               dpi);
+            return SnapFullOverlay.ScreenSnapArea(dpi);
         }
     }
 }

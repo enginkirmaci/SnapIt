@@ -66,6 +66,9 @@
     <Compile Include="Controls\SnapControl.xaml.cs">
       <DependentUpon>SnapControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SnapFullOverlay.xaml.cs">
+      <DependentUpon>SnapFullOverlay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SnapOverlay.xaml.cs">
       <DependentUpon>SnapOverlay.xaml</DependentUpon>
     </Compile>
@@ -170,6 +173,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SnapControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SnapFullOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

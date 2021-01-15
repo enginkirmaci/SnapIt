@@ -218,6 +218,7 @@ namespace SnapIt.Library.Controls
             };
 
             MainGrid.Children.Clear();
+            MainFullOverlay.Children.Clear();
             MainOverlay.Children.Clear();
 
             MainGrid.Children.Add(topBorder);
@@ -256,11 +257,17 @@ namespace SnapIt.Library.Controls
                 {
                     foreach (var layoutOverlay in layout.LayoutOverlays)
                     {
-                        var overlay = new SnapOverlay(this, Theme)
+                        var fullOverlay = new SnapFullOverlay(Theme)
                         {
                             LayoutOverlay = layoutOverlay
                         };
 
+                        var overlay = new SnapOverlay(Theme, fullOverlay)
+                        {
+                            LayoutOverlay = layoutOverlay
+                        };
+
+                        MainFullOverlay.Children.Add(fullOverlay);
                         MainOverlay.Children.Add(overlay);
                     }
                 }
@@ -342,6 +349,26 @@ namespace SnapIt.Library.Controls
                             };
 
                             overlay.SetPos(newPoint, newSize);
+                        }
+                    }
+
+                    var fullOverlays = this.FindChildren<SnapFullOverlay>();
+                    foreach (var fullOverlay in fullOverlays)
+                    {
+                        if (fullOverlay.LayoutOverlay != null)
+                        {
+                            var newPoint = new Point
+                            {
+                                X = fullOverlay.LayoutOverlay.Point.X * factorX,
+                                Y = fullOverlay.LayoutOverlay.Point.Y * factorY
+                            };
+                            var newSize = new Size
+                            {
+                                Width = fullOverlay.LayoutOverlay.Size.Width * factorX,
+                                Height = fullOverlay.LayoutOverlay.Size.Height * factorY
+                            };
+
+                            fullOverlay.SetPos(newPoint, newSize);
                         }
                     }
                 }

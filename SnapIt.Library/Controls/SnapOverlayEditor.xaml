@@ -65,10 +65,7 @@
                 Foreground="White"
                 Style="{StaticResource MaterialDesignOutlinedButton}">
                 <Button.Content>
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon VerticalAlignment="Bottom" Kind="DeleteOutline" />
-                        <TextBlock Margin="8,0,0,0" Text="Remove" />
-                    </StackPanel>
+                    <materialDesign:PackIcon Kind="DeleteOutline" />
                 </Button.Content>
             </Button>
         </Grid>

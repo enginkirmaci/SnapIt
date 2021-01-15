@@ -43,31 +43,25 @@
                 <Button
                     x:Name="SplitVertically"
                     Height="36"
-                    Margin="2"
+                    Margin="4,0"
                     HorizontalAlignment="Center"
                     Click="SplitVertically_Click"
                     Foreground="White"
                     Style="{StaticResource MaterialDesignOutlinedButton}">
                     <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon VerticalAlignment="Bottom" Kind="ArrowSplitVertical" />
-                            <TextBlock Margin="8,0,0,0" Text="Split Vertically" />
-                        </StackPanel>
+                        <materialDesign:PackIcon Kind="ArrowSplitVertical" />
                     </Button.Content>
                 </Button>
                 <Button
                     x:Name="SplitHorizantally"
                     Height="36"
-                    Margin="2"
+                    Margin="4,0"
                     HorizontalAlignment="Center"
                     Click="SplitHorizantally_Click"
                     Foreground="White"
                     Style="{StaticResource MaterialDesignOutlinedButton}">
                     <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon VerticalAlignment="Bottom" Kind="ArrowSplitHorizontal" />
-                            <TextBlock Margin="8,0,0,0" Text="Split Horizantally" />
-                        </StackPanel>
+                        <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
                     </Button.Content>
                 </Button>
             </StackPanel>
