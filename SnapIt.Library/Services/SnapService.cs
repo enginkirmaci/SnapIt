@@ -179,7 +179,7 @@ namespace SnapIt.Library.Services
         {
             Thread.Sleep(2000);
             Release();
-
+            DevMode.Log("ok");
             settingService.ReInitialize();
 
             Initialize();

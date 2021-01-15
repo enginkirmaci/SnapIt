@@ -111,8 +111,11 @@ namespace SnapIt.Library.Controls
             {
                 var snapControl = Content as SnapControl;
                 var snapAreas = snapControl.FindChildren<SnapArea>();
+                var snapOverlays = snapControl.FindChildren<SnapOverlay>();
 
+                //todo test
                 var generated = snapAreas.Select(snapArea => snapArea.ScreenSnapArea(Dpi)).ToList();
+                generated.AddRange(snapOverlays.Select(snapOverlay => snapOverlay.ScreenSnapArea(Dpi)));
 
                 SnapAreaBoundries = generated.OrderBy(i => i.X).ThenBy(i => i.Y).ToList();
             }

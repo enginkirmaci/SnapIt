@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Interop;
 using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using SnapIt.Library;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
 
 namespace SnapIt.ViewModels
@@ -13,6 +15,7 @@ namespace SnapIt.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private readonly IRegionManager regionManager;
+        private readonly ISnapService snapService;
         private readonly ISettingService settingService;
 
         private bool HideWindowAtStartup = true;
@@ -45,7 +48,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand StartStopCommand { get; private set; }
         public DelegateCommand<string> HandleLinkClick { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
-        public DelegateCommand LoadedCommand { get; private set; }
+        public DelegateCommand<object> LoadedCommand { get; private set; }
 
         public MainWindowViewModel(
             IWindowService windowService,
@@ -54,6 +57,7 @@ namespace SnapIt.ViewModels
             ISettingService settingService)
         {
             this.regionManager = regionManager;
+            this.snapService = snapService;
             this.settingService = settingService;
 
             IsDarkTheme = settingService.Settings.IsDarkTheme;
@@ -87,9 +91,12 @@ namespace SnapIt.ViewModels
                 }
             });
 
-            LoadedCommand = new DelegateCommand(() =>
+            LoadedCommand = new DelegateCommand<object>((window) =>
             {
                 NavigateCommand.Execute("LayoutView");
+
+                HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper((Window)window).Handle);
+                source.AddHook(new HwndSourceHook(WndProc));
             });
 
             StartStopCommand = new DelegateCommand(() =>
@@ -134,6 +141,27 @@ namespace SnapIt.ViewModels
                     this.regionManager.RequestNavigate(Constants.MainRegion, navigatePath);
                 }
             });
+        }
+
+        private const uint WM_DISPLAYCHANGE = 0x007e;
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            // Listen for operating system messages.
+            switch ((uint)msg)
+            {
+                case WM_DISPLAYCHANGE:
+                    System.Windows.Forms.Screen.PrimaryScreen.GetDpi(DpiType.Effective, out uint x, out uint y);
+                    DevMode.Log($"WM_DISPLAYCHANGE: {System.Windows.Forms.Screen.AllScreens.Length}, DPI: {96.0 / x}x{96.0 / y}");
+
+                    if (IsRunning)
+                    {
+                        snapService.Release();
+                        snapService.Initialize();
+                    }
+                    break;
+            }
+            return IntPtr.Zero;
         }
 
         private void SnapService_StatusChanged(bool isRunning)
