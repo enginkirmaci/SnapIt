@@ -1,0 +1,40 @@
+{
+  "Version": "2.0",
+  "Guid": "edcedeaf-acb2-483a-86ae-ccc7c021f9c9",
+  "Name": "3 Part Right Wide",
+  "Size": "1536,824",
+  "LayoutLines": [
+    {
+      "Point": "768,0",
+      "Size": "0,824"
+    },
+    {
+      "Point": "384,0",
+      "Size": "0,824"
+    },
+    {
+      "Point": "0,412",
+      "Size": "384,0",
+      "SplitDirection": 1
+    },
+    {
+      "Point": "384,412",
+      "Size": "384,0",
+      "SplitDirection": 1
+    }
+  ],
+  "LayoutOverlays": [
+    {
+      "Point": "384,0",
+      "Size": "384,824"
+    },
+    {
+      "Point": "0,0",
+      "Size": "384,824"
+    },
+    {
+      "Point": "0,0",
+      "Size": "768,824"
+    }
+  ]
+}

@@ -146,8 +146,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DesignWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\KeyboardSettingsView.xaml">
       <SubType>Designer</SubType>
