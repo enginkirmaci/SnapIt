@@ -2,6 +2,18 @@
 
 namespace SnapIt.Library.Entities
 {
+    public enum LayoutStatus
+    {
+        NotSaved = 0,
+        Saved,
+        Ignored
+    }
+
+    public enum ResizeHitType
+    {
+        None, Body, UL, UR, LR, LL, L, R, T, B
+    };
+
     public enum ViewType
     {
         LayoutView,
@@ -19,8 +31,8 @@ namespace SnapIt.Library.Entities
 
     public enum SplitDirection
     {
-        Vertically,
-        Horizantally
+        Vertical,
+        Horizontal
     }
 
     public enum MouseButton

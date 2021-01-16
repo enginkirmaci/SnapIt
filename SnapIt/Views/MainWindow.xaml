@@ -313,7 +313,47 @@
                 </Button>
             </StackPanel>
 
-            <ContentControl Margin="16,48,8,8" prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}" />
+            <Grid>
+                <ContentControl Margin="16,48,8,8" prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}" />
+                <materialDesign:DialogHost
+                    CloseOnClickAway="True"
+                    IsOpen="{Binding IsVersion3000MessageShown, Converter={StaticResource InverseBoolConverter}}"
+                    Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
+                    <materialDesign:DialogHost.DialogContent>
+                        <StackPanel Width="360" Margin="16">
+                            <TextBlock
+                                Margin="0,6,0,18"
+                                Style="{StaticResource MaterialDesignTitleTextBlock2}"
+                                Text="Important Notice !" />
+                            <TextBlock TextWrapping="Wrap">
+                                <Run Text="I have been getting lots of feedback about layouts and layout designer which tells how difficult or not possible to design layouts that you want. I was aware of it, but there were some difficulties needs to solved." />
+                                <LineBreak />
+                                <LineBreak />
+                                <Run Text="After some experimenting, I finally managed to develop more flexible and easier layout mechanism. This new mechanism opens more possibilities in the future." />
+                                <LineBreak />
+                                <LineBreak />
+                                <Run Text="Because of the changes, unfortunately your old layout can't work with this version and there is no way for me to migrate it to newer structure. I know that some of you spend a lot of time to create it and I'm really sorry." />
+                                <LineBreak />
+                                <LineBreak />
+                                <Run Text="Please give a try to new layout designer. I hope you'll enjoy it." />
+                            </TextBlock>
+                            <Button
+                                Margin="0,18,0,12"
+                                HorizontalAlignment="Center"
+                                Command="materialDesign:DialogHost.CloseDialogCommand"
+                                IsDefault="True"
+                                Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                                <Button.CommandParameter>
+                                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                        True
+                                    </system:Boolean>
+                                </Button.CommandParameter>
+                                OK
+                            </Button>
+                        </StackPanel>
+                    </materialDesign:DialogHost.DialogContent>
+                </materialDesign:DialogHost>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

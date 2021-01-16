@@ -54,8 +54,26 @@
     <Compile Include="Controls\HotkeyEditorControl.xaml.cs">
       <DependentUpon>HotkeyEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SnapAreaEditor.xaml.cs">
+      <DependentUpon>SnapAreaEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SnapArea.xaml.cs">
       <DependentUpon>SnapArea.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SnapBorder.xaml.cs">
+      <DependentUpon>SnapBorder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SnapControl.xaml.cs">
+      <DependentUpon>SnapControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SnapFullOverlay.xaml.cs">
+      <DependentUpon>SnapFullOverlay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SnapOverlay.xaml.cs">
+      <DependentUpon>SnapOverlay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SnapOverlayEditor.xaml.cs">
+      <DependentUpon>SnapOverlayEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\EqualVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
@@ -67,11 +85,21 @@
     <Compile Include="Entities\ExcludedApplication.cs" />
     <Compile Include="Entities\ExcludedApplicationSettings.cs" />
     <Compile Include="Entities\Constants.cs" />
+    <Compile Include="Entities\LayoutOverlay.cs" />
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\SnapAreaInfo.cs" />
     <Compile Include="Entities\SnapAreaTheme.cs" />
+    <Compile Include="Entities\SweepLine.cs" />
+    <Compile Include="Extensions\SnapBorderExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="FindRectangle\Intersection.cs" />
+    <Compile Include="FindRectangle\Rectangle.cs" />
+    <Compile Include="FindRectangle\Segment.cs" />
+    <Compile Include="FindRectangle\SegmentPoint.cs" />
+    <Compile Include="FindRectangle\SegmentPointConnections.cs" />
+    <Compile Include="FindRectangle\Settings.cs" />
+    <Compile Include="FindRectangle\sSize.cs" />
     <Compile Include="Services\FileOperationService.cs" />
     <Compile Include="Services\IFileOperationService.cs" />
     <Compile Include="Controls\SnapScreen.cs" />
@@ -81,7 +109,6 @@
     <Compile Include="Entities\Settings.cs" />
     <Compile Include="Entities\Enums.cs" />
     <Compile Include="Entities\Layout.cs" />
-    <Compile Include="Entities\LayoutArea.cs" />
     <Compile Include="Entities\Rectangle.cs" />
     <Compile Include="Extensions\ScreenExtensions.cs" />
     <Compile Include="InteropServices\DwmApi.cs" />
@@ -98,14 +125,6 @@
     <Compile Include="Services\SnapService.cs" />
     <Compile Include="Services\WinApiService.cs" />
     <Compile Include="Services\WindowService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Layouts\00904f1f-4e41-4dc6-8677-6e5a2b231935.json" />
-    <EmbeddedResource Include="Layouts\0e217130-d44e-4057-bfe9-daf6f6e341d2.json" />
-    <EmbeddedResource Include="Layouts\335af962-69ad-4b2e-a2ef-77cd0f1fc329.json" />
-    <EmbeddedResource Include="Layouts\eba07116-7ba0-40ec-80f0-fa9542afc640.json" />
-    <EmbeddedResource Include="Layouts\f332538f-5f83-4c4f-8472-1155f1aef340.json" />
-    <EmbeddedResource Include="Layouts\f640fa94-b4ea-4755-9b6f-68bf49b85c0c.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GlobalHotkeys">
@@ -141,16 +160,47 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SnapAreaEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\SnapArea.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SnapBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SnapControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SnapFullOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SnapOverlay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SnapOverlayEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Layouts\377f159c-72bd-4876-bdbe-85745e10f3cc.json" />
-    <EmbeddedResource Include="Layouts\5125fc03-7acc-4ea2-9639-c589fa8cc052.json" />
-    <EmbeddedResource Include="Layouts\6089ef8c-7084-4cb5-b4c0-5881e14a0e66.json" />
-    <EmbeddedResource Include="Layouts\65fdbf65-0de0-4842-ae0a-b9d87705e9b0.json" />
+    <EmbeddedResource Include="Layouts\097d074b-0eed-4878-a035-b2eb76a324ce.json" />
+    <EmbeddedResource Include="Layouts\1ff17736-c6cf-49be-b63e-a5affefd31d9.json" />
+    <EmbeddedResource Include="Layouts\338106eb-1ae5-4185-bc00-f46339e1888d.json" />
+    <EmbeddedResource Include="Layouts\61c00b23-5cdf-4c27-9a6d-a73693f16d47.json" />
+    <EmbeddedResource Include="Layouts\6a86804e-c948-47ea-a1c3-1387736a8a80.json" />
+    <EmbeddedResource Include="Layouts\6a91f112-af26-4505-86cb-a1983e4f4e14.json" />
+    <EmbeddedResource Include="Layouts\97565260-e874-41dd-849e-0351e5dcbc6e.json" />
+    <EmbeddedResource Include="Layouts\a4e1eb3d-376d-473c-afac-cb253cd8ee8e.json" />
+    <EmbeddedResource Include="Layouts\b94079de-54a2-49d0-b31c-878a8f63ba75.json" />
+    <EmbeddedResource Include="Layouts\edcedeaf-acb2-483a-86ae-ccc7c021f9c9.json" />
+    <EmbeddedResource Include="Layouts\f1cb61d1-d38a-4e80-adab-e4be62d057f3.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

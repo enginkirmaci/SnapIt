@@ -11,8 +11,8 @@
     xmlns:prism="http://prismlibrary.com/"
     x:Name="DesignWindowView"
     Title="Snap It - Layout Designer"
-    Width="600"
-    Height="450"
+    Width="480"
+    Height="360"
     d:DataContext="{d:DesignInstance design:DesignWindowDesignView,
                                      IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -28,58 +28,114 @@
     mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MainSnapArea}" />
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
-        <!--<i:EventTrigger EventName="SourceInitialized">
-            <i:InvokeCommandAction Command="{Binding SourceInitializedCommand}" CommandParameter="{Binding ElementName=DesignWindowView}" />
-        </i:EventTrigger>-->
     </i:Interaction.Triggers>
 
     <Grid>
-        <Controls:SnapArea
-            x:Name="MainSnapArea"
+        <Controls:SnapControl
+            x:Name="SnapControl"
             IsDesignMode="True"
-            IsMergeIconHidden="True"
-            LayoutArea="{Binding Layout.LayoutArea}"
-            Theme="{Binding Theme}" />
-        <StackPanel
-            HorizontalAlignment="Center"
+            Layout="{Binding Layout}"
+            Theme="{Binding Theme, Mode=TwoWay}" />
+
+        <materialDesign:Card
+            Margin="0,20,20,0"
+            HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Orientation="Horizontal">
-
-            <Button
-                Margin="4,0"
-                Background="White"
-                Command="{Binding SaveLayoutCommand}"
-                Foreground="Black"
-                Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ContentSaveOutline" />
-                        <TextBlock
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="Save" />
+            Background="{DynamicResource MaterialDesignPaper}"
+            Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}">
+            <Expander
+                HorizontalAlignment="Stretch"
+                Header="Settings"
+                IsExpanded="True">
+                <StackPanel Margin="24,8,24,16">
+                    <TextBlock Margin="0,0,0,6">
+                        Designer Opacity
+                    </TextBlock>
+                    <Slider
+                        Width="150"
+                        Height="20"
+                        HorizontalAlignment="Left"
+                        Maximum="1"
+                        Minimum="0"
+                        TickFrequency="0.1"
+                        Value="{Binding Theme.Opacity}" />
+                    <Separator Style="{StaticResource MaterialDesignLightSeparator}" />
+                    <TextBlock Margin="0,0,0,6">
+                        Layout Name
+                    </TextBlock>
+                    <TextBox
+                        Width="128"
+                        Margin="0,0,0,16"
+                        HorizontalAlignment="Left"
+                        Text="{Binding Layout.Name}" />
+                    <Button
+                        Padding="6,4"
+                        HorizontalAlignment="Left"
+                        Command="{Binding AddOverlayLayoutCommand}"
+                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="LayersOutline" />
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="Add Overlay" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button
+                        Padding="6,4"
+                        HorizontalAlignment="Left"
+                        Command="{Binding ClearLayoutCommand}"
+                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Refresh" />
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="Clear Layout" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Separator Style="{StaticResource MaterialDesignLightSeparator}" />
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,3,0"
+                            Padding="6,4"
+                            HorizontalAlignment="Right"
+                            Command="{Binding SaveLayoutCommand}"
+                            Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ContentSaveOutline" />
+                                    <TextBlock
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="Save" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                        <Button
+                            Margin="3,0,0,0"
+                            Padding="6,4"
+                            Command="{Binding CloseLayoutCommand}"
+                            Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Close" />
+                                    <TextBlock
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="Close" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
                     </StackPanel>
-                </Button.Content>
-            </Button>
-
-            <Button
-                Margin="4,0"
-                Background="White"
-                Command="{Binding CloseLayoutCommand}"
-                Foreground="Black"
-                Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Close" />
-                        <TextBlock
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="Close" />
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-        </StackPanel>
+                </StackPanel>
+            </Expander>
+        </materialDesign:Card>
     </Grid>
 </Window>

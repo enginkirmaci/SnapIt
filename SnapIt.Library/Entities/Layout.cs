@@ -1,18 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using Newtonsoft.Json;
-using SnapIt.Library.Controls;
 
 namespace SnapIt.Library.Entities
 {
     public class Layout : Bindable
     {
         private string name;
-        private LayoutArea layoutArea;
 
-        public string Version = "1.0";
+        public string Version = "2.0";
         public Guid Guid { get; set; }
+
         [JsonIgnore]
-        public bool IsSaved { get; set; }
+        public bool IsNew { get; set; }
+
+        [JsonIgnore]
+        public LayoutStatus Status { get; set; }
 
         [JsonIgnore]
         public SnapAreaTheme Theme { get; set; }
@@ -22,17 +26,19 @@ namespace SnapIt.Library.Entities
             get => name;
             set
             {
-                IsSaved = false;
+                Status = LayoutStatus.NotSaved;
                 SetProperty(ref name, value);
             }
         }
 
-        public LayoutArea LayoutArea { get => layoutArea; set => SetProperty(ref layoutArea, value); }
+        public Size Size { get; set; }
+        public List<LayoutLine> LayoutLines { get; set; }
+        public List<LayoutOverlay> LayoutOverlays { get; set; }
 
-        public void GenerateLayoutArea(SnapArea snapArea)
+        public Layout()
         {
-            LayoutArea = new LayoutArea();
-            snapArea.GetLayoutAreas(LayoutArea);
+            LayoutLines = new List<LayoutLine>();
+            LayoutOverlays = new List<LayoutOverlay>();
         }
     }
 }

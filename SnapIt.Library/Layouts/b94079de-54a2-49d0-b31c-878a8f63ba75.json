@@ -1,0 +1,36 @@
+{
+  "Version": "2.0",
+  "Guid": "b94079de-54a2-49d0-b31c-878a8f63ba75",
+  "Name": "3 Part Vertical",
+  "Size": "1536,824",
+  "LayoutLines": [
+    {
+      "Point": "0,274",
+      "Size": "1536,0",
+      "SplitDirection": 1
+    },
+    {
+      "Point": "0,548",
+      "Size": "1536,0",
+      "SplitDirection": 1
+    },
+    {
+      "Point": "768,0",
+      "Size": "0,274"
+    },
+    {
+      "Point": "768,548",
+      "Size": "0,274"
+    }
+  ],
+  "LayoutOverlays": [
+    {
+      "Point": "0,0",
+      "Size": "1536,274"
+    },
+    {
+      "Point": "0,274",
+      "Size": "1536,548"
+    }
+  ]
+}

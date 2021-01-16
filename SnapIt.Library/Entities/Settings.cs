@@ -36,6 +36,7 @@ namespace SnapIt.Library.Entities
         public string MoveRightShortcut { get; set; } = "Control + Alt + Right";
         public string CycleLayoutsShortcut { get; set; } = "Control + Alt + C";
         //public string StartStopShortcut { get; set; } = "Control + Alt + S";
+        public bool IsVersion3000MessageShown { get; set; }
 
         public SnapAreaTheme Theme { get; set; } = new SnapAreaTheme();
     }

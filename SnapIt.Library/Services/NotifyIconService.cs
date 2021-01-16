@@ -169,7 +169,7 @@ namespace SnapIt.Library.Services
             snapService.Initialize();
         }
 
-        private void ShowNotification(string title, string message, int timeout = 1000, ToolTipIcon tipIcon = ToolTipIcon.None)
+        public void ShowNotification(string title, string message, int timeout = 1000, ToolTipIcon tipIcon = ToolTipIcon.None)
         {
             notifyIcon.ShowBalloonTip(timeout, title, message, tipIcon);
         }

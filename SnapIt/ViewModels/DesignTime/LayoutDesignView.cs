@@ -32,107 +32,95 @@ namespace SnapIt.ViewModels.DesignTime
             SnapScreens.Add(new SnapScreen() { DeviceNumber = "1", Primary = "Primary", Resolution = "1920 x 1080" });
             SnapScreens.Add(new SnapScreen() { DeviceNumber = "2", Primary = null, Resolution = "3440 x 1440" });
 
-            Layouts = new ObservableCollection<Layout>();
-            Layouts.Add(new Layout
+            Layouts = new ObservableCollection<Layout>
             {
-                Name = "Layout 1",
-                Theme = Theme,
-                LayoutArea = new LayoutArea
+                new Layout
                 {
-                    Areas = new List<LayoutArea>
+                    Name = "Layout 1",
+                    Size = new System.Windows.Size(500, 200),
+                    LayoutLines = new List<LayoutLine>
                     {
-                        new LayoutArea
+                        new LayoutLine
                         {
-                            Width=1
+                            Point=new System.Windows.Point(150,0),
+                            Size = new System.Windows.Size(0,200)
                         },
-                        new LayoutArea
+                         new LayoutLine
                         {
-                            Width=3,
-                            Column=1,
-                            Merged= true,
-                            Areas = new List<LayoutArea>
-                            {
-                                new LayoutArea
-                                {
-                                    Height=1
-                                },
-                                new LayoutArea
-                                {
-                                    Height=1,
-                                    Row=1,
-                                    Areas = new List<LayoutArea>
-                                    {
-                                        new LayoutArea
-                                        {
-                                            Width=1
-                                        },
-                                        new LayoutArea
-                                        {
-                                            Width=1,
-                                            Column=1
-                                        }
-                                    }
-                                }
-                            }
+                            Point=new System.Windows.Point(150,100),
+                            Size = new System.Windows.Size(350,0),
+                            SplitDirection = SplitDirection.Horizontal
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(325,100),
+                            Size = new System.Windows.Size(0,100)
                         }
-                    }
-                }
-            });
-            Layouts.Add(new Layout
-            {
-                Name = "Layout 2",
-                Theme = Theme,
-                LayoutArea = new LayoutArea
+                    },
+                    Theme = Theme
+                },
+                new Layout
                 {
-                    Areas = new List<LayoutArea>
+                    Name = "Layout 2",
+                    Size = new System.Windows.Size(1436, 700.8),
+                    LayoutLines = new List<LayoutLine>
+                {
+                    new LayoutLine
                     {
-                        new LayoutArea
-                        {
-                            Width=1
-                        },
-                        new LayoutArea
-                        {
-                            Width=3,
-                            Column=1,
-                            Merged= true,
-                            Areas = new List<LayoutArea>
-                            {
-                                new LayoutArea
-                                {
-                                    Height=1
-                                },
-                                new LayoutArea
-                                {
-                                    Height=1,
-                                    Row=1,
-                                    Areas = new List<LayoutArea>
-                                    {
-                                        new LayoutArea
-                                        {
-                                            Width=1
-                                        },
-                                        new LayoutArea
-                                        {
-                                            Width=1,
-                                            Column=1
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        Point=new System.Windows.Point(259.904414003044,0),
+                        Size = new System.Windows.Size(0,700.8)
+                    },
+                     new LayoutLine
+                    {
+                        Point=new System.Windows.Point( 1230.4596651446,0),
+                        Size = new System.Windows.Size(0,700.8 )
+                    },
+                     new LayoutLine
+                    {
+                        Point=new System.Windows.Point(259.904414003044,471.072897196262 ),
+                        Size = new System.Windows.Size(970.555251141553,0 ),
+                        SplitDirection = SplitDirection.Horizontal
+                    },
+                     new LayoutLine
+                    {
+                        Point=new System.Windows.Point(455.331811263318,471.072897196262 ),
+                        Size = new System.Windows.Size(0,229.727102803738 )
+                    },
+                     new LayoutLine
+                    {
+                        Point=new System.Windows.Point(567.733637747336,0 ),
+                        Size = new System.Windows.Size( 0,471.072897196262)
+                    },
+                     new LayoutLine
+                    {
+                        Point=new System.Windows.Point(567,235.5 ),
+                        Size = new System.Windows.Size(663,0 ),
+                        SplitDirection = SplitDirection.Horizontal
+                    },
+                     new LayoutLine
+                    {
+                        Point=new System.Windows.Point(898.5,235 ),
+                        Size = new System.Windows.Size( 0,236)
+                    },
+                     new LayoutLine
+                    {
+                        Point=new System.Windows.Point(842.5,471 ),
+                        Size = new System.Windows.Size( 0,229)
                     }
+                },
+                    Theme = Theme
+                },
+                new Layout
+                {
+                    Name = "3 Part Horizontal Reverse",
+                    Theme = Theme
+                },
+                new Layout
+                {
+                    Name = "Layout 4",
+                    Theme = Theme
                 }
-            });
-            Layouts.Add(new Layout
-            {
-                Name = "3 Part Horizontal Reverse",
-                Theme = Theme
-            });
-            Layouts.Add(new Layout
-            {
-                Name = "Layout 4",
-                Theme = Theme
-            });
+            };
 
             SelectedLayout = Layouts.First();
             SelectedSnapScreen = SnapScreens.First();

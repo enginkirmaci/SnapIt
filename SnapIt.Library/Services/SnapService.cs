@@ -93,7 +93,7 @@ namespace SnapIt.Library.Services
             {
                 new ExcludedApplication
                 {
-                    Keyword = Constants.AppName,
+                    Keyword = Constants.AppTitle,
                     MatchRule = MatchRule.Contains,
                     Mouse=true,
                     Keyboard=true
@@ -179,7 +179,7 @@ namespace SnapIt.Library.Services
         {
             Thread.Sleep(2000);
             Release();
-
+            DevMode.Log("ok");
             settingService.ReInitialize();
 
             Initialize();

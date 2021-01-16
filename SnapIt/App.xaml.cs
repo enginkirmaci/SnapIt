@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Drawing;
+using System.Windows;
 using DryIoc;
 using Prism.Ioc;
 using Prism.Regions;
@@ -37,7 +39,12 @@ namespace SnapIt
             //{
             if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
             {
-                MessageBox.Show("only one instance at a time");
+                var notifyIcon = new System.Windows.Forms.NotifyIcon
+                {
+                    Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream),
+                    Visible = true
+                };
+                notifyIcon.ShowBalloonTip(3000, null, "Only one instance of Snap It can run at the same time.", System.Windows.Forms.ToolTipIcon.Warning);
 
                 Shutdown();
                 return;
