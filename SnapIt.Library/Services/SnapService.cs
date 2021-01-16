@@ -28,6 +28,7 @@ namespace SnapIt.Library.Services
         private IKeyboardMouseEvents globalHook;
         private List<ExcludedApplication> matchRulesForMouse;
         private List<ExcludedApplication> matchRulesForKeyboard;
+        private static List<Keys> keysDown = new List<Keys>();
 
         public bool IsRunning { get; set; }
 
@@ -62,16 +63,25 @@ namespace SnapIt.Library.Services
 
             var map = new Dictionary<Combination, Action>
             {
-                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty)), ()=> CycleLayouts() }
+                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> CycleLayouts() }
                 //{ Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
             };
 
             if (settingService.Settings.EnableKeyboard)
             {
-                map.Add(Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty)), () => MoveActiveWindowByKeyboard(MoveDirection.Left));
-                map.Add(Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty)), () => MoveActiveWindowByKeyboard(MoveDirection.Right));
-                map.Add(Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty)), () => MoveActiveWindowByKeyboard(MoveDirection.Up));
-                map.Add(Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty)), () => MoveActiveWindowByKeyboard(MoveDirection.Down));
+                map.Add(Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Left));
+                map.Add(Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Right));
+                map.Add(Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Up));
+                map.Add(Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Down));
+
+                if ((settingService.Settings.MoveLeftShortcut +
+                    settingService.Settings.MoveRightShortcut +
+                    settingService.Settings.MoveUpShortcut +
+                    settingService.Settings.MoveDownShortcut).Contains("Win"))
+                {
+                    globalHook.KeyDown += HookManager_KeyDown;
+                    globalHook.KeyUp += HookManager_KeyUp;
+                }
             }
 
             globalHook.OnCombination(map);
@@ -183,6 +193,54 @@ namespace SnapIt.Library.Services
             settingService.ReInitialize();
 
             Initialize();
+        }
+
+        private static void HookManager_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Used for overriding the Windows default hotkeys
+            if (keysDown.Contains(e.KeyCode) == false)
+            {
+                keysDown.Add(e.KeyCode);
+            }
+
+            if (e.KeyCode == Keys.Right && WIN())
+            {
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Left && WIN())
+            {
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Up && WIN())
+            {
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Down && WIN())
+            {
+                e.Handled = true;
+            }
+        }
+
+        private static void HookManager_KeyUp(object sender, KeyEventArgs e)
+        {
+            //Used for overriding the Windows default hotkeys
+            while (keysDown.Contains(e.KeyCode))
+            {
+                keysDown.Remove(e.KeyCode);
+            }
+        }
+
+        private static bool WIN()
+        {
+            if (keysDown.Contains(Keys.LWin) ||
+                keysDown.Contains(Keys.RWin))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private bool HoldingKeyResult()

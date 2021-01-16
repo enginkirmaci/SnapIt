@@ -127,9 +127,6 @@
     <Compile Include="Services\WindowService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GlobalHotkeys">
-      <Version>1.0.0.6</Version>
-    </PackageReference>
     <PackageReference Include="MaterialDesignColors">
       <Version>1.2.3</Version>
     </PackageReference>
