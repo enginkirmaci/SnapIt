@@ -14,7 +14,7 @@
     Version="3.0.0.0" />
 
   <Properties>
-    <DisplayName>Snap It</DisplayName>
+    <DisplayName>SnapIt</DisplayName>
     <PublisherDisplayName>Engin Kırmacı</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>

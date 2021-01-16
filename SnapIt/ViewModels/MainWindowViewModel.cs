@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Interop;
 using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using SnapIt.Library;
 using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
 
 namespace SnapIt.ViewModels
@@ -95,8 +93,8 @@ namespace SnapIt.ViewModels
             {
                 NavigateCommand.Execute("LayoutView");
 
-                HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper((Window)window).Handle);
-                source.AddHook(new HwndSourceHook(WndProc));
+                //HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper((Window)window).Handle);
+                //source.AddHook(new HwndSourceHook(WndProc));
             });
 
             StartStopCommand = new DelegateCommand(() =>
@@ -143,26 +141,27 @@ namespace SnapIt.ViewModels
             });
         }
 
-        private const uint WM_DISPLAYCHANGE = 0x007e;
+        //private const uint WM_DISPLAYCHANGE = 0x007e;
 
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            // Listen for operating system messages.
-            switch ((uint)msg)
-            {
-                case WM_DISPLAYCHANGE:
-                    System.Windows.Forms.Screen.PrimaryScreen.GetDpi(DpiType.Effective, out uint x, out uint y);
-                    DevMode.Log($"WM_DISPLAYCHANGE: {System.Windows.Forms.Screen.AllScreens.Length}, DPI: {96.0 / x}x{96.0 / y}");
+        //SnapService has also same functionlity, SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged
+        //private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        //{
+        //    // Listen for operating system messages.
+        //    switch ((uint)msg)
+        //    {
+        //        case WM_DISPLAYCHANGE:
+        //            System.Windows.Forms.Screen.PrimaryScreen.GetDpi(DpiType.Effective, out uint x, out uint y);
+        //            DevMode.Log($"WM_DISPLAYCHANGE: {System.Windows.Forms.Screen.AllScreens.Length}, DPI: {96.0 / x}x{96.0 / y}");
 
-                    if (IsRunning)
-                    {
-                        snapService.Release();
-                        snapService.Initialize();
-                    }
-                    break;
-            }
-            return IntPtr.Zero;
-        }
+        //            if (IsRunning)
+        //            {
+        //                snapService.Release();
+        //                snapService.Initialize();
+        //            }
+        //            break;
+        //    }
+        //    return IntPtr.Zero;
+        //}
 
         private void SnapService_StatusChanged(bool isRunning)
         {
