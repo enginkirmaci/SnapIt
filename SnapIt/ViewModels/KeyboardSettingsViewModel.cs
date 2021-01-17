@@ -17,7 +17,7 @@ namespace SnapIt.ViewModels
         public string MoveLeftShortcut { get => settingService.Settings.MoveLeftShortcut; set { settingService.Settings.MoveLeftShortcut = value; ApplyChanges(); } }
         public string MoveRightShortcut { get => settingService.Settings.MoveRightShortcut; set { settingService.Settings.MoveRightShortcut = value; ApplyChanges(); } }
         public string CycleLayoutsShortcut { get => settingService.Settings.CycleLayoutsShortcut; set { settingService.Settings.CycleLayoutsShortcut = value; ApplyChanges(); } }
-        //public string StartStopShortcut { get => settingService.Settings.StartStopShortcut; set { settingService.Settings.StartStopShortcut = value; ApplyChanges(); } }
+        public string StartStopShortcut { get => settingService.Settings.StartStopShortcut; set { settingService.Settings.StartStopShortcut = value; ApplyChanges(); } }
 
         public DelegateCommand LoadedCommand { get; private set; }
 
