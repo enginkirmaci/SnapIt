@@ -1,16 +1,12 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.KeyboardSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
-    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:local="clr-namespace:SnapIt.Views"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:vm="clr-namespace:SnapIt.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     d:DataContext="{d:DesignInstance design:KeyboardSettingsDesignView,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="600"
@@ -75,7 +71,7 @@
                 <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveRightShortcut}" />
             </Grid>
 
-            <!--<TextBlock
+            <TextBlock
                 Margin="0,10,0,6"
                 Text="Start/Stop Snap It"
                 TextWrapping="Wrap" />
@@ -83,7 +79,7 @@
             <Controls:HotkeyEditorControl
                 Width="156"
                 HorizontalAlignment="Left"
-                Text="{Binding StartStopShortcut}" />-->
+                Text="{Binding StartStopShortcut}" />
 
             <TextBlock
                 Margin="0,10,0,6"

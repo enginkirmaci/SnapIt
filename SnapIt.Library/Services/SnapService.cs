@@ -63,8 +63,8 @@ namespace SnapIt.Library.Services
 
             var map = new Dictionary<Combination, Action>
             {
-                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> CycleLayouts() }
-                //{ Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
+                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> CycleLayouts() },
+                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
             };
 
             if (settingService.Settings.EnableKeyboard)
@@ -145,6 +145,19 @@ namespace SnapIt.Library.Services
             ScreenLayoutLoaded?.Invoke(settingService.SnapScreens, settingService.Layouts);
         }
 
+        private void StartStop()
+        {
+            DevMode.Log(IsRunning);
+            if (IsRunning)
+            {
+                Release();
+            }
+            else
+            {
+                Initialize();
+            }
+        }
+
         public void Release()
         {
             SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
@@ -165,8 +178,29 @@ namespace SnapIt.Library.Services
                     globalHook.KeyUp -= GlobalHook_KeyUp;
                 }
 
+                if (settingService.Settings.EnableKeyboard)
+                {
+                    if ((settingService.Settings.MoveLeftShortcut +
+                        settingService.Settings.MoveRightShortcut +
+                        settingService.Settings.MoveUpShortcut +
+                        settingService.Settings.MoveDownShortcut).Contains("Win"))
+                    {
+                        globalHook.KeyDown -= HookManager_KeyDown;
+                        globalHook.KeyUp -= HookManager_KeyUp;
+                    }
+                }
+
                 globalHook.Dispose();
             }
+
+            globalHook = Hook.GlobalEvents();
+
+            var map = new Dictionary<Combination, Action>
+            {
+                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
+            };
+
+            globalHook.OnCombination(map);
 
             IsRunning = false;
             StatusChanged?.Invoke(false);
