@@ -35,13 +35,21 @@
                 Text="Use following shortcuts to snap window"
                 TextWrapping="Wrap" />
 
+            <Button
+                HorizontalAlignment="Left"
+                Command="{Binding OverrideDefaultSnapCommand}"
+                Content="Override default snap shortcuts (Win + Arrow)"
+                FontWeight="Normal"
+                Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
+                Style="{StaticResource MaterialDesignOutlinedButton}" />
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="92" />
                     <ColumnDefinition Width="156" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,6" Text="Move Up" />
-                <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveUpShortcut}" />
+                <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveUpShortcut, Mode=TwoWay}" />
             </Grid>
 
             <Grid>
@@ -50,7 +58,7 @@
                     <ColumnDefinition Width="156" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,6" Text="Move Down" />
-                <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveDownShortcut}" />
+                <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveDownShortcut, Mode=TwoWay}" />
             </Grid>
 
             <Grid>
@@ -59,7 +67,7 @@
                     <ColumnDefinition Width="156" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,6" Text="Move Left" />
-                <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveLeftShortcut}" />
+                <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveLeftShortcut, Mode=TwoWay}" />
             </Grid>
 
             <Grid>
@@ -68,7 +76,7 @@
                     <ColumnDefinition Width="156" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,6" Text="Move Right" />
-                <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveRightShortcut}" />
+                <Controls:HotkeyEditorControl Grid.Column="1" Text="{Binding MoveRightShortcut, Mode=TwoWay}" />
             </Grid>
 
             <TextBlock

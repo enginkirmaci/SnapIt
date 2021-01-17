@@ -64,7 +64,7 @@ namespace SnapIt.Library.Services
             var map = new Dictionary<Combination, Action>
             {
                 { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> CycleLayouts() },
-                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
+                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> StartStop() }
             };
 
             if (settingService.Settings.EnableKeyboard)
@@ -147,7 +147,6 @@ namespace SnapIt.Library.Services
 
         private void StartStop()
         {
-            DevMode.Log(IsRunning);
             if (IsRunning)
             {
                 Release();
@@ -197,7 +196,7 @@ namespace SnapIt.Library.Services
 
             var map = new Dictionary<Combination, Action>
             {
-                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty)), ()=> StartStop() }
+                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> StartStop() }
             };
 
             globalHook.OnCombination(map);
@@ -223,7 +222,6 @@ namespace SnapIt.Library.Services
         {
             Thread.Sleep(2000);
             Release();
-            DevMode.Log("ok");
             settingService.ReInitialize();
 
             Initialize();
