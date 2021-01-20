@@ -99,45 +99,10 @@ namespace SnapIt.Library.Services
                 }
             }
 
-            var defaultExcludedApplications = new List<ExcludedApplication>
-            {
-                new ExcludedApplication
-                {
-                    Keyword = Constants.AppTitle,
-                    MatchRule = MatchRule.Contains,
-                    Mouse=true,
-                    Keyboard=true
-                },
-                new ExcludedApplication
-                {
-                    Keyword = "Action center",
-                    MatchRule = MatchRule.Contains,
-                    Mouse=true,
-                    Keyboard=true
-                },
-                new ExcludedApplication
-                {
-                    Keyword = "Start",
-                    MatchRule = MatchRule.Contains,
-                    Mouse=true,
-                    Keyboard=true
-                },
-                new ExcludedApplication
-                {
-                    Keyword = "New notification",
-                    MatchRule = MatchRule.Contains,
-                    Mouse=true,
-                    Keyboard=true
-                }
-            };
-
             if (settingService.ExcludedApplicationSettings?.Applications != null)
             {
                 matchRulesForMouse = settingService.ExcludedApplicationSettings.Applications.Where(i => i.Mouse).ToList();
                 matchRulesForKeyboard = settingService.ExcludedApplicationSettings.Applications.Where(i => i.Keyboard).ToList();
-
-                matchRulesForMouse.AddRange(defaultExcludedApplications);
-                matchRulesForKeyboard.AddRange(defaultExcludedApplications);
             }
 
             IsRunning = true;
@@ -407,7 +372,8 @@ namespace SnapIt.Library.Services
 
             if (activeWindow != ActiveWindow.Empty)
             {
-                if ((settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow.Boundry)) ||
+                if ((settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow)) ||
+                    !winApiService.IsAllowedWindowStyle(activeWindow) ||
                     IsExcludedApplication(activeWindow.Title, true))
                 {
                     return;
@@ -534,7 +500,11 @@ namespace SnapIt.Library.Services
                     {
                         isListening = false;
                     }
-                    else if (settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow.Boundry))
+                    else if (settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
+                    {
+                        isListening = false;
+                    }
+                    else if (!winApiService.IsAllowedWindowStyle(activeWindow))
                     {
                         isListening = false;
                     }
