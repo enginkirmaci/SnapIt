@@ -1,4 +1,6 @@
-﻿namespace SnapIt.Test
+﻿using System.Windows.Input;
+
+namespace SnapIt.Test
 {
     /// <summary>
     /// Interaction logic for UITest.xaml
@@ -12,6 +14,14 @@
 
         private void ToggleButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+        }
+
+        private void Grid_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
     }
 }

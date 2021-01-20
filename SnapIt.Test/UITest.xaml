@@ -3,12 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
     xmlns:vm="clr-namespace:SnapIt.Test.DesignTime"
-    xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
     Title="SnapIt"
     Width="860"
     Height="660"
@@ -16,33 +16,167 @@
     MinHeight="440"
     d:DataContext="{d:DesignInstance vm:MainWindowDesignViewModel,
                                      IsDesignTimeCreatable=True}"
-    fw:AcrylicWindow.Enabled="True"
-    Foreground="White"
-    GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+    Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
     ResizeMode="CanResizeWithGrip"
-    ShowIconOnTitleBar="True"
-    Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
+    ShowTitleBar="False"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/Controls.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            <!--  This is the template for all menu items. In this sample we use the glyph items.  -->
+            <DataTemplate x:Key="HamburgerMenuItem" DataType="{x:Type mah:HamburgerMenuItem}">
+                <Grid Height="48">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength}" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ContentControl
+                        Grid.Column="0"
+                        Content="{Binding Tag}"
+                        Focusable="False"
+                        IsTabStop="False" />
+                    <TextBlock
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="{Binding Label}" />
+                </Grid>
+            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
 
-    <mah:MetroWindow.RightWindowCommands>
-        <mah:WindowCommands>
-            <Button Content="Another Test" />
-            <ToggleButton Content="ToggleButton" />
-        </mah:WindowCommands>
-    </mah:MetroWindow.RightWindowCommands>
-
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Width="240"
+            Height="36"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="{DynamicResource MahApps.HamburgerMenu.Pane.Background}"
+            MouseMove="Grid_MouseMove">
+            <TextBlock
+                Margin="10"
+                VerticalAlignment="Top"
+                Foreground="{DynamicResource MahApps.HamburgerMenu.Pane.Foreground}"
+                Text="Snap It" />
+        </Grid>
+
+        <mah:HamburgerMenu
+            x:Name="HamburgerMenuControl"
+            Grid.Row="2"
+            DisplayMode="CompactInline"
+            IsPaneOpen="True"
+            ItemTemplate="{StaticResource HamburgerMenuItem}"
+            OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
+            SelectedIndex="0">
+
+            <!--  Items  -->
+            <mah:HamburgerMenu.ItemsSource>
+                <mah:HamburgerMenuItemCollection>
+                    <mah:HamburgerMenuGlyphItem Label="Layout">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <iconPacks:PackIconMaterial
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Kind="BorderAll" />
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </mah:HamburgerMenuGlyphItem>
+
+                    <mah:HamburgerMenuGlyphItem Label="Mouse">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <iconPacks:PackIconMaterial
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Kind="Mouse" />
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </mah:HamburgerMenuGlyphItem>
+
+                    <mah:HamburgerMenuGlyphItem Label="Keyboard">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <iconPacks:PackIconMaterial
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Kind="KeyboardOutline" />
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </mah:HamburgerMenuGlyphItem>
+
+                    <mah:HamburgerMenuGlyphItem Label="Window">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <iconPacks:PackIconMaterial
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Kind="WindowRestore" />
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </mah:HamburgerMenuGlyphItem>
+
+                    <mah:HamburgerMenuGlyphItem Label="Theme">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <iconPacks:PackIconMaterial
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Kind="PaletteOutline" />
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </mah:HamburgerMenuGlyphItem>
+
+                    <mah:HamburgerMenuGlyphItem Label="Settings">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <iconPacks:PackIconMaterial
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Kind="CogOutline" />
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </mah:HamburgerMenuGlyphItem>
+                </mah:HamburgerMenuItemCollection>
+            </mah:HamburgerMenu.ItemsSource>
+
+            <!--  Options  -->
+            <mah:HamburgerMenu.OptionsItemsSource>
+                <mah:HamburgerMenuItemCollection>
+                    <mah:HamburgerMenuSeparatorItem />
+                    <mah:HamburgerMenuGlyphItem Label="About">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <iconPacks:PackIconMaterial
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Kind="InformationVariant" />
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </mah:HamburgerMenuGlyphItem>
+                </mah:HamburgerMenuItemCollection>
+            </mah:HamburgerMenu.OptionsItemsSource>
+
+            <!--  Content  -->
+            <mah:HamburgerMenu.ContentTemplate>
+                <DataTemplate>
+                    <Grid x:Name="ContentGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="48" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <mah:TransitioningContentControl
+                            Grid.Row="1"
+                            Content="{Binding}"
+                            RestartTransitionOnContentChange="True"
+                            Transition="Default">
+                            <mah:TransitioningContentControl.Resources>
+                                <DataTemplate DataType="{x:Type mah:HamburgerMenuGlyphItem}">
+                                    <Image Source="{Binding Glyph, Mode=OneWay, Converter={mah:NullToUnsetValueConverter}}" />
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type mah:HamburgerMenuIconItem}">
+                                    <ContentControl
+                                        Content="{Binding Tag, Mode=OneWay}"
+                                        Focusable="True"
+                                        IsTabStop="False" />
+                                </DataTemplate>
+                            </mah:TransitioningContentControl.Resources>
+                        </mah:TransitioningContentControl>
+                    </Grid>
+                </DataTemplate>
+            </mah:HamburgerMenu.ContentTemplate>
+        </mah:HamburgerMenu>
 
         <Border
             Margin="6,0"
@@ -51,7 +185,8 @@
             VerticalAlignment="Bottom"
             Panel.ZIndex="99"
             BorderBrush="{DynamicResource MaterialDesignBodyLight}"
-            BorderThickness="0,1,0,0">
+            BorderThickness="0,1,0,0"
+            Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -104,7 +239,8 @@
         <StackPanel
             HorizontalAlignment="Left"
             Background="#D802233F"
-            Orientation="Vertical">
+            Orientation="Vertical"
+            Visibility="Collapsed">
             <TextBlock Margin="18,13,0,32" Text="{x:Static c:Constants.AppName}" />
 
             <RadioButton Style="{StaticResource MaterialDesignTabRadioButton2}" Visibility="Collapsed">
@@ -286,41 +422,29 @@
             </RadioButton>
         </StackPanel>
 
-        <Grid Grid.Column="1" Background="#A50078D7">
-            <StackPanel
+        <Grid Grid.Column="1">
+
+            <Button
+                Height="30"
+                Margin="0,0,140,0"
+                Padding="14,6"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Orientation="Horizontal"
-                WindowChrome.IsHitTestVisibleInChrome="True">
-                <Button
-                    Padding="12,4"
-                    materialDesign:ButtonAssist.CornerRadius="0"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Command="{Binding HandleLinkClick}"
-                    CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
-                    Style="{StaticResource MaterialDesignIconForegroundButton2}"
-                    ToolTip="Give Feedback">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="FeedbackOutline" />
-                        <TextBlock
-                            Margin="6,0,0,0"
-                            FontSize="13"
-                            Text="Feedback" />
-                    </StackPanel>
-                </Button>
-
-                <Button
-                    materialDesign:ButtonAssist.CornerRadius="0"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Command="{Binding CloseWindowCommand, Mode=OneWay}"
-                    CommandParameter="{Binding ElementName=MainWindowView}"
-                    Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                    <materialDesign:PackIcon
-                        Width="18"
-                        Height="18"
-                        Kind="WindowClose" />
-                </Button>
-            </StackPanel>
+                Command="{Binding HandleLinkClick}"
+                CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
+                FontSize="13"
+                FontWeight="Light"
+                Style="{StaticResource SnapIt.Styles.Button.Flat}"
+                ToolTip="Give Feedback">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial
+                        Width="14"
+                        Height="14"
+                        VerticalAlignment="Center"
+                        Kind="MessageAlertOutline" />
+                    <TextBlock Margin="6,0,0,0" Text="Feedback" />
+                </StackPanel>
+            </Button>
 
             <Grid />
         </Grid>
