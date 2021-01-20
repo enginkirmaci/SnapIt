@@ -42,13 +42,33 @@ namespace SnapIt.Library.Services
             return GetOpenWindows().Select(i => i.Value).Distinct().OrderBy(i => i);
         }
 
-        public bool IsFullscreen(Rectangle activeWindowRectangle)
+        public bool IsAllowedWindowStyle(ActiveWindow activeWindow)
+        {
+            var style = User32.GetWindowLong(activeWindow.Handle, (int)GWL.STYLE);
+
+            //foreach (WindowStyles ws in (WindowStyles[])Enum.GetValues(typeof(WindowStyles)))
+            //{
+            //    var wsEnum = (WindowStyles)(style & (uint)(ws));
+
+            //    if (wsEnum != WindowStyles.WS_EX_LEFT)
+            //    {
+            //    }
+            //}
+
+            var windowStyle = (WindowStyles)(style & (uint)WindowStyles.WS_EX_APPWINDOW);
+
+            return windowStyle == WindowStyles.WS_EX_APPWINDOW;
+        }
+
+        public bool IsFullscreen(ActiveWindow activeWindow)
         {
             User32.GetWindowRect(User32.GetDesktopWindow(), out Rectangle desktopWindow);
-            return activeWindowRectangle.Left == desktopWindow.Left &&
-                    activeWindowRectangle.Top == desktopWindow.Top &&
-                    activeWindowRectangle.Right == desktopWindow.Right &&
-                    activeWindowRectangle.Bottom == desktopWindow.Bottom;
+            var isFullScreen = activeWindow.Boundry.Left == desktopWindow.Left &&
+                    activeWindow.Boundry.Top == desktopWindow.Top &&
+                    activeWindow.Boundry.Right == desktopWindow.Right &&
+                    activeWindow.Boundry.Bottom == desktopWindow.Bottom;
+
+            return isFullScreen;
         }
 
         public void MoveWindow(ActiveWindow activeWindow, Rectangle newRect)

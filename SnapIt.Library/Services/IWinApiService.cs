@@ -10,7 +10,9 @@ namespace SnapIt.Library.Services
 
         IEnumerable<string> GetOpenWindowsNames();
 
-        bool IsFullscreen(Rectangle activeWindowRectangle);
+        bool IsFullscreen(ActiveWindow activeWindow);
+
+        bool IsAllowedWindowStyle(ActiveWindow activeWindow);
 
         void MoveWindow(ActiveWindow activeWindow, Rectangle newRect);
 
