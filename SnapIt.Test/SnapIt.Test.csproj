@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AcrylicWindow.cs" />
     <Compile Include="DesignTime\MainWindowDesignViewModel.cs" />
     <Compile Include="UITest.xaml.cs">
       <DependentUpon>UITest.xaml</DependentUpon>
