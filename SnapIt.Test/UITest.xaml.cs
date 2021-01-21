@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using SnapIt.Test.DesignTime;
 
 namespace SnapIt.Test
 {
@@ -10,6 +11,8 @@ namespace SnapIt.Test
         public UITest()
         {
             InitializeComponent();
+
+            DataContext = new MainWindowDesignViewModel();
         }
 
         private void ToggleButton_Click(object sender, System.Windows.RoutedEventArgs e)
