@@ -227,7 +227,8 @@
                 Margin="8"
                 Padding="14,5"
                 HorizontalAlignment="Right"
-                Style="{StaticResource SnapIt.Styles.Hamburger.Button.Flat}">
+                Style="{StaticResource SnapIt.Styles.Hamburger.Button.Flat}"
+                Visibility="Hidden">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Margin="0,0,12,0" Text="{Binding ThemeTitle}" />
@@ -246,6 +247,24 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
+
+            <mah:DropDownButton
+                Margin="8"
+                HorizontalAlignment="Right"
+                Background="Transparent"
+                BorderThickness="0"
+                Content="{Binding SelectedTheme, Mode=TwoWay}"
+                ItemsSource="{Binding ThemeList}">
+                <mah:DropDownButton.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="{x:Type MenuItem}">
+                        <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mah:DropDownButton}}, Path=DataContext.ThemeItemCommand}" />
+                        <Setter Property="CommandParameter" Value="{Binding}" />
+                    </Style>
+                </mah:DropDownButton.ItemContainerStyle>
+                <mah:DropDownButton.Icon>
+                    <iconPacks:PackIconMaterial Margin="6" Kind="ThemeLightDark" />
+                </mah:DropDownButton.Icon>
+            </mah:DropDownButton>
         </Grid>
 
         <Button
