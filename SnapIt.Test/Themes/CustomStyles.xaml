@@ -253,7 +253,7 @@
     <Style x:Key="SnapIt.Styles.ToggleButton.Flat" TargetType="{x:Type ToggleButton}">
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}" />
                 <Setter Property="Foreground" Value="White" />
             </Trigger>
             <MultiTrigger>

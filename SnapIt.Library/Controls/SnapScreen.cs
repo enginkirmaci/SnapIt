@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using SnapIt.Library.Entities;
+﻿using SnapIt.Library.Entities;
+using WpfScreenHelper;
 
 namespace SnapIt.Library.Controls
 {

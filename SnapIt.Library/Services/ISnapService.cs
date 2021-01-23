@@ -12,6 +12,10 @@ namespace SnapIt.Library.Services
 
         event LayoutChangedEvent LayoutChanged;
 
+        event ScreenChangedEvent ScreenChanged;
+
+        void ScreenChangedEvent();
+
         void Initialize();
 
         void Release();
@@ -22,4 +26,6 @@ namespace SnapIt.Library.Services
     public delegate void LayoutChangedEvent(SnapScreen snapScreen, Layout layout);
 
     public delegate void ScreenLayoutLoadedEvent(IList<SnapScreen> snapScreens, IList<Layout> layouts);
+
+    public delegate void ScreenChangedEvent(IList<SnapScreen> snapScreens);
 }

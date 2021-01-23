@@ -68,10 +68,10 @@ namespace SnapIt.ViewModels
             };
 
             winApiService.MoveWindow(activeWindow,
-                                  SnapScreen.Base.WorkingArea.Left,
-                                  SnapScreen.Base.WorkingArea.Top,
-                                  SnapScreen.Base.WorkingArea.Width,
-                                  SnapScreen.Base.WorkingArea.Height);
+                                 (int)SnapScreen.Base.WorkingArea.Left,
+                                 (int)SnapScreen.Base.WorkingArea.Top,
+                                 (int)SnapScreen.Base.WorkingArea.Width,
+                                 (int)SnapScreen.Base.WorkingArea.Height);
 
             snapService.Release();
         }
