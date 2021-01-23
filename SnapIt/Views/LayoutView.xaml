@@ -37,7 +37,7 @@
                 <ListBox
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Top"
-                    ItemsSource="{Binding SnapScreens, UpdateSourceTrigger=PropertyChanged}"
+                    ItemsSource="{Binding SnapScreens}"
                     SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>

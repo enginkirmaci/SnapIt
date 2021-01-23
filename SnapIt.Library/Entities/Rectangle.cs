@@ -1,4 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace SnapIt.Library.Entities
@@ -33,8 +36,8 @@ namespace SnapIt.Library.Entities
 
         public int X { get { return Left; } }
         public int Y { get { return Top; } }
-        public int Width { get { return Right - Left; } }
-        public int Height { get { return Bottom - Top; } }
+        public int Width { get { return Math.Abs(Right - Left); } }
+        public int Height { get { return Math.Abs(Bottom - Top); } }
         public Point Center { get { return new Point((Left + Right) / 2, (Top + Bottom) / 2); } }
 
         public static Rectangle Empty { get { return new Rectangle(); } }
@@ -53,6 +56,24 @@ namespace SnapIt.Library.Entities
             };
 
             return Left <= center.X && center.X <= Right && Top <= center.Y && center.Y <= Bottom;
+        }
+
+        public System.Windows.Rect GetRect()
+        {
+            return new System.Windows.Rect(
+                new System.Windows.Point(Left, Top),
+                new System.Windows.Point(Right, Bottom));
+        }
+
+        public IList<Rectangle> GetCollisions(IList<Rectangle> rectangles)
+        {
+            var rect = GetRect();
+
+            var result = rectangles
+                .Where(b => System.Windows.Rect.Intersect(rect, b.GetRect()) != System.Windows.Rect.Empty)
+                .ToList();
+
+            return result;
         }
 
         public override string ToString()

@@ -8,6 +8,7 @@ using Gma.System.MouseKeyHook;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Mappers;
+using SnapIt.Library.Tools;
 
 namespace SnapIt.Library.Services
 {
@@ -388,36 +389,9 @@ namespace SnapIt.Library.Services
                     var activeBoundry = boundries.FirstOrDefault(i => i.Contains(rectmargin));
                     activeWindow.Dpi = DpiHelper.GetDpiFromPoint(activeBoundry.Left, activeBoundry.Right);
 
-                    var copyActiveBoundry = !activeBoundry.Equals(Rectangle.Empty) ?
-                        new Rectangle(activeBoundry.Left, activeBoundry.Top, activeBoundry.Right, activeBoundry.Bottom, activeBoundry.Dpi) :
-                        boundries.First();
+                    var newSnapArea = FindClosest.GetClosestRectangle(boundries, activeBoundry, direction);
 
-                    switch (direction)
-                    {
-                        case MoveDirection.Left:
-                            activeBoundry.Left -= rectmargin.Width / 2;
-                            activeBoundry.Right -= rectmargin.Width / 2;
-                            break;
-
-                        case MoveDirection.Right:
-                            activeBoundry.Left += activeBoundry.Width + rectmargin.Width / 2;
-                            activeBoundry.Right += activeBoundry.Width + rectmargin.Width / 2;
-                            break;
-
-                        case MoveDirection.Up:
-                            activeBoundry.Top -= rectmargin.Height / 2;
-                            activeBoundry.Bottom -= rectmargin.Height / 2;
-                            break;
-
-                        case MoveDirection.Down:
-                            activeBoundry.Top += activeBoundry.Height + rectmargin.Height / 2;
-                            activeBoundry.Bottom += activeBoundry.Height + rectmargin.Height / 2;
-                            break;
-                    }
-
-                    var newSnapArea = boundries.FirstOrDefault(i => i.Dpi.Equals(activeWindow.Dpi) ? i.Contains(activeBoundry) : i.ContainsDpiAwareness(activeBoundry));
-
-                    MoveActiveWindow(!newSnapArea.Equals(Rectangle.Empty) ? newSnapArea : copyActiveBoundry, false);
+                    MoveActiveWindow(newSnapArea.HasValue ? newSnapArea.Value : activeBoundry, false);
                 }
             }
         }
