@@ -126,6 +126,7 @@
     <Compile Include="Services\SnapService.cs" />
     <Compile Include="Services\WinApiService.cs" />
     <Compile Include="Services\WindowService.cs" />
+    <Compile Include="Tools\FindClosest.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaterialDesignColors">
