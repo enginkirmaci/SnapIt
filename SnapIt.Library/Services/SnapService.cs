@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
-using Microsoft.Win32;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Mappers;
@@ -18,6 +17,8 @@ namespace SnapIt.Library.Services
         private readonly ISettingService settingService;
         private readonly IWinApiService winApiService;
 
+        private static List<Keys> keysDown = new List<Keys>();
+
         private ActiveWindow activeWindow;
         private SnapAreaInfo snapAreaInfo;
         private bool isWindowDetected = false;
@@ -28,11 +29,12 @@ namespace SnapIt.Library.Services
         private IKeyboardMouseEvents globalHook;
         private List<ExcludedApplication> matchRulesForMouse;
         private List<ExcludedApplication> matchRulesForKeyboard;
-        private static List<Keys> keysDown = new List<Keys>();
 
         public bool IsRunning { get; set; }
 
         public event GetStatus StatusChanged;
+
+        public event ScreenChangedEvent ScreenChanged;
 
         public event LayoutChangedEvent LayoutChanged;
 
@@ -52,8 +54,6 @@ namespace SnapIt.Library.Services
         {
             isWindowDetected = false;
             isListening = false;
-
-            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 
             windowService.Initialize();
 
@@ -124,8 +124,6 @@ namespace SnapIt.Library.Services
 
         public void Release()
         {
-            SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
-
             windowService.Release();
 
             if (globalHook != null)
@@ -183,13 +181,17 @@ namespace SnapIt.Library.Services
             LayoutChanged?.Invoke(snapScreen, nextLayout);
         }
 
-        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        public void ScreenChangedEvent()
         {
-            Thread.Sleep(2000);
-            Release();
             settingService.ReInitialize();
 
-            Initialize();
+            if (IsRunning)
+            {
+                Release();
+                Initialize();
+            }
+
+            ScreenChanged?.Invoke(settingService.SnapScreens);
         }
 
         private static void HookManager_KeyDown(object sender, KeyEventArgs e)

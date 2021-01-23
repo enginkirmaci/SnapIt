@@ -33,7 +33,7 @@ namespace SnapIt.ViewModels
             set
             {
                 SetProperty(ref selectedSnapScreen, value);
-                SelectedLayout = selectedSnapScreen.Layout;
+                SelectedLayout = selectedSnapScreen?.Layout;
             }
         }
 
@@ -73,6 +73,8 @@ namespace SnapIt.ViewModels
             this.snapService = snapService;
             this.settingService = settingService;
             this.winApiService = winApiService;
+
+            snapService.ScreenChanged += SnapService_ScreenChanged;
 
             Theme = new SnapAreaTheme
             {
@@ -180,6 +182,14 @@ namespace SnapIt.ViewModels
                 designWindow.SetViewModel(SelectedSnapScreen, PopupLayout);
                 designWindow.Show();
             });
+        }
+
+        private void SnapService_ScreenChanged(System.Collections.Generic.IList<SnapScreen> snapScreens)
+        {
+            var deviceNumber = selectedSnapScreen.DeviceNumber;
+
+            SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
+            SelectedSnapScreen = SnapScreens.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
         }
 
         private void DesignWindow_Closed(object sender, EventArgs e)

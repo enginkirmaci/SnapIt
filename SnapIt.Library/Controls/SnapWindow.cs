@@ -77,10 +77,10 @@ namespace SnapIt.Library.Controls
 
             winApiService.MoveWindow(
                 window,
-                Screen.Base.WorkingArea.Left,
-                Screen.Base.WorkingArea.Top,
-                Screen.Base.WorkingArea.Width,
-                Screen.Base.WorkingArea.Height);
+                (int)Screen.Base.WorkingArea.Left,
+                (int)Screen.Base.WorkingArea.Top,
+                (int)Screen.Base.WorkingArea.Width,
+                (int)Screen.Base.WorkingArea.Height);
         }
 
         private void CalculateDpi()

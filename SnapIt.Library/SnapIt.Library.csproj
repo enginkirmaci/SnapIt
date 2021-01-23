@@ -151,6 +151,9 @@
     <PackageReference Include="WindowsBase">
       <Version>4.6.1055</Version>
     </PackageReference>
+    <PackageReference Include="WpfScreenHelper">
+      <Version>1.0.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\HotkeyEditorControl.xaml">

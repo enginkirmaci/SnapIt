@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using Windows.ApplicationModel;
+using WpfScreenHelper;
 
 namespace SnapIt.Library.Services
 {
