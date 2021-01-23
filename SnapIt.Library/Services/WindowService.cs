@@ -30,16 +30,17 @@ namespace SnapIt.Library.Services
         {
             foreach (var screen in settingService.SnapScreens)
             {
-                var window = new SnapWindow(settingService, winApiService, screen);
-
-                if (!snapWindows.Any(i => i.Screen == screen))
+                if (screen.IsActive)
                 {
-                    window.ApplyLayout();
+                    var window = new SnapWindow(settingService, winApiService, screen);
 
-                    snapWindows.Add(window);
+                    if (!snapWindows.Any(i => i.Screen == screen))
+                    {
+                        window.ApplyLayout();
+
+                        snapWindows.Add(window);
+                    }
                 }
-
-                //break; //TODO test
             }
 
             snapWindows.ForEach(window =>

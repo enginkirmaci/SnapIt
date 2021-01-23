@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
-using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 using SnapIt.Views;
@@ -17,16 +17,15 @@ namespace SnapIt.ViewModels
     {
         private readonly ISnapService snapService;
         private readonly ISettingService settingService;
-        private readonly IWinApiService winApiService;
 
-        private ObservableCollection<SnapScreen> snapScreens;
+        private ObservableCollectionWithItemNotify<SnapScreen> snapScreens;
         private SnapScreen selectedSnapScreen;
         private ObservableCollection<Layout> layouts;
         private Layout selectedLayout;
         private bool isRenameDialogOpen;
         private Layout popupLayout;
 
-        public ObservableCollection<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
+        public ObservableCollectionWithItemNotify<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
         public SnapScreen SelectedSnapScreen
         {
             get => selectedSnapScreen;
@@ -67,12 +66,10 @@ namespace SnapIt.ViewModels
 
         public LayoutViewModel(
             ISnapService snapService,
-            ISettingService settingService,
-            IWinApiService winApiService)
+            ISettingService settingService)
         {
             this.snapService = snapService;
             this.settingService = settingService;
-            this.winApiService = winApiService;
 
             snapService.ScreenChanged += SnapService_ScreenChanged;
 
@@ -91,8 +88,10 @@ namespace SnapIt.ViewModels
             }
 
             Layouts = new ObservableCollection<Layout>(settingService.Layouts);
-            SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
+            SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
             SelectedSnapScreen = SnapScreens.FirstOrDefault(); //TODO this causes two times initialization on startup
+
+            SnapScreens.CollectionChanged += SnapScreens_CollectionChanged;
 
             ImportLayoutCommand = new DelegateCommand(() =>
             {
@@ -184,11 +183,16 @@ namespace SnapIt.ViewModels
             });
         }
 
+        private void SnapScreens_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ApplyChanges();
+        }
+
         private void SnapService_ScreenChanged(System.Collections.Generic.IList<SnapScreen> snapScreens)
         {
             var deviceNumber = selectedSnapScreen.DeviceNumber;
 
-            SnapScreens = new ObservableCollection<SnapScreen>(settingService.SnapScreens);
+            SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
             SelectedSnapScreen = SnapScreens.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
         }
 
