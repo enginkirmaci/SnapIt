@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using Windows.ApplicationModel;
 using WpfScreenHelper;
@@ -43,6 +42,8 @@ namespace SnapIt.Library.Services
 
         public void Save()
         {
+            Settings.ActiveScreens = SnapScreens.Where(s => s.IsActive).Select(s => s.Base.DeviceName).ToList();
+
             fileOperationService.Save(Settings);
 
             foreach (var layout in Layouts.Where(i => i.Status == LayoutStatus.NotSaved))
@@ -113,7 +114,14 @@ namespace SnapIt.Library.Services
                     snapScreen.Layout = Layouts.FirstOrDefault();
                 }
 
+                snapScreen.IsActive = Settings.ActiveScreens.Contains(snapScreen.Base.DeviceName);
+
                 snapScreens.Add(snapScreen);
+            }
+
+            if (snapScreens.Any(s => !s.IsActive))
+            {
+                snapScreens.ForEach(s => s.IsActive = true);
             }
 
             return snapScreens;

@@ -1,13 +1,13 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.LayoutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     d:DataContext="{d:DesignInstance design:LayoutDesignView,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="800"
@@ -37,7 +37,7 @@
                 <ListBox
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Top"
-                    ItemsSource="{Binding SnapScreens}"
+                    ItemsSource="{Binding SnapScreens, UpdateSourceTrigger=PropertyChanged}"
                     SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -58,6 +58,10 @@
                                     VerticalAlignment="Center"
                                     Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                                     Text="{Binding DeviceNumber}" />
+                                <CheckBox
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    IsChecked="{Binding IsActive}" />
                                 <StackPanel Grid.Row="1">
                                     <TextBlock
                                         HorizontalAlignment="Center"

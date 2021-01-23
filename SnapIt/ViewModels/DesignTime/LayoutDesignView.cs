@@ -30,7 +30,7 @@ namespace SnapIt.ViewModels.DesignTime
 
             SnapScreens = new ObservableCollection<SnapScreen>();
             SnapScreens.Add(new SnapScreen() { DeviceNumber = "1", Primary = "Primary", Resolution = "1920 x 1080" });
-            SnapScreens.Add(new SnapScreen() { DeviceNumber = "2", Primary = null, Resolution = "3440 x 1440" });
+            SnapScreens.Add(new SnapScreen() { DeviceNumber = "2", IsActive = true, Primary = null, Resolution = "3440 x 1440" });
 
             Layouts = new ObservableCollection<Layout>
             {
@@ -134,6 +134,7 @@ namespace SnapIt.ViewModels.DesignTime
         public string Primary { get; set; }
         public string DeviceNumber { get; set; }
         public string Resolution { get; set; }
+        public bool IsActive { get; set; }
         public Layout Layout { get; set; }
     }
 }

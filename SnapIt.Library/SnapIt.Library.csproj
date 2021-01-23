@@ -85,6 +85,7 @@
     <Compile Include="Entities\ExcludedApplication.cs" />
     <Compile Include="Entities\ExcludedApplicationSettings.cs" />
     <Compile Include="Entities\Constants.cs" />
+    <Compile Include="Entities\FullyObservableCollection.cs" />
     <Compile Include="Entities\LayoutOverlay.cs" />
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\SnapAreaInfo.cs" />
@@ -102,7 +103,7 @@
     <Compile Include="FindRectangle\sSize.cs" />
     <Compile Include="Services\FileOperationService.cs" />
     <Compile Include="Services\IFileOperationService.cs" />
-    <Compile Include="Controls\SnapScreen.cs" />
+    <Compile Include="Entities\SnapScreen.cs" />
     <Compile Include="Controls\SnapWindow.cs" />
     <Compile Include="Entities\ActiveWindow.cs" />
     <Compile Include="Entities\Bindable.cs" />
