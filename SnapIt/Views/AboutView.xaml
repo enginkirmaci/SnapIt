@@ -1,14 +1,12 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.AboutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
-    xmlns:clr="clr-namespace:System;assembly=mscorlib"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:SnapIt.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
     d:DataContext="{d:DesignInstance vm:AboutViewModel,
                                      IsDesignTimeCreatable=True}"
@@ -79,18 +77,6 @@
                         <Hyperlink.Inlines>
                             <materialDesign:PackIcon Margin="0,-3" Kind="StarRate" />
                             <Run Text="Rate and review on Microsoft Store" />
-                        </Hyperlink.Inlines>
-                    </Hyperlink>
-                </TextBlock>
-
-                <TextBlock Margin="0,24,0,0">
-                    <Hyperlink
-                        Command="{Binding OpenChangeLogDialog}"
-                        FontSize="20"
-                        FontWeight="Light"
-                        Style="{StaticResource MaterialDesignBody1Hyperlink}">
-                        <Hyperlink.Inlines>
-                            <Run Text="Change log" />
                         </Hyperlink.Inlines>
                     </Hyperlink>
                 </TextBlock>
@@ -177,36 +163,5 @@
                 </Hyperlink>
             </TextBlock>
         </Grid>
-
-        <materialDesign:DialogHost
-            Grid.RowSpan="2"
-            CloseOnClickAway="True"
-            IsOpen="{Binding IsChangeLogDialogOpen}"
-            Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
-            <materialDesign:DialogHost.DialogContent>
-                <Grid Width="480" Margin="16">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock
-                        Margin="0,0,0,12"
-                        Style="{StaticResource MaterialDesignTitleTextBlock2}"
-                        Text="Change Log" />
-
-                    <ListBox Grid.Row="1" ItemsSource="{Binding ChangeLogs}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Header}" />
-                                    <ItemsControl ItemsSource="{Binding Lines}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-            </materialDesign:DialogHost.DialogContent>
-        </materialDesign:DialogHost>
     </Grid>
 </UserControl>

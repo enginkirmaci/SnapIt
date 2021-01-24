@@ -101,6 +101,7 @@
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\DesignTime\WindowsDesignView.cs" />
     <Compile Include="ViewModels\ThemeViewModel.cs" />
+    <Compile Include="ViewModels\WhatsNewViewModel.cs" />
     <Compile Include="ViewModels\WindowsViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
@@ -129,6 +130,9 @@
     </Compile>
     <Compile Include="Views\ThemeView.xaml.cs">
       <DependentUpon>ThemeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WhatsNewView.xaml.cs">
+      <DependentUpon>WhatsNewView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindowsView.xaml.cs">
       <DependentUpon>WindowsView.xaml</DependentUpon>
@@ -170,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ThemeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WhatsNewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
