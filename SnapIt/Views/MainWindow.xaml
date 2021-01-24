@@ -253,6 +253,29 @@
                 </RadioButton.Content>
             </RadioButton>
             <RadioButton
+                x:Name="WhatsNewViewRadio"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="WhatsNewView"
+                Style="{StaticResource MaterialDesignTabRadioButton2}">
+                <RadioButton.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Kind="FileDocumentBoxMultipleOutline" />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            Text="What's New" />
+                    </Grid>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
                 x:Name="AboutViewRadio"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="AboutView"

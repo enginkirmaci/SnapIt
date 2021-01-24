@@ -76,6 +76,7 @@ namespace SnapIt
             containerRegistry.RegisterForNavigation<SettingsView>();
             containerRegistry.RegisterForNavigation<WindowsView>();
             containerRegistry.RegisterForNavigation<ThemeView>();
+            containerRegistry.RegisterForNavigation<WhatsNewView>();
             containerRegistry.RegisterForNavigation<AboutView>();
 
             containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
