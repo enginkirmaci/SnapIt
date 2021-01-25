@@ -190,7 +190,6 @@ namespace SnapIt.Library.Controls
 
                 case LayoutStatus.Ignored:
                     Layout.Name = currentName;
-                    Layout.Size = new Size(ActualWidth, ActualHeight);
                     Layout.LayoutLines = currentLayoutLines;
                     Layout.LayoutOverlays = currentLayoutOverlays;
                     Layout.Status = LayoutStatus.Ignored;
