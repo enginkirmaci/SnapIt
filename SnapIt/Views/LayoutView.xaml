@@ -1,7 +1,7 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.LayoutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,11 +13,12 @@
     d:DesignHeight="800"
     d:DesignWidth="640"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
-
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -27,10 +28,10 @@
             </Grid.RowDefinitions>
 
             <StackPanel>
-                <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Layout" />
-                <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Screens" />
+                <TextBlock Text="Layout" />
+                <TextBlock Text="Screens" />
                 <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
-                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
+                    <Hyperlink IsEnabled="False">
                         Select screen and proceed to layout section.
                     </Hyperlink>
                 </TextBlock>
@@ -46,7 +47,8 @@
                                     <RowDefinition />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <materialDesign:PackIcon
+
+                                <iconPacks:PackIconMaterial
                                     Width="60"
                                     Height="60"
                                     HorizontalAlignment="Center"
@@ -56,7 +58,6 @@
                                     Margin="0,-8,0,0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                                     Text="{Binding DeviceNumber}" />
                                 <CheckBox
                                     HorizontalAlignment="Right"
@@ -66,18 +67,15 @@
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                                         Text="{Binding Resolution}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                         Text="{Binding Primary}"
                                         Visibility="{Binding Primary, TargetNullValue=Collapsed}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                         Text="{Binding Layout.Name}"
                                         TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
@@ -89,16 +87,6 @@
                             <StackPanel Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
-                    <ListBox.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource PrimaryHueDarkBrush}" />
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
                 </ListBox>
             </StackPanel>
 
@@ -108,10 +96,10 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Change Layouts" />
+                <TextBlock Text="Change Layouts" />
 
                 <TextBlock Grid.Row="1" TextWrapping="Wrap">
-                    <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
+                    <Hyperlink IsEnabled="False">
                         Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu.
                     </Hyperlink>
                 </TextBlock>
@@ -120,13 +108,13 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal">
-                    <Button Command="{Binding NewLayoutCommand}" Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                    <Button Command="{Binding NewLayoutCommand}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon
+                                <iconPacks:PackIconMaterial
                                     Width="22"
                                     Height="22"
-                                    Kind="Add" />
+                                    Kind="Plus" />
                                 <TextBlock
                                     Margin="8,0,0,0"
                                     VerticalAlignment="Center"
@@ -134,10 +122,10 @@
                             </StackPanel>
                         </Button.Content>
                     </Button>
-                    <Button Command="{Binding ImportLayoutCommand}" Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                    <Button Command="{Binding ImportLayoutCommand}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon
+                                <iconPacks:PackIconMaterial
                                     Width="22"
                                     Height="22"
                                     Kind="Import" />
@@ -155,6 +143,7 @@
                 Grid.Row="2"
                 VerticalContentAlignment="Top"
                 ItemsSource="{Binding Layouts}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -163,13 +152,6 @@
                                 <RowDefinition />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-
-                            <!--<Controls:SnapAreaOld
-                                Width="188"
-                                Height="156"
-                                IsMergeIconHidden="True"
-                                LayoutArea="{Binding LayoutArea}"
-                                Theme="{Binding Theme}" />-->
 
                             <Controls:SnapControl
                                 Width="188"
@@ -180,15 +162,13 @@
                             <TextBlock
                                 Grid.Row="1"
                                 Margin="0,8"
-                                Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                                 Text="{Binding Name}"
                                 TextWrapping="Wrap" />
 
-                            <materialDesign:PopupBox
+                            <!--<materialDesign:PopupBox
                                 Margin="0,6"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
                                 PopupMode="Click">
                                 <StackPanel>
                                     <Button
@@ -209,7 +189,7 @@
                                         CommandParameter="{Binding}"
                                         Content="Export" />
                                 </StackPanel>
-                            </materialDesign:PopupBox>
+                            </materialDesign:PopupBox>-->
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -218,22 +198,12 @@
                         <WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
-                <ListBox.ItemContainerStyle>
-                    <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="{StaticResource PrimaryHueDarkBrush}" />
-                                <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListBox.ItemContainerStyle>
             </ListBox>
         </Grid>
-        <materialDesign:DialogHost IsOpen="{Binding IsRenameDialogOpen}" Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
+        <!--<materialDesign:DialogHost IsOpen="{Binding IsRenameDialogOpen}">
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Width="360" Margin="16">
-                    <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock2}" Text="Layout Name" />
+                    <TextBlock Text="Layout Name" />
                     <TextBox
                         Margin="0,8,0,0"
                         HorizontalAlignment="Stretch"
@@ -243,8 +213,7 @@
                         Margin="0,8,0,0"
                         HorizontalAlignment="Center"
                         Command="materialDesign:DialogHost.CloseDialogCommand"
-                        IsDefault="True"
-                        Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                        IsDefault="True">
                         <Button.CommandParameter>
                             <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                                 True
@@ -254,6 +223,6 @@
                     </Button>
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
-        </materialDesign:DialogHost>
+        </materialDesign:DialogHost>-->
     </Grid>
 </UserControl>

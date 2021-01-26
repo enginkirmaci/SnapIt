@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using MaterialDesignThemes.Wpf;
 using Prism.Commands;
@@ -7,6 +9,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using SnapIt.Library;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
 
 namespace SnapIt.ViewModels
@@ -41,6 +44,8 @@ namespace SnapIt.ViewModels
 
         public string ThemeTitle { get => themeTitle; set => SetProperty(ref themeTitle, value); }
         public bool IsVersion3000MessageShown { get => settingService.Settings.IsVersion3000MessageShown; set { settingService.Settings.IsVersion3000MessageShown = value; } }
+        public ObservableCollection<Themes> ThemeList { get; set; }
+        public Themes SelectedTheme { get; set; }
 
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
@@ -48,6 +53,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand<string> HandleLinkClick { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
         public DelegateCommand<object> LoadedCommand { get; private set; }
+        public DelegateCommand ThemeItemCommand { get; }
 
         public MainWindowViewModel(
             IWindowService windowService,
@@ -60,6 +66,14 @@ namespace SnapIt.ViewModels
             this.settingService = settingService;
 
             IsDarkTheme = settingService.Settings.IsDarkTheme;
+
+            ThemeList = new ObservableCollection<Themes> {
+                Themes.Light,
+                Themes.Dark,
+                Themes.System
+            };
+
+            SelectedTheme = Themes.System;
 
             snapService.StatusChanged += SnapService_StatusChanged;
 
@@ -92,6 +106,11 @@ namespace SnapIt.ViewModels
 
             LoadedCommand = new DelegateCommand<object>((window) =>
             {
+                var contentControl = ((Window)window).FindChildren<ContentControl>("MainContentControl");
+
+                RegionManager.SetRegionName(contentControl, Constants.MainRegion);
+                RegionManager.SetRegionManager(contentControl, regionManager);
+
                 NavigateCommand.Execute("LayoutView");
 
                 HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper((Window)window).Handle);
@@ -174,12 +193,12 @@ namespace SnapIt.ViewModels
 
         private static void ModifyTheme(Action<ITheme> modificationAction)
         {
-            PaletteHelper paletteHelper = new PaletteHelper();
-            ITheme theme = paletteHelper.GetTheme();
+            //PaletteHelper paletteHelper = new PaletteHelper();
+            //ITheme theme = paletteHelper.GetTheme();
 
-            modificationAction?.Invoke(theme);
+            //modificationAction?.Invoke(theme);
 
-            paletteHelper.SetTheme(theme);
+            //paletteHelper.SetTheme(theme);
         }
     }
 }

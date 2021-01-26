@@ -15,11 +15,12 @@
     d:DesignHeight="700"
     d:DesignWidth="550"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
-
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=ThemeViewUserControl}" />
@@ -35,12 +36,9 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel>
-                    <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Themes" />
+                    <TextBlock Text="Themes" />
 
-                    <TextBlock
-                        Margin="0,6"
-                        Style="{StaticResource MaterialDesignTitleTextBlock2}"
-                        Text="Preview" />
+                    <TextBlock Margin="0,6" Text="Preview" />
                     <Grid HorizontalAlignment="Left">
                         <Grid.Background>
                             <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill" />
@@ -67,7 +65,6 @@
                     <TextBlock
                         Grid.ColumnSpan="2"
                         Margin="0,6"
-                        Style="{StaticResource MaterialDesignTitleTextBlock2}"
                         Text="Snap Area" />
 
                     <StackPanel Grid.Row="1">
@@ -180,8 +177,7 @@
                         Margin="24,0,0,0"
                         HorizontalAlignment="Right"
                         Command="{Binding DiscardChangesCommand}"
-                        Content="Discard"
-                        Style="{StaticResource MaterialDesignIconForegroundButton2}" />
+                        Content="Discard" />
                 </Grid>
             </materialDesign:SnackbarMessage>
         </materialDesign:Snackbar>

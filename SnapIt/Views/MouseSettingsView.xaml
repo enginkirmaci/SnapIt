@@ -1,29 +1,25 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.MouseSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
-    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:local="clr-namespace:SnapIt.Views"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:vm="clr-namespace:SnapIt.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     d:DataContext="{d:DesignInstance design:MouseSettingsDesignView,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="600"
     d:DesignWidth="480"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
-
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Mouse" />
+            <TextBlock Text="Mouse" />
             <TextBlock
                 Margin="0,6"
                 Text="Use mouse to snap window"
@@ -32,8 +28,7 @@
             <ToggleButton
                 Margin="0,6"
                 HorizontalAlignment="Left"
-                IsChecked="{Binding EnableMouse}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                IsChecked="{Binding EnableMouse}" />
 
             <TextBlock
                 Margin="0,6,0,0"
@@ -43,7 +38,7 @@
                 Margin="0,0,0,6"
                 TextWrapping="Wrap"
                 Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
+                <Hyperlink IsEnabled="False">
                     Delay time is disabled when hold key in use
                 </Hyperlink>
             </TextBlock>
@@ -59,15 +54,14 @@
                 Text="Only use window title to snap window"
                 TextWrapping="Wrap" />
             <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
-                <Hyperlink IsEnabled="False" Style="{StaticResource MaterialDesignCaptionHyperlink2}">
+                <Hyperlink IsEnabled="False">
                     It is recommend to enable it if you choose Left mouse button for snapping
                 </Hyperlink>
             </TextBlock>
             <ToggleButton
                 Margin="0,6"
                 HorizontalAlignment="Left"
-                IsChecked="{Binding DragByTitle}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                IsChecked="{Binding DragByTitle}" />
 
             <TextBlock
                 Margin="0,6"
@@ -84,8 +78,7 @@
             <ToggleButton
                 Margin="0,6"
                 HorizontalAlignment="Left"
-                IsChecked="{Binding EnableHoldKey}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                IsChecked="{Binding EnableHoldKey}" />
 
             <TextBlock
                 Margin="0,6"

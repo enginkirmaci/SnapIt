@@ -12,14 +12,16 @@
     d:DesignHeight="600"
     d:DesignWidth="480"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Keyboard" />
+            <TextBlock Text="Keyboard" />
             <TextBlock
                 Margin="0,6"
                 Text="Use keyboard to snap window"
@@ -27,8 +29,7 @@
             <ToggleButton
                 Margin="0,6"
                 HorizontalAlignment="Left"
-                IsChecked="{Binding EnableKeyboard}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                IsChecked="{Binding EnableKeyboard}" />
 
             <TextBlock
                 Margin="0,6"
@@ -39,9 +40,7 @@
                 HorizontalAlignment="Left"
                 Command="{Binding OverrideDefaultSnapCommand}"
                 Content="Override default snap shortcuts (Win + Arrow)"
-                FontWeight="Normal"
-                Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
-                Style="{StaticResource MaterialDesignOutlinedButton}" />
+                FontWeight="Normal" />
 
             <Grid>
                 <Grid.ColumnDefinitions>

@@ -11,10 +11,12 @@
     d:DesignHeight="480"
     d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -22,10 +24,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Margin="0,0,0,12"
-            Style="{StaticResource MaterialDesignTitleTextBlock2}"
-            Text="What's New" />
+        <TextBlock Margin="0,0,0,12" Text="What's New" />
 
         <ScrollViewer Grid.Row="1">
             <ItemsControl ItemsSource="{Binding ChangeLogs}">

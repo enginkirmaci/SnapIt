@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro">
 
-    <Style x:Key="ListBoxItemStyle1" TargetType="{x:Type ListBoxItem}">
+    <Style x:Key="HamburgerMenuItemStyle" TargetType="{x:Type ListBoxItem}">
         <Setter Property="mah:ItemHelper.ActiveSelectionBackgroundBrush" Value="Transparent" />
         <Setter Property="mah:ItemHelper.ActiveSelectionForegroundBrush" Value="{Binding Foreground, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="mah:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource MahApps.Brushes.Gray}" />

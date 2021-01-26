@@ -13,10 +13,12 @@
     d:DesignHeight="480"
     d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -35,7 +37,7 @@
                     <Image Margin="-1" Source="/SnapIt;component/Themes/snapit.png" />
 
                     <StackPanel Grid.Column="1" Margin="16,8,0,0">
-                        <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="{x:Static c:Constants.AppName}" />
+                        <TextBlock Text="{x:Static c:Constants.AppName}" />
                         <TextBlock Text="{x:Static c:Constants.AppVersion}" />
                     </StackPanel>
                 </Grid>
@@ -46,26 +48,17 @@
                     TextWrapping="Wrap" />
 
                 <TextBlock>
-                    <Hyperlink
-                        Command="{Binding HandleLinkClick}"
-                        CommandParameter="{x:Static c:Constants.AppUrl}"
-                        Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                    <Hyperlink Command="{Binding HandleLinkClick}" CommandParameter="{x:Static c:Constants.AppUrl}">
                         <Hyperlink.Inlines>
                             <Run Text="{x:Static c:Constants.AppUrl}" />
                         </Hyperlink.Inlines>
                     </Hyperlink>
                 </TextBlock>
 
-                <TextBlock
-                    Margin="0,24,0,0"
-                    Style="{StaticResource MaterialDesignTitleTextBlock2}"
-                    Text="Give Feedback" />
+                <TextBlock Margin="0,24,0,0" Text="Give Feedback" />
                 <TextBlock Text="Help me make SnapIt better. You can add new ideas and features, as well as vote other ideas and submit a bug here." TextWrapping="Wrap" />
                 <TextBlock Margin="12,8">
-                    <Hyperlink
-                        Command="{Binding HandleLinkClick}"
-                        CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
-                        Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                    <Hyperlink Command="{Binding HandleLinkClick}" CommandParameter="{x:Static c:Constants.AppFeedbackUrl}">
                         <Hyperlink.Inlines>
                             <materialDesign:PackIcon Margin="0,-3" Kind="Idea" />
                             <Run Text="New ideas or report a bug" />
@@ -73,7 +66,7 @@
                     </Hyperlink>
                 </TextBlock>
                 <TextBlock Margin="12,0">
-                    <Hyperlink Command="{Binding RateReviewStoreClick}" Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                    <Hyperlink Command="{Binding RateReviewStoreClick}">
                         <Hyperlink.Inlines>
                             <materialDesign:PackIcon Margin="0,-3" Kind="StarRate" />
                             <Run Text="Rate and review on Microsoft Store" />
@@ -81,10 +74,7 @@
                     </Hyperlink>
                 </TextBlock>
 
-                <TextBlock
-                    Margin="0,24,0,0"
-                    Style="{StaticResource MaterialDesignTitleTextBlock2}"
-                    Text="Follow Me" />
+                <TextBlock Margin="0,24,0,0" Text="Follow Me" />
 
                 <StackPanel Orientation="Horizontal">
                     <Button
@@ -93,8 +83,7 @@
                         BorderThickness="0"
                         Command="{Binding HandleLinkClick}"
                         CommandParameter="{x:Static c:Constants.TwitterUrl}"
-                        Foreground="#FF00ACED"
-                        Style="{StaticResource MaterialDesignFlatButton}">
+                        Foreground="#FF00ACED">
                         <Button.Content>
                             <materialDesign:PackIcon
                                 Width="24"
@@ -108,8 +97,7 @@
                         BorderThickness="0"
                         Command="{Binding HandleLinkClick}"
                         CommandParameter="{x:Static c:Constants.LinkedinUrl}"
-                        Foreground="#FF4875B4"
-                        Style="{StaticResource MaterialDesignFlatButton}">
+                        Foreground="#FF4875B4">
                         <Button.Content>
                             <materialDesign:PackIcon
                                 Width="24"
@@ -123,8 +111,7 @@
                         BorderThickness="0"
                         Command="{Binding HandleLinkClick}"
                         CommandParameter="{x:Static c:Constants.GithubUrl}"
-                        Foreground="#7DBBE6 "
-                        Style="{StaticResource MaterialDesignFlatButton}">
+                        Foreground="#7DBBE6 ">
                         <Button.Content>
                             <materialDesign:PackIcon
                                 Width="24"
@@ -142,10 +129,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <TextBlock HorizontalAlignment="Left">
-                <Hyperlink
-                    Command="{Binding HandleLinkClick}"
-                    CommandParameter="{x:Static c:Constants.CompanyUrl}"
-                    Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                <Hyperlink Command="{Binding HandleLinkClick}" CommandParameter="{x:Static c:Constants.CompanyUrl}">
                     <Hyperlink.Inlines>
                         <Run Text="{x:Static c:Constants.CompanyName}" />
                     </Hyperlink.Inlines>
@@ -153,10 +137,7 @@
             </TextBlock>
 
             <TextBlock Grid.Column="1" HorizontalAlignment="Right">
-                <Hyperlink
-                    Command="{Binding HandleLinkClick}"
-                    CommandParameter="{x:Static c:Constants.AppPrivacyUrl}"
-                    Style="{StaticResource MaterialDesignBody1Hyperlink}">
+                <Hyperlink Command="{Binding HandleLinkClick}" CommandParameter="{x:Static c:Constants.AppPrivacyUrl}">
                     <Hyperlink.Inlines>
                         <Run Text="Privacy policy" />
                     </Hyperlink.Inlines>

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Applications\ApplicationInstance.cs" />
     <Compile Include="Applications\RunAsAdministrator.cs" />
+    <Compile Include="Controls\AcrylicWindow.cs" />
     <Compile Include="Controls\HotkeyEditorControl.xaml.cs">
       <DependentUpon>HotkeyEditorControl.xaml</DependentUpon>
     </Compile>
@@ -129,6 +130,12 @@
     <Compile Include="Tools\FindClosest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MahApps.Metro">
+      <Version>2.4.3</Version>
+    </PackageReference>
+    <PackageReference Include="MahApps.Metro.IconPacks.Material">
+      <Version>4.8.0</Version>
+    </PackageReference>
     <PackageReference Include="MaterialDesignColors">
       <Version>1.2.3</Version>
     </PackageReference>
