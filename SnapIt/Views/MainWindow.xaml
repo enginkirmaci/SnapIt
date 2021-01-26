@@ -1,12 +1,14 @@
-﻿<Window
+﻿<Controls:AcrylicWindow
     x:Class="SnapIt.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
     xmlns:vm="clr-namespace:SnapIt.ViewModels.DesignTime"
     x:Name="MainWindowView"
@@ -18,13 +20,11 @@
     d:DataContext="{d:DesignInstance vm:MainWindowDesignViewModel,
                                      IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
-    BorderBrush="{DynamicResource MaterialDesignBodyLight}"
-    BorderThickness="1"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    Style="{DynamicResource WindowStyle}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="CanResizeWithGrip"
+    ShowTitleBar="False"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <i:Interaction.Triggers>
@@ -34,349 +34,594 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
         </i:EventTrigger>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding CloseWindowCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-        <Border
-            Margin="6,0"
-            Padding="0,12"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Bottom"
-            BorderBrush="{DynamicResource MaterialDesignBodyLight}"
-            BorderThickness="0,1,0,0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <Grid Grid.RowSpan="2">
+                <Rectangle
+                    Width="240"
+                    HorizontalAlignment="Left"
+                    Fill="{DynamicResource MahApps.Brushes.Accent}"
+                    Opacity="0.92" />
+                <Rectangle Margin="240,0,0,0" Fill="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+            </Grid>
 
+            <mah:HamburgerMenu
+                x:Name="HamburgerMenuControl"
+                Grid.Row="2"
+                DisplayMode="CompactInline"
+                IsPaneOpen="True"
+                ItemContainerStyle="{DynamicResource HamburgerMenuItemStyle}"
+                ItemTemplate="{StaticResource HamburgerMenuItem}"
+                OptionsItemContainerStyle="{DynamicResource HamburgerMenuItemStyle}"
+                OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
+                PaneBackground="Transparent"
+                PaneForeground="White"
+                SelectedIndex="0"
+                ShowSelectionIndicator="True">
+
+                <!--  Items  -->
+                <mah:HamburgerMenu.ItemsSource>
+                    <mah:HamburgerMenuItemCollection>
+                        <mah:HamburgerMenuGlyphItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="LayoutView"
+                            Label="Layout">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="BorderAll" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+
+                        <mah:HamburgerMenuGlyphItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="MouseSettingsView"
+                            Label="Mouse">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="Mouse" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+
+                        <mah:HamburgerMenuGlyphItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="KeyboardSettingsView"
+                            Label="Keyboard">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="KeyboardOutline" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+
+                        <mah:HamburgerMenuGlyphItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="WindowsView"
+                            Label="Window">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="WindowRestore" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+
+                        <mah:HamburgerMenuGlyphItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="ThemeView"
+                            Label="Theme">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="PaletteOutline" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+
+                        <mah:HamburgerMenuGlyphItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="SettingsView"
+                            Label="Settings">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="CogOutline" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+
+                        <mah:HamburgerMenuGlyphItem Label="Tutorials">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="BookOpenPageVariantOutline" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+
+                        <mah:HamburgerMenuGlyphItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="WhatsNewView"
+                            Label="What's New">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="FileDocumentMultipleOutline" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+
+                        <mah:HamburgerMenuGlyphItem
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="AboutView"
+                            Label="About">
+                            <mah:HamburgerMenuGlyphItem.Tag>
+                                <iconPacks:PackIconMaterial
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="InformationVariant" />
+                            </mah:HamburgerMenuGlyphItem.Tag>
+                        </mah:HamburgerMenuGlyphItem>
+                    </mah:HamburgerMenuItemCollection>
+                </mah:HamburgerMenu.ItemsSource>
+
+                <!--  Options  -->
+                <mah:HamburgerMenu.OptionsItemsSource>
+                    <mah:HamburgerMenuItemCollection>
+                        <mah:HamburgerMenuSeparatorItem />
+                        <mah:HamburgerMenuImageItem IsEnabled="False" />
+                    </mah:HamburgerMenuItemCollection>
+                </mah:HamburgerMenu.OptionsItemsSource>
+
+                <!--  Content  -->
+                <mah:HamburgerMenu.Content>
+                    <!--<ContentControl x:Name="MainContentControl" prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}" />-->
+
+                    <mah:TransitioningContentControl
+                        x:Name="MainContentControl"
+                        Margin="16,8,8,8"
+                        prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}"
+                        RestartTransitionOnContentChange="True"
+                        Transition="Default" />
+                </mah:HamburgerMenu.Content>
+            </mah:HamburgerMenu>
+
+            <Grid MouseMove="Grid_MouseMove">
+                <TextBlock
+                    Margin="10"
+                    VerticalAlignment="Top"
+                    Foreground="White"
+                    Text="{x:Static c:Constants.AppName}" />
+            </Grid>
+
+            <Grid
+                Grid.Row="2"
+                Width="240"
+                Height="58"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom">
+
+                <ToggleButton
+                    Margin="8"
+                    Padding="14,5"
+                    HorizontalAlignment="Left"
+                    Command="{Binding StartStopCommand}"
+                    IsChecked="{Binding IsRunning}"
+                    Style="{DynamicResource SnapIt.Styles.ToggleButton.Flat}">
+                    <Grid>
+                        <iconPacks:PackIconMaterial
+                            Width="12"
+                            Height="12"
+                            VerticalAlignment="Center"
+                            Kind="Pause"
+                            Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                        <iconPacks:PackIconMaterial
+                            Width="16"
+                            Height="16"
+                            VerticalAlignment="Center"
+                            Kind="Play"
+                            Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
+                        <TextBlock Margin="24,0,0,0" Text="{Binding Status}" />
+                    </Grid>
+                </ToggleButton>
+
+                <mah:DropDownButton
+                    Margin="8"
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding ThemeList}">
+                    <mah:DropDownButton.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="{x:Type MenuItem}">
+                            <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mah:DropDownButton}}, Path=DataContext.ThemeItemCommand}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
+                        </Style>
+                    </mah:DropDownButton.ItemContainerStyle>
+                    <mah:DropDownButton.Icon>
+                        <iconPacks:PackIconMaterial Margin="6" Kind="ThemeLightDark" />
+                    </mah:DropDownButton.Icon>
+                </mah:DropDownButton>
+            </Grid>
+
+            <Button
+                Height="30"
+                Margin="0,0,140,0"
+                Padding="14,6"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Command="{Binding HandleLinkClick}"
+                CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
+                FontSize="13"
+                FontWeight="Light"
+                Style="{StaticResource SnapIt.Styles.Button.Flat}"
+                ToolTip="Give Feedback">
                 <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial
+                        Width="14"
+                        Height="14"
+                        VerticalAlignment="Center"
+                        Kind="MessageAlertOutline" />
+                    <TextBlock Margin="8,0,0,0" Text="Feedback" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!--<Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Border
+                Margin="6,0"
+                Padding="0,12"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                BorderBrush="{DynamicResource MaterialDesignBodyLight}"
+                BorderThickness="0,1,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button
+                            Margin="0,-2,0,0"
+                            Padding="4"
+                            Command="{Binding StartStopCommand}"
+                            Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Pause" Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                                    <materialDesign:PackIcon Kind="Play" Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
+                                    <TextBlock
+                                        Margin="4,2,0,0"
+                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                        Text="{Binding Status}" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                            Text="{Binding ThemeTitle}" />
+
+                        <ToggleButton IsChecked="{Binding IsDarkTheme}" Style="{StaticResource MaterialDesignSwitchAccentToggleButton}">
+                            <materialDesign:PackIcon Margin="-1,-1,0,0" Kind="WhiteBalanceSunny" />
+
+                            <materialDesign:ToggleButtonAssist.OnContent>
+                                <materialDesign:PackIcon Margin="1,-5,0,0" Kind="Brightness2" />
+                            </materialDesign:ToggleButtonAssist.OnContent>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
+                <TextBlock Margin="18,13,0,32" Text="{x:Static c:Constants.AppName}" />
+
+                <RadioButton Style="{StaticResource MaterialDesignTabRadioButton2}" Visibility="Collapsed">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="HomeOutline" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="Home" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+                <RadioButton
+                    x:Name="LayoutViewRadio"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="LayoutView"
+                    IsChecked="True"
+                    Style="{StaticResource MaterialDesignTabRadioButton2}">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="BorderAll" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="Layout" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+                <RadioButton
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="MouseSettingsView"
+                    Style="{StaticResource MaterialDesignTabRadioButton2}">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="Mouse" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="Mouse" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+                <RadioButton
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="KeyboardSettingsView"
+                    Style="{StaticResource MaterialDesignTabRadioButton2}">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="KeyboardOutline" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="Keyboard" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+                <RadioButton
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="WindowsView"
+                    Style="{StaticResource MaterialDesignTabRadioButton2}">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="WindowRestore" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="Windows" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+                <RadioButton
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="ThemeView"
+                    Style="{StaticResource MaterialDesignTabRadioButton2}">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="PaletteOutline" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="Theme" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+                <RadioButton
+                    x:Name="SettingsViewRadio"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="SettingsView"
+                    Style="{StaticResource MaterialDesignTabRadioButton2}">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="SettingsOutline" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="Settings" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+                <RadioButton
+                    x:Name="WhatsNewViewRadio"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="WhatsNewView"
+                    Style="{StaticResource MaterialDesignTabRadioButton2}">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="FileDocumentBoxMultipleOutline" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="What's New" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+                <RadioButton
+                    x:Name="AboutViewRadio"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="AboutView"
+                    Style="{StaticResource MaterialDesignTabRadioButton2}">
+                    <RadioButton.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,10,0"
+                                Kind="InformationVariant" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Text="About" />
+                        </Grid>
+                    </RadioButton.Content>
+                </RadioButton>
+            </StackPanel>
+
+            <Grid Grid.Column="1" Background="{DynamicResource MaterialDesignBackground}">
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
                     <Button
-                        Margin="0,-2,0,0"
-                        Padding="4"
-                        Command="{Binding StartStopCommand}"
+                        Padding="12,4"
+                        materialDesign:ButtonAssist.CornerRadius="0"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                        Command="{Binding HandleLinkClick}"
+                        CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
+                        Style="{StaticResource MaterialDesignIconForegroundButton2}"
+                        ToolTip="Give Feedback">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="FeedbackOutline" />
+                            <TextBlock
+                                Margin="6,0,0,0"
+                                FontSize="13"
+                                Text="Feedback" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button
+                        materialDesign:ButtonAssist.CornerRadius="0"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                        Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                        CommandParameter="{Binding ElementName=MainWindowView}"
                         Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Pause" Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
-                                <materialDesign:PackIcon Kind="Play" Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
-                                <TextBlock
-                                    Margin="4,2,0,0"
-                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                    Text="{Binding Status}" />
-                            </StackPanel>
-                        </Button.Content>
+                        <materialDesign:PackIcon
+                            Width="18"
+                            Height="18"
+                            Kind="WindowClose" />
                     </Button>
                 </StackPanel>
 
-                <StackPanel
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-                    <TextBlock
-                        Margin="0,0,8,0"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                        Text="{Binding ThemeTitle}" />
-
-                    <ToggleButton IsChecked="{Binding IsDarkTheme}" Style="{StaticResource MaterialDesignSwitchAccentToggleButton}">
-                        <materialDesign:PackIcon Margin="-1,-1,0,0" Kind="WhiteBalanceSunny" />
-
-                        <materialDesign:ToggleButtonAssist.OnContent>
-                            <materialDesign:PackIcon Margin="1,-5,0,0" Kind="Brightness2" />
-                        </materialDesign:ToggleButtonAssist.OnContent>
-                    </ToggleButton>
-                </StackPanel>
+                <Grid>
+                    <ContentControl Margin="16,48,8,8" prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}" />
+                    <materialDesign:DialogHost
+                        CloseOnClickAway="True"
+                        IsOpen="{Binding IsVersion3000MessageShown, Converter={StaticResource InverseBoolConverter}}"
+                        Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
+                        <materialDesign:DialogHost.DialogContent>
+                            <StackPanel Width="360" Margin="16">
+                                <TextBlock
+                                    Margin="0,6,0,18"
+                                    Style="{StaticResource MaterialDesignTitleTextBlock2}"
+                                    Text="Important Notice !" />
+                                <TextBlock TextWrapping="Wrap">
+                                    <Run Text="I have been getting lots of feedback about layouts and layout designer which tells how difficult or not possible to design layouts that you want. I was aware of it, but there were some difficulties needs to solved." />
+                                    <LineBreak />
+                                    <LineBreak />
+                                    <Run Text="After some experimenting, I finally managed to develop more flexible and easier layout mechanism. This new mechanism opens more possibilities in the future." />
+                                    <LineBreak />
+                                    <LineBreak />
+                                    <Run Text="Because of the changes, unfortunately your old layout can't work with this version and there is no way for me to migrate it to newer structure. I know that some of you spend a lot of time to create it and I'm really sorry." />
+                                    <LineBreak />
+                                    <LineBreak />
+                                    <Run Text="Please give a try to new layout designer. I hope you'll enjoy it." />
+                                </TextBlock>
+                                <Button
+                                    Margin="0,18,0,12"
+                                    HorizontalAlignment="Center"
+                                    Command="materialDesign:DialogHost.CloseDialogCommand"
+                                    IsDefault="True"
+                                    Style="{StaticResource MaterialDesignIconForegroundButton2}">
+                                    <Button.CommandParameter>
+                                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                            True
+                                        </system:Boolean>
+                                    </Button.CommandParameter>
+                                    OK
+                                </Button>
+                            </StackPanel>
+                        </materialDesign:DialogHost.DialogContent>
+                    </materialDesign:DialogHost>
+                </Grid>
             </Grid>
-        </Border>
-
-        <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
-            <TextBlock Margin="18,13,0,32" Text="{x:Static c:Constants.AppName}" />
-
-            <RadioButton Style="{StaticResource MaterialDesignTabRadioButton2}" Visibility="Collapsed">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="HomeOutline" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="Home" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton
-                x:Name="LayoutViewRadio"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="LayoutView"
-                IsChecked="True"
-                Style="{StaticResource MaterialDesignTabRadioButton2}">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="BorderAll" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="Layout" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton
-                Command="{Binding NavigateCommand}"
-                CommandParameter="MouseSettingsView"
-                Style="{StaticResource MaterialDesignTabRadioButton2}">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="Mouse" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="Mouse" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton
-                Command="{Binding NavigateCommand}"
-                CommandParameter="KeyboardSettingsView"
-                Style="{StaticResource MaterialDesignTabRadioButton2}">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="KeyboardOutline" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="Keyboard" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton
-                Command="{Binding NavigateCommand}"
-                CommandParameter="WindowsView"
-                Style="{StaticResource MaterialDesignTabRadioButton2}">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="WindowRestore" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="Windows" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton
-                Command="{Binding NavigateCommand}"
-                CommandParameter="ThemeView"
-                Style="{StaticResource MaterialDesignTabRadioButton2}">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="PaletteOutline" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="Theme" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton
-                x:Name="SettingsViewRadio"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="SettingsView"
-                Style="{StaticResource MaterialDesignTabRadioButton2}">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="SettingsOutline" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="Settings" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton
-                x:Name="WhatsNewViewRadio"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="WhatsNewView"
-                Style="{StaticResource MaterialDesignTabRadioButton2}">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="FileDocumentBoxMultipleOutline" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="What's New" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton
-                x:Name="AboutViewRadio"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="AboutView"
-                Style="{StaticResource MaterialDesignTabRadioButton2}">
-                <RadioButton.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Width="20"
-                            Height="20"
-                            Margin="0,0,10,0"
-                            Kind="InformationVariant" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Text="About" />
-                    </Grid>
-                </RadioButton.Content>
-            </RadioButton>
-        </StackPanel>
-
-        <Grid Grid.Column="1" Background="{DynamicResource MaterialDesignBackground}">
-            <StackPanel
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Orientation="Horizontal"
-                WindowChrome.IsHitTestVisibleInChrome="True">
-                <Button
-                    Padding="12,4"
-                    materialDesign:ButtonAssist.CornerRadius="0"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Command="{Binding HandleLinkClick}"
-                    CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
-                    Style="{StaticResource MaterialDesignIconForegroundButton2}"
-                    ToolTip="Give Feedback">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="FeedbackOutline" />
-                        <TextBlock
-                            Margin="6,0,0,0"
-                            FontSize="13"
-                            Text="Feedback" />
-                    </StackPanel>
-                </Button>
-
-                <Button
-                    materialDesign:ButtonAssist.CornerRadius="0"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Command="{Binding CloseWindowCommand, Mode=OneWay}"
-                    CommandParameter="{Binding ElementName=MainWindowView}"
-                    Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                    <materialDesign:PackIcon
-                        Width="18"
-                        Height="18"
-                        Kind="WindowClose" />
-                </Button>
-            </StackPanel>
-
-            <Grid>
-                <ContentControl Margin="16,48,8,8" prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}" />
-                <materialDesign:DialogHost
-                    CloseOnClickAway="True"
-                    IsOpen="{Binding IsVersion3000MessageShown, Converter={StaticResource InverseBoolConverter}}"
-                    Style="{StaticResource MaterialDesignEmbeddedDialogHost2}">
-                    <materialDesign:DialogHost.DialogContent>
-                        <StackPanel Width="360" Margin="16">
-                            <TextBlock
-                                Margin="0,6,0,18"
-                                Style="{StaticResource MaterialDesignTitleTextBlock2}"
-                                Text="Important Notice !" />
-                            <TextBlock TextWrapping="Wrap">
-                                <Run Text="I have been getting lots of feedback about layouts and layout designer which tells how difficult or not possible to design layouts that you want. I was aware of it, but there were some difficulties needs to solved." />
-                                <LineBreak />
-                                <LineBreak />
-                                <Run Text="After some experimenting, I finally managed to develop more flexible and easier layout mechanism. This new mechanism opens more possibilities in the future." />
-                                <LineBreak />
-                                <LineBreak />
-                                <Run Text="Because of the changes, unfortunately your old layout can't work with this version and there is no way for me to migrate it to newer structure. I know that some of you spend a lot of time to create it and I'm really sorry." />
-                                <LineBreak />
-                                <LineBreak />
-                                <Run Text="Please give a try to new layout designer. I hope you'll enjoy it." />
-                            </TextBlock>
-                            <Button
-                                Margin="0,18,0,12"
-                                HorizontalAlignment="Center"
-                                Command="materialDesign:DialogHost.CloseDialogCommand"
-                                IsDefault="True"
-                                Style="{StaticResource MaterialDesignIconForegroundButton2}">
-                                <Button.CommandParameter>
-                                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                                        True
-                                    </system:Boolean>
-                                </Button.CommandParameter>
-                                OK
-                            </Button>
-                        </StackPanel>
-                    </materialDesign:DialogHost.DialogContent>
-                </materialDesign:DialogHost>
-            </Grid>
-        </Grid>
+        </Grid>-->
     </Grid>
-</Window>
+</Controls:AcrylicWindow>

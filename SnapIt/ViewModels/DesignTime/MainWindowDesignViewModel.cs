@@ -14,7 +14,7 @@
             Status = "Stop";
             ThemeTitle = "Light";
             IsDarkTheme = false;
-            IsVersion3000MessageShown = false;
+            IsVersion3000MessageShown = true;
         }
     }
 }

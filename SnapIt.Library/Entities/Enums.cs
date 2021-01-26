@@ -2,6 +2,13 @@
 
 namespace SnapIt.Library.Entities
 {
+    public enum Themes
+    {
+        Light,
+        Dark,
+        System
+    }
+
     public enum LayoutStatus
     {
         NotSaved = 0,
