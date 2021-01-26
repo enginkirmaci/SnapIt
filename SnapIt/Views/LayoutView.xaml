@@ -19,30 +19,32 @@
             <Setter Property="Background" Value="White" />
         </Style>
     </d:DesignerProperties.DesignStyle>
-    <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
 
-            <StackPanel>
-                <TextBlock Text="Layout" />
-                <TextBlock Text="Screens" />
-                <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
-                    <Hyperlink IsEnabled="False">
-                        Select screen and proceed to layout section.
-                    </Hyperlink>
-                </TextBlock>
-                <ListBox
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Top"
-                    ItemsSource="{Binding SnapScreens}"
-                    SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Width="100" Margin="-2">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="34"
+                Text="Layout" />
+            <TextBlock FontSize="18" Text="Screens" />
+            <TextBlock
+                Margin="0,0,0,6"
+                Foreground="{DynamicResource MahApps.Brushes.Gray}"
+                Text="Select screen and proceed to layout section."
+                TextWrapping="Wrap" />
+            <ListBox
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Top"
+                ItemsSource="{Binding SnapScreens}"
+                SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="112" Margin="-4,0,0,0">
+                            <Grid Margin="6">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition />
@@ -60,8 +62,8 @@
                                     VerticalAlignment="Center"
                                     Text="{Binding DeviceNumber}" />
                                 <CheckBox
+                                    Margin="0,0,-2,32"
                                     HorizontalAlignment="Right"
-                                    VerticalAlignment="Top"
                                     IsChecked="{Binding IsActive}" />
                                 <StackPanel Grid.Row="1">
                                     <TextBlock
@@ -71,7 +73,7 @@
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        Text="{Binding Primary}"
+                                        Text="{Binding Primary, TargetNullValue=''}"
                                         Visibility="{Binding Primary, TargetNullValue=Collapsed}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
@@ -80,74 +82,74 @@
                                         TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                             </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
-            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
 
-            <Grid Grid.Row="1" Margin="0,12,0,6">
+            <Grid Margin="0,16,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Change Layouts" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="18"
+                    Text="Change Layouts" />
 
-                <TextBlock Grid.Row="1" TextWrapping="Wrap">
-                    <Hyperlink IsEnabled="False">
-                        Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu.
-                    </Hyperlink>
-                </TextBlock>
+                <TextBlock
+                    Grid.Row="1"
+                    Foreground="{DynamicResource MahApps.Brushes.Gray}"
+                    Text="Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu."
+                    TextWrapping="Wrap" />
 
                 <StackPanel
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
                     Orientation="Horizontal">
-                    <Button Command="{Binding NewLayoutCommand}">
+
+                    <Button Command="{Binding NewLayoutCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconMaterial
-                                    Width="22"
-                                    Height="22"
-                                    Kind="Plus" />
-                                <TextBlock
-                                    Margin="8,0,0,0"
-                                    VerticalAlignment="Center"
-                                    Text="New" />
+                                <iconPacks:PackIconMaterial VerticalAlignment="Center" Kind="Plus" />
+                                <TextBlock Margin="8,0,0,0" Text="New" />
                             </StackPanel>
                         </Button.Content>
                     </Button>
-                    <Button Command="{Binding ImportLayoutCommand}">
+
+                    <Button Command="{Binding ImportLayoutCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconMaterial
-                                    Width="22"
-                                    Height="22"
-                                    Kind="Import" />
-                                <TextBlock
-                                    Margin="8,0,0,0"
-                                    VerticalAlignment="Center"
-                                    Text="Import" />
+                                <iconPacks:PackIconMaterial VerticalAlignment="Center" Kind="Import" />
+                                <TextBlock Margin="8,0,0,0" Text="Import" />
                             </StackPanel>
                         </Button.Content>
                     </Button>
                 </StackPanel>
             </Grid>
+        </StackPanel>
 
-            <ListBox
-                Grid.Row="2"
-                VerticalContentAlignment="Top"
-                ItemsSource="{Binding Layouts}"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Width="188">
+        <ListBox
+            Grid.Row="1"
+            VerticalContentAlignment="Top"
+            ItemsSource="{Binding Layouts}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Width="188" Margin="-4,0,0,0">
+                        <Grid Margin="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition Height="Auto" />
@@ -191,16 +193,17 @@
                                 </StackPanel>
                             </materialDesign:PopupBox>-->
                         </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
-        </Grid>
-        <!--<materialDesign:DialogHost IsOpen="{Binding IsRenameDialogOpen}">
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+    </Grid>
+    <!--<materialDesign:DialogHost IsOpen="{Binding IsRenameDialogOpen}">
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Width="360" Margin="16">
                     <TextBlock Text="Layout Name" />
@@ -224,5 +227,4 @@
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>-->
-    </Grid>
 </UserControl>

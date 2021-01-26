@@ -2,8 +2,8 @@
     x:Class="SnapIt.Test.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="clr-namespace:SnapIt.Library.Converters;assembly=SnapIt.Library"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:converter="clr-namespace:SnapIt.Library.Converters;assembly=SnapIt.Library"
     StartupUri="UITest.xaml">
     <Application.Resources>
         <ResourceDictionary>
