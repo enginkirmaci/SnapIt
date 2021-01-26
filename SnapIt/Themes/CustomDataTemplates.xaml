@@ -9,7 +9,6 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <ContentControl
-                Grid.Column="0"
                 Content="{Binding Tag}"
                 Focusable="False"
                 IsTabStop="False" />

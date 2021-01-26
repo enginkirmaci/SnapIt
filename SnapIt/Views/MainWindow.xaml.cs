@@ -54,5 +54,9 @@ namespace SnapIt.Views
             //        break;
             //}
         }
+
+        private void HamburgerMenuControl_ItemClick(object sender, MahApps.Metro.Controls.ItemClickEventArgs args)
+        {
+        }
     }
 }

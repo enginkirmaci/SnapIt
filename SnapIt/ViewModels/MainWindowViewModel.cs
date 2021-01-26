@@ -3,7 +3,9 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
-using MaterialDesignThemes.Wpf;
+using ControlzEx.Theming;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -23,37 +25,22 @@ namespace SnapIt.ViewModels
         private bool HideWindowAtStartup = true;
         private bool isRunning;
         private string status;
-        private bool isDarkTheme;
-        private string themeTitle;
+        private bool isPaneOpen = true;
 
         public string Title { get => Constants.AppTitle; }
         public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
         public string Status { get => status; set => SetProperty(ref status, value); }
-        public bool IsDarkTheme
-        {
-            get => isDarkTheme;
-            set
-            {
-                ThemeTitle = value ? "Dark" : "Light";
-
-                SetProperty(ref isDarkTheme, value);
-                settingService.Settings.IsDarkTheme = value;
-                ModifyTheme(theme => theme.SetBaseTheme(isDarkTheme ? Theme.Dark : Theme.Light));
-            }
-        }
-
-        public string ThemeTitle { get => themeTitle; set => SetProperty(ref themeTitle, value); }
+        public bool IsPaneOpen { get => isPaneOpen; set => SetProperty(ref isPaneOpen, value); }
         public bool IsVersion3000MessageShown { get => settingService.Settings.IsVersion3000MessageShown; set { settingService.Settings.IsVersion3000MessageShown = value; } }
         public ObservableCollection<Themes> ThemeList { get; set; }
-        public Themes SelectedTheme { get; set; }
 
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
         public DelegateCommand StartStopCommand { get; private set; }
         public DelegateCommand<string> HandleLinkClick { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
-        public DelegateCommand<object> LoadedCommand { get; private set; }
-        public DelegateCommand ThemeItemCommand { get; }
+        public DelegateCommand<Window> LoadedCommand { get; private set; }
+        public DelegateCommand<object> ThemeItemCommand { get; }
 
         public MainWindowViewModel(
             IWindowService windowService,
@@ -65,15 +52,11 @@ namespace SnapIt.ViewModels
             this.snapService = snapService;
             this.settingService = settingService;
 
-            IsDarkTheme = settingService.Settings.IsDarkTheme;
-
             ThemeList = new ObservableCollection<Themes> {
                 Themes.Light,
                 Themes.Dark,
                 Themes.System
             };
-
-            SelectedTheme = Themes.System;
 
             snapService.StatusChanged += SnapService_StatusChanged;
 
@@ -89,6 +72,14 @@ namespace SnapIt.ViewModels
 
             ActivatedCommand = new DelegateCommand<Window>((window) =>
             {
+                //var dialog = new CustomDialog(new MetroDialogSettings() { OwnerCanCloseWithDialog = true })
+                //{
+                //    Content = window.Resources["CustomDialog"],
+                //    Title = "Important Notice !"
+                //};
+
+                //((MetroWindow)window).ShowMetroDialogAsync(dialog);
+
                 if (IsVersion3000MessageShown)
                 {
                     if (settingService.Settings.ShowMainWindow)
@@ -104,16 +95,29 @@ namespace SnapIt.ViewModels
                 }
             });
 
-            LoadedCommand = new DelegateCommand<object>((window) =>
+            LoadedCommand = new DelegateCommand<Window>((window) =>
             {
-                var contentControl = ((Window)window).FindChildren<ContentControl>("MainContentControl");
+                if (!IsVersion3000MessageShown)
+                {
+                    ((MetroWindow)window).ShowMessageAsync("Important Notice !",
+                        @"I have been getting lots of feedback about layouts and layout designer which tells how difficult or not possible to design layouts that you want. I was aware of it, but there were some difficulties needs to solved.
+
+After some experimenting, I finally managed to develop more flexible and easier layout mechanism.This new mechanism opens more possibilities in the future.
+
+Because of the changes, unfortunately your old layout can't work with this version and there is no way for me to migrate it to newer structure. I know that some of you spend a lot of time to create it and I'm really sorry.
+
+Please give a try to new layout designer.I hope you'll enjoy it.
+");
+                }
+
+                var contentControl = window.FindChildren<ContentControl>("MainContentControl");
 
                 RegionManager.SetRegionName(contentControl, Constants.MainRegion);
                 RegionManager.SetRegionManager(contentControl, regionManager);
 
                 NavigateCommand.Execute("LayoutView");
 
-                HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper((Window)window).Handle);
+                HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(window).Handle);
                 source.AddHook(new HwndSourceHook(WndProc));
             });
 
@@ -159,6 +163,33 @@ namespace SnapIt.ViewModels
                     this.regionManager.RequestNavigate(Constants.MainRegion, navigatePath);
                 }
             });
+
+            ThemeItemCommand = new DelegateCommand<object>((theme) =>
+            {
+                switch ((Themes)theme)
+                {
+                    case Themes.Dark:
+                        ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
+                        ThemeManager.Current.SyncTheme();
+                        ThemeManager.Current.ChangeThemeBaseColor(Application.Current, "Dark");
+                        break;
+
+                    case Themes.Light:
+                        ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
+                        ThemeManager.Current.SyncTheme();
+                        ThemeManager.Current.ChangeThemeBaseColor(Application.Current, "Light");
+                        break;
+
+                    case Themes.System:
+                        ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
+                        ThemeManager.Current.SyncTheme();
+                        break;
+                }
+
+                settingService.Settings.AppTheme = (Themes)theme;
+            });
+
+            ThemeItemCommand.Execute(settingService.Settings.AppTheme);
         }
 
         private const uint WM_DISPLAYCHANGE = 0x007e;
@@ -189,16 +220,6 @@ namespace SnapIt.ViewModels
             {
                 Status = "Start";
             }
-        }
-
-        private static void ModifyTheme(Action<ITheme> modificationAction)
-        {
-            //PaletteHelper paletteHelper = new PaletteHelper();
-            //ITheme theme = paletteHelper.GetTheme();
-
-            //modificationAction?.Invoke(theme);
-
-            //paletteHelper.SetTheme(theme);
         }
     }
 }
