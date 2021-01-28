@@ -1,6 +1,7 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.MouseSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -19,16 +20,16 @@
     </d:DesignerProperties.DesignStyle>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <TextBlock Text="Mouse" />
             <TextBlock
-                Margin="0,6"
+                Margin="0,0,0,10"
+                FontSize="34"
+                Text="Mouse" />
+            <TextBlock
+                Margin="0,0,0,6"
                 Text="Use mouse to snap window"
                 TextWrapping="Wrap" />
 
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding EnableMouse}" />
+            <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding EnableMouse}" />
 
             <TextBlock
                 Margin="0,6,0,0"
@@ -42,13 +43,16 @@
                     Delay time is disabled when hold key in use
                 </Hyperlink>
             </TextBlock>
-            <TextBox
+            <mah:NumericUpDown
                 Width="128"
                 Margin="0,6"
                 HorizontalAlignment="Left"
+                mah:TextBoxHelper.ClearTextButton="False"
+                Interval="50"
                 IsEnabled="{Binding EnableHoldKey, Converter={StaticResource InverseBoolConverter}}"
-                Text="{Binding MouseDragDelay}" />
-
+                Maximum="1000"
+                Minimum="0"
+                Value="{Binding MouseDragDelay}" />
             <TextBlock
                 Margin="0,6,0,0"
                 Text="Only use window title to snap window"
@@ -58,10 +62,7 @@
                     It is recommend to enable it if you choose Left mouse button for snapping
                 </Hyperlink>
             </TextBlock>
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding DragByTitle}" />
+            <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding DragByTitle}" />
 
             <TextBlock
                 Margin="0,6"
@@ -75,10 +76,7 @@
                 SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
 
             <TextBlock Margin="0,6,0,0" Text="Use Hold key" />
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding EnableHoldKey}" />
+            <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding EnableHoldKey}" />
 
             <TextBlock
                 Margin="0,6"
