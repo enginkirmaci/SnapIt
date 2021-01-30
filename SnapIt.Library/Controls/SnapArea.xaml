@@ -10,10 +10,11 @@
     d:DesignWidth="300"
     mc:Ignorable="d">
     <Grid>
+
+        <Grid x:Name="Area" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}" />
         <Border
             x:Name="Border"
             BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
             BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
-        <Grid x:Name="Area" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}" />
     </Grid>
 </UserControl>

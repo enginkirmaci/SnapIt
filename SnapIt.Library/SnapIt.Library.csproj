@@ -76,6 +76,7 @@
     <Compile Include="Controls\SnapOverlayEditor.xaml.cs">
       <DependentUpon>SnapOverlayEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\DoubleMultiplierConverter.cs" />
     <Compile Include="Converters\EqualVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\InputDeviceConverter.cs" />

@@ -1,6 +1,7 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -25,24 +26,21 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer Margin="16,8,8,8" VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <TextBlock Text="Settings" />
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="34"
+                Text="Settings" />
 
             <TextBlock
                 Margin="0,6"
                 Text="Disable snapping for fullscreen application and games (recommended)"
                 TextWrapping="Wrap" />
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding DisableForFullscreen}" />
+            <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding DisableForFullscreen}" />
 
             <TextBlock Margin="0,6" Text="Start Snap It when I start Windows" />
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding IsStartupTaskActive}" />
+            <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding IsStartupTaskActive}" />
 
             <!--<TextBlock Margin="0,6">
                             Run as administrator (experimental, needs to be restarted)
