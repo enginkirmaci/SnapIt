@@ -20,7 +20,7 @@
         </Style>
     </d:DesignerProperties.DesignStyle>
 
-    <Grid>
+    <Grid Margin="16,8,8,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -119,19 +119,30 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
 
-                    <Button Command="{Binding NewLayoutCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}">
+                    <Button Command="{Binding NewLayoutCommand}" Style="{StaticResource MahApps.Styles.Button.Flat}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconMaterial VerticalAlignment="Center" Kind="Plus" />
+                                <iconPacks:PackIconMaterial
+                                    Width="12"
+                                    Height="12"
+                                    VerticalAlignment="Center"
+                                    Kind="Plus" />
                                 <TextBlock Margin="8,0,0,0" Text="New" />
                             </StackPanel>
                         </Button.Content>
                     </Button>
 
-                    <Button Command="{Binding ImportLayoutCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}">
+                    <Button
+                        Margin="8,0,0,0"
+                        Command="{Binding ImportLayoutCommand}"
+                        Style="{StaticResource MahApps.Styles.Button.Flat}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconMaterial VerticalAlignment="Center" Kind="Import" />
+                                <iconPacks:PackIconMaterial
+                                    Width="12"
+                                    Height="12"
+                                    VerticalAlignment="Center"
+                                    Kind="Import" />
                                 <TextBlock Margin="8,0,0,0" Text="Import" />
                             </StackPanel>
                         </Button.Content>

@@ -18,7 +18,7 @@
             <Setter Property="Background" Value="White" />
         </Style>
     </d:DesignerProperties.DesignStyle>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer Margin="16,8,8,8" VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <TextBlock
                 Margin="0,0,0,10"
@@ -37,11 +37,10 @@
                 TextWrapping="Wrap" />
             <TextBlock
                 Margin="0,0,0,6"
+                Foreground="{DynamicResource MahApps.Brushes.Gray}"
                 TextWrapping="Wrap"
                 Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Hyperlink IsEnabled="False">
-                    Delay time is disabled when hold key in use
-                </Hyperlink>
+                Delay time is disabled when hold key in use
             </TextBlock>
             <mah:NumericUpDown
                 Width="128"
@@ -57,10 +56,11 @@
                 Margin="0,6,0,0"
                 Text="Only use window title to snap window"
                 TextWrapping="Wrap" />
-            <TextBlock Margin="0,0,0,6" TextWrapping="Wrap">
-                <Hyperlink IsEnabled="False">
-                    It is recommend to enable it if you choose Left mouse button for snapping
-                </Hyperlink>
+            <TextBlock
+                Margin="0,0,0,6"
+                Foreground="{DynamicResource MahApps.Brushes.Gray}"
+                TextWrapping="Wrap">
+                It is recommend to enable it if you choose Left mouse button for snapping
             </TextBlock>
             <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding DragByTitle}" />
 

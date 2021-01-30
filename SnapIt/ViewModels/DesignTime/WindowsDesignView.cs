@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Prism.Commands;
 using SnapIt.Library.Entities;
 
 namespace SnapIt.ViewModels.DesignTime
@@ -13,6 +14,8 @@ namespace SnapIt.ViewModels.DesignTime
         public bool IsExcludeApplicationDialogOpen { get; set; } = false;
         public ExcludedApplication SelectedExcludedApplication { get; set; }
         public ObservableCollection<MatchRule> MatchRules { get; set; }
+        public DelegateCommand<ExcludedApplication> RemoveExcludedApplicationCommand { get; private set; }
+        public DelegateCommand<ExcludedApplication> EditExcludedApplicationCommand { get; private set; }
 
         public WindowsDesignView()
         {

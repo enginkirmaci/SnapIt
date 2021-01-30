@@ -12,8 +12,6 @@ namespace SnapIt.ViewModels
     public class WindowsViewModel : BindableBase
     {
         private readonly ISnapService snapService;
-        private readonly ISettingService settingService;
-        private readonly IWinApiService winApiService;
 
         private string selectedApplication;
         private ObservableCollection<string> runningApplications;
@@ -44,8 +42,6 @@ namespace SnapIt.ViewModels
             IWinApiService winApiService)
         {
             this.snapService = snapService;
-            this.settingService = settingService;
-            this.winApiService = winApiService;
 
             if (settingService.ExcludedApplicationSettings?.Applications != null)
             {

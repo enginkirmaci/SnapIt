@@ -1,7 +1,7 @@
 ﻿<UserControl
     x:Class="SnapIt.Library.Controls.SnapAreaEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -17,7 +17,7 @@
                     <MenuItem Click="SplitVertically_Click">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="ArrowSplitVertical" />
+                                <iconPacks:PackIconMaterial VerticalAlignment="Center" Kind="ArrowSplitVertical" />
                                 <TextBlock Margin="8,-1,0,0" Text="Split Vertically" />
                             </StackPanel>
                         </MenuItem.Header>
@@ -25,7 +25,7 @@
                     <MenuItem Click="SplitHorizantally_Click">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
+                                <iconPacks:PackIconMaterial VerticalAlignment="Center" Kind="ArrowSplitHorizontal" />
                                 <TextBlock Margin="8,-1,0,0" Text="Split Horizantally" />
                             </StackPanel>
                         </MenuItem.Header>
@@ -46,10 +46,9 @@
                     Margin="4,0"
                     HorizontalAlignment="Center"
                     Click="SplitVertically_Click"
-                    Foreground="White"
-                    Style="{StaticResource MaterialDesignOutlinedButton}">
+                    Style="{StaticResource MahApps.Styles.Button.Flat}">
                     <Button.Content>
-                        <materialDesign:PackIcon Kind="ArrowSplitVertical" />
+                        <iconPacks:PackIconMaterial VerticalAlignment="Center" Kind="ArrowSplitVertical" />
                     </Button.Content>
                 </Button>
                 <Button
@@ -58,10 +57,9 @@
                     Margin="4,0"
                     HorizontalAlignment="Center"
                     Click="SplitHorizantally_Click"
-                    Foreground="White"
-                    Style="{StaticResource MaterialDesignOutlinedButton}">
+                    Style="{StaticResource MahApps.Styles.Button.Flat}">
                     <Button.Content>
-                        <materialDesign:PackIcon Kind="ArrowSplitHorizontal" />
+                        <iconPacks:PackIconMaterial VerticalAlignment="Center" Kind="ArrowSplitHorizontal" />
                     </Button.Content>
                 </Button>
             </StackPanel>

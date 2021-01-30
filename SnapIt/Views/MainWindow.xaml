@@ -179,7 +179,6 @@
                 <mah:HamburgerMenu.Content>
                     <mah:TransitioningContentControl
                         x:Name="MainContentControl"
-                        Margin="16,8,8,8"
                         prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}"
                         RestartTransitionOnContentChange="True"
                         Transition="Default" />
@@ -232,6 +231,7 @@
                     </Grid>
                 </ToggleButton>
             </Grid>
+
             <Grid
                 Grid.Row="2"
                 Width="240"
@@ -255,8 +255,8 @@
                             Kind="Pause"
                             Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
                         <iconPacks:PackIconMaterial
-                            Width="16"
-                            Height="16"
+                            Width="12"
+                            Height="12"
                             VerticalAlignment="Center"
                             Kind="Play"
                             Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
@@ -267,8 +267,13 @@
                 <mah:DropDownButton
                     Margin="8"
                     HorizontalAlignment="Right"
+                    ArrowBrush="White"
+                    ArrowMouseOverBrush="LightGray"
+                    ArrowPressedBrush="White"
                     Background="Transparent"
                     BorderThickness="0"
+                    ButtonStyle="{DynamicResource SnapIt.Styles.Button.Flat}"
+                    Foreground="White"
                     ItemsSource="{Binding ThemeList}">
                     <mah:DropDownButton.ItemContainerStyle>
                         <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="{x:Type MenuItem}">

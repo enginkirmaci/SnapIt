@@ -4,6 +4,30 @@
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro">
 
     <Style
+        x:Key="SnapIt.Styles.Hyperlink"
+        BasedOn="{StaticResource MahApps.Styles.Hyperlink}"
+        TargetType="{x:Type Hyperlink}">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="TextDecorations" Value="None" />
+        <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.AccentBase}" />
+        <!--<Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignCheckBoxDisabled}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="True">
+                <Setter Property="Cursor" Value="Hand" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsEnabled" Value="True" />
+                    <Condition Property="IsMouseOver" Value="True" />
+                </MultiTrigger.Conditions>
+                <Setter Property="TextDecorations" Value="Underline" />
+            </MultiTrigger>
+        </Style.Triggers>-->
+    </Style>
+
+    <Style
         x:Key="HamburgerMenuItemStyle"
         BasedOn="{StaticResource MahApps.Styles.ListBoxItem.HamburgerMenuItem.CreatorsUpdate}"
         TargetType="{x:Type ListBoxItem}">
