@@ -1,13 +1,16 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.LayoutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
+    x:Name="userControl"
     d:DataContext="{d:DesignInstance design:LayoutDesignView,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="800"
@@ -20,222 +23,259 @@
         </Style>
     </d:DesignerProperties.DesignStyle>
 
-    <Grid Margin="16,8,8,8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <StackPanel>
-            <TextBlock
-                Margin="0,0,0,10"
-                FontSize="34"
-                Text="Layout" />
-            <TextBlock FontSize="18" Text="Screens" />
-            <TextBlock
-                Margin="0,0,0,6"
-                Foreground="{DynamicResource MahApps.Brushes.Gray}"
-                Text="Select screen and proceed to layout section."
-                TextWrapping="Wrap" />
+    <Grid Margin="0,-36,0,0">
+
+        <simpleChildWindow:ChildWindow
+            Title="Layout Name"
+            CloseByEscape="True"
+            IsOpen="{Binding IsRenameDialogOpen}"
+            TitleBarBackground="Transparent">
+            <StackPanel Width="420" Margin="16">
+                <TextBox HorizontalAlignment="Stretch" Text="{Binding RenameDialogLayoutName}" />
+
+                <StackPanel
+                    Margin="0,24,0,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+
+                    <Button
+                        Margin="0,0,20,0"
+                        Padding="6,4"
+                        HorizontalAlignment="Right"
+                        Command="{Binding RenameDialogClosingCommand}"
+                        CommandParameter="{StaticResource TrueValue}"
+                        Style="{StaticResource MahApps.Styles.Button.Flat}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial
+                                Width="12"
+                                Height="12"
+                                VerticalAlignment="Center"
+                                Kind="ContentSaveOutline" />
+                            <TextBlock Margin="8,0,0,0" Text="Save" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button
+                        Margin="20,0,0,0"
+                        Padding="6,4"
+                        Command="{Binding RenameDialogClosingCommand}"
+                        CommandParameter="{StaticResource FalseValue}"
+                        Style="{StaticResource MahApps.Styles.Button.Flat}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial
+                                Width="12"
+                                Height="12"
+                                VerticalAlignment="Center"
+                                Kind="Close" />
+
+                            <TextBlock Margin="8,0,0,0" Text="Close" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </simpleChildWindow:ChildWindow>
+
+        <Grid Margin="16,42,8,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,10"
+                    FontSize="34"
+                    Text="Layout" />
+                <TextBlock FontSize="18" Text="Screens" />
+                <TextBlock
+                    Margin="0,0,0,6"
+                    Foreground="{DynamicResource MahApps.Brushes.Gray}"
+                    Text="Select screen and proceed to layout section."
+                    TextWrapping="Wrap" />
+                <ListBox
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Top"
+                    ItemsSource="{Binding SnapScreens}"
+                    SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="112" Margin="-4,0,0,0">
+                                <Grid Margin="6">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <iconPacks:PackIconMaterial
+                                        Width="60"
+                                        Height="60"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="Monitor" />
+                                    <TextBlock
+                                        Margin="0,-8,0,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding DeviceNumber}" />
+                                    <CheckBox
+                                        Margin="0,0,-8,42"
+                                        HorizontalAlignment="Right"
+                                        IsChecked="{Binding IsActive}" />
+                                    <StackPanel Grid.Row="1">
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Resolution}" />
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Primary, TargetNullValue=''}"
+                                            Visibility="{Binding Primary, TargetNullValue=Collapsed}" />
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Layout.Name}"
+                                            TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+
+                <Grid Margin="0,16,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        Text="Change Layouts" />
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Foreground="{DynamicResource MahApps.Brushes.Gray}"
+                        Text="Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu."
+                        TextWrapping="Wrap" />
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+
+                        <Button Command="{Binding NewLayoutCommand}" Style="{StaticResource MahApps.Styles.Button.Flat}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterial
+                                        Width="12"
+                                        Height="12"
+                                        VerticalAlignment="Center"
+                                        Kind="Plus" />
+                                    <TextBlock Margin="8,0,0,0" Text="New" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding ImportLayoutCommand}"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterial
+                                        Width="12"
+                                        Height="12"
+                                        VerticalAlignment="Center"
+                                        Kind="Import" />
+                                    <TextBlock Margin="8,0,0,0" Text="Import" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
             <ListBox
-                HorizontalContentAlignment="Center"
+                Grid.Row="1"
                 VerticalContentAlignment="Top"
-                ItemsSource="{Binding SnapScreens}"
-                SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
+                ItemsSource="{Binding Layouts}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="112" Margin="-4,0,0,0">
-                            <Grid Margin="6">
+                        <Grid Width="188" Margin="-4,0,0,0">
+                            <Grid Margin="2">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
-                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <iconPacks:PackIconMaterial
-                                    Width="60"
-                                    Height="60"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Kind="Monitor" />
+                                <Controls:SnapControl
+                                    Width="188"
+                                    Height="156"
+                                    IsDesignMode="False"
+                                    Layout="{Binding Mode=OneWay}" />
+
                                 <TextBlock
-                                    Margin="0,-8,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding DeviceNumber}" />
-                                <CheckBox
-                                    Margin="0,0,-8,42"
+                                    Grid.Row="1"
+                                    Margin="0,8"
+                                    Text="{Binding Name}"
+                                    TextWrapping="Wrap" />
+
+                                <mah:DropDownButton
+                                    Margin="4"
+                                    Padding="0"
                                     HorizontalAlignment="Right"
-                                    IsChecked="{Binding IsActive}" />
-                                <StackPanel Grid.Row="1">
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding Resolution}" />
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding Primary, TargetNullValue=''}"
-                                        Visibility="{Binding Primary, TargetNullValue=Collapsed}" />
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding Layout.Name}"
-                                        TextTrimming="CharacterEllipsis" />
-                                </StackPanel>
+                                    VerticalAlignment="Top"
+                                    ArrowVisibility="Collapsed"
+                                    Background="Transparent"
+                                    BorderThickness="0">
+                                    <mah:DropDownButton.Icon>
+                                        <iconPacks:PackIconMaterial Margin="3" Kind="PlaylistEdit" />
+                                    </mah:DropDownButton.Icon>
+
+                                    <mah:DropDownButton.Items>
+                                        <MenuItem
+                                            Command="{Binding DataContext.DesignLayoutCommand, ElementName=userControl}"
+                                            CommandParameter="{Binding}"
+                                            Header="Open in Designer" />
+                                        <Separator />
+                                        <MenuItem
+                                            Command="{Binding DataContext.OpenRenameDialogCommand, ElementName=userControl}"
+                                            CommandParameter="{Binding}"
+                                            Header="Rename" />
+                                        <MenuItem
+                                            Command="{Binding DataContext.DeleteLayoutCommand, ElementName=userControl}"
+                                            CommandParameter="{Binding}"
+                                            Header="Delete" />
+                                        <Separator />
+                                        <MenuItem
+                                            Command="{Binding DataContext.ExportLayoutCommand, ElementName=userControl}"
+                                            CommandParameter="{Binding}"
+                                            Header="Export" />
+                                    </mah:DropDownButton.Items>
+                                </mah:DropDownButton>
                             </Grid>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
+                        <WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
-
-            <Grid Margin="0,16,0,8">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="18"
-                    Text="Change Layouts" />
-
-                <TextBlock
-                    Grid.Row="1"
-                    Foreground="{DynamicResource MahApps.Brushes.Gray}"
-                    Text="Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu."
-                    TextWrapping="Wrap" />
-
-                <StackPanel
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-
-                    <Button Command="{Binding NewLayoutCommand}" Style="{StaticResource MahApps.Styles.Button.Flat}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconMaterial
-                                    Width="12"
-                                    Height="12"
-                                    VerticalAlignment="Center"
-                                    Kind="Plus" />
-                                <TextBlock Margin="8,0,0,0" Text="New" />
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
-
-                    <Button
-                        Margin="8,0,0,0"
-                        Command="{Binding ImportLayoutCommand}"
-                        Style="{StaticResource MahApps.Styles.Button.Flat}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconMaterial
-                                    Width="12"
-                                    Height="12"
-                                    VerticalAlignment="Center"
-                                    Kind="Import" />
-                                <TextBlock Margin="8,0,0,0" Text="Import" />
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </StackPanel>
-
-        <ListBox
-            Grid.Row="1"
-            VerticalContentAlignment="Top"
-            ItemsSource="{Binding Layouts}"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid Width="188" Margin="-4,0,0,0">
-                        <Grid Margin="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Controls:SnapControl
-                                Width="188"
-                                Height="156"
-                                IsDesignMode="False"
-                                Layout="{Binding Mode=OneWay}" />
-
-                            <TextBlock
-                                Grid.Row="1"
-                                Margin="0,8"
-                                Text="{Binding Name}"
-                                TextWrapping="Wrap" />
-
-                            <!--<materialDesign:PopupBox
-                                Margin="0,6"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Top"
-                                PopupMode="Click">
-                                <StackPanel>
-                                    <Button
-                                        Command="{Binding DataContext.DesignLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Content="Open in Designer" />
-                                    <Separator />
-                                    <Button
-                                        Command="{Binding DataContext.OpenRenameDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Content="Rename" />
-                                    <Button
-                                        Command="{Binding DataContext.DeleteLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Content="Delete" />
-                                    <Button
-                                        Command="{Binding DataContext.ExportLayoutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Content="Export" />
-                                </StackPanel>
-                            </materialDesign:PopupBox>-->
-                        </Grid>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-        </ListBox>
+        </Grid>
     </Grid>
-    <!--<materialDesign:DialogHost IsOpen="{Binding IsRenameDialogOpen}">
-            <materialDesign:DialogHost.DialogContent>
-                <StackPanel Width="360" Margin="16">
-                    <TextBlock Text="Layout Name" />
-                    <TextBox
-                        Margin="0,8,0,0"
-                        HorizontalAlignment="Stretch"
-                        Text="{Binding PopupLayout.Name, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <Button
-                        Margin="0,8,0,0"
-                        HorizontalAlignment="Center"
-                        Command="materialDesign:DialogHost.CloseDialogCommand"
-                        IsDefault="True">
-                        <Button.CommandParameter>
-                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                                True
-                            </system:Boolean>
-                        </Button.CommandParameter>
-                        OK
-                    </Button>
-                </StackPanel>
-            </materialDesign:DialogHost.DialogContent>
-        </materialDesign:DialogHost>-->
 </UserControl>
