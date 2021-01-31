@@ -245,7 +245,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DryIoc.dll">
-      <Version>4.1.4</Version>
+      <Version>4.7.2</Version>
     </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>2.4.3</Version>
@@ -259,8 +259,11 @@
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.19041.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.31</Version>
+    </PackageReference>
     <PackageReference Include="Prism.DryIoc">
-      <Version>7.2.0.1422</Version>
+      <Version>8.0.0.1909</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
