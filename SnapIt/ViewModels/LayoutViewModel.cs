@@ -24,6 +24,7 @@ namespace SnapIt.ViewModels
         private Layout selectedLayout;
         private bool isRenameDialogOpen;
         private Layout popupLayout;
+        private string renameDialogLayoutName;
 
         public ObservableCollectionWithItemNotify<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
         public SnapScreen SelectedSnapScreen
@@ -55,12 +56,14 @@ namespace SnapIt.ViewModels
         }
 
         public bool IsRenameDialogOpen { get => isRenameDialogOpen; set => SetProperty(ref isRenameDialogOpen, value); }
+        public string RenameDialogLayoutName { get => renameDialogLayoutName; set => SetProperty(ref renameDialogLayoutName, value); }
         public Layout PopupLayout { get => popupLayout; set => SetProperty(ref popupLayout, value); }
         public SnapAreaTheme Theme { get; set; }
         public DelegateCommand NewLayoutCommand { get; private set; }
         public DelegateCommand ImportLayoutCommand { get; private set; }
         public DelegateCommand<Layout> DesignLayoutCommand { get; private set; }
         public DelegateCommand<Layout> OpenRenameDialogCommand { get; private set; }
+        public DelegateCommand<object> RenameDialogClosingCommand { get; private set; }
         public DelegateCommand<Layout> DeleteLayoutCommand { get; private set; }
         public DelegateCommand<Layout> ExportLayoutCommand { get; private set; }
 
@@ -118,7 +121,18 @@ namespace SnapIt.ViewModels
             OpenRenameDialogCommand = new DelegateCommand<Layout>((layout) =>
             {
                 PopupLayout = layout;
+                RenameDialogLayoutName = PopupLayout.Name;
                 IsRenameDialogOpen = true;
+            });
+
+            RenameDialogClosingCommand = new DelegateCommand<object>((isSave) =>
+            {
+                if ((bool)isSave)
+                {
+                    PopupLayout.Name = RenameDialogLayoutName;
+                }
+
+                IsRenameDialogOpen = false;
             });
 
             DeleteLayoutCommand = new DelegateCommand<Layout>((layout) =>

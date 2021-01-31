@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
@@ -76,7 +75,6 @@ namespace SnapIt.ViewModels
             ExcludeApplicationDialogClosingCommand = new DelegateCommand<object>((isSave) =>
             {
                 IsExcludeApplicationDialogOpen = false;
-                DialogHost.CloseDialogCommand.Execute(null, null);
 
                 if ((bool)isSave)
                 {

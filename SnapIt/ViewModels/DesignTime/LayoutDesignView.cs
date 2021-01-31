@@ -16,6 +16,7 @@ namespace SnapIt.ViewModels.DesignTime
         public SnapAreaTheme Theme { get; set; }
         public DelegateCommand DesignLayoutCommand { get; private set; }
         public DelegateCommand ExportLayoutCommand { get; private set; }
+        public bool IsRenameDialogOpen { get; set; } = false;
 
         public LayoutDesignView()
         {
