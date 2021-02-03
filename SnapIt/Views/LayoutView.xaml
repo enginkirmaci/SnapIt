@@ -209,64 +209,64 @@
             <ListBox
                 Grid.Row="1"
                 VerticalContentAlignment="Top"
+                ItemContainerStyle="{DynamicResource SnapIt.Styles.ListBoxItem}"
                 ItemsSource="{Binding Layouts}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="188" Margin="-4,0,0,0">
-                            <Grid Margin="2">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                                <Controls:SnapControl
-                                    Width="188"
-                                    Height="156"
-                                    IsDesignMode="False"
-                                    Layout="{Binding Mode=OneWay}" />
+                            <Controls:SnapControl
+                                Width="184"
+                                Height="156"
+                                IsDesignMode="False"
+                                Layout="{Binding Mode=OneWay}" />
 
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Margin="0,8"
-                                    Text="{Binding Name}"
-                                    TextWrapping="Wrap" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Margin="0,8"
+                                Text="{Binding Name}"
+                                TextWrapping="Wrap" />
 
-                                <mah:DropDownButton
-                                    Margin="4"
-                                    Padding="0"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Top"
-                                    ArrowVisibility="Collapsed"
-                                    Background="Transparent"
-                                    BorderThickness="0">
-                                    <mah:DropDownButton.Icon>
-                                        <iconPacks:PackIconMaterial Margin="3" Kind="PlaylistEdit" />
-                                    </mah:DropDownButton.Icon>
+                            <mah:DropDownButton
+                                Margin="4"
+                                Padding="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                ArrowVisibility="Collapsed"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="White">
+                                <mah:DropDownButton.Icon>
+                                    <iconPacks:PackIconMaterial Margin="3" Kind="PlaylistEdit" />
+                                </mah:DropDownButton.Icon>
 
-                                    <mah:DropDownButton.Items>
-                                        <MenuItem
-                                            Command="{Binding DataContext.DesignLayoutCommand, ElementName=userControl}"
-                                            CommandParameter="{Binding}"
-                                            Header="Open in Designer" />
-                                        <Separator />
-                                        <MenuItem
-                                            Command="{Binding DataContext.OpenRenameDialogCommand, ElementName=userControl}"
-                                            CommandParameter="{Binding}"
-                                            Header="Rename" />
-                                        <MenuItem
-                                            Command="{Binding DataContext.DeleteLayoutCommand, ElementName=userControl}"
-                                            CommandParameter="{Binding}"
-                                            Header="Delete" />
-                                        <Separator />
-                                        <MenuItem
-                                            Command="{Binding DataContext.ExportLayoutCommand, ElementName=userControl}"
-                                            CommandParameter="{Binding}"
-                                            Header="Export" />
-                                    </mah:DropDownButton.Items>
-                                </mah:DropDownButton>
-                            </Grid>
+                                <mah:DropDownButton.Items>
+                                    <MenuItem
+                                        Command="{Binding DataContext.DesignLayoutCommand, ElementName=userControl}"
+                                        CommandParameter="{Binding}"
+                                        Header="Open in Designer" />
+                                    <Separator />
+                                    <MenuItem
+                                        Command="{Binding DataContext.OpenRenameDialogCommand, ElementName=userControl}"
+                                        CommandParameter="{Binding}"
+                                        Header="Rename" />
+                                    <MenuItem
+                                        Command="{Binding DataContext.DeleteLayoutCommand, ElementName=userControl}"
+                                        CommandParameter="{Binding}"
+                                        Header="Delete" />
+                                    <Separator />
+                                    <MenuItem
+                                        Command="{Binding DataContext.ExportLayoutCommand, ElementName=userControl}"
+                                        CommandParameter="{Binding}"
+                                        Header="Export" />
+                                </mah:DropDownButton.Items>
+                            </mah:DropDownButton>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

@@ -1,12 +1,12 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.AboutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
     d:DataContext="{d:DesignInstance vm:AboutViewModel,
                                      IsDesignTimeCreatable=True}"
@@ -100,27 +100,27 @@
                     Text="Follow Me" />
 
                 <StackPanel Orientation="Horizontal">
-                    <Button
+                    <!--<Button
                         Margin="0,0,12,0"
-                        Padding="0"
-                        BorderThickness="0"
+                        Padding="4"
                         Command="{Binding HandleLinkClick}"
                         CommandParameter="{x:Static c:Constants.TwitterUrl}"
-                        Foreground="#FF00ACED">
+                        Foreground="#FF00ACED"
+                        Style="{StaticResource MahApps.Styles.Button.Chromeless}">
                         <Button.Content>
                             <iconPacks:PackIconMaterial
                                 Width="24"
                                 Height="24"
                                 Kind="Twitter" />
                         </Button.Content>
-                    </Button>
+                    </Button>-->
                     <Button
                         Margin="0,0,12,0"
-                        Padding="0"
-                        BorderThickness="0"
+                        Padding="4"
                         Command="{Binding HandleLinkClick}"
                         CommandParameter="{x:Static c:Constants.LinkedinUrl}"
-                        Foreground="#FF4875B4">
+                        Foreground="#FF4875B4"
+                        Style="{StaticResource MahApps.Styles.Button.Chromeless}">
                         <Button.Content>
                             <iconPacks:PackIconMaterial
                                 Width="24"
@@ -130,11 +130,11 @@
                     </Button>
                     <Button
                         Margin="0,0,12,0"
-                        Padding="0"
-                        BorderThickness="0"
+                        Padding="4"
                         Command="{Binding HandleLinkClick}"
                         CommandParameter="{x:Static c:Constants.GithubUrl}"
-                        Foreground="#7DBBE6 ">
+                        Foreground="#7DBBE6 "
+                        Style="{StaticResource MahApps.Styles.Button.Chromeless}">
                         <Button.Content>
                             <iconPacks:PackIconMaterial
                                 Width="24"

@@ -32,7 +32,7 @@ namespace SnapIt.ViewModels
         public string Status { get => status; set => SetProperty(ref status, value); }
         public bool IsPaneOpen { get => isPaneOpen; set => SetProperty(ref isPaneOpen, value); }
         public bool IsVersion3000MessageShown { get => settingService.Settings.IsVersion3000MessageShown; set { settingService.Settings.IsVersion3000MessageShown = value; } }
-        public ObservableCollection<Themes> ThemeList { get; set; }
+        public ObservableCollection<UITheme> ThemeList { get; set; }
 
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
         public DelegateCommand<Window> CloseWindowCommand { get; private set; }
@@ -52,10 +52,10 @@ namespace SnapIt.ViewModels
             this.snapService = snapService;
             this.settingService = settingService;
 
-            ThemeList = new ObservableCollection<Themes> {
-                Themes.Light,
-                Themes.Dark,
-                Themes.System
+            ThemeList = new ObservableCollection<UITheme> {
+                UITheme.Light,
+                UITheme.Dark,
+                UITheme.System
             };
 
             snapService.StatusChanged += SnapService_StatusChanged;
@@ -166,27 +166,29 @@ Please give a try to new layout designer.I hope you'll enjoy it.
 
             ThemeItemCommand = new DelegateCommand<object>((theme) =>
             {
-                switch ((Themes)theme)
+                switch ((UITheme)theme)
                 {
-                    case Themes.Dark:
-                        ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
-                        ThemeManager.Current.SyncTheme();
+                    case UITheme.Dark:
+                        //ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
+                        //ThemeManager.Current.SyncTheme();
+                        ThemeManager.Current.ChangeThemeColorScheme(Application.Current, settingService.Settings.AppAccentColor.Name);
                         ThemeManager.Current.ChangeThemeBaseColor(Application.Current, "Dark");
                         break;
 
-                    case Themes.Light:
-                        ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
-                        ThemeManager.Current.SyncTheme();
+                    case UITheme.Light:
+                        //ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
+                        //ThemeManager.Current.SyncTheme();
+                        ThemeManager.Current.ChangeThemeColorScheme(Application.Current, settingService.Settings.AppAccentColor.Name);
                         ThemeManager.Current.ChangeThemeBaseColor(Application.Current, "Light");
                         break;
 
-                    case Themes.System:
+                    case UITheme.System:
                         ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
                         ThemeManager.Current.SyncTheme();
                         break;
                 }
 
-                settingService.Settings.AppTheme = (Themes)theme;
+                settingService.Settings.AppTheme = (UITheme)theme;
             });
 
             ThemeItemCommand.Execute(settingService.Settings.AppTheme);
