@@ -42,6 +42,40 @@
             <TextBlock Margin="0,6" Text="Start Snap It when I start Windows" />
             <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding IsStartupTaskActive}" />
 
+            <TextBlock
+                Padding="0,16,0,0"
+                FontSize="18"
+                Text="Personalization" />
+            <TextBlock Margin="0,6" Text="Color" />
+
+            <ListBox
+                Width="360"
+                HorizontalAlignment="Left"
+                ItemContainerStyle="{DynamicResource SnapIt.Styles.ListBoxItem}"
+                ItemsSource="{Binding AccentColors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectedItem="{Binding SelectedAccentColor, Mode=TwoWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            Width="36"
+                            Height="36"
+                            Background="{Binding Color, Converter={StaticResource ColorToBrushConverter}}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+
+            <ListBox
+                Margin="0,6"
+                ItemsSource="{Binding ThemeList}"
+                SelectedValue="{Binding SelectedTheme, Mode=TwoWay}"
+                Style="{StaticResource SnapIt.Styles.RadioButtonList}" />
+
             <!--<TextBlock Margin="0,6">
                             Run as administrator (experimental, needs to be restarted)
                         </TextBlock>

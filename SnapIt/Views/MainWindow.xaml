@@ -138,14 +138,14 @@
                             </mah:HamburgerMenuGlyphItem.Tag>
                         </mah:HamburgerMenuGlyphItem>
 
-                        <mah:HamburgerMenuGlyphItem Label="Tutorials">
+                        <!--<mah:HamburgerMenuGlyphItem Label="Tutorials">
                             <mah:HamburgerMenuGlyphItem.Tag>
                                 <iconPacks:PackIconMaterial
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Kind="BookOpenPageVariantOutline" />
                             </mah:HamburgerMenuGlyphItem.Tag>
-                        </mah:HamburgerMenuGlyphItem>
+                        </mah:HamburgerMenuGlyphItem>-->
 
                         <mah:HamburgerMenuGlyphItem CommandParameter="WhatsNewView" Label="What's New">
                             <mah:HamburgerMenuGlyphItem.Tag>

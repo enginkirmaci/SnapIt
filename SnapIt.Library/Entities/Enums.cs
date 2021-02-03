@@ -2,7 +2,7 @@
 
 namespace SnapIt.Library.Entities
 {
-    public enum Themes
+    public enum UITheme
     {
         Light,
         Dark,
