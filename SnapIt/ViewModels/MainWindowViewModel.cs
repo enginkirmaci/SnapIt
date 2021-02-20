@@ -35,7 +35,7 @@ namespace SnapIt.ViewModels
         public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
         public string Status { get => status; set => SetProperty(ref status, value); }
         public bool IsPaneOpen { get => isPaneOpen; set => SetProperty(ref isPaneOpen, value); }
-        public bool IsVersion3000MessageShown { get => settingService.Settings.IsVersion3000MessageShown; set { settingService.Settings.IsVersion3000MessageShown = value; } }
+        //public bool IsVersion3000MessageShown { get => settingService.Settings.IsVersion3000MessageShown; set { settingService.Settings.IsVersion3000MessageShown = value; } }
         public ObservableCollection<UITheme> ThemeList { get; set; }
 
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
@@ -78,7 +78,7 @@ namespace SnapIt.ViewModels
             {
                 //CheckTrialExpiredAsync();
 
-                if (IsVersion3000MessageShown)
+                //if (IsVersion3000MessageShown)
                 {
                     if (settingService.Settings.ShowMainWindow)
                     {
@@ -97,18 +97,19 @@ namespace SnapIt.ViewModels
             {
                 mainWindow = window;
 
-                if (!IsVersion3000MessageShown)
-                {
-                    ((MetroWindow)window).ShowMessageAsync("Important Notice !",
-                        @"I have been getting lots of feedback about layouts and layout designer which tells how difficult or not possible to design layouts that you want. I was aware of it, but there were some difficulties needs to solved.
+                //                if (!IsVersion3000MessageShown)
+                //                {
+                //                    ((MetroWindow)window).ShowMessageAsync("Important Notice !",
+                //                        @"I have been getting lots of feedback about layouts and layout designer which tells how difficult or not possible to design layouts that you want. I was aware of it, but there were some difficulties needs to solved.
 
-                        After some experimenting, I finally managed to develop more flexible and easier layout mechanism.This new mechanism opens more possibilities in the future.
+                //After some experimenting, I finally managed to develop more flexible and easier layout mechanism.This new mechanism opens more possibilities in the future.
 
-                        Because of the changes, unfortunately your old layout can't work with this version and there is no way for me to migrate it to newer structure. I know that some of you spend a lot of time to create it and I'm really sorry.
+                //Because of the changes, unfortunately your old layout can't work with this version and there is no way for me to migrate it to newer structure. I know that some of you spend a lot of time to create it and I'm really sorry.
 
-                        Please give a try to new layout designer.I hope you'll enjoy it.
-                        ");
-                }
+                //Please give a try to new layout designer.I hope you'll enjoy it.
+                //");
+                //                    IsVersion3000MessageShown = true;
+                //                }
 
                 var contentControl = window.FindChildren<ContentControl>("MainContentControl");
 
