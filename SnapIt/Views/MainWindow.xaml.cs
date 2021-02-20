@@ -32,31 +32,19 @@ namespace SnapIt.Views
 
         private void NotifyIconService_SetView(ViewType viewType)
         {
-            //LayoutViewRadio.IsChecked = false;
-            //SettingsViewRadio.IsChecked = false;
-            //AboutViewRadio.IsChecked = false;
+            var index = 0;
+            foreach (MahApps.Metro.Controls.HamburgerMenuGlyphItem item in (MahApps.Metro.Controls.HamburgerMenuItemCollection)HamburgerMenuControl.ItemsSource)
+            {
+                if (item.CommandParameter.Equals(viewType.ToString()))
+                {
+                    HamburgerMenuControl.SelectedIndex = index;
+                    regionManager.RequestNavigate(Constants.MainRegion, viewType.ToString());
 
-            //switch (viewType)
-            //{
-            //    case ViewType.LayoutView:
-            //        LayoutViewRadio.IsChecked = true;
-            //        regionManager.RequestNavigate(Constants.MainRegion, "LayoutView");
-            //        break;
+                    break;
+                }
 
-            //    case ViewType.SettingsView:
-            //        SettingsViewRadio.IsChecked = true;
-            //        regionManager.RequestNavigate(Constants.MainRegion, "SettingsView");
-            //        break;
-
-            //    case ViewType.AboutView:
-            //        AboutViewRadio.IsChecked = true;
-            //        regionManager.RequestNavigate(Constants.MainRegion, "AboutView");
-            //        break;
-            //}
-        }
-
-        private void HamburgerMenuControl_ItemClick(object sender, MahApps.Metro.Controls.ItemClickEventArgs args)
-        {
+                index++;
+            }
         }
     }
 }
