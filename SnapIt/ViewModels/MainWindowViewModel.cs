@@ -136,10 +136,10 @@ namespace SnapIt.ViewModels
 
             ClosingWindowCommand = new DelegateCommand<CancelEventArgs>((args) =>
             {
+                args.Cancel = true;
+
                 if (mainWindow != null)
                 {
-                    args.Cancel = true;
-
                     settingService.Save();
 
                     mainWindow.Hide();

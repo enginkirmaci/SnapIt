@@ -204,10 +204,14 @@ namespace SnapIt.ViewModels
 
         private void SnapService_ScreenChanged(System.Collections.Generic.IList<SnapScreen> snapScreens)
         {
-            var deviceNumber = selectedSnapScreen.DeviceNumber;
+            try
+            {
+                var deviceNumber = selectedSnapScreen.DeviceNumber;
 
-            SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
-            SelectedSnapScreen = SnapScreens.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+                SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
+                SelectedSnapScreen = SnapScreens.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+            }
+            catch { }
         }
 
         private void DesignWindow_Closed(object sender, EventArgs e)
