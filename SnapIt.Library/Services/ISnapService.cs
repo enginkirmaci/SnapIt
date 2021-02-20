@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
-using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
     public interface ISnapService
     {
+        bool IsRunning { get; set; }
+
         event GetStatus StatusChanged;
 
         event ScreenLayoutLoadedEvent ScreenLayoutLoaded;

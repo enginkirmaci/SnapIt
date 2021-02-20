@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -28,8 +29,17 @@ namespace SnapIt.Library.Entities
 
         public bool EnableKeyboard { get; set; } = true;
         public bool DisableForFullscreen { get; set; } = true;
+        public bool DisableForModal { get; set; } = true;
         public bool ShowMainWindow { get; set; } = true;
-        public bool IsDarkTheme { get; set; } = true;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public UITheme AppTheme { get; set; } = UITheme.Dark;
+
+        public AccentColorData AppAccentColor { get; set; } = new AccentColorData
+        {
+            Name = "Blue",
+            Color = Color.FromArgb(255, 0, 120, 215)
+        };
+
         public Dictionary<string, string> ScreensLayouts { get; set; }
         public List<string> ActiveScreens { get; set; }
         public string MoveUpShortcut { get; set; } = "Control + Alt + Up";

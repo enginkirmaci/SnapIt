@@ -1,34 +1,36 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.KeyboardSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:prism="http://prismlibrary.com/"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
     d:DataContext="{d:DesignInstance design:KeyboardSettingsDesignView,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="600"
     d:DesignWidth="480"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer Margin="16,8,8,8" VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Keyboard" />
             <TextBlock
-                Margin="0,6"
+                Margin="0,0,0,10"
+                FontSize="34"
+                Text="Keyboard" />
+            <TextBlock
+                Margin="0,0,0,6"
                 Text="Use keyboard to snap window"
                 TextWrapping="Wrap" />
-            <ToggleButton
-                Margin="0,6"
-                HorizontalAlignment="Left"
-                IsChecked="{Binding EnableKeyboard}"
-                Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+            <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding EnableKeyboard}" />
 
             <TextBlock
                 Margin="0,6"
@@ -36,12 +38,11 @@
                 TextWrapping="Wrap" />
 
             <Button
+                Margin="0,0,0,8"
                 HorizontalAlignment="Left"
                 Command="{Binding OverrideDefaultSnapCommand}"
                 Content="Override default snap shortcuts (Win + Arrow)"
-                FontWeight="Normal"
-                Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
-                Style="{StaticResource MaterialDesignOutlinedButton}" />
+                Style="{StaticResource MahApps.Styles.Button.Flat}" />
 
             <Grid>
                 <Grid.ColumnDefinitions>
