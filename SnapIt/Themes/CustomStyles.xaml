@@ -66,6 +66,7 @@
         TargetType="{x:Type ListBoxItem}">
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="4" />
+        <Setter Property="Margin" Value="2" />
     </Style>
 
     <Style

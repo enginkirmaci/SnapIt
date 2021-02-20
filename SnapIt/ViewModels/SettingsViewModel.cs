@@ -6,7 +6,6 @@ using System.Windows.Media;
 using ControlzEx.Theming;
 using Prism.Commands;
 using Prism.Mvvm;
-using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 
@@ -55,8 +54,6 @@ namespace SnapIt.ViewModels
             }
         }
 
-        public bool DisableForFullscreen { get => settingService.Settings.DisableForFullscreen; set { settingService.Settings.DisableForFullscreen = value; ApplyChanges(); } }
-
         //public bool IsRunAsAdmin
         //{
         //	get => Properties.Settings.Default.RunAsAdmin;
@@ -102,15 +99,6 @@ namespace SnapIt.ViewModels
             {
                 IsStartupTaskActive = await settingService.GetStartupTaskStatusAsync();
             });
-        }
-
-        private void ApplyChanges()
-        {
-            if (!DevMode.IsActive)
-            {
-                snapService.Release();
-                snapService.Initialize();
-            }
         }
 
         private void ChangeTheme()

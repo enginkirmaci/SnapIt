@@ -1,15 +1,15 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.WindowsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:prism="http://prismlibrary.com/"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
     x:Name="userControl"
     d:DataContext="{d:DesignInstance {x:Type design:WindowsDesignView},
                                      IsDesignTimeCreatable=True}"
@@ -17,6 +17,11 @@
     d:DesignWidth="640"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
 
     <Grid Margin="0,-36,0,0">
         <simpleChildWindow:ChildWindow
@@ -151,7 +156,30 @@
                     Margin="0,0,0,10"
                     FontSize="34"
                     Text="Window" />
-                <TextBlock FontSize="18" Text="Excluded Applications" />
+
+                <TextBlock
+                    Margin="0,6"
+                    Text="Disable snapping for fullscreen application and games (recommended)"
+                    TextWrapping="Wrap" />
+                <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding DisableForFullscreen}" />
+
+                <TextBlock
+                    Margin="0,6"
+                    Text="Disable snapping for modal window (recommended). If enable snapping for modal, you need to exclude Start, Action Center and etc, to work correctly for windows."
+                    TextWrapping="Wrap" />
+                <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding DisableForModal}" />
+                <Button
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Left"
+                    Command="{Binding ExcludeWindowsModalCommand}"
+                    Content="Exclude Windows Default Modals"
+                    Style="{StaticResource MahApps.Styles.Button.Flat}"
+                    Visibility="{Binding DisableForModal, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
+
+                <TextBlock
+                    Padding="0,16,0,0"
+                    FontSize="18"
+                    Text="Excluded Applications" />
 
                 <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>

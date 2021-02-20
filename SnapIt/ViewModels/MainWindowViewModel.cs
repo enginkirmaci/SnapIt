@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -13,6 +15,7 @@ using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
+using Windows.Services.Store;
 
 namespace SnapIt.ViewModels
 {
@@ -26,6 +29,7 @@ namespace SnapIt.ViewModels
         private bool isRunning;
         private string status;
         private bool isPaneOpen = true;
+        private Window mainWindow;
 
         public string Title { get => Constants.AppTitle; }
         public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
@@ -35,11 +39,11 @@ namespace SnapIt.ViewModels
         public ObservableCollection<UITheme> ThemeList { get; set; }
 
         public DelegateCommand<Window> ActivatedCommand { get; private set; }
-        public DelegateCommand<Window> CloseWindowCommand { get; private set; }
+        public DelegateCommand<Window> LoadedCommand { get; private set; }
+        public DelegateCommand<CancelEventArgs> ClosingWindowCommand { get; private set; }
         public DelegateCommand StartStopCommand { get; private set; }
         public DelegateCommand<string> HandleLinkClick { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
-        public DelegateCommand<Window> LoadedCommand { get; private set; }
         public DelegateCommand<object> ThemeItemCommand { get; }
 
         public MainWindowViewModel(
@@ -72,13 +76,7 @@ namespace SnapIt.ViewModels
 
             ActivatedCommand = new DelegateCommand<Window>((window) =>
             {
-                //var dialog = new CustomDialog(new MetroDialogSettings() { OwnerCanCloseWithDialog = true })
-                //{
-                //    Content = window.Resources["CustomDialog"],
-                //    Title = "Important Notice !"
-                //};
-
-                //((MetroWindow)window).ShowMetroDialogAsync(dialog);
+                //CheckTrialExpiredAsync();
 
                 if (IsVersion3000MessageShown)
                 {
@@ -97,17 +95,19 @@ namespace SnapIt.ViewModels
 
             LoadedCommand = new DelegateCommand<Window>((window) =>
             {
+                mainWindow = window;
+
                 if (!IsVersion3000MessageShown)
                 {
                     ((MetroWindow)window).ShowMessageAsync("Important Notice !",
                         @"I have been getting lots of feedback about layouts and layout designer which tells how difficult or not possible to design layouts that you want. I was aware of it, but there were some difficulties needs to solved.
 
-After some experimenting, I finally managed to develop more flexible and easier layout mechanism.This new mechanism opens more possibilities in the future.
+                        After some experimenting, I finally managed to develop more flexible and easier layout mechanism.This new mechanism opens more possibilities in the future.
 
-Because of the changes, unfortunately your old layout can't work with this version and there is no way for me to migrate it to newer structure. I know that some of you spend a lot of time to create it and I'm really sorry.
+                        Because of the changes, unfortunately your old layout can't work with this version and there is no way for me to migrate it to newer structure. I know that some of you spend a lot of time to create it and I'm really sorry.
 
-Please give a try to new layout designer.I hope you'll enjoy it.
-");
+                        Please give a try to new layout designer.I hope you'll enjoy it.
+                        ");
                 }
 
                 var contentControl = window.FindChildren<ContentControl>("MainContentControl");
@@ -123,7 +123,7 @@ Please give a try to new layout designer.I hope you'll enjoy it.
 
             StartStopCommand = new DelegateCommand(() =>
             {
-                if (IsRunning)
+                if (snapService.IsRunning)
                 {
                     snapService.Release();
                 }
@@ -133,13 +133,15 @@ Please give a try to new layout designer.I hope you'll enjoy it.
                 }
             });
 
-            CloseWindowCommand = new DelegateCommand<Window>((window) =>
+            ClosingWindowCommand = new DelegateCommand<CancelEventArgs>((args) =>
             {
-                if (window != null)
+                if (mainWindow != null)
                 {
+                    args.Cancel = true;
+
                     settingService.Save();
 
-                    window.Hide();
+                    mainWindow.Hide();
                 }
 
                 if (DevMode.IsActive)
@@ -223,5 +225,102 @@ Please give a try to new layout designer.I hope you'll enjoy it.
                 Status = "Start";
             }
         }
+
+        private StoreContext storeContext = null;
+        private bool isStoreContextLoaded = false;
+
+        private async void CheckTrialExpiredAsync()
+        {
+            if (mainWindow != null && mainWindow.IsActive && !isStoreContextLoaded)
+            {
+                isStoreContextLoaded = true;
+                storeContext = StoreContext.GetDefault();
+                //storeContext.OfflineLicensesChanged += OfflineLicensesChanged;
+
+                IInitializeWithWindow initWindow = (IInitializeWithWindow)(object)storeContext;
+                initWindow.Initialize(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle);
+
+                StoreAppLicense license = await storeContext.GetAppLicenseAsync();
+
+                if (license.IsActive)
+                {
+                    //if (license.IsTrial)
+                    {
+                        var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
+                            "Trial Notice !",
+                            @"Trial license",
+                            MessageDialogStyle.AffirmativeAndNegative,
+                            new MetroDialogSettings
+                            {
+                                AffirmativeButtonText = "Buy Full Version!"
+                            });
+
+                        if (result == MessageDialogResult.Affirmative)
+                        {
+                            PurchaseFullLicense();
+                        }
+                    }
+                }
+            }
+        }
+
+        private async void PurchaseFullLicense()
+        {
+            // Get app store product details
+            StoreProductResult productResult = await storeContext.GetStoreProductForCurrentAppAsync();
+            if (productResult.ExtendedError != null)
+            {
+                // The user may be offline or there might be some other server failure
+                DevMode.Log($"ExtendedError: {productResult.ExtendedError.Message}");
+                return;
+            }
+
+            DevMode.Log("Buying the full license...");
+            StoreAppLicense license = await storeContext.GetAppLicenseAsync();
+            if (license.IsTrial)
+            {
+                StorePurchaseResult result = await productResult.Product.RequestPurchaseAsync();
+                if (result.ExtendedError != null)
+                {
+                    await ((MetroWindow)mainWindow).ShowMessageAsync("", $"Purchase failed: ExtendedError: {result.ExtendedError.Message}");
+                    return;
+                }
+
+                switch (result.Status)
+                {
+                    case StorePurchaseStatus.AlreadyPurchased:
+                        await ((MetroWindow)mainWindow).ShowMessageAsync("", $"You already bought this app and have a fully-licensed version.");
+                        break;
+
+                    case StorePurchaseStatus.Succeeded:
+                        // License will refresh automatically using the StoreContext.OfflineLicensesChanged event
+                        break;
+
+                    case StorePurchaseStatus.NotPurchased:
+                        await ((MetroWindow)mainWindow).ShowMessageAsync("", "Product was not purchased, it may have been canceled.");
+                        break;
+
+                    case StorePurchaseStatus.NetworkError:
+                        await ((MetroWindow)mainWindow).ShowMessageAsync("", "Product was not purchased due to a Network Error.");
+                        break;
+
+                    case StorePurchaseStatus.ServerError:
+                        await ((MetroWindow)mainWindow).ShowMessageAsync("", "Product was not purchased due to a Server Error.");
+                        break;
+
+                    default:
+                        await ((MetroWindow)mainWindow).ShowMessageAsync("", "Product was not purchased due to an Unknown Error.");
+                        break;
+                }
+            }
+        }
+    }
+
+    [ComImport]
+    [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IInitializeWithWindow
+    {
+        void Initialize(IntPtr hwnd);
     }
 }

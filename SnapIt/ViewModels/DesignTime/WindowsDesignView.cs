@@ -7,6 +7,7 @@ namespace SnapIt.ViewModels.DesignTime
 {
     public class WindowsDesignView
     {
+        public bool DisableForModal { get; set; }
         public ObservableCollection<ExcludedApplication> ExcludedApplications { get; set; }
         public ObservableCollection<string> RunningApplications { get; set; }
         public string SelectedApplication { get; set; }
@@ -19,6 +20,8 @@ namespace SnapIt.ViewModels.DesignTime
 
         public WindowsDesignView()
         {
+            DisableForModal = false;
+
             ExcludedApplications = new ObservableCollection<ExcludedApplication>
             {
                 new ExcludedApplication

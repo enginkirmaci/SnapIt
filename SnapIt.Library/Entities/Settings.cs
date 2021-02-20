@@ -29,6 +29,7 @@ namespace SnapIt.Library.Entities
 
         public bool EnableKeyboard { get; set; } = true;
         public bool DisableForFullscreen { get; set; } = true;
+        public bool DisableForModal { get; set; } = true;
         public bool ShowMainWindow { get; set; } = true;
         [JsonConverter(typeof(StringEnumConverter))]
         public UITheme AppTheme { get; set; } = UITheme.Dark;

@@ -376,7 +376,7 @@ namespace SnapIt.Library.Services
             if (activeWindow != ActiveWindow.Empty)
             {
                 if ((settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow)) ||
-                    !winApiService.IsAllowedWindowStyle(activeWindow) ||
+                   (settingService.Settings.DisableForModal && !winApiService.IsAllowedWindowStyle(activeWindow)) ||
                     IsExcludedApplication(activeWindow.Title, true))
                 {
                     return;
@@ -480,7 +480,7 @@ namespace SnapIt.Library.Services
                     {
                         isListening = false;
                     }
-                    else if (!winApiService.IsAllowedWindowStyle(activeWindow))
+                    else if (settingService.Settings.DisableForModal && !winApiService.IsAllowedWindowStyle(activeWindow))
                     {
                         isListening = false;
                     }
