@@ -1,0 +1,23 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
+    <DataTemplate x:Key="HamburgerMenuItem" DataType="{x:Type mah:HamburgerMenuItem}">
+        <Grid Height="48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength}" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ContentControl
+                Grid.Column="0"
+                Content="{Binding Tag}"
+                Focusable="False"
+                IsTabStop="False" />
+            <TextBlock
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{Binding Label}" />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

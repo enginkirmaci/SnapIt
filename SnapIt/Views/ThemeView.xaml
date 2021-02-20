@@ -1,11 +1,11 @@
 ﻿<UserControl
     x:Class="SnapIt.Views.ThemeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
@@ -15,11 +15,12 @@
     d:DesignHeight="700"
     d:DesignWidth="550"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    FontFamily="{StaticResource MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
-
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=ThemeViewUserControl}" />
@@ -27,7 +28,7 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Margin="16,8,8,8" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -35,11 +36,14 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel>
-                    <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock2}" Text="Themes" />
+                    <TextBlock
+                        Margin="0,0,0,10"
+                        FontSize="34"
+                        Text="Themes" />
 
                     <TextBlock
-                        Margin="0,6"
-                        Style="{StaticResource MaterialDesignTitleTextBlock2}"
+                        Margin="0,0,0,6"
+                        FontSize="18"
                         Text="Preview" />
                     <Grid HorizontalAlignment="Left">
                         <Grid.Background>
@@ -66,54 +70,37 @@
 
                     <TextBlock
                         Grid.ColumnSpan="2"
-                        Margin="0,6"
-                        Style="{StaticResource MaterialDesignTitleTextBlock2}"
+                        Margin="0,16,0,6"
+                        FontSize="18"
                         Text="Snap Area" />
 
                     <StackPanel Grid.Row="1">
                         <TextBlock Margin="0,6" Text="Overlay color" />
-                        <Expander Width="256" HorizontalAlignment="Left">
-                            <Expander.Header>
-                                <Grid Margin="-18,-12,0,-12">
-                                    <Grid>
-                                        <Grid.Background>
-                                            <ImageBrush
-                                                ImageSource="/SnapIt;component/Themes/Transparency10.png"
-                                                TileMode="Tile"
-                                                Viewport="0,0,10,10"
-                                                ViewportUnits="Absolute" />
-                                        </Grid.Background>
-                                    </Grid>
-                                    <Rectangle Fill="{Binding Theme.OverlayColor, Converter={StaticResource ColorToBrushConverter}}" />
-                                </Grid>
-                            </Expander.Header>
-                            <materialDesign:ColorPicker
-                                Height="160"
-                                Margin="2"
-                                Color="{Binding Theme.OverlayColor}" />
-                        </Expander>
+
+                        <mah:ColorPicker
+                            Margin="0,6,18,0"
+                            mah:TextBoxHelper.Watermark="Select a color"
+                            CustomColorPalette01Header="Accent Colors"
+                            CustomColorPalette01ItemsSource="{Binding AccentColors}"
+                            DropDownHeight="300"
+                            DropDownWidth="420"
+                            IsAvailableColorPaletteVisible="False"
+                            IsCustomColorPalette01Visible="True"
+                            IsStandardColorPaletteVisible="False"
+                            SelectedColor="{Binding Theme.OverlayColor}" />
 
                         <TextBlock Margin="0,6" Text="Highlight color" />
-                        <Expander Width="256" HorizontalAlignment="Left">
-                            <Expander.Header>
-                                <Grid Margin="-18,-12,0,-12">
-                                    <Grid>
-                                        <Grid.Background>
-                                            <ImageBrush
-                                                ImageSource="/SnapIt;component/Themes/Transparency10.png"
-                                                TileMode="Tile"
-                                                Viewport="0,0,10,10"
-                                                ViewportUnits="Absolute" />
-                                        </Grid.Background>
-                                    </Grid>
-                                    <Rectangle Fill="{Binding Theme.HighlightColor, Converter={StaticResource ColorToBrushConverter}}" />
-                                </Grid>
-                            </Expander.Header>
-                            <materialDesign:ColorPicker
-                                Height="160"
-                                Margin="2"
-                                Color="{Binding Theme.HighlightColor}" />
-                        </Expander>
+                        <mah:ColorPicker
+                            Margin="0,6,18,0"
+                            mah:TextBoxHelper.Watermark="Select a color"
+                            CustomColorPalette01Header="Accent Colors"
+                            CustomColorPalette01ItemsSource="{Binding AccentColors}"
+                            DropDownHeight="300"
+                            DropDownWidth="420"
+                            IsAvailableColorPaletteVisible="False"
+                            IsCustomColorPalette01Visible="True"
+                            IsStandardColorPaletteVisible="False"
+                            SelectedColor="{Binding Theme.HighlightColor}" />
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Grid.Column="1">
@@ -122,68 +109,65 @@
                             Width="256"
                             Margin="0,6,0,0"
                             HorizontalAlignment="Left"
-                            Maximum="1"
+                            mah:SliderHelper.ChangeValueBy="LargeChange"
+                            mah:SliderHelper.EnableMouseWheel="MouseHover"
+                            AutoToolTipPlacement="TopLeft"
+                            LargeChange="5"
+                            Maximum="100"
                             Minimum="0"
-                            TickFrequency="0.1"
-                            Value="{Binding Theme.Opacity}" />
+                            SmallChange="1"
+                            Value="{Binding Theme.Opacity, Converter={StaticResource DoubleMultiplierConverter}}" />
 
                         <TextBlock Margin="0,6" Text="Border thickness" />
                         <Slider
                             Width="256"
                             Margin="0,6,0,0"
                             HorizontalAlignment="Left"
+                            mah:SliderHelper.ChangeValueBy="SmallChange"
+                            mah:SliderHelper.EnableMouseWheel="MouseHover"
+                            AutoToolTipPlacement="TopLeft"
                             Maximum="25"
                             Minimum="0"
-                            TickFrequency="1"
+                            SmallChange="1"
                             Value="{Binding Theme.BorderThickness}" />
 
                         <TextBlock Margin="0,6" Text="Border color" />
-                        <Expander Width="256" HorizontalAlignment="Left">
-                            <Expander.Header>
-                                <Grid Margin="-18,-12,0,-12">
-                                    <Grid>
-                                        <Grid.Background>
-                                            <ImageBrush
-                                                ImageSource="/SnapIt;component/Themes/Transparency10.png"
-                                                TileMode="Tile"
-                                                Viewport="0,0,10,10"
-                                                ViewportUnits="Absolute" />
-                                        </Grid.Background>
-                                    </Grid>
-                                    <Rectangle Fill="{Binding Theme.BorderColor, Converter={StaticResource ColorToBrushConverter}}" />
-                                </Grid>
-                            </Expander.Header>
-                            <materialDesign:ColorPicker
-                                Height="160"
-                                Margin="2"
-                                Color="{Binding Theme.BorderColor}" />
-                        </Expander>
+                        <mah:ColorPicker
+                            Margin="0,6,18,0"
+                            mah:TextBoxHelper.Watermark="Select a color"
+                            CustomColorPalette01Header="Accent Colors"
+                            CustomColorPalette01ItemsSource="{Binding AccentColors}"
+                            DropDownHeight="300"
+                            DropDownWidth="420"
+                            IsAvailableColorPaletteVisible="False"
+                            IsCustomColorPalette01Visible="True"
+                            IsStandardColorPaletteVisible="False"
+                            SelectedColor="{Binding Theme.BorderColor}" />
                     </StackPanel>
                 </Grid>
             </Grid>
         </ScrollViewer>
 
-        <materialDesign:Snackbar
-            Margin="12,0"
-            HorizontalAlignment="Stretch"
-            IsActive="{Binding OpenApplyChangesBar}">
-            <materialDesign:SnackbarMessage ActionCommand="{Binding ApplyChangesCommand}" ActionContent="Apply Changes">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+        <mah:Flyout
+            Margin="16,0"
+            CloseButtonVisibility="Collapsed"
+            IsOpen="{Binding OpenApplyChangesBar}"
+            Position="Bottom"
+            TitleVisibility="Collapsed">
+            <Grid Margin="16,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                    <TextBlock VerticalAlignment="Center" Text="Do you want to apply changes?" />
-                    <Button
-                        Grid.Column="1"
-                        Margin="24,0,0,0"
-                        HorizontalAlignment="Right"
-                        Command="{Binding DiscardChangesCommand}"
-                        Content="Discard"
-                        Style="{StaticResource MaterialDesignIconForegroundButton2}" />
-                </Grid>
-            </materialDesign:SnackbarMessage>
-        </materialDesign:Snackbar>
+                <TextBlock VerticalAlignment="Center" Text="Do you want to apply changes?" />
+                <Button
+                    Grid.Column="1"
+                    Height="36"
+                    Command="{Binding DiscardChangesCommand}"
+                    Content="Discard"
+                    Style="{DynamicResource MahApps.Styles.Button.MetroSquare.Accent}" />
+            </Grid>
+        </mah:Flyout>
     </Grid>
 </UserControl>

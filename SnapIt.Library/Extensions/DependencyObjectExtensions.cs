@@ -26,6 +26,25 @@ namespace SnapIt.Library.Extensions
             }
         }
 
+        public static T FindChildren<T>(this DependencyObject depObj, string childName) where T : DependencyObject
+        {
+            var collection = FindChildren<T>(depObj);
+            T foundChild = null;
+
+            foreach (var child in collection)
+            {
+                var frameworkElement = child as FrameworkElement;
+
+                if (frameworkElement != null && frameworkElement.Name == childName)
+                {
+                    foundChild = (T)child;
+                    break;
+                }
+            }
+
+            return foundChild;
+        }
+
         public static T FindParent<T>(this DependencyObject child) where T : DependencyObject
         {
             var parent = VisualTreeHelper.GetParent(child);

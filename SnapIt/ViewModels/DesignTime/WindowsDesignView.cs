@@ -1,11 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Prism.Commands;
 using SnapIt.Library.Entities;
 
 namespace SnapIt.ViewModels.DesignTime
 {
     public class WindowsDesignView
     {
+        public bool DisableForModal { get; set; }
         public ObservableCollection<ExcludedApplication> ExcludedApplications { get; set; }
         public ObservableCollection<string> RunningApplications { get; set; }
         public string SelectedApplication { get; set; }
@@ -13,9 +15,13 @@ namespace SnapIt.ViewModels.DesignTime
         public bool IsExcludeApplicationDialogOpen { get; set; } = false;
         public ExcludedApplication SelectedExcludedApplication { get; set; }
         public ObservableCollection<MatchRule> MatchRules { get; set; }
+        public DelegateCommand<ExcludedApplication> RemoveExcludedApplicationCommand { get; private set; }
+        public DelegateCommand<ExcludedApplication> EditExcludedApplicationCommand { get; private set; }
 
         public WindowsDesignView()
         {
+            DisableForModal = false;
+
             ExcludedApplications = new ObservableCollection<ExcludedApplication>
             {
                 new ExcludedApplication
