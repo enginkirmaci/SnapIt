@@ -14,6 +14,15 @@ namespace SnapIt.ViewModels
                 {
                     new ChangeLogItem()
                     {
+                        Header = "v3.2.8.0",
+                        Lines = new List<string>() {
+                            "New UI, follows Windows 10 fluent design.",
+                            "Disabling snapping for popup/modal windows can be disabled from windows setting.",
+                            "Hex code can be used to set color."
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
                         Header = "v3.1.6.0",
                         Lines = new List<string>() {
                             "Fixed layout export."
