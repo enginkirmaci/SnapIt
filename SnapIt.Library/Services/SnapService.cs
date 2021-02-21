@@ -22,6 +22,7 @@ namespace SnapIt.Library.Services
 
         private ActiveWindow activeWindow;
         private SnapAreaInfo snapAreaInfo;
+        private bool isTrialEnded = false;
         private bool isWindowDetected = false;
         private bool isListening = false;
         private bool isHoldingKey = false;
@@ -51,8 +52,25 @@ namespace SnapIt.Library.Services
             this.winApiService = winApiService;
         }
 
+        public void SetIsTrialEnded(bool isEnded)
+        {
+            if (isEnded)
+            {
+                isTrialEnded = true;
+                Release();
+            }
+            else
+            {
+                isTrialEnded = false;
+                Initialize();
+            }
+        }
+
         public void Initialize()
         {
+            if (isTrialEnded)
+                return;
+
             isWindowDetected = false;
             isListening = false;
 
