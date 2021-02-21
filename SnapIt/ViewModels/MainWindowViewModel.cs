@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -25,12 +26,17 @@ namespace SnapIt.ViewModels
         private readonly ISnapService snapService;
         private readonly ISettingService settingService;
 
+        private bool isTrial;
+        private bool isTrialEnded;
         private bool HideWindowAtStartup = true;
         private bool isRunning;
         private string status;
         private bool isPaneOpen = true;
         private Window mainWindow;
+        private StoreContext storeContext = null;
 
+        public bool IsTrial { get => isTrial; set => SetProperty(ref isTrial, value); }
+        public bool IsTrialEnded { get => isTrialEnded; set => SetProperty(ref isTrialEnded, value); }
         public string Title { get => Constants.AppTitle; }
         public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
         public string Status { get => status; set => SetProperty(ref status, value); }
@@ -45,6 +51,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand<string> HandleLinkClick { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
         public DelegateCommand<object> ThemeItemCommand { get; }
+        public DelegateCommand TrialVersionCommand { get; private set; }
 
         public MainWindowViewModel(
             IWindowService windowService,
@@ -76,21 +83,6 @@ namespace SnapIt.ViewModels
 
             ActivatedCommand = new DelegateCommand<Window>((window) =>
             {
-                //CheckTrialExpiredAsync();
-
-                //if (IsVersion3000MessageShown)
-                {
-                    if (settingService.Settings.ShowMainWindow)
-                    {
-                        settingService.Settings.ShowMainWindow = false;
-                        HideWindowAtStartup = false;
-                    }
-                    else if (!DevMode.IsActive && HideWindowAtStartup)
-                    {
-                        HideWindowAtStartup = false;
-                        window.Hide();
-                    }
-                }
             });
 
             LoadedCommand = new DelegateCommand<Window>((window) =>
@@ -120,6 +112,22 @@ namespace SnapIt.ViewModels
 
                 HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(window).Handle);
                 source.AddHook(new HwndSourceHook(WndProc));
+
+                //if (IsVersion3000MessageShown)
+                {
+                    if (settingService.Settings.ShowMainWindow)
+                    {
+                        settingService.Settings.ShowMainWindow = false;
+                        HideWindowAtStartup = false;
+                    }
+                    else if (!DevMode.IsActive && HideWindowAtStartup)
+                    {
+                        HideWindowAtStartup = false;
+                        window.Hide();
+                    }
+                }
+
+                CheckIfTrialAsync();
             });
 
             StartStopCommand = new DelegateCommand(() =>
@@ -167,20 +175,36 @@ namespace SnapIt.ViewModels
                 }
             });
 
+            TrialVersionCommand = new DelegateCommand(async () =>
+            {
+                var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
+                              $"{Constants.AppName} Trial",
+                              $"You are using trial version of {Constants.AppName}!",
+                              MessageDialogStyle.AffirmativeAndNegative,
+                              new MetroDialogSettings
+                              {
+                                  AffirmativeButtonText = "Buy Full Version!",
+                                  DefaultButtonFocus = MessageDialogResult.Affirmative
+                              });
+
+                switch (result)
+                {
+                    case MessageDialogResult.Affirmative:
+                        PurchaseFullLicense();
+                        break;
+                }
+            });
+
             ThemeItemCommand = new DelegateCommand<object>((theme) =>
             {
                 switch ((UITheme)theme)
                 {
                     case UITheme.Dark:
-                        //ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
-                        //ThemeManager.Current.SyncTheme();
                         ThemeManager.Current.ChangeThemeColorScheme(Application.Current, settingService.Settings.AppAccentColor.Name);
                         ThemeManager.Current.ChangeThemeBaseColor(Application.Current, "Dark");
                         break;
 
                     case UITheme.Light:
-                        //ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
-                        //ThemeManager.Current.SyncTheme();
                         ThemeManager.Current.ChangeThemeColorScheme(Application.Current, settingService.Settings.AppAccentColor.Name);
                         ThemeManager.Current.ChangeThemeBaseColor(Application.Current, "Light");
                         break;
@@ -227,101 +251,140 @@ namespace SnapIt.ViewModels
             }
         }
 
-        private StoreContext storeContext = null;
-        private bool isStoreContextLoaded = false;
-
-        private async void CheckTrialExpiredAsync()
+        private async void CheckIfTrialAsync()
         {
-            if (mainWindow != null && mainWindow.IsActive && !isStoreContextLoaded)
+            storeContext = StoreContext.GetDefault();
+            storeContext.OfflineLicensesChanged += OfflineLicensesChanged;
+
+            IInitializeWithWindow initWindow = (IInitializeWithWindow)(object)storeContext;
+            initWindow.Initialize(new WindowInteropHelper(mainWindow).Handle);
+
+            await GetLicenseState();
+
+            if (IsTrialEnded)
             {
-                isStoreContextLoaded = true;
-                storeContext = StoreContext.GetDefault();
-                //storeContext.OfflineLicensesChanged += OfflineLicensesChanged;
-
-                IInitializeWithWindow initWindow = (IInitializeWithWindow)(object)storeContext;
-                initWindow.Initialize(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle);
-
-                StoreAppLicense license = await storeContext.GetAppLicenseAsync();
-
-                if (license.IsActive)
+                if (!mainWindow.IsVisible)
                 {
-                    //if (license.IsTrial)
-                    {
-                        var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
-                            "Trial Notice !",
-                            @"Trial license",
-                            MessageDialogStyle.AffirmativeAndNegative,
-                            new MetroDialogSettings
-                            {
-                                AffirmativeButtonText = "Buy Full Version!"
-                            });
+                    mainWindow.Show();
+                }
 
-                        if (result == MessageDialogResult.Affirmative)
-                        {
-                            PurchaseFullLicense();
-                        }
+                var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
+                    $"{Constants.AppName} Trial",
+                    @"Your trial period has expired!",
+                    MessageDialogStyle.AffirmativeAndNegative,
+                    new MetroDialogSettings
+                    {
+                        AffirmativeButtonText = "Buy Full Version!",
+                        NegativeButtonText = "Exit",
+                        DefaultButtonFocus = MessageDialogResult.Affirmative
+                    });
+
+                switch (result)
+                {
+                    case MessageDialogResult.Affirmative:
+                        PurchaseFullLicense();
+                        break;
+
+                    case MessageDialogResult.Negative:
+                        Application.Current.Shutdown();
+                        break;
+                }
+            }
+        }
+
+        private void OfflineLicensesChanged(StoreContext sender, object args)
+        {
+            GetLicenseState();
+        }
+
+        private async Task GetLicenseState()
+        {
+            var license = await storeContext.GetAppLicenseAsync();
+
+            if (license.IsActive)
+            {
+                if (license.IsTrial)
+                {
+                    IsTrial = true;
+
+                    int remainingTrialTime = (license.ExpirationDate - DateTime.Now).Days;
+
+                    //remainingTrialTime = 0; //todo remove here
+
+                    if (remainingTrialTime <= 0)
+                    {
+                        IsTrialEnded = true;
+
+                        snapService.SetIsTrialEnded(true);
                     }
+                }
+                else
+                {
+                    IsTrial = false;
+                    IsTrialEnded = false;
+                    snapService.SetIsTrialEnded(false);
                 }
             }
         }
 
         private async void PurchaseFullLicense()
         {
-            // Get app store product details
-            StoreProductResult productResult = await storeContext.GetStoreProductForCurrentAppAsync();
-            if (productResult.ExtendedError != null)
+            var hasError = false;
+
+            var purchaseResult = await storeContext.RequestPurchaseAsync(Constants.AppStoreId);
+
+            if (purchaseResult.ExtendedError != null)
             {
-                // The user may be offline or there might be some other server failure
-                DevMode.Log($"ExtendedError: {productResult.ExtendedError.Message}");
-                return;
+                hasError = true;
             }
 
-            DevMode.Log("Buying the full license...");
-            StoreAppLicense license = await storeContext.GetAppLicenseAsync();
-            if (license.IsTrial)
+            switch (purchaseResult.Status)
             {
-                StorePurchaseResult result = await productResult.Product.RequestPurchaseAsync();
-                if (result.ExtendedError != null)
+                case StorePurchaseStatus.AlreadyPurchased:
+                    await ((MetroWindow)mainWindow).ShowMessageAsync("", $"You already bought this app and have a fully-licensed version.");
+                    break;
+
+                case StorePurchaseStatus.Succeeded:
+                    // License will refresh automatically using the StoreContext.OfflineLicensesChanged event
+                    break;
+
+                default:
+                    hasError = true;
+                    break;
+            }
+
+            if (hasError)
+            {
+                var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
+                    $"Purchase failed!",
+                    $"{Constants.AppName} was not purchased. Please try to purchase from Microsoft Store.",
+                    MessageDialogStyle.AffirmativeAndNegative,
+                    new MetroDialogSettings
+                    {
+                        AffirmativeButtonText = "Open Microsoft Store",
+                        NegativeButtonText = "Exit",
+                        DefaultButtonFocus = MessageDialogResult.Affirmative
+                    });
+
+                switch (result)
                 {
-                    await ((MetroWindow)mainWindow).ShowMessageAsync("", $"Purchase failed: ExtendedError: {result.ExtendedError.Message}");
-                    return;
-                }
-
-                switch (result.Status)
-                {
-                    case StorePurchaseStatus.AlreadyPurchased:
-                        await ((MetroWindow)mainWindow).ShowMessageAsync("", $"You already bought this app and have a fully-licensed version.");
+                    case MessageDialogResult.Affirmative:
+                        await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-windows-store://pdp/?ProductId={Constants.AppStoreId}"));
                         break;
 
-                    case StorePurchaseStatus.Succeeded:
-                        // License will refresh automatically using the StoreContext.OfflineLicensesChanged event
-                        break;
-
-                    case StorePurchaseStatus.NotPurchased:
-                        await ((MetroWindow)mainWindow).ShowMessageAsync("", "Product was not purchased, it may have been canceled.");
-                        break;
-
-                    case StorePurchaseStatus.NetworkError:
-                        await ((MetroWindow)mainWindow).ShowMessageAsync("", "Product was not purchased due to a Network Error.");
-                        break;
-
-                    case StorePurchaseStatus.ServerError:
-                        await ((MetroWindow)mainWindow).ShowMessageAsync("", "Product was not purchased due to a Server Error.");
-                        break;
-
-                    default:
-                        await ((MetroWindow)mainWindow).ShowMessageAsync("", "Product was not purchased due to an Unknown Error.");
+                    case MessageDialogResult.Negative:
+                        Application.Current.Shutdown();
                         break;
                 }
             }
         }
-    }
 
-    [ComImport]
-    [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IInitializeWithWindow
-    {
-        void Initialize(IntPtr hwnd);
+        [ComImport]
+        [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IInitializeWithWindow
+        {
+            void Initialize(IntPtr hwnd);
+        }
     }
 }

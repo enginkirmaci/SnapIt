@@ -15,6 +15,8 @@ namespace SnapIt.Library.Services
 
         event ScreenChangedEvent ScreenChanged;
 
+        void SetIsTrialEnded(bool isEnded);
+
         void ScreenChangedEvent();
 
         void Initialize();
