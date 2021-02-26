@@ -411,6 +411,8 @@ namespace SnapIt.Library.Services
                     var newSnapArea = FindClosest.GetClosestRectangle(boundries, activeBoundry, direction);
 
                     MoveActiveWindow(newSnapArea.HasValue ? newSnapArea.Value : activeBoundry, false);
+
+                    Telemetry.TrackEvent("MoveActiveWindow - Keyboard");
                 }
             }
         }
@@ -616,6 +618,8 @@ namespace SnapIt.Library.Services
                             winApiService.MoveWindow(activeWindow, rectangle);
                         }
                     }
+
+                    Telemetry.TrackEvent("MoveActiveWindow - Mouse");
                 }
             }
         }
