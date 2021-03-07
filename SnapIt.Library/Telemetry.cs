@@ -56,6 +56,28 @@ namespace SnapIt.Library
             }
         }
 
+        public static void TrackException(Exception ex, string note = null)
+        {
+            if (ex != null && Enabled)
+            {
+                if (!string.IsNullOrEmpty(note))
+                {
+                    var properties = new Dictionary<string, string>();
+                    properties.Add("dev note", note);
+
+                    _telemetry.TrackException(ex, properties);
+                }
+                else
+                {
+                    var telex = new Microsoft.ApplicationInsights.DataContracts.ExceptionTelemetry(ex);
+
+                    _telemetry.TrackException(telex);
+                }
+
+                Flush();
+            }
+        }
+
         internal static void Flush()
         {
             _telemetry.Flush();
