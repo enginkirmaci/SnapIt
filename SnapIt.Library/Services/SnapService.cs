@@ -444,6 +444,11 @@ namespace SnapIt.Library.Services
                     var isMatched = false;
                     foreach (var rule in matchRules)
                     {
+                        if (string.IsNullOrWhiteSpace(rule.Keyword))
+                        {
+                            continue;
+                        }
+
                         switch (rule.MatchRule)
                         {
                             case MatchRule.Contains:
