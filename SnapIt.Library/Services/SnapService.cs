@@ -63,7 +63,7 @@ namespace SnapIt.Library.Services
             else
             {
                 isTrialEnded = false;
-                Initialize();
+                //Initialize();
             }
         }
 

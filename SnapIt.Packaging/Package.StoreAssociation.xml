@@ -364,10 +364,14 @@
     <MainPackageIdentityName>30071EnginKrmac.SnapIt</MainPackageIdentityName>
     <ReservedNames>
       <ReservedName>SnapIt</ReservedName>
+      <ReservedName>Snap Area</ReservedName>
+      <ReservedName>SnapArea</ReservedName>
+      <ReservedName>Snap Screen</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>30071EnginKrmac.Haberci</MainPackageIdentityName>
+    <MainPackageIdentityName>30071EnginKrmac.SnapItforBusiness</MainPackageIdentityName>
     <MainPackageIdentityName>30071EnginKrmac.Themely</MainPackageIdentityName>
   </AccountPackageIdentityNames>
   <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9PHGBMZ7RBZX" />

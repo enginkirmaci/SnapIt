@@ -44,7 +44,7 @@
 
                 <TextBlock
                     Margin="0,24,0,0"
-                    Text="Snap It is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens."
+                    Text="Snap Screen is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens."
                     TextWrapping="Wrap" />
 
                 <TextBlock>
