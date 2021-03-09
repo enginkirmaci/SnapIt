@@ -57,7 +57,11 @@ namespace SnapIt.Library.Services
         {
             snapWindows.ForEach(window =>
             {
-                window.Close();
+                try
+                {
+                    window.Close();
+                }
+                catch { }
             });
             snapWindows.Clear();
         }

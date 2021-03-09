@@ -171,7 +171,7 @@ namespace SnapIt.ViewModels
             {
                 if (navigatePath != null)
                 {
-                    this.regionManager.RequestNavigate(Constants.MainRegion, navigatePath);
+                    this.regionManager.RequestNavigate(Constants.MainRegion, navigatePath, NavigationCompleted);
                 }
             });
 
@@ -222,6 +222,14 @@ namespace SnapIt.ViewModels
         }
 
         private const uint WM_DISPLAYCHANGE = 0x007e;
+
+        private void NavigationCompleted(NavigationResult navigationResult)
+        {
+            if (navigationResult.Error != null)
+            {
+                throw navigationResult.Error;
+            }
+        }
 
         //TODO consider this to move SnapService
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

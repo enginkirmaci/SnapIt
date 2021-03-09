@@ -28,6 +28,7 @@ namespace SnapIt.Library.Services
         private bool isHoldingKey = false;
         private bool holdKeyUsed = false;
         private DateTime delayStartTime;
+        private System.Drawing.Point startLocation;
         private IKeyboardMouseEvents globalHook;
         private List<ExcludedApplication> matchRulesForMouse;
         private List<ExcludedApplication> matchRulesForKeyboard;
@@ -62,7 +63,7 @@ namespace SnapIt.Library.Services
             else
             {
                 isTrialEnded = false;
-                Initialize();
+                //Initialize();
             }
         }
 
@@ -443,6 +444,11 @@ namespace SnapIt.Library.Services
                     var isMatched = false;
                     foreach (var rule in matchRules)
                     {
+                        if (string.IsNullOrWhiteSpace(rule.Keyword))
+                        {
+                            continue;
+                        }
+
                         switch (rule.MatchRule)
                         {
                             case MatchRule.Contains:
@@ -471,19 +477,23 @@ namespace SnapIt.Library.Services
             return false;
         }
 
-        private bool IsDelayDone()
+        private bool IsDelayDone(System.Drawing.Point endLocation)
         {
             if (settingService.Settings.EnableHoldKey)
                 return true;
 
             var elapsedMillisecs = (DateTime.Now - delayStartTime).TotalMilliseconds;
 
+            var move = Math.Abs(endLocation.X - startLocation.X) + Math.Abs(endLocation.Y - startLocation.Y);
+            DevMode.Log(move);
+            //TODO consider change miliseconds to pixel
+
             return elapsedMillisecs > settingService.Settings.MouseDragDelay;
         }
 
         private void MouseMoveEvent(object sender, MouseEventArgs e)
         {
-            if (isListening && HoldingKeyResult() && IsDelayDone())
+            if (isListening && HoldingKeyResult() && IsDelayDone(e.Location))
             {
                 if (!isWindowDetected)
                 {
@@ -549,6 +559,7 @@ namespace SnapIt.Library.Services
                 isListening = true;
 
                 delayStartTime = DateTime.Now;
+                startLocation = e.Location;
             }
         }
 
