@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Snap It")]
-[assembly: AssemblyDescription("Snap It is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens.")]
+[assembly: AssemblyTitle("Snap Screen")]
+[assembly: AssemblyDescription("Snap Screen is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Engin KIRMACI")]
-[assembly: AssemblyProduct("Snap It")]
+[assembly: AssemblyProduct("Snap Screen")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -48,4 +48,4 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("3.2.9.0")]
+[assembly: AssemblyFileVersion("3.3.3.0")]

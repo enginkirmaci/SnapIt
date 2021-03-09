@@ -45,7 +45,7 @@ namespace SnapIt
                     Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream),
                     Visible = true
                 };
-                notifyIcon.ShowBalloonTip(3000, null, "Only one instance of Snap It can run at the same time.", System.Windows.Forms.ToolTipIcon.Warning);
+                notifyIcon.ShowBalloonTip(3000, null, "Only one instance of Snap Screen can run at the same time.", System.Windows.Forms.ToolTipIcon.Warning);
 
                 Shutdown();
                 return;

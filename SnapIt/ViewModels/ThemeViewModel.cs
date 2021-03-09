@@ -51,7 +51,14 @@ namespace SnapIt.ViewModels
             this.settingService = settingService;
             this.winApiService = winApiService;
 
-            BackgroundImage = new BitmapImage(new Uri(winApiService.GetCurrentDesktopWallpaper()));
+            try
+            {
+                BackgroundImage = new BitmapImage(new Uri(winApiService.GetCurrentDesktopWallpaper()));
+            }
+            catch (Exception ex)
+            {
+                Telemetry.TrackException(ex, "Background Image handled exception");
+            }
 
             Theme = settingService.Settings.Theme.Copy();
 

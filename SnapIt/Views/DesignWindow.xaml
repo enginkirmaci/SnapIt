@@ -11,7 +11,7 @@
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     x:Name="DesignWindowView"
-    Title="Snap It - Layout Designer"
+    Title="Snap Screen - Layout Designer"
     Width="480"
     Height="360"
     d:DataContext="{d:DesignInstance {x:Type design:DesignWindowDesignView},

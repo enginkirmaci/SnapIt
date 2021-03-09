@@ -38,12 +38,20 @@ namespace SnapIt.Views
                 if (item.CommandParameter.Equals(viewType.ToString()))
                 {
                     HamburgerMenuControl.SelectedIndex = index;
-                    regionManager.RequestNavigate(Constants.MainRegion, viewType.ToString());
+                    regionManager.RequestNavigate(Constants.MainRegion, viewType.ToString(), NavigationCompleted);
 
                     break;
                 }
 
                 index++;
+            }
+        }
+
+        private void NavigationCompleted(NavigationResult navigationResult)
+        {
+            if (navigationResult.Error != null)
+            {
+                throw navigationResult.Error;
             }
         }
     }
