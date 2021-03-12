@@ -14,6 +14,16 @@ namespace SnapIt.ViewModels
                 {
                     new ChangeLogItem()
                     {
+                        Header = "v3.3.4.0",
+                        Lines = new List<string>() {
+                            "Fixed Theme window causing not navigating menu.",
+                            "Improved error handling.",
+                            "Website links updated.",
+                            "Other minor fixes."
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
                         Header = "v3.2.8.0",
                         Lines = new List<string>() {
                             "New UI, follows Windows 10 fluent design.",
