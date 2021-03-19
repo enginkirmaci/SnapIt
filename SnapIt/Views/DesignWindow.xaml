@@ -51,7 +51,7 @@
             Header="Settings"
             IsExpanded="True">
             <StackPanel Margin="12">
-                <TextBlock Margin="0,0,0,6"><Run Text="Designer Opacity" /></TextBlock>
+                <TextBlock Margin="0,0,0,6" Foreground="{DynamicResource MahApps.Brushes.SystemControlForegroundAltHigh}"><Run Text="Designer Opacity" /></TextBlock>
                 <Slider
                     Width="150"
                     Height="20"
@@ -61,7 +61,10 @@
                     TickFrequency="0.1"
                     Value="{Binding Theme.Opacity}" />
                 <Separator Margin="0,12" />
-                <TextBlock Margin="0,0,0,6" Text="Layout Name" />
+                <TextBlock
+                    Margin="0,0,0,6"
+                    Foreground="{DynamicResource MahApps.Brushes.SystemControlForegroundAltHigh}"
+                    Text="Layout Name" />
                 <TextBox
                     Width="128"
                     Margin="0,0,0,16"

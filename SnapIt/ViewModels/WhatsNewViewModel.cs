@@ -14,6 +14,14 @@ namespace SnapIt.ViewModels
                 {
                     new ChangeLogItem()
                     {
+                        Header = "v3.3.6.0",
+                        Lines = new List<string>() {
+                            "Added missing Apply Changes to Theme",
+                            "UI Fixes for Light/Dark themes"
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
                         Header = "v3.3.4.0",
                         Lines = new List<string>() {
                             "Fixed Theme window causing not navigating menu.",
