@@ -158,6 +158,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock VerticalAlignment="Center" Text="Do you want to apply changes?" />
@@ -166,6 +167,13 @@
                     Height="36"
                     Command="{Binding DiscardChangesCommand}"
                     Content="Discard"
+                    Style="{DynamicResource MahApps.Styles.Button.MetroSquare}" />
+                <Button
+                    Grid.Column="2"
+                    Height="36"
+                    Margin="10,0,0,0"
+                    Command="{Binding ApplyChangesCommand}"
+                    Content="Apply Changes"
                     Style="{DynamicResource MahApps.Styles.Button.MetroSquare.Accent}" />
             </Grid>
         </mah:Flyout>
