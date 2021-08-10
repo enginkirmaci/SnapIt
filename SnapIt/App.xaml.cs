@@ -18,22 +18,24 @@ namespace SnapIt
         {
             //if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
             //{
-            //	if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
-            //	{
-            //		if (!ApplicationInstance.RegisterSingleInstance())
-            //		{
-            //			MessageBox.Show("only one instance at a time");
+#if STANDALONE
+            if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
+            {
+                if (!ApplicationInstance.RegisterSingleInstance())
+                {
+                    MessageBox.Show("only one instance at a time");
 
-            //			Shutdown();
-            //			return;
-            //		}
-            //	}
-            //	else
-            //	{
-            //		RunAsAdministrator.Run();
-            //		Shutdown();
-            //		return;
-            //	}
+                    Shutdown();
+                    return;
+                }
+            }
+            else
+            {
+                RunAsAdministrator.Run();
+                Shutdown();
+                return;
+            }
+#endif
             //}
             //else
 

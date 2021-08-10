@@ -24,6 +24,11 @@ namespace SnapIt.Library.Services
             this.fileOperationService = fileOperationService;
 
             Settings = this.fileOperationService.Load<Settings>();
+            if (Settings == null)
+            {
+                Settings = new Settings();
+            }
+
             ExcludedApplicationSettings = this.fileOperationService.Load<ExcludedApplicationSettings>();
             Layouts = this.fileOperationService.GetLayouts();
 
@@ -165,7 +170,7 @@ namespace SnapIt.Library.Services
                     startupTask.Disable();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
         }

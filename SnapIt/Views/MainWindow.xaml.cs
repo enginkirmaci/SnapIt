@@ -22,7 +22,7 @@ namespace SnapIt.Views
             notifyIconService.SetView += NotifyIconService_SetView;
         }
 
-        private void Grid_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Grid_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
