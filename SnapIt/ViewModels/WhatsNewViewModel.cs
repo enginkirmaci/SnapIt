@@ -14,6 +14,13 @@ namespace SnapIt.ViewModels
                 {
                     new ChangeLogItem()
                     {
+                        Header = "v3.3.8.0",
+                        Lines = new List<string>() {
+                            "Several minor bugfixes"
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
                         Header = "v3.3.6.0",
                         Lines = new List<string>() {
                             "Added missing Apply Changes to Theme",
