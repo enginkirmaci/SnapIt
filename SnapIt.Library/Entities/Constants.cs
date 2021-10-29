@@ -8,7 +8,7 @@ namespace SnapIt.Library.Entities
         public const string AppLogo = "/SnapIt.UI;component/Themes/snapit.png";
         public static string AppName => Application.ProductName;
         public static string AppTitle => $"{AppName} - Window Manager";
-        public static string AppVersion => string.Format("version {0}", Application.ProductVersion);
+        public static string AppVersion => $"version {Application.ProductVersion}";
         public const string AppUrl = "snapscreen.app";
         public const string AppFeedbackUrl = "snapscreen.app/support";
         public const string AppPrivacyUrl = "snapscreen.app/features/privacy-policy";
