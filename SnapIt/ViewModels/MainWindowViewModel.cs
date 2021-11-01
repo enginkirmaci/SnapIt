@@ -146,6 +146,10 @@ namespace SnapIt.ViewModels
             {
                 args.Cancel = true;
 
+                WindowInteropHelper wndHelper = new WindowInteropHelper(mainWindow);
+                HwndSource src = HwndSource.FromHwnd(wndHelper.Handle);
+                src.RemoveHook(new HwndSourceHook(WndProc));
+
                 if (mainWindow != null)
                 {
                     settingService.Save();
@@ -221,7 +225,8 @@ namespace SnapIt.ViewModels
             ThemeItemCommand.Execute(settingService.Settings.AppTheme);
         }
 
-        private const uint WM_DISPLAYCHANGE = 0x007e;
+        private const uint WM_DISPLAYCHANGE = 126;
+        private const uint WM_SETTINGCHANGE = 26;
 
         private void NavigationCompleted(NavigationResult navigationResult)
         {
@@ -232,17 +237,41 @@ namespace SnapIt.ViewModels
         }
 
         //TODO consider this to move SnapService
+        private static int taskCount = 0;
+
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((uint)msg)
             {
                 case WM_DISPLAYCHANGE:
+                    DevMode.Log($"WM_DISPLAYCHANGE: {wParam}");
+                    taskCount++;
+                    ScreenChangedTask(snapService);
+                    break;
 
-                    snapService.ScreenChangedEvent();
-
+                case WM_SETTINGCHANGE:
+                    DevMode.Log($"WM_SETTINGCHANGE: {wParam}");
+                    taskCount++;
+                    ScreenChangedTask(snapService);
                     break;
             }
+
             return IntPtr.Zero;
+        }
+
+        private async void ScreenChangedTask(ISnapService snapService)
+        {
+            await Task.Delay(5000);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (taskCount > 0)
+                {
+                    DevMode.Log($"ScreenChangedEvent" + taskCount);
+                    taskCount = 0;
+                    snapService.ScreenChangedEvent();
+                }
+            });
         }
 
         private void SnapService_StatusChanged(bool isRunning)
