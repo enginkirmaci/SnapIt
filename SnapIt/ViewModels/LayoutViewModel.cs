@@ -206,10 +206,13 @@ namespace SnapIt.ViewModels
         {
             try
             {
-                var deviceNumber = selectedSnapScreen.DeviceNumber;
+                if (selectedSnapScreen != null)
+                {
+                    var deviceNumber = selectedSnapScreen.DeviceNumber;
 
-                SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
-                SelectedSnapScreen = SnapScreens.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+                    SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
+                    SelectedSnapScreen = SnapScreens.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+                }
             }
             catch { }
         }

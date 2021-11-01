@@ -203,7 +203,6 @@ namespace SnapIt.Library.Services
 
         public void ScreenChangedEvent()
         {
-            Thread.Sleep(5000);
             settingService.ReInitialize();
 
             if (IsRunning)
