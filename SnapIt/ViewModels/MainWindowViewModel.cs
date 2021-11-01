@@ -237,21 +237,19 @@ namespace SnapIt.ViewModels
         }
 
         //TODO consider this to move SnapService
-        private static int taskCount = 0;
+        private static bool screenChanged = false;
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((uint)msg)
             {
                 case WM_DISPLAYCHANGE:
-                    DevMode.Log($"WM_DISPLAYCHANGE: {wParam}");
-                    taskCount++;
+                    screenChanged = true;
                     ScreenChangedTask(snapService);
                     break;
 
                 case WM_SETTINGCHANGE:
-                    DevMode.Log($"WM_SETTINGCHANGE: {wParam}");
-                    taskCount++;
+                    screenChanged = true;
                     ScreenChangedTask(snapService);
                     break;
             }
@@ -265,10 +263,9 @@ namespace SnapIt.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (taskCount > 0)
+                if (screenChanged)
                 {
-                    DevMode.Log($"ScreenChangedEvent" + taskCount);
-                    taskCount = 0;
+                    screenChanged = false;
                     snapService.ScreenChangedEvent();
                 }
             });

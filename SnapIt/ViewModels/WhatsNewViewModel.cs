@@ -14,6 +14,14 @@ namespace SnapIt.ViewModels
                 {
                     new ChangeLogItem()
                     {
+                        Header = "v3.4.0.0",
+                        Lines = new List<string>() {
+                            "Fixed screen detection, will solve after sleep and plug/unplug monitor issues",
+                            "Minor UI fixes"
+                        }
+                    },
+                    new ChangeLogItem()
+                    {
                         Header = "v3.3.8.0",
                         Lines = new List<string>() {
                             "Several minor bugfixes"

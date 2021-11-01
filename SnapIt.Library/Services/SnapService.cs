@@ -484,9 +484,8 @@ namespace SnapIt.Library.Services
 
             var elapsedMillisecs = (DateTime.Now - delayStartTime).TotalMilliseconds;
 
-            var move = Math.Abs(endLocation.X - startLocation.X) + Math.Abs(endLocation.Y - startLocation.Y);
-            DevMode.Log(move);
-            //TODO consider change miliseconds to pixel
+            //TODO consider change miliseconds to pixel, like below
+            //var move = Math.Abs(endLocation.X - startLocation.X) + Math.Abs(endLocation.Y - startLocation.Y);
 
             return elapsedMillisecs > settingService.Settings.MouseDragDelay;
         }
