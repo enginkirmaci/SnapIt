@@ -62,8 +62,6 @@ namespace SnapIt.Library.Tools
             rectangles.Remove(current);
             rectangleInDirection = directionRectangle.GetCollisions(rectangles);
 
-            DevMode.Log(rectangleInDirection.Count());
-
             return rectangleInDirection
                 .Select(rectangle => new { distance = GetDistance(rectangle.Center, current.Center), rectangle })
                 .OrderBy(rectangle => rectangle.distance)
