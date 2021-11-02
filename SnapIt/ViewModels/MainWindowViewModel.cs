@@ -146,10 +146,6 @@ namespace SnapIt.ViewModels
             {
                 args.Cancel = true;
 
-                WindowInteropHelper wndHelper = new WindowInteropHelper(mainWindow);
-                HwndSource src = HwndSource.FromHwnd(wndHelper.Handle);
-                src.RemoveHook(new HwndSourceHook(WndProc));
-
                 if (mainWindow != null)
                 {
                     settingService.Save();
@@ -227,6 +223,13 @@ namespace SnapIt.ViewModels
 
         private const uint WM_DISPLAYCHANGE = 126;
         private const uint WM_SETTINGCHANGE = 26;
+
+        //public void OnExit()
+        //{
+        //    WindowInteropHelper wndHelper = new WindowInteropHelper(mainWindow);
+        //    HwndSource src = HwndSource.FromHwnd(wndHelper.Handle);
+        //    src.RemoveHook(new HwndSourceHook(WndProc));
+        //}
 
         private void NavigationCompleted(NavigationResult navigationResult)
         {
