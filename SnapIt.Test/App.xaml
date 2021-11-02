@@ -2,9 +2,9 @@
     x:Class="SnapIt.Test.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:converter="clr-namespace:SnapIt.Library.Converters;assembly=SnapIt.Library"
-    StartupUri="UITest.xaml">
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    StartupUri="LicenseUI.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
