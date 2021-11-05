@@ -16,43 +16,42 @@ namespace SnapIt
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            //if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
-            //{
 #if STANDALONE
-            if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
+            if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
             {
-                if (!ApplicationInstance.RegisterSingleInstance())
+                if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
                 {
-                    MessageBox.Show("only one instance at a time");
+                    if (!ApplicationInstance.RegisterSingleInstance())
+                    {
+                        MessageBox.Show("only one instance at a time");
 
+                        Shutdown();
+                        return;
+                    }
+                }
+                else if (!DevMode.IsActive)
+                {
+                    RunAsAdministrator.Run();
                     Shutdown();
                     return;
                 }
             }
             else
-            {
-                RunAsAdministrator.Run();
-                Shutdown();
-                return;
-            }
 #endif
-            //}
-            //else
-
-            //{
-            if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
             {
-                var notifyIcon = new System.Windows.Forms.NotifyIcon
+                if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
                 {
-                    Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream),
-                    Visible = true
-                };
-                notifyIcon.ShowBalloonTip(3000, null, "Only one instance of Snap Screen can run at the same time.", System.Windows.Forms.ToolTipIcon.Warning);
+                    var notifyIcon = new System.Windows.Forms.NotifyIcon
+                    {
+                        Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream),
+                        Visible = true
+                    };
+                    notifyIcon.ShowBalloonTip(3000, null, "Only one instance of Snap Screen can run at the same time.", System.Windows.Forms.ToolTipIcon.Warning);
 
-                Shutdown();
-                return;
+                    Shutdown();
+                    return;
+                }
             }
-            //}
 
             AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
             {
@@ -114,6 +113,7 @@ namespace SnapIt
             containerRegistry.RegisterSingleton<ISettingService, SettingService>();
             containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
             containerRegistry.Register<IWindowService, WindowService>();
+            containerRegistry.RegisterSingleton<IStandaloneLicenseService, StandaloneLicenseService>();
         }
 
         protected override void OnExit(ExitEventArgs e)

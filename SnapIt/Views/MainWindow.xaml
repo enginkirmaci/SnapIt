@@ -186,18 +186,50 @@
             </mah:HamburgerMenu>
 
             <Grid MouseMove="Grid_MouseMove">
-                <TextBlock
+                <TextBlock />
+                <StackPanel
                     Margin="62,10,0,0"
                     VerticalAlignment="Top"
-                    Foreground="White"
-                    Text="{x:Static c:Constants.AppName}"
-                    Visibility="{Binding IsPaneOpen, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
-                <TextBlock
+                    Orientation="Horizontal"
+                    Visibility="{Binding IsPaneOpen, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}">
+                    <TextBlock Foreground="White" Text="{x:Static c:Constants.AppName}" />
+                    <TextBlock
+                        Foreground="LightGray"
+                        Text=" - "
+                        Visibility="{Binding LicenseText, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="10"
+                        Foreground="LightGray"
+                        Text="{Binding LicenseText}"
+                        TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <Grid
+                    MaxWidth="290"
                     Margin="10"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Foreground="White"
-                    Text="{x:Static c:Constants.AppName}"
-                    Visibility="{Binding IsPaneOpen, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                    Visibility="{Binding IsPaneOpen, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Foreground="White" Text="{x:Static c:Constants.AppName}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Foreground="LightGray"
+                        Text=" - "
+                        Visibility="{Binding LicenseText, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        FontSize="10"
+                        Foreground="LightGray"
+                        Text="{Binding LicenseText}"
+                        TextTrimming="CharacterEllipsis"
+                        ToolTip="{Binding LicenseText}" />
+                </Grid>
             </Grid>
 
             <Grid

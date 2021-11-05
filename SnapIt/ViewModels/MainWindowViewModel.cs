@@ -25,13 +25,14 @@ namespace SnapIt.ViewModels
         private readonly IRegionManager regionManager;
         private readonly ISnapService snapService;
         private readonly ISettingService settingService;
-
+        private readonly IStandaloneLicenseService standaloneLicenseService;
         private bool isTrial;
         private bool isTrialEnded;
         private bool HideWindowAtStartup = true;
         private bool isRunning;
         private string status;
         private bool isPaneOpen = true;
+        private string licenseText;
         private Window mainWindow;
         private StoreContext storeContext = null;
 
@@ -41,6 +42,7 @@ namespace SnapIt.ViewModels
         public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
         public string Status { get => status; set => SetProperty(ref status, value); }
         public bool IsPaneOpen { get => isPaneOpen; set => SetProperty(ref isPaneOpen, value); }
+        public string LicenseText { get => licenseText; set => SetProperty(ref licenseText, value); }
         //public bool IsVersion3000MessageShown { get => settingService.Settings.IsVersion3000MessageShown; set { settingService.Settings.IsVersion3000MessageShown = value; } }
         public ObservableCollection<UITheme> ThemeList { get; set; }
 
@@ -57,11 +59,13 @@ namespace SnapIt.ViewModels
             IWindowService windowService,
             IRegionManager regionManager,
             ISnapService snapService,
-            ISettingService settingService)
+            ISettingService settingService,
+            IStandaloneLicenseService standaloneLicenseService)
         {
             this.regionManager = regionManager;
             this.snapService = snapService;
             this.settingService = settingService;
+            this.standaloneLicenseService = standaloneLicenseService;
 
             ThemeList = new ObservableCollection<UITheme> {
                 UITheme.Light,
@@ -127,7 +131,13 @@ namespace SnapIt.ViewModels
                     }
                 }
 
+#if !STANDALONE
                 CheckIfTrialAsync();
+#endif
+
+#if STANDALONE
+                CheckIfTrialStandAlone();
+#endif
             });
 
             StartStopCommand = new DelegateCommand(() =>
@@ -288,6 +298,54 @@ namespace SnapIt.ViewModels
             }
         }
 
+        private async void CheckIfTrialStandAlone()
+        {
+            switch (standaloneLicenseService.CheckStatus())
+            {
+                case LicenseStatus.InTrial:
+                    IsTrial = true;
+                    IsTrialEnded = false;
+                    snapService.SetIsTrialEnded(false);
+                    break;
+
+                case LicenseStatus.TrialEnded:
+                    IsTrial = true;
+                    IsTrialEnded = true;
+                    snapService.SetIsTrialEnded(true);
+                    if (!mainWindow.IsVisible)
+                    {
+                        mainWindow.Show();
+                    }
+
+                    var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
+                        $"{Constants.AppName} Trial",
+                        @"Your trial period has expired!",
+                        MessageDialogStyle.AffirmativeAndNegative,
+                        new MetroDialogSettings
+                        {
+                            AffirmativeButtonText = "Buy Full Version!",
+                            NegativeButtonText = "Exit",
+                            DefaultButtonFocus = MessageDialogResult.Affirmative
+                        });
+
+                    switch (result)
+                    {
+                        case MessageDialogResult.Affirmative:
+                            PurchaseFullLicense();
+                            break;
+
+                        case MessageDialogResult.Negative:
+                            Application.Current.Shutdown();
+                            break;
+                    }
+                    break;
+
+                case LicenseStatus.Licensed:
+                    LicenseText = $"licensed to {standaloneLicenseService.License.Name}";
+                    break;
+            }
+        }
+
         private async void CheckIfTrialAsync()
         {
             storeContext = StoreContext.GetDefault();
@@ -345,8 +403,6 @@ namespace SnapIt.ViewModels
                     IsTrial = true;
 
                     int remainingTrialTime = (license.ExpirationDate - DateTime.Now).Days;
-
-                    //remainingTrialTime = 0; //todo remove here
 
                     if (remainingTrialTime <= 0)
                     {

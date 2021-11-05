@@ -14,6 +14,7 @@ namespace SnapIt.Library.Services
 
         public Settings Settings { get; private set; }
         public ExcludedApplicationSettings ExcludedApplicationSettings { get; private set; }
+        public StandaloneLicense StandaloneLicense { get; private set; }
         public IList<Layout> Layouts { get; private set; }
         public IList<SnapScreen> SnapScreens { get; private set; }
         public SnapScreen LatestActiveScreen { get; set; }
@@ -31,6 +32,10 @@ namespace SnapIt.Library.Services
 
             ExcludedApplicationSettings = this.fileOperationService.Load<ExcludedApplicationSettings>();
             Layouts = this.fileOperationService.GetLayouts();
+
+#if STANDALONE
+            StandaloneLicense = this.fileOperationService.Load<StandaloneLicense>();
+#endif
 
             ReInitialize();
         }
@@ -62,6 +67,11 @@ namespace SnapIt.Library.Services
             ExcludedApplicationSettings.Applications = excludedApplications;
 
             fileOperationService.Save(ExcludedApplicationSettings);
+        }
+
+        public void SaveStandaloneLicense()
+        {
+            fileOperationService.Save(StandaloneLicense);
         }
 
         public void SaveLayout(Layout layout)
