@@ -54,15 +54,15 @@ namespace SnapIt.ViewModels
             }
         }
 
-        //public bool IsRunAsAdmin
-        //{
-        //	get => Properties.Settings.Default.RunAsAdmin;
-        //	set
-        //	{
-        //		Properties.Settings.Default.RunAsAdmin = value;
-        //		Properties.Settings.Default.Save();
-        //	}
-        //}
+        public bool IsRunAsAdmin
+        {
+            get => Properties.Settings.Default.RunAsAdmin;
+            set
+            {
+                Properties.Settings.Default.RunAsAdmin = value;
+                Properties.Settings.Default.Save();
+            }
+        }
 
         public bool IsStartupTaskActive
         {

@@ -8,6 +8,7 @@
         public bool IsTrial { get; set; }
         public bool IsVersion3000MessageShown { get; set; }
         public bool IsPaneOpen { get; set; }
+        public string LicenseText { get; set; }
 
         public MainWindowDesignViewModel()
         {
@@ -17,6 +18,7 @@
             ThemeTitle = "Light";
             IsVersion3000MessageShown = true;
             IsPaneOpen = true;
+            LicenseText = "licensed to Engin KIRMACI";
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
@@ -9,6 +8,7 @@ namespace SnapIt.Library.Services
     {
         Settings Settings { get; }
         ExcludedApplicationSettings ExcludedApplicationSettings { get; }
+        StandaloneLicense StandaloneLicense { get; }
         IList<Layout> Layouts { get; }
         IList<SnapScreen> SnapScreens { get; }
         SnapScreen LatestActiveScreen { get; set; }
@@ -20,6 +20,8 @@ namespace SnapIt.Library.Services
         void SaveLayout(Layout layout);
 
         void SaveExcludedApps(List<ExcludedApplication> excludedApplications);
+
+        void SaveStandaloneLicense();
 
         void ExportLayout(Layout layout, string layoutPath);
 

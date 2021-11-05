@@ -1,9 +1,9 @@
 ﻿<prism:PrismApplication
     x:Class="SnapIt.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:prism="http://prismlibrary.com/"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:SnapIt.Library.Converters;assembly=SnapIt.Library"
-    xmlns:prism="http://prismlibrary.com/"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     ShutdownMode="OnExplicitShutdown">
     <prism:PrismApplication.Resources>
@@ -14,6 +14,7 @@
             <converter:ColorToBrushConverter x:Key="ColorToBrushConverter" />
             <converter:EqualVisibilityConverter x:Key="EqualVisibilityConverter" />
             <converter:DoubleMultiplierConverter x:Key="DoubleMultiplierConverter" />
+            <converter:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
 
             <sys:Boolean x:Key="FalseValue">False</sys:Boolean>
             <sys:Boolean x:Key="TrueValue">True</sys:Boolean>
