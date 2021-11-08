@@ -35,6 +35,12 @@ namespace SnapIt.Library.Services
 
 #if STANDALONE
             StandaloneLicense = this.fileOperationService.Load<StandaloneLicense>();
+
+            if (StandaloneLicense == null)
+            {
+                StandaloneLicense = new StandaloneLicense();
+                
+            }
 #endif
 
             ReInitialize();
@@ -69,8 +75,9 @@ namespace SnapIt.Library.Services
             fileOperationService.Save(ExcludedApplicationSettings);
         }
 
-        public void SaveStandaloneLicense()
+        public void SaveStandaloneLicense(StandaloneLicense standaloneLicense)
         {
+            StandaloneLicense = standaloneLicense;
             fileOperationService.Save(StandaloneLicense);
         }
 

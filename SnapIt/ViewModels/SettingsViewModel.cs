@@ -74,6 +74,8 @@ namespace SnapIt.ViewModels
             }
         }
 
+        public bool CheckForNewVersion { get => settingService.Settings.CheckForNewVersion; set { settingService.Settings.CheckForNewVersion = value; } }
+
         public DelegateCommand LoadedCommand { get; private set; }
 
         public SettingsViewModel(

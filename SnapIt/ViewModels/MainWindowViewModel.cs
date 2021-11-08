@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,6 +10,7 @@ using System.Windows.Interop;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -137,6 +139,8 @@ namespace SnapIt.ViewModels
 
 #if STANDALONE
                 CheckIfTrialStandAlone();
+
+                CheckForNewVersion();
 #endif
             });
 
@@ -200,7 +204,12 @@ namespace SnapIt.ViewModels
                 switch (result)
                 {
                     case MessageDialogResult.Affirmative:
+#if !STANDALONE
                         PurchaseFullLicense();
+#endif
+#if STANDALONE
+                        PurchaseFullLicenseStandalone(false);
+#endif
                         break;
                 }
             });
@@ -298,6 +307,46 @@ namespace SnapIt.ViewModels
             }
         }
 
+        private async void CheckForNewVersion()
+        {
+            try
+            {
+                var client = new HttpClient();
+                var url = $"https://{Constants.AppVersionCheckUrl}";
+                var response = await client.GetAsync(url);
+                var latestVersion = JsonConvert.DeserializeObject<AppVersion>(await response.Content.ReadAsStringAsync());
+
+                if (System.Windows.Forms.Application.ProductVersion != latestVersion.Version)
+                {
+                    var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
+                   "Update Available",
+                   $"A newer version of {Constants.AppName} is available as a download from website.\nWould you like to update now?",
+                   MessageDialogStyle.AffirmativeAndNegative,
+                   new MetroDialogSettings
+                   {
+                       AffirmativeButtonText = "Update Now",
+                       NegativeButtonText = "Later",
+                       DefaultButtonFocus = MessageDialogResult.Affirmative
+                   });
+
+                    switch (result)
+                    {
+                        case MessageDialogResult.Affirmative:
+                            var uriToLaunch = string.Format("https://" + Constants.AppNewVersionUrl, latestVersion.Version);
+                            var uri = new Uri(uriToLaunch);
+                            await Windows.System.Launcher.LaunchUriAsync(uri);
+                            break;
+
+                        case MessageDialogResult.Negative:
+                            break;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         private async void CheckIfTrialStandAlone()
         {
             switch (standaloneLicenseService.CheckStatus())
@@ -331,7 +380,7 @@ namespace SnapIt.ViewModels
                     switch (result)
                     {
                         case MessageDialogResult.Affirmative:
-                            PurchaseFullLicense();
+                            PurchaseFullLicenseStandalone(true);
                             break;
 
                         case MessageDialogResult.Negative:
@@ -341,6 +390,9 @@ namespace SnapIt.ViewModels
                     break;
 
                 case LicenseStatus.Licensed:
+                    IsTrial = false;
+                    IsTrialEnded = false;
+                    snapService.SetIsTrialEnded(false);
                     LicenseText = $"licensed to {standaloneLicenseService.License.Name}";
                     break;
             }
@@ -416,6 +468,67 @@ namespace SnapIt.ViewModels
                     IsTrial = false;
                     IsTrialEnded = false;
                     snapService.SetIsTrialEnded(false);
+                }
+            }
+        }
+
+        private async void PurchaseFullLicenseStandalone(bool closeApp, bool openWebsite = true)
+        {
+            if (openWebsite)
+            {
+                var uriToLaunch = $"http://{Constants.AppPurchaseUrl}";
+                var uri = new Uri(uriToLaunch);
+                await Windows.System.Launcher.LaunchUriAsync(uri);
+            }
+
+            var result = await ((MetroWindow)mainWindow).ShowInputAsync(
+                   $"Enter License Key",
+                   "", //$"{Constants.AppName} was not purchased. Please try to purchase from Microsoft Store.",
+                   new MetroDialogSettings
+                   {
+                       //AffirmativeButtonText = "Open Microsoft Store",
+                       NegativeButtonText = closeApp ? "Exit" : "Close",
+                       DefaultButtonFocus = MessageDialogResult.Affirmative
+                   });
+
+            if (result == null)
+            {
+                if (closeApp)
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+            else
+            {
+                var isVerified = standaloneLicenseService.VerifyLicenseKey(result.Trim());
+
+                if (isVerified)
+                {
+                    await ((MetroWindow)mainWindow).ShowMessageAsync(
+                        "Activation Successful",
+                        $"Thank you for Purchasing {Constants.AppName}",
+                        MessageDialogStyle.Affirmative,
+                        new MetroDialogSettings
+                        {
+                            AffirmativeButtonText = "OK",
+                            DefaultButtonFocus = MessageDialogResult.Affirmative,
+                        });
+
+                    CheckIfTrialStandAlone();
+                }
+                else
+                {
+                    await ((MetroWindow)mainWindow).ShowMessageAsync(
+                          "Activation Failed",
+                          $"The entered license key is not valid for {Constants.AppName}. Check your license key.",
+                          MessageDialogStyle.Affirmative,
+                          new MetroDialogSettings
+                          {
+                              AffirmativeButtonText = "OK",
+                              DefaultButtonFocus = MessageDialogResult.Affirmative,
+                          });
+
+                    PurchaseFullLicenseStandalone(closeApp, false);
                 }
             }
         }

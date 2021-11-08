@@ -21,7 +21,7 @@ namespace SnapIt.Library.Services
 
         void SaveExcludedApps(List<ExcludedApplication> excludedApplications);
 
-        void SaveStandaloneLicense();
+        void SaveStandaloneLicense(StandaloneLicense standaloneLicense);
 
         void ExportLayout(Layout layout, string layoutPath);
 
