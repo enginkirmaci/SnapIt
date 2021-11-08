@@ -23,6 +23,31 @@ namespace SnapIt.Library.Services
             this.settingService = settingService;
         }
 
+        public bool VerifyLicenseKey(string key)
+        {
+            try
+            {
+                var signedLicense = Lic.Verifier
+                     .WithRsaPublicKey(publicKey)
+                     .WithApplicationCode("SSQ")
+                     .LoadAndVerify(key);
+
+                License.Name = signedLicense.Properties["Name"];
+                License.IsValid = true;
+                License.Value = signedLicense.Serialize();
+                License.CreatedDate = DateTime.Now;
+
+                settingService.SaveStandaloneLicense(License);
+
+                return true;
+            }
+            catch (Exception)
+            {
+            }
+
+            return false;
+        }
+
         public LicenseStatus CheckStatus()
         {
             License = settingService.StandaloneLicense;
@@ -65,7 +90,7 @@ namespace SnapIt.Library.Services
                 licenseStatus = LicenseStatus.TrialEnded;
             }
 
-            settingService.SaveStandaloneLicense();
+            settingService.SaveStandaloneLicense(License);
 
             return licenseStatus;
         }

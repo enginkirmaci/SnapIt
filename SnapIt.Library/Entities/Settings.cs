@@ -51,5 +51,6 @@ namespace SnapIt.Library.Entities
         public bool IsVersion3000MessageShown { get; set; }
 
         public SnapAreaTheme Theme { get; set; } = new SnapAreaTheme();
+        public bool CheckForNewVersion { get; set; } = true;
     }
 }
