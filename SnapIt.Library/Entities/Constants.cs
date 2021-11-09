@@ -21,6 +21,7 @@ namespace SnapIt.Library.Entities
         public const string AppVersionCheckUrl = "dl.snapscreen.app/latest.json";
         public const string AppNewVersionUrl = "dl.snapscreen.app/setup_SnapScreenPro_{0}.exe";
         public const string AppPrivacyUrl = "snapscreen.app/features/privacy-policy";
+        public const string AppRegistryKey = "SnapScreenPro";
         public static string CompanyName => Application.CompanyName;
         public const string CompanyUrl = "enginkirmaci.com";
         public const string TwitterUrl = "twitter.com/enginkirmaci";
