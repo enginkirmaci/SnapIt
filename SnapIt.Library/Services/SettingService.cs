@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SnapIt.Library.Entities;
-using Windows.ApplicationModel;
 using WpfScreenHelper;
 
 namespace SnapIt.Library.Services
@@ -39,7 +37,6 @@ namespace SnapIt.Library.Services
             if (StandaloneLicense == null)
             {
                 StandaloneLicense = new StandaloneLicense();
-                
             }
 #endif
 
@@ -151,6 +148,7 @@ namespace SnapIt.Library.Services
 
         public async Task<bool> GetStartupTaskStatusAsync()
         {
+#if !STANDALONE
             try
             {
                 var startupTask = await StartupTask.GetAsync("SnapItStartupTask"); // Pass the task ID you specified in the appxmanifest file
@@ -167,14 +165,22 @@ namespace SnapIt.Library.Services
                         return true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
+#endif
+#if STANDALONE
+            using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                return key.GetValue(Constants.AppRegistryKey) != null;
+            }
+#endif
         }
 
         public async Task SetStartupTaskStatusAsync(bool isActive)
         {
+#if !STANDALONE
             try
             {
                 var startupTask = await StartupTask.GetAsync("SnapItStartupTask");
@@ -190,6 +196,20 @@ namespace SnapIt.Library.Services
             catch (Exception ex)
             {
             }
+#endif
+#if STANDALONE
+            using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            { 
+                if (isActive)
+                {
+                    key.SetValue(Constants.AppRegistryKey, "\"" + System.Windows.Forms.Application.ExecutablePath + "\"");
+                }
+                else
+                {
+                    key.DeleteValue(Constants.AppRegistryKey, false);
+                }
+            }
+#endif
         }
     }
 }
