@@ -25,6 +25,7 @@ namespace SnapIt.ViewModels
         private bool isStartupTaskActive;
         private AccentColorData selectedAccentColor;
         private UITheme selectedTheme;
+        private bool isStandalone;
 
         public AccentColorData SelectedAccentColor
         {
@@ -74,8 +75,10 @@ namespace SnapIt.ViewModels
             }
         }
 
-        public bool CheckForNewVersion { get => settingService.Settings.CheckForNewVersion; set { settingService.Settings.CheckForNewVersion = value; } }
+        public bool CheckForNewVersion
+        { get => settingService.Settings.CheckForNewVersion; set { settingService.Settings.CheckForNewVersion = value; } }
 
+        public bool IsStandalone { get => isStandalone; set => SetProperty(ref isStandalone, value); }
         public DelegateCommand LoadedCommand { get; private set; }
 
         public SettingsViewModel(
@@ -96,6 +99,10 @@ namespace SnapIt.ViewModels
             {
                 SelectedAccentColor = AccentColors.ElementAt(2);
             }
+
+#if STANDALONE
+            IsStandalone = true;
+#endif
 
             LoadedCommand = new DelegateCommand(async () =>
             {
