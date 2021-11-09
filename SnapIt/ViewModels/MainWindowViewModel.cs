@@ -309,41 +309,50 @@ namespace SnapIt.ViewModels
 
         private async void CheckForNewVersion()
         {
-            try
+            if (settingService.Settings.CheckForNewVersion)
             {
-                var client = new HttpClient();
-                var url = $"https://{Constants.AppVersionCheckUrl}";
-                var response = await client.GetAsync(url);
-                var latestVersion = JsonConvert.DeserializeObject<AppVersion>(await response.Content.ReadAsStringAsync());
-
-                if (System.Windows.Forms.Application.ProductVersion != latestVersion.Version)
+                try
                 {
-                    var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
-                   "Update Available",
-                   $"A newer version of {Constants.AppName} is available as a download from website.\nWould you like to update now?",
-                   MessageDialogStyle.AffirmativeAndNegative,
-                   new MetroDialogSettings
-                   {
-                       AffirmativeButtonText = "Update Now",
-                       NegativeButtonText = "Later",
-                       DefaultButtonFocus = MessageDialogResult.Affirmative
-                   });
+                    await Task.Delay(new TimeSpan(0, 3, 0));
+                    var client = new HttpClient();
+                    var url = $"https://{Constants.AppVersionCheckUrl}";
+                    var response = await client.GetAsync(url);
+                    var latestVersion = JsonConvert.DeserializeObject<AppVersion>(await response.Content.ReadAsStringAsync());
 
-                    switch (result)
+                    if (System.Windows.Forms.Application.ProductVersion != latestVersion.Version)
                     {
-                        case MessageDialogResult.Affirmative:
-                            var uriToLaunch = string.Format("https://" + Constants.AppNewVersionUrl, latestVersion.Version);
-                            var uri = new Uri(uriToLaunch);
-                            await Windows.System.Launcher.LaunchUriAsync(uri);
-                            break;
+                        if (!mainWindow.IsVisible)
+                        {
+                            mainWindow.Show();
+                        }
 
-                        case MessageDialogResult.Negative:
-                            break;
+                        var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
+                            "Update Available",
+                            $"A newer version of {Constants.AppName} is available as a download from website.\nWould you like to update now?",
+                            MessageDialogStyle.AffirmativeAndNegative,
+                            new MetroDialogSettings
+                            {
+                                AffirmativeButtonText = "Update Now",
+                                NegativeButtonText = "Later",
+                                DefaultButtonFocus = MessageDialogResult.Affirmative
+                            });
+
+                        switch (result)
+                        {
+                            case MessageDialogResult.Affirmative:
+                                var uriToLaunch = string.Format("https://" + Constants.AppNewVersionUrl, latestVersion.Version);
+                                var uri = new Uri(uriToLaunch);
+                                await Windows.System.Launcher.LaunchUriAsync(uri);
+                                break;
+
+                            case MessageDialogResult.Negative:
+                                break;
+                        }
                     }
                 }
-            }
-            catch (Exception)
-            {
+                catch (Exception)
+                {
+                }
             }
         }
 

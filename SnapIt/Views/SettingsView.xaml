@@ -36,11 +36,13 @@
             <TextBlock Margin="0,6" Text="Start Snap Screen when I start Windows" />
             <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding IsStartupTaskActive}" />
 
-            <TextBlock Margin="0,6" Text="Run as administrator (experimental, needs to be restarted)" />
-            <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding IsRunAsAdmin}" />
+            <StackPanel Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
+                <TextBlock Margin="0,6" Text="Run as administrator (needs to be restarted)" />
+                <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding IsRunAsAdmin}" />
 
-            <TextBlock Margin="0,6" Text="Check for new version" />
-            <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding CheckForNewVersion}" />
+                <TextBlock Margin="0,6" Text="Check for new version" />
+                <mah:ToggleSwitch HorizontalAlignment="Left" IsOn="{Binding CheckForNewVersion}" />
+            </StackPanel>
 
             <TextBlock
                 Padding="0,16,0,0"
