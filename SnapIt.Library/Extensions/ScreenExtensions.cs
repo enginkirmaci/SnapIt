@@ -15,7 +15,17 @@ namespace SnapIt.Library.Extensions
             var pnt = new Point(X + 1, Y + 1);
             var mon = MonitorFromPoint(pnt, 2/*MONITOR_DEFAULTTONEAREST*/);
 
-            GetDpiForMonitor(mon, DpiType.Effective, out var dpiX, out var dpiY);
+            uint dpiX = 1;
+            uint dpiY = 1;
+
+            try { 
+                GetDpiForMonitor(mon, DpiType.Effective, out dpiX, out dpiY);
+            }
+            catch (Exception)
+            {
+                dpiX = 1;
+                dpiY = 1;
+            }
 
             return new Dpi { X = 96.0 / dpiX, Y = 96.0 / dpiY };
         }
@@ -35,7 +45,16 @@ namespace SnapIt.Library.Extensions
         {
             var pnt = new Point((int)screen.Bounds.Left + 1, (int)screen.Bounds.Top + 1);
             var mon = MonitorFromPoint(pnt, 2/*MONITOR_DEFAULTTONEAREST*/);
-            GetDpiForMonitor(mon, dpiType, out dpiX, out dpiY);
+
+            try
+            {
+                GetDpiForMonitor(mon, dpiType, out dpiX, out dpiY);
+            }
+            catch (Exception)
+            {
+                dpiX = 1;
+                dpiY = 1;
+            }
         }
 
         //https://msdn.microsoft.com/en-us/library/windows/desktop/dd145062(v=vs.85).aspx

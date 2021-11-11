@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -18,7 +19,10 @@ using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
+
+#if !STANDALONE
 using Windows.Services.Store;
+#endif
 
 namespace SnapIt.ViewModels
 {
@@ -36,7 +40,9 @@ namespace SnapIt.ViewModels
         private bool isPaneOpen = true;
         private string licenseText;
         private Window mainWindow;
+#if !STANDALONE
         private StoreContext storeContext = null;
+#endif
 
         public bool IsTrial { get => isTrial; set => SetProperty(ref isTrial, value); }
         public bool IsTrialEnded { get => isTrialEnded; set => SetProperty(ref isTrialEnded, value); }
@@ -173,12 +179,14 @@ namespace SnapIt.ViewModels
                 }
             });
 
-            HandleLinkClick = new DelegateCommand<string>(async (url) =>
+            HandleLinkClick = new DelegateCommand<string>((url) =>
             {
                 string uriToLaunch = $"http://{url}";
-                var uri = new Uri(uriToLaunch);
-
-                await Windows.System.Launcher.LaunchUriAsync(uri);
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = uriToLaunch,
+                    UseShellExecute = true
+                });
             });
 
             NavigateCommand = new DelegateCommand<string>((navigatePath) =>
@@ -341,8 +349,11 @@ namespace SnapIt.ViewModels
                         {
                             case MessageDialogResult.Affirmative:
                                 var uriToLaunch = string.Format("https://" + Constants.AppNewVersionUrl, latestVersion.Version);
-                                var uri = new Uri(uriToLaunch);
-                                await Windows.System.Launcher.LaunchUriAsync(uri);
+                                Process.Start(new ProcessStartInfo
+                                {
+                                    FileName = uriToLaunch,
+                                    UseShellExecute = true
+                                });
                                 break;
 
                             case MessageDialogResult.Negative:
@@ -406,88 +417,16 @@ namespace SnapIt.ViewModels
                     break;
             }
         }
-
-        private async void CheckIfTrialAsync()
-        {
-            storeContext = StoreContext.GetDefault();
-            storeContext.OfflineLicensesChanged += OfflineLicensesChanged;
-
-            IInitializeWithWindow initWindow = (IInitializeWithWindow)(object)storeContext;
-            initWindow.Initialize(new WindowInteropHelper(mainWindow).Handle);
-
-            await GetLicenseState();
-
-            if (IsTrialEnded)
-            {
-                if (!mainWindow.IsVisible)
-                {
-                    mainWindow.Show();
-                }
-
-                var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
-                    $"{Constants.AppName} Trial",
-                    @"Your trial period has expired!",
-                    MessageDialogStyle.AffirmativeAndNegative,
-                    new MetroDialogSettings
-                    {
-                        AffirmativeButtonText = "Buy Full Version!",
-                        NegativeButtonText = "Exit",
-                        DefaultButtonFocus = MessageDialogResult.Affirmative
-                    });
-
-                switch (result)
-                {
-                    case MessageDialogResult.Affirmative:
-                        PurchaseFullLicense();
-                        break;
-
-                    case MessageDialogResult.Negative:
-                        Application.Current.Shutdown();
-                        break;
-                }
-            }
-        }
-
-        private void OfflineLicensesChanged(StoreContext sender, object args)
-        {
-            GetLicenseState();
-        }
-
-        private async Task GetLicenseState()
-        {
-            var license = await storeContext.GetAppLicenseAsync();
-
-            if (license.IsActive)
-            {
-                if (license.IsTrial)
-                {
-                    IsTrial = true;
-
-                    int remainingTrialTime = (license.ExpirationDate - DateTime.Now).Days;
-
-                    if (remainingTrialTime <= 0)
-                    {
-                        IsTrialEnded = true;
-
-                        snapService.SetIsTrialEnded(true);
-                    }
-                }
-                else
-                {
-                    IsTrial = false;
-                    IsTrialEnded = false;
-                    snapService.SetIsTrialEnded(false);
-                }
-            }
-        }
-
         private async void PurchaseFullLicenseStandalone(bool closeApp, bool openWebsite = true)
         {
             if (openWebsite)
             {
                 var uriToLaunch = $"http://{Constants.AppPurchaseUrl}";
-                var uri = new Uri(uriToLaunch);
-                await Windows.System.Launcher.LaunchUriAsync(uri);
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = uriToLaunch,
+                    UseShellExecute = true
+                });
             }
 
             var result = await ((MetroWindow)mainWindow).ShowInputAsync(
@@ -542,6 +481,84 @@ namespace SnapIt.ViewModels
             }
         }
 
+#if !STANDALONE
+        private async void CheckIfTrialAsync()
+        {
+            storeContext = StoreContext.GetDefault();
+            storeContext.OfflineLicensesChanged += OfflineLicensesChanged;
+
+            IInitializeWithWindow initWindow = (IInitializeWithWindow)(object)storeContext;
+            initWindow.Initialize(new WindowInteropHelper(mainWindow).Handle);
+
+            await GetLicenseState();
+
+            if (IsTrialEnded)
+            {
+                if (!mainWindow.IsVisible)
+                {
+                    mainWindow.Show();
+                }
+
+                var result = await ((MetroWindow)mainWindow).ShowMessageAsync(
+                    $"{Constants.AppName} Trial",
+                    @"Your trial period has expired!",
+                    MessageDialogStyle.AffirmativeAndNegative,
+                    new MetroDialogSettings
+                    {
+                        AffirmativeButtonText = "Buy Full Version!",
+                        NegativeButtonText = "Exit",
+                        DefaultButtonFocus = MessageDialogResult.Affirmative
+                    });
+
+                switch (result)
+                {
+                    case MessageDialogResult.Affirmative:
+                        PurchaseFullLicense();
+                        break;
+
+                    case MessageDialogResult.Negative:
+                        Application.Current.Shutdown();
+                        break;
+                }
+            }
+        }
+
+
+        private void OfflineLicensesChanged(StoreContext sender, object args)
+        {
+            GetLicenseState();
+        }
+
+        private async Task GetLicenseState()
+        {
+            var license = await storeContext.GetAppLicenseAsync();
+
+            if (license.IsActive)
+            {
+                if (license.IsTrial)
+                {
+                    IsTrial = true;
+
+                    int remainingTrialTime = (license.ExpirationDate - DateTime.Now).Days;
+
+                    if (remainingTrialTime <= 0)
+                    {
+                        IsTrialEnded = true;
+
+                        snapService.SetIsTrialEnded(true);
+                    }
+                }
+                else
+                {
+                    IsTrial = false;
+                    IsTrialEnded = false;
+                    snapService.SetIsTrialEnded(false);
+                }
+            }
+        }
+
+        
+
         private async void PurchaseFullLicense()
         {
             var hasError = false;
@@ -593,6 +610,7 @@ namespace SnapIt.ViewModels
                 }
             }
         }
+#endif
 
         [ComImport]
         [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
