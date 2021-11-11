@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library.Entities;
@@ -17,12 +18,14 @@ namespace SnapIt.ViewModels
                 await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
             });
 
-            HandleLinkClick = new DelegateCommand<string>(async (url) =>
+            HandleLinkClick = new DelegateCommand<string>((url) =>
             {
                 string uriToLaunch = $"http://{url}";
-                var uri = new Uri(uriToLaunch);
-
-                await Windows.System.Launcher.LaunchUriAsync(uri);
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = uriToLaunch,
+                    UseShellExecute = true
+                });
             });
         }
     }

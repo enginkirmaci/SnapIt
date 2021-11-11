@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
-using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using Windows.System;
 
@@ -79,7 +79,11 @@ namespace SnapIt.Library.Services
 
             var feedbackMenu = new ToolStripMenuItem("Feedback");
             notifyIcon.ContextMenuStrip.Items.Add(feedbackMenu);
-            feedbackMenu.DropDownItems.Add("Send new idea/bug").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"http://{Constants.AppFeedbackUrl}"));
+            feedbackMenu.DropDownItems.Add("Send new idea/bug").Click += (s, e) => Process.Start(new ProcessStartInfo
+            {
+                FileName = $"http://{Constants.AppFeedbackUrl}",
+                UseShellExecute = true
+            });
             feedbackMenu.DropDownItems.Add("Rate and review").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
 
             notifyIcon.ContextMenuStrip.Items.Add("About").Click += (s, e) => ShowDefaultWindow(ViewType.AboutView);
