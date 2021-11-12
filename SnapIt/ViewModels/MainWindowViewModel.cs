@@ -24,6 +24,7 @@ using SnapIt.Library.Services;
 using Windows.Services.Store;
 #endif
 
+//TODO refactor microsoft Store licensing
 namespace SnapIt.ViewModels
 {
     public class MainWindowViewModel : BindableBase
@@ -417,6 +418,7 @@ namespace SnapIt.ViewModels
                     break;
             }
         }
+
         private async void PurchaseFullLicenseStandalone(bool closeApp, bool openWebsite = true)
         {
             if (openWebsite)
@@ -523,7 +525,6 @@ namespace SnapIt.ViewModels
             }
         }
 
-
         private void OfflineLicensesChanged(StoreContext sender, object args)
         {
             GetLicenseState();
@@ -556,8 +557,6 @@ namespace SnapIt.ViewModels
                 }
             }
         }
-
-        
 
         private async void PurchaseFullLicense()
         {
