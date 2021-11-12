@@ -15,7 +15,14 @@ namespace SnapIt.ViewModels
         {
             RateReviewStoreClick = new DelegateCommand(async () =>
             {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
+                try
+                {
+                    await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
+                }
+                catch (Exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("Rate and review only works for Windows 10 or later versions");
+                }
             });
 
             HandleLinkClick = new DelegateCommand<string>((url) =>

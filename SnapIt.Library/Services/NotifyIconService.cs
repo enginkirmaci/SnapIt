@@ -84,8 +84,14 @@ namespace SnapIt.Library.Services
                 FileName = $"http://{Constants.AppFeedbackUrl}",
                 UseShellExecute = true
             });
-            feedbackMenu.DropDownItems.Add("Rate and review").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
-
+            try
+            {
+                feedbackMenu.DropDownItems.Add("Rate and review").Click += async (s, e) => await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
+            }
+            catch (Exception)
+            {
+                System.Windows.Forms.MessageBox.Show("Rate and review only works for Windows 10 or later versions");
+            }
             notifyIcon.ContextMenuStrip.Items.Add("About").Click += (s, e) => ShowDefaultWindow(ViewType.AboutView);
 
             notifyIcon.ContextMenuStrip.Items.Add("-");
