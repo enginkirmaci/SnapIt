@@ -29,7 +29,7 @@ namespace SnapIt.Test
             SignedLicense license = Lic.Builder
                 .WithRsaPrivateKey(privateKey)                                           // .WithSigner(ISigner)
                 .WithoutHardwareIdentifier() // .WithoutHardwareIdentifier()
-                .WithoutSerialNumber()                 // .WithoutSerialNumber()
+                .WithSerialNumber(SerialNumber.Create("SSQ")) //.WithoutSerialNumber()                 // .WithoutSerialNumber()
                 .WithoutExpiration()                                             // .ExpiresIn(TimeSpan), .ExpiresOn(DateTime)
                 .WithProperty("Name", "Bill Gates")
                 .SignAndCreate();
