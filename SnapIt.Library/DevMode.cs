@@ -1,5 +1,8 @@
-﻿using System;
+﻿#if DEBUG
+using System;
 using System.Diagnostics;
+#endif
+
 using System.Runtime.CompilerServices;
 
 namespace SnapIt.Library
@@ -7,7 +10,7 @@ namespace SnapIt.Library
     public static class DevMode
     {
 #if DEBUG
-        public const bool IsActive = true;
+        public const bool IsActive = false;
         public const bool ShowSnapWindowOnStartup = false;
 #else
         public const bool IsActive = false;
