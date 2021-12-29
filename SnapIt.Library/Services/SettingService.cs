@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SnapIt.Library.Entities;
-using Windows.ApplicationModel;
 using WpfScreenHelper;
 
 namespace SnapIt.Library.Services
@@ -16,8 +14,8 @@ namespace SnapIt.Library.Services
         public ExcludedApplicationSettings ExcludedApplicationSettings { get; private set; }
         public StandaloneLicense StandaloneLicense { get; private set; }
         public IList<Layout> Layouts { get; private set; }
-        public IList<SnapScreen> SnapScreens { get; private set; }
-        public SnapScreen LatestActiveScreen { get; set; }
+        public IList<Entities.SnapScreen> SnapScreens { get; private set; }
+        public Entities.SnapScreen LatestActiveScreen { get; set; }
 
         public SettingService(
             IFileOperationService fileOperationService)
@@ -102,7 +100,7 @@ namespace SnapIt.Library.Services
             return fileOperationService.ImportLayout(layoutPath);
         }
 
-        public void LinkScreenLayout(SnapScreen snapScreen, Layout layout)
+        public void LinkScreenLayout(Entities.SnapScreen snapScreen, Layout layout)
         {
             SnapScreens.First(screen => screen.Base.DeviceName == snapScreen.Base.DeviceName).Layout = layout;
 
@@ -116,13 +114,13 @@ namespace SnapIt.Library.Services
             }
         }
 
-        private IList<SnapScreen> GetSnapScreens()
+        private IList<Entities.SnapScreen> GetSnapScreens()
         {
-            var snapScreens = new List<SnapScreen>();
+            var snapScreens = new List<Entities.SnapScreen>();
 
             foreach (var screen in Screen.AllScreens)
             {
-                var snapScreen = new SnapScreen(screen);
+                var snapScreen = new Entities.SnapScreen(screen);
                 var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName)
                     ? Settings.ScreensLayouts[snapScreen.Base.DeviceName] : string.Empty;
 
@@ -201,7 +199,7 @@ namespace SnapIt.Library.Services
 #endif
 #if STANDALONE
             using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
-            { 
+            {
                 if (isActive)
                 {
                     key.SetValue(Constants.AppRegistryKey, "\"" + System.Windows.Forms.Application.ExecutablePath + "\"");

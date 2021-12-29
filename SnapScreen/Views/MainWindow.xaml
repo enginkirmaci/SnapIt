@@ -1,0 +1,173 @@
+﻿<Window
+    x:Class="SnapScreen.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="clr-namespace:SnapScreen.Library.Entities;assembly=SnapScreen.Library"
+    xmlns:vm="clr-namespace:SnapScreen.ViewModels.DesignTime"
+    xmlns:wpfuiCommon="clr-namespace:WPFUI.Common;assembly=WPFUI"
+    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
+    Title="{x:Static c:Constants.AppName}"
+    Width="800"
+    Height="450"
+    d:DataContext="{d:DesignInstance vm:MainWindowDesignViewModel,
+                                     IsDesignTimeCreatable=True}"
+    Style="{StaticResource UiWindow}"
+    mc:Ignorable="d">
+
+    <Grid>
+        <!--  The first division of the grid divides the application into the top bar (TitleBar) and the content itself  -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1" Margin="12,6,12,12">
+            <!--  Here we separate CardProfile, Navigation and Frame  -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Profile card displays the app's icon, name, and subtitle  -->
+            <Grid Grid.Row="0" Margin="6,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--<Border
+                    Grid.Column="0"
+                    Width="40"
+                    Height="40"
+                    CornerRadius="20">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Themes/snapit.png" />
+                    </Border.Background>
+                </Border>-->
+
+                <!--<Image Width="40" Source="/Themes/snapit.png" />-->
+
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center">
+                    <TextBlock FontWeight="Medium" Text="{x:Static c:Constants.AppName}" />
+                    <TextBlock
+                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                        Text="{Binding LicenseText}"
+                        Visibility="{Binding LicenseText, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
+                </StackPanel>
+            </Grid>
+
+            <!--  This element displays the navigation items  -->
+            <wpfui:NavigationFluent
+                x:Name="RootNavigation"
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,0,12,0"
+                Frame="{Binding ElementName=RootFrame}">
+                <wpfui:NavigationFluent.Items>
+                    <wpfui:NavigationItem
+                        Content="Layout"
+                        Icon="DataTreemap24"
+                        Tag="dashboard" />
+
+                    <wpfui:NavigationItem
+                        Content="Mouse"
+                        Style="{StaticResource NavigationItemStyle}"
+                        Tag="forms" />
+                    <wpfui:NavigationItem
+                        Content="Keyboard"
+                        Icon="Keyboard24"
+                        Tag="controls" />
+                    <wpfui:NavigationItem
+                        Content="Window"
+                        Icon="Grid24"
+                        Tag="actions" />
+                    <wpfui:NavigationItem
+                        Content="Theme"
+                        Icon="TableSimple24"
+                        Tag="colors" />
+                    <wpfui:NavigationItem
+                        Content="Settings"
+                        Icon="Home20"
+                        Tag="icons" />
+                    <wpfui:NavigationItem
+                        Content="What's New"
+                        Icon="Home20"
+                        Tag="windows" />
+                    <wpfui:NavigationItem
+                        Content="About"
+                        Icon="Home20"
+                        Tag="windows" />
+                </wpfui:NavigationFluent.Items>
+            </wpfui:NavigationFluent>
+
+            <!--  Pages are presented here  -->
+            <Grid
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <wpfui:Breadcrumb
+                    Grid.Row="0"
+                    Margin="0,0,0,18"
+                    Navigation="{Binding ElementName=RootNavigation}" />
+                <Frame x:Name="RootFrame" Grid.Row="1" />
+            </Grid>
+
+            <wpfui:Snackbar
+                x:Name="RootSnackbar"
+                Title="Hello World!"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1"
+                Icon="PuzzlePiece24"
+                Message="Remember that the Heat Death of Universe is coming someday, no time to explain - let's go!"
+                Timeout="5000" />
+        </Grid>
+        <!--  Dialogue is above all controls except the navigation buttons. So it covers all the content, but allows you to close or move the application.  -->
+
+        <!--  Contains buttons responsible for maximizing, minimizing and closing the app. It also has a background colored strip that allows you to move the application around  -->
+        <wpfui:TitleBar
+            x:Name="RootTitleBar"
+            Grid.Row="0"
+            ApplicationNavigation="True"
+            MinimizeToTray="True"
+            NotifyIconImage="pack://application:,,,/Assets/mwpf_icon.png"
+            NotifyIconTooltip="WPF UI"
+            UseNotifyIcon="True"
+            UseSnapLayout="True">
+            <wpfui:TitleBar.NotifyIconMenu>
+                <ContextMenu>
+                    <MenuItem
+                        Header="Home 123"
+                        Icon="{x:Static wpfuiCommon:Icon.Library28}"
+                        Tag="home" />
+                    <MenuItem
+                        Header="Save"
+                        Icon="{x:Static wpfuiCommon:Icon.Save24}"
+                        Tag="save" />
+                    <MenuItem
+                        Header="Open"
+                        Icon="{x:Static wpfuiCommon:Icon.Folder28}"
+                        Tag="open" />
+                    <Separator />
+                    <MenuItem
+                        Header="Reload"
+                        Icon="{x:Static wpfuiCommon:Icon.ArrowClockwise24}"
+                        Tag="reload" />
+                </ContextMenu>
+            </wpfui:TitleBar.NotifyIconMenu>
+        </wpfui:TitleBar>
+    </Grid>
+</Window>

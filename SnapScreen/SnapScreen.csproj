@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\halo_infinite.jpg" />
+    <None Remove="Assets\master_chief.jpg" />
+    <None Remove="Assets\microsoft-icon-store.png" />
+    <None Remove="Assets\microsoft-shell-accessibility.ico" />
+    <None Remove="Assets\microsoft-shell-colors.ico" />
+    <None Remove="Assets\microsoft-shell-desktop.ico" />
+    <None Remove="Assets\microsoft-shell-gallery.ico" />
+    <None Remove="Assets\microsoft-shell-monitor.ico" />
+    <None Remove="Assets\microsoft-shell-settings.ico" />
+    <None Remove="Assets\microsoft-shell-workspace.ico" />
+    <None Remove="Assets\mwpf_icon.png" />
+    <None Remove="Assets\mwpf_icon_full.png" />
+    <None Remove="Assets\the_witcher_wallpaper.jpg" />
+    <None Remove="Themes\app.ico" />
+    <None Remove="Themes\notifyicon.ico" />
+    <None Remove="Themes\Segoe Fluent Icons.ttf" />
+    <None Remove="Themes\snapit.png" />
+    <None Remove="Themes\Transparency10.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="PInvoke.User32" Version="0.7.104" />
+    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="WPF-UI" Version="1.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SnapScreen.Library\SnapScreen.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\halo_infinite.jpg" />
+    <Resource Include="Assets\master_chief.jpg" />
+    <Resource Include="Assets\microsoft-icon-store.png" />
+    <Resource Include="Assets\microsoft-shell-accessibility.ico" />
+    <Resource Include="Assets\microsoft-shell-colors.ico" />
+    <Resource Include="Assets\microsoft-shell-desktop.ico" />
+    <Resource Include="Assets\microsoft-shell-gallery.ico" />
+    <Resource Include="Assets\microsoft-shell-monitor.ico" />
+    <Resource Include="Assets\microsoft-shell-settings.ico" />
+    <Resource Include="Assets\microsoft-shell-workspace.ico" />
+    <Resource Include="Assets\mwpf_icon.png" />
+    <Resource Include="Assets\mwpf_icon_full.png" />
+    <Resource Include="Assets\the_witcher_wallpaper.jpg" />
+    <Resource Include="Themes\app.ico" />
+    <Resource Include="Themes\notifyicon.ico" />
+    <Resource Include="Themes\Segoe Fluent Icons.ttf" />
+    <Resource Include="Themes\snapit.png" />
+    <Resource Include="Themes\Transparency10.png" />
+  </ItemGroup>
+
+</Project>
