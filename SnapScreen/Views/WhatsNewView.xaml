@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:SnapScreen.ViewModels"
+    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
     Title="What's New"
     d:DataContext="{d:DesignInstance vm:WhatsNewViewModel,
                                      IsDesignTimeCreatable=True}"
@@ -21,28 +22,52 @@
         </Style>
     </d:DesignerProperties.DesignStyle>
 
-    <Grid>
-        <ItemsControl ItemsSource="{Binding ChangeLogs}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock
-                            Margin="0,6,0,6"
-                            FontSize="18"
-                            Text="{Binding Header}" />
-                        <ItemsControl ItemsSource="{Binding Lines}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
-                                        <TextBlock FontSize="10" Text="&#x25CF; " />
-                                        <TextBlock Text="{Binding}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+    <StackPanel>
+        <TextBlock
+            Margin="0,0,0,8"
+            FontSize="18"
+            FontWeight="Medium"
+            Text="Current Version" />
+        <StackPanel DataContext="{Binding FirstChangeLog}">
+            <TextBlock
+                Margin="0,0,0,6"
+                FontWeight="Medium"
+                Text="{Binding Header}" />
+            <ItemsControl ItemsSource="{Binding Lines}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
+                            <TextBlock FontSize="10" Text="&#x25CF; " />
+                            <TextBlock Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <wpfui:CardExpander Margin="0,8,0,0" Header="Older Changes">
+            <ItemsControl ItemsSource="{Binding ChangeLogs}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,6,0,6"
+                                FontWeight="Medium"
+                                Text="{Binding Header}" />
+                            <ItemsControl ItemsSource="{Binding Lines}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
+                                            <TextBlock FontSize="10" Text="&#x25CF; " />
+                                            <TextBlock Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </wpfui:CardExpander>
+    </StackPanel>
 </Page>

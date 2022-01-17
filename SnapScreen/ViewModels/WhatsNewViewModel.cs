@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Prism.Mvvm;
 using SnapScreen.Library.Entities;
 
@@ -6,11 +7,7 @@ namespace SnapScreen.ViewModels
 {
     public class WhatsNewViewModel : BindableBase
     {
-        public List<ChangeLogItem> ChangeLogs
-        {
-            get
-            {
-                return new List<ChangeLogItem>
+        private List<ChangeLogItem> changeLogs = new List<ChangeLogItem>
                 {
                     new ChangeLogItem()
                     {
@@ -191,7 +188,9 @@ namespace SnapScreen.ViewModels
                         }
                     }
                 };
-            }
-        }
+
+        public IEnumerable<ChangeLogItem> ChangeLogs => changeLogs.Skip(1);
+
+        public ChangeLogItem FirstChangeLog { get => changeLogs.FirstOrDefault(); }
     }
 }

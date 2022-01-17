@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
 using SnapIt.Library.Extensions;
@@ -477,7 +478,7 @@ namespace SnapScreen.Library.Services
             return false;
         }
 
-        private bool IsDelayDone(System.Drawing.Point endLocation)
+        private bool IsDelayDone(Point endLocation)
         {
             if (settingService.Settings.EnableHoldKey)
                 return true;
@@ -492,14 +493,16 @@ namespace SnapScreen.Library.Services
 
         private void MouseMoveEvent(object sender, MouseEventArgs e)
         {
-            if (isListening && HoldingKeyResult() && IsDelayDone(e.Location))
+            var p = WpfScreenHelper.MouseHelper.MousePosition;
+
+            if (isListening && HoldingKeyResult() && IsDelayDone(p))
             {
                 if (!isWindowDetected)
                 {
                     holdKeyUsed = true;
 
                     activeWindow = winApiService.GetActiveWindow();
-                    activeWindow.Dpi = DpiHelper.GetDpiFromPoint(e.X, e.Y);
+                    activeWindow.Dpi = DpiHelper.GetDpiFromPoint((int)p.X, (int)p.Y);
 
                     if (activeWindow?.Title != null && IsExcludedApplication(activeWindow.Title, false))
                     {
@@ -518,7 +521,7 @@ namespace SnapScreen.Library.Services
                         var titleBarHeight = SystemInformation.CaptionHeight;
                         var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
 
-                        if (activeWindow.Boundry.Top + (titleBarHeight + 2 + FixedFrameBorderSize * 2) / activeWindow.Dpi.Y >= e.Location.Y)
+                        if (activeWindow.Boundry.Top + (titleBarHeight + 2 + FixedFrameBorderSize * 2) >= p.Y)
                         {
                             isWindowDetected = true;
                         }
@@ -538,7 +541,7 @@ namespace SnapScreen.Library.Services
                 }
                 else
                 {
-                    snapAreaInfo = windowService.SelectElementWithPoint(e.Location.X, e.Location.Y);
+                    snapAreaInfo = windowService.SelectElementWithPoint((int)p.X, (int)p.Y);
 
                     if (snapAreaInfo?.SnapWindow?.Screen != null)
                     {
@@ -607,20 +610,20 @@ namespace SnapScreen.Library.Services
                             winApiService.MoveWindow(activeWindow, rectangle);
 
                             //TODO feels like this is not working, add thread here
-                            if (!rectangle.Dpi.Equals(activeWindow.Dpi))
-                            {
-                                winApiService.MoveWindow(activeWindow, rectangle);
-                            }
+                            //if (!rectangle.Dpi.Equals(activeWindow.Dpi))
+                            //{
+                            //    winApiService.MoveWindow(activeWindow, rectangle);
+                            //}
                         }).Start();
                     }
                     else
                     {
                         winApiService.MoveWindow(activeWindow, rectangle);
 
-                        if (!rectangle.Dpi.Equals(activeWindow.Dpi))
-                        {
-                            winApiService.MoveWindow(activeWindow, rectangle);
-                        }
+                        //if (!rectangle.Dpi.Equals(activeWindow.Dpi))
+                        //{
+                        //    winApiService.MoveWindow(activeWindow, rectangle);
+                        //}
                     }
 
                     Telemetry.TrackEvent("MoveActiveWindow - Mouse");

@@ -69,7 +69,7 @@ namespace SnapScreen.Library.Controls
             MiniOverlay.Height = Height * factor;
 
             var iconFactor = 0.2;
-            MergedIcon.Width = MergedIcon.Height = MiniOverlay.Height * iconFactor;
+            MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = MiniOverlay.Height * iconFactor;
         }
 
         public LayoutOverlay GetOverlay()

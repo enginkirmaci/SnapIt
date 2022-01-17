@@ -92,37 +92,37 @@
                         CommandParameter="LayoutView"
                         Content="Layout"
                         Icon="DataTreemap24"
-                        Tag="dashboard" />
+                        Tag="layout" />
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
                         CommandParameter="MouseSettingsView"
                         Content="Mouse"
                         FontIcon="&#xe962;"
-                        Tag="forms" />
+                        Tag="mouse" />
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
                         CommandParameter="KeyboardSettingsView"
                         Content="Keyboard"
                         Icon="Keyboard24"
-                        Tag="controls" />
+                        Tag="keyboard" />
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
                         CommandParameter="WindowsView"
                         Content="Window"
                         Icon="CalendarMultiple24"
-                        Tag="actions" />
+                        Tag="window" />
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
                         CommandParameter="ThemeView"
                         Content="Theme"
                         Icon="Color24"
-                        Tag="colors" />
+                        Tag="theme" />
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
                         CommandParameter="SettingsView"
                         Content="Settings"
                         Icon="Settings24"
-                        Tag="icons" />
+                        Tag="settings" />
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
                         CommandParameter="AboutView"
@@ -157,7 +157,8 @@
                 <Frame
                     x:Name="MainFrame"
                     Grid.Row="1"
-                    prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}" />
+                    prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}"
+                    Navigating="MainFrame_Navigating" />
             </Grid>
         </Grid>
 

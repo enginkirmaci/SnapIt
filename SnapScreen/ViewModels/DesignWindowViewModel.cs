@@ -59,10 +59,10 @@ namespace SnapScreen.ViewModels
 
         private void LoadedCommandExecute()
         {
-            Window.Width = SnapScreen.WorkingArea.Width;
-            Window.Height = SnapScreen.WorkingArea.Height;
-            Window.Left = SnapScreen.WorkingArea.X;
-            Window.Top = SnapScreen.WorkingArea.Y;
+            //Window.Width = SnapScreen.WorkingArea.Width;
+            //Window.Height = SnapScreen.WorkingArea.Height;
+            //Window.Left = SnapScreen.WorkingArea.X;
+            //Window.Top = SnapScreen.WorkingArea.Y;
 
             var wih = new WindowInteropHelper(Window);
             var activeWindow = new ActiveWindow
