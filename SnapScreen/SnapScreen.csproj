@@ -6,22 +6,18 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>Themes\app.ico</ApplicationIcon>
+    <Product>Snap Screen</Product>
+    <Description>Snap Screen is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens.</Description>
+    <Version>4.0.0.0</Version>
+    <Copyright>Copyright ©  2019</Copyright>
+    <Company>Engin KIRMACI</Company>
+    <FileVersion></FileVersion>
+    <AssemblyVersion></AssemblyVersion>
+    <Configurations>Debug;Release;Standalone</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\halo_infinite.jpg" />
-    <None Remove="Assets\master_chief.jpg" />
-    <None Remove="Assets\microsoft-icon-store.png" />
-    <None Remove="Assets\microsoft-shell-accessibility.ico" />
-    <None Remove="Assets\microsoft-shell-colors.ico" />
-    <None Remove="Assets\microsoft-shell-desktop.ico" />
-    <None Remove="Assets\microsoft-shell-gallery.ico" />
-    <None Remove="Assets\microsoft-shell-monitor.ico" />
-    <None Remove="Assets\microsoft-shell-settings.ico" />
-    <None Remove="Assets\microsoft-shell-workspace.ico" />
-    <None Remove="Assets\mwpf_icon.png" />
-    <None Remove="Assets\mwpf_icon_full.png" />
-    <None Remove="Assets\the_witcher_wallpaper.jpg" />
     <None Remove="Themes\app.ico" />
     <None Remove="Themes\notifyicon.ico" />
     <None Remove="Themes\Segoe Fluent Icons.ttf" />
@@ -30,36 +26,49 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Themes\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dirkster.ColorPickerLib" Version="1.6.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
-    <PackageReference Include="WPF-UI" Version="1.2.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\wpfui\WPFUI\WPFUI.csproj" />
     <ProjectReference Include="..\SnapScreen.Library\SnapScreen.Library.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\halo_infinite.jpg" />
-    <Resource Include="Assets\master_chief.jpg" />
-    <Resource Include="Assets\microsoft-icon-store.png" />
-    <Resource Include="Assets\microsoft-shell-accessibility.ico" />
-    <Resource Include="Assets\microsoft-shell-colors.ico" />
-    <Resource Include="Assets\microsoft-shell-desktop.ico" />
-    <Resource Include="Assets\microsoft-shell-gallery.ico" />
-    <Resource Include="Assets\microsoft-shell-monitor.ico" />
-    <Resource Include="Assets\microsoft-shell-settings.ico" />
-    <Resource Include="Assets\microsoft-shell-workspace.ico" />
-    <Resource Include="Assets\mwpf_icon.png" />
-    <Resource Include="Assets\mwpf_icon_full.png" />
-    <Resource Include="Assets\the_witcher_wallpaper.jpg" />
     <Resource Include="Themes\app.ico" />
     <Resource Include="Themes\notifyicon.ico" />
     <Resource Include="Themes\Segoe Fluent Icons.ttf" />
     <Resource Include="Themes\snapit.png" />
     <Resource Include="Themes\Transparency10.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\DesignWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

@@ -10,8 +10,6 @@ namespace SnapScreen.Views
         public MainWindow()
         {
             InitializeComponent();
-
-            WPFUI.Theme.Manager.SetSystemTheme(false);
         }
     }
 }

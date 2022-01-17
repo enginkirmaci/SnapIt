@@ -21,7 +21,9 @@ using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
 
 #if !STANDALONE
+
 using Windows.Services.Store;
+
 #endif
 
 //TODO refactor microsoft Store licensing
@@ -52,6 +54,7 @@ namespace SnapIt.ViewModels
         public string Status { get => status; set => SetProperty(ref status, value); }
         public bool IsPaneOpen { get => isPaneOpen; set => SetProperty(ref isPaneOpen, value); }
         public string LicenseText { get => licenseText; set => SetProperty(ref licenseText, value); }
+
         //public bool IsVersion3000MessageShown { get => settingService.Settings.IsVersion3000MessageShown; set { settingService.Settings.IsVersion3000MessageShown = value; } }
         public ObservableCollection<UITheme> ThemeList { get; set; }
 
@@ -121,8 +124,6 @@ namespace SnapIt.ViewModels
                 RegionManager.SetRegionName(contentControl, Constants.MainRegion);
                 RegionManager.SetRegionManager(contentControl, regionManager);
 
-                NavigateCommand.Execute("LayoutView");
-
                 HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(window).Handle);
                 source.AddHook(new HwndSourceHook(WndProc));
 
@@ -135,6 +136,7 @@ namespace SnapIt.ViewModels
                     }
                     else if (!DevMode.IsActive && HideWindowAtStartup)
                     {
+                        NavigateCommand.Execute("LayoutView");
                         HideWindowAtStartup = false;
                         window.Hide();
                     }
@@ -484,6 +486,7 @@ namespace SnapIt.ViewModels
         }
 
 #if !STANDALONE
+
         private async void CheckIfTrialAsync()
         {
             storeContext = StoreContext.GetDefault();
@@ -609,6 +612,7 @@ namespace SnapIt.ViewModels
                 }
             }
         }
+
 #endif
 
         [ComImport]
