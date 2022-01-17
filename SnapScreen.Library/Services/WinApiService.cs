@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using SnapScreen.Library.Entities;
 using SnapScreen.Library.InteropServices;
@@ -11,29 +10,28 @@ namespace SnapScreen.Library.Services
 {
     public class WinApiService : IWinApiService
     {
-        private const uint SPI_GETDESKWALLPAPER = 0x73;
         private const int MAX_PATH = 260;
 
         public IDictionary<IntPtr, string> GetOpenWindows()
         {
-            var shellWindow = User32.GetShellWindow();
+            var shellWindow = PInvoke.User32.GetShellWindow();
             var windows = new Dictionary<IntPtr, string>();
 
-            User32.EnumWindows(delegate (IntPtr hWnd, int lParam)
+            PInvoke.User32.EnumWindows(delegate (IntPtr hwnd, IntPtr lParam)
             {
-                if (hWnd == shellWindow) return true;
-                if (!User32.IsWindowVisible(hWnd)) return true;
+                if (hwnd == shellWindow) return true;
+                if (!PInvoke.User32.IsWindowVisible(hwnd)) return true;
 
-                //PInvoke.User32
-                var length = User32.GetWindowTextLength(hWnd);
+                var length = PInvoke.User32.GetWindowTextLength(hwnd);
                 if (length == 0) return true;
 
-                var builder = new StringBuilder(length);
-                User32.GetWindowText(hWnd, builder, length + 1);
+                var text = new char[length + 1];
+                var finalLength = PInvoke.User32.GetWindowText(hwnd, text, length + 1);
+                if (finalLength == 0) return true;
 
-                windows[hWnd] = builder.ToString();
+                windows[hwnd] = new string(text, 0, finalLength);
                 return true;
-            }, 0);
+            }, IntPtr.Zero);
 
             return windows;
         }
@@ -45,7 +43,7 @@ namespace SnapScreen.Library.Services
 
         public bool IsAllowedWindowStyle(ActiveWindow activeWindow)
         {
-            var style = User32.GetWindowLong(activeWindow.Handle, (int)GWL.STYLE);
+            var style = PInvoke.User32.GetWindowLong(activeWindow.Handle, PInvoke.User32.WindowLongIndexFlags.GWL_STYLE);
 
             //foreach (WindowStyles ws in (WindowStyles[])Enum.GetValues(typeof(WindowStyles)))
             //{
@@ -55,19 +53,18 @@ namespace SnapScreen.Library.Services
             //    {
             //    }
             //}
+            var windowStyle = (PInvoke.User32.WindowStylesEx)(style & (uint)PInvoke.User32.WindowStylesEx.WS_EX_APPWINDOW);
 
-            var windowStyle = (WindowStyles)(style & (uint)WindowStyles.WS_EX_APPWINDOW);
-
-            return windowStyle == WindowStyles.WS_EX_APPWINDOW;
+            return windowStyle == PInvoke.User32.WindowStylesEx.WS_EX_APPWINDOW;
         }
 
         public bool IsFullscreen(ActiveWindow activeWindow)
         {
-            User32.GetWindowRect(User32.GetDesktopWindow(), out Rectangle desktopWindow);
-            var isFullScreen = activeWindow.Boundry.Left == desktopWindow.Left &&
-                    activeWindow.Boundry.Top == desktopWindow.Top &&
-                    activeWindow.Boundry.Right == desktopWindow.Right &&
-                    activeWindow.Boundry.Bottom == desktopWindow.Bottom;
+            PInvoke.User32.GetWindowRect(PInvoke.User32.GetDesktopWindow(), out PInvoke.RECT desktopWindow);
+            var isFullScreen = activeWindow.Boundry.Left == desktopWindow.left &&
+                    activeWindow.Boundry.Top == desktopWindow.top &&
+                    activeWindow.Boundry.Right == desktopWindow.right &&
+                    activeWindow.Boundry.Bottom == desktopWindow.bottom;
 
             return isFullScreen;
         }
@@ -79,16 +76,16 @@ namespace SnapScreen.Library.Services
 
         public bool MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height)
         {
-            User32.ShowWindow(activeWindow.Handle, (int)ShowWindowCommand.SW_SHOWNORMAL); //if window maximized, restores to normal so position can be set
+            PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL); //if window maximized, restores to normal so position can be set
 
-            var res = User32.SetWindowPos(
+            var res = PInvoke.User32.SetWindowPos(
                 activeWindow.Handle,
-                (IntPtr)SpecialWindowHandles.HWND_TOP,
+                PInvoke.User32.SpecialWindowHandles.HWND_TOP,
                 X,
                 Y,
                 width,
                 height,
-                SetWindowPosFlags.ShowWindow);
+                PInvoke.User32.SetWindowPosFlags.SWP_SHOWWINDOW);
 
             var msg = Marshal.GetLastWin32Error();
             if (msg != 0)
@@ -100,9 +97,7 @@ namespace SnapScreen.Library.Services
 
         public void SendMessage(ActiveWindow activeWindow)
         {
-            const uint WM_KEYDOWN = 0x100;
-
-            User32.SendMessage(activeWindow.Handle, WM_KEYDOWN, (IntPtr)Keys.Escape, (IntPtr)0);
+            PInvoke.User32.SendMessage(activeWindow.Handle, PInvoke.User32.WindowMessage.WM_KEYDOWN, (IntPtr)Keys.Escape, (IntPtr)0);
         }
 
         public void GetWindowMargin(ActiveWindow activeWindow, out Rectangle withMargin)
@@ -118,19 +113,20 @@ namespace SnapScreen.Library.Services
         {
             var activeWindow = new ActiveWindow
             {
-                Handle = User32.GetForegroundWindow()
+                Handle = PInvoke.User32.GetForegroundWindow()
             };
 
             var chars = 256;
-            var buff = new StringBuilder(chars);
-            if (User32.GetWindowText(activeWindow.Handle, buff, chars) > 0)
+            var buff = new char[chars + 1];
+            var length = PInvoke.User32.GetWindowText(activeWindow.Handle, buff, chars);
+            if (length > 0)
             {
-                activeWindow.Title = buff.ToString();
+                activeWindow.Title = new string(buff, 0, length);
             }
 
-            if (User32.GetWindowRect(activeWindow.Handle, out Rectangle rct))
+            if (PInvoke.User32.GetWindowRect(activeWindow.Handle, out PInvoke.RECT rct))
             {
-                activeWindow.Boundry = rct;
+                activeWindow.Boundry = new Rectangle(rct.left, rct.top, rct.right, rct.bottom);
             }
 
             if (activeWindow.Handle == IntPtr.Zero || activeWindow.Boundry.Equals(Rectangle.Empty))
@@ -141,8 +137,18 @@ namespace SnapScreen.Library.Services
 
         public string GetCurrentDesktopWallpaper()
         {
-            var currentWallpaper = new string('\0', MAX_PATH);
-            User32.SystemParametersInfo(SPI_GETDESKWALLPAPER, currentWallpaper.Length, currentWallpaper, 0);
+            var buff = new char[MAX_PATH];
+
+            IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(buff, 0);
+
+            PInvoke.User32.SystemParametersInfo(
+                PInvoke.User32.SystemParametersInfoAction.SPI_GETDESKWALLPAPER,
+                (uint)buff.Length,
+                ptr,
+                PInvoke.User32.SystemParametersInfoFlags.None);
+
+            var currentWallpaper = new string(buff, 0, buff.Length);
+            //User32.SystemParametersInfo(SPI_GETDESKWALLPAPER, currentWallpaper.Length, currentWallpaper, 0);
             return currentWallpaper.Substring(0, currentWallpaper.IndexOf('\0'));
         }
     }

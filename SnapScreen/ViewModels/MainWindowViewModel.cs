@@ -41,6 +41,7 @@ namespace SnapScreen.ViewModels
         private bool isTryStoreMessageOpen;
         private bool isRunning;
         private string status;
+        private string notifyStatus = "Opening";
         private string licenseText;
         private Window mainWindow;
 
@@ -56,6 +57,7 @@ namespace SnapScreen.ViewModels
         public bool IsTryStoreMessageOpen { get => isTryStoreMessageOpen; set => SetProperty(ref isTryStoreMessageOpen, value); }
         public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
         public string Status { get => status; set => SetProperty(ref status, value); }
+        public string NotifyStatus { get => notifyStatus; set => SetProperty(ref notifyStatus, value); }
         public string LicenseText { get => licenseText; set => SetProperty(ref licenseText, value); }
 
         public DelegateCommand<Window> LoadedCommand { get; private set; }
@@ -442,10 +444,12 @@ namespace SnapScreen.ViewModels
             if (isRunning)
             {
                 Status = "Stop";
+                NotifyStatus = "Running";
             }
             else
             {
                 Status = "Start";
+                NotifyStatus = "Stopped";
             }
         }
 

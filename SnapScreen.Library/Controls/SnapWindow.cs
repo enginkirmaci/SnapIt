@@ -32,7 +32,11 @@ namespace SnapScreen.Library.Controls
 
             Screen = screen;
 
-            Topmost = true;
+            if (!DevMode.IsTopmostDisabled)
+            {
+                Topmost = true;
+            }
+
             AllowsTransparency = true;
             Background = new SolidColorBrush(Colors.Transparent);
             ResizeMode = ResizeMode.NoResize;
@@ -45,6 +49,13 @@ namespace SnapScreen.Library.Controls
             WindowStyle = WindowStyle.None;
 
             CalculateDpi();
+        }
+
+        //TODO test here
+        public new void Show()
+        {
+            base.Show();
+            MaximizeWindow();
         }
 
         protected override void OnSourceInitialized(EventArgs e)

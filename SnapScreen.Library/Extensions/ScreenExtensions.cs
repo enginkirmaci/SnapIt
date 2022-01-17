@@ -5,7 +5,6 @@ using WpfScreenHelper;
 
 namespace SnapIt.Library.Extensions
 {
-    //TODO refactor here
     public class DpiHelper
     {
         public static Dpi GetDpiFromPoint(int X, int Y)
@@ -34,15 +33,7 @@ namespace SnapIt.Library.Extensions
     {
         public static Dpi GetDpi(this Screen screen)
         {
-            return DpiHelper.GetDpiFromPoint((int)screen.Bounds.Left, (int)screen.Bounds.Top);
+            return DpiHelper.GetDpiFromPoint((int)screen.PixelBounds.Left, (int)screen.PixelBounds.Top);
         }
-    }
-
-    //https://msdn.microsoft.com/en-us/library/windows/desktop/dn280511(v=vs.85).aspx
-    public enum DpiType
-    {
-        Effective = 0,
-        Angular = 1,
-        Raw = 2,
     }
 }
