@@ -609,21 +609,20 @@ namespace SnapScreen.Library.Services
 
                             winApiService.MoveWindow(activeWindow, rectangle);
 
-                            //TODO feels like this is not working, add thread here
-                            //if (!rectangle.Dpi.Equals(activeWindow.Dpi))
-                            //{
-                            //    winApiService.MoveWindow(activeWindow, rectangle);
-                            //}
+                            if (!rectangle.Dpi.Equals(activeWindow.Dpi))
+                            {
+                                winApiService.MoveWindow(activeWindow, rectangle);
+                            }
                         }).Start();
                     }
                     else
                     {
                         winApiService.MoveWindow(activeWindow, rectangle);
 
-                        //if (!rectangle.Dpi.Equals(activeWindow.Dpi))
-                        //{
-                        //    winApiService.MoveWindow(activeWindow, rectangle);
-                        //}
+                        if (!rectangle.Dpi.Equals(activeWindow.Dpi))
+                        {
+                            winApiService.MoveWindow(activeWindow, rectangle);
+                        }
                     }
 
                     Telemetry.TrackEvent("MoveActiveWindow - Mouse");

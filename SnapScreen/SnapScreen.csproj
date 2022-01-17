@@ -15,6 +15,7 @@
     <FileVersion></FileVersion>
     <AssemblyVersion></AssemblyVersion>
     <Configurations>Debug;Release;Standalone</Configurations>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +23,6 @@
     <None Remove="Themes\notifyicon.ico" />
     <None Remove="Themes\Segoe Fluent Icons.ttf" />
     <None Remove="Themes\snapit.png" />
-    <None Remove="Themes\Transparency10.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +33,6 @@
     <PackageReference Include="Dirkster.ColorPickerLib" Version="1.6.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="PInvoke.SHCore" Version="0.7.104" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
   </ItemGroup>
 
@@ -47,7 +46,6 @@
     <Resource Include="Themes\notifyicon.ico" />
     <Resource Include="Themes\Segoe Fluent Icons.ttf" />
     <Resource Include="Themes\snapit.png" />
-    <Resource Include="Themes\Transparency10.png" />
   </ItemGroup>
 
   <ItemGroup>

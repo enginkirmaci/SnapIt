@@ -182,7 +182,7 @@
                             <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <Label Content="Opening" IsEnabled="False" />
+                    <Label Content="{Binding NotifyStatus}" IsEnabled="False" />
                     <Separator />
                     <MenuItem
                         Command="{Binding StartStopCommand}"

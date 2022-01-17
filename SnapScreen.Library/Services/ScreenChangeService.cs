@@ -27,18 +27,18 @@ namespace SnapScreen.Library.Services
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            switch ((uint)msg)
-            {
-                case WM_DISPLAYCHANGE:
-                    screenChanged = true;
-                    ScreenChangedTask(snapService);
-                    break;
+            //switch ((uint)msg)
+            //{
+            //    case WM_DISPLAYCHANGE:
+            //        screenChanged = true;
+            //        ScreenChangedTask(snapService);
+            //        break;
 
-                case WM_SETTINGCHANGE:
-                    screenChanged = true;
-                    ScreenChangedTask(snapService);
-                    break;
-            }
+            //    case WM_SETTINGCHANGE:
+            //        screenChanged = true;
+            //        ScreenChangedTask(snapService);
+            //        break;
+            //}
 
             return IntPtr.Zero;
         }
