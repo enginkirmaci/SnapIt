@@ -7,10 +7,45 @@
 	  <Copyright>©  2021</Copyright>
 	  <Company>Engin KIRMACI</Company>
 	  <Authors>Engin KIRMACI</Authors>
+	  <Configurations>Debug;Release;Standalone</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MouseKeyHook" Version="5.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="ThinkSharp.Licensing" Version="1.0.0" />
+    <PackageReference Include="WpfScreenHelper" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\wpfui\WPFUI\WPFUI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\HotkeyEditorControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\SnapArea.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\SnapAreaEditor.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\SnapBorder.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\SnapControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\SnapFullOverlay.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\SnapOverlay.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\SnapOverlayEditor.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>
