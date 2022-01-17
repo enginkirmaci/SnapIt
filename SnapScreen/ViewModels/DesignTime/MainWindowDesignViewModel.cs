@@ -12,7 +12,7 @@
         public string LicenseMessageErrorText { get; set; } = "Error";
         public bool IsLicenseSuccess { get; set; } = false;
         public bool NewVersionMessageOpen { get; set; } = false;
-        public bool IsTryStoreMessageOpen { get; set; } = true;
+        public bool IsTryStoreMessageOpen { get; set; } = false;
 
         public MainWindowDesignViewModel()
         {

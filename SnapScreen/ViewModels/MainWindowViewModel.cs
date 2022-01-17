@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,13 +17,6 @@ using SnapScreen.Library.Services;
 using WPFUI.Controls;
 using WPFUI.Theme;
 
-#if !STANDALONE
-
-using System.Windows.Interop;
-using Windows.Services.Store;
-
-#endif
-
 namespace SnapScreen.ViewModels
 {
     public class MainWindowViewModel : BindableBase
@@ -33,7 +25,9 @@ namespace SnapScreen.ViewModels
         private readonly ISettingService settingService;
         private readonly ISnapService snapService;
         private readonly IStandaloneLicenseService standaloneLicenseService;
-
+        private readonly IStoreLicenseService storeLicenseService;
+        private readonly IScreenChangeService screenChangeService;
+        private bool isStandalone;
         private bool isTrial;
         private bool isTrialEnded;
         private bool isTrialMessageOpen;
@@ -49,9 +43,6 @@ namespace SnapScreen.ViewModels
         private string status;
         private string licenseText;
         private Window mainWindow;
-#if !STANDALONE
-        private StoreContext storeContext = null;
-#endif
 
         public bool IsTrial { get => isTrial; set => SetProperty(ref isTrial, value); }
         public bool IsTrialEnded { get => isTrialEnded; set => SetProperty(ref isTrialEnded, value); }
@@ -87,16 +78,28 @@ namespace SnapScreen.ViewModels
                 ISettingService settingService,
                 ISnapService snapService,
                 IWindowService windowService,
-                IStandaloneLicenseService standaloneLicenseService)
+                IStandaloneLicenseService standaloneLicenseService,
+                IStoreLicenseService storeLicenseService,
+                IScreenChangeService screenChangeService)
         {
             this.regionManager = regionManager;
             this.settingService = settingService;
             this.snapService = snapService;
             this.standaloneLicenseService = standaloneLicenseService;
+            this.storeLicenseService = storeLicenseService;
+            this.screenChangeService = screenChangeService;
+
+#if !STANDALONE
+            isStandalone = false;
+#endif
+#if STANDALONE
+            isStandalone = true;
+#endif
 
             snapService.StatusChanged += SnapService_StatusChanged;
             //snapService.ScreenLayoutLoaded += SnapService_ScreenLayoutLoaded;
             snapService.LayoutChanged += SnapService_LayoutChanged;
+            storeLicenseService.OfflineLicensesChanged += StoreLicenseService_OfflineLicensesChanged;
 
             if (!DevMode.IsActive)
             {
@@ -120,6 +123,12 @@ namespace SnapScreen.ViewModels
                 RegionManager.SetRegionName(contentControl, Constants.MainRegion);
                 RegionManager.SetRegionManager(contentControl, regionManager);
 
+                var mainregion = regionManager.Regions[Constants.MainRegion];
+                mainregion.NavigationService.Navigating += NavigationService_Navigating;
+                //Journal.GoForward();
+
+                screenChangeService.Init(mainWindow);
+
                 if (!settingService.Settings.ShowMainWindow && !DevMode.IsActive)
                 {
                     mainWindow.Visibility = Visibility.Hidden;
@@ -129,15 +138,12 @@ namespace SnapScreen.ViewModels
                     NavigateView("LayoutView");
                 }
 
-#if !STANDALONE
                 CheckIfTrialAsync();
-#endif
 
-#if STANDALONE
-                CheckIfTrialStandAlone();
-
-                CheckForNewVersion();
-#endif
+                if (isStandalone)
+                {
+                    CheckForNewVersion();
+                }
             });
 
             TrialVersionCommand = new DelegateCommand(() =>
@@ -149,12 +155,14 @@ namespace SnapScreen.ViewModels
             {
                 if ((bool)isConfirm)
                 {
-#if !STANDALONE
-                    PurchaseFullLicense();
-#endif
-#if STANDALONE
-                    PurchaseFullLicenseStandalone();
-#endif
+                    if (isStandalone)
+                    {
+                        PurchaseFullLicenseStandalone();
+                    }
+                    else
+                    {
+                        PurchaseFullLicense();
+                    }
 
                     IsTrialMessageOpen = false;
                 }
@@ -171,7 +179,7 @@ namespace SnapScreen.ViewModels
                 }
             });
 
-            LicenseMessageClosingCommand = new DelegateCommand<object>((isConfirm) =>
+            LicenseMessageClosingCommand = new DelegateCommand<object>(async (isConfirm) =>
             {
                 if ((bool)isConfirm)
                 {
@@ -179,7 +187,7 @@ namespace SnapScreen.ViewModels
 
                     if (isVerified)
                     {
-                        CheckIfTrialStandAlone();
+                        await CheckIfTrialAsync();
 
                         IsLicenseSuccess = true;
 
@@ -256,7 +264,7 @@ namespace SnapScreen.ViewModels
 
             NotifyIconViewCommand = new DelegateCommand<string>((navigatePath) =>
             {
-                if (mainWindow.IsVisible)
+                if (mainWindow != null && mainWindow.IsVisible)
                 {
                     if (mainWindow.WindowState == WindowState.Minimized)
                     {
@@ -372,6 +380,10 @@ namespace SnapScreen.ViewModels
                     snapService.Initialize();
                 }
             });
+        }
+
+        private void NavigationService_Navigating(object? sender, RegionNavigationEventArgs e)
+        {
         }
 
         private void NavigationCompleted(NavigationResult navigationResult)
@@ -514,11 +526,13 @@ namespace SnapScreen.ViewModels
             }
         }
 
-        private void CheckIfTrialStandAlone()
+        private async Task CheckIfTrialAsync()
         {
-            LicenseMessageCloseButtonText = IsTrialEnded ? "Exit Application" : "Close";
+            LicenseStatus licenseStatus = isStandalone ?
+                standaloneLicenseService.CheckStatus() :
+                await storeLicenseService.CheckStatusAsync();
 
-            switch (standaloneLicenseService.CheckStatus())
+            switch (licenseStatus)
             {
                 case LicenseStatus.InTrial:
                     IsTrial = true;
@@ -543,9 +557,14 @@ namespace SnapScreen.ViewModels
                     IsTrial = false;
                     IsTrialEnded = false;
                     snapService.SetIsTrialEnded(false);
-                    LicenseText = $"licensed to {standaloneLicenseService.License.Name}";
+                    if (isStandalone)
+                    {
+                        LicenseText = $"licensed to {standaloneLicenseService.License.Name}";
+                    }
                     break;
             }
+
+            LicenseMessageCloseButtonText = IsTrialEnded ? "Exit Application" : "Close";
         }
 
         private void PurchaseFullLicenseStandalone()
@@ -562,102 +581,29 @@ namespace SnapScreen.ViewModels
             LicenseMessageCloseButtonText = IsTrialEnded ? "Exit Application" : "Close";
         }
 
-#if !STANDALONE
-
-        private async void CheckIfTrialAsync()
+        private void StoreLicenseService_OfflineLicensesChanged()
         {
-            storeContext = StoreContext.GetDefault();
-            storeContext.OfflineLicensesChanged += OfflineLicensesChanged;
-
-            IInitializeWithWindow initWindow = (IInitializeWithWindow)(object)storeContext;
-            initWindow.Initialize(new WindowInteropHelper(mainWindow).Handle);
-
-            await GetLicenseState();
-
-            if (IsTrialEnded)
-            {
-                if (!mainWindow.IsVisible)
-                {
-                    mainWindow.Show();
-                }
-
-                IsTrialMessageOpen = true;
-            }
-        }
-
-        private void OfflineLicensesChanged(StoreContext sender, object args)
-        {
-            GetLicenseState();
-        }
-
-        private async Task GetLicenseState()
-        {
-            var license = await storeContext.GetAppLicenseAsync();
-
-            if (license.IsActive)
-            {
-                if (license.IsTrial)
-                {
-                    IsTrial = true;
-
-                    int remainingTrialTime = (license.ExpirationDate - DateTime.Now).Days;
-
-                    if (remainingTrialTime <= 0)
-                    {
-                        IsTrialEnded = true;
-
-                        snapService.SetIsTrialEnded(true);
-                    }
-                }
-                else
-                {
-                    IsTrial = false;
-                    IsTrialEnded = false;
-                    snapService.SetIsTrialEnded(false);
-                }
-            }
+            CheckIfTrialAsync();
         }
 
         private async void PurchaseFullLicense()
         {
-            var hasError = false;
+            var purchaseResult = await storeLicenseService.RequestPurchaseAsync();
 
-            var purchaseResult = await storeContext.RequestPurchaseAsync(Constants.AppStoreId);
-
-            if (purchaseResult.ExtendedError != null)
+            switch (purchaseResult)
             {
-                hasError = true;
-            }
-
-            switch (purchaseResult.Status)
-            {
-                case StorePurchaseStatus.AlreadyPurchased:
+                case PurchaseStatus.AlreadyPurchased:
                     //await ((MetroWindow)mainWindow).ShowMessageAsync("", $"You already bought this app and have a fully-licensed version.");
                     break;
 
-                case StorePurchaseStatus.Succeeded:
+                case PurchaseStatus.Succeeded:
                     // License will refresh automatically using the StoreContext.OfflineLicensesChanged event
                     break;
 
-                default:
-                    hasError = true;
+                case PurchaseStatus.Error:
+                    IsTryStoreMessageOpen = true;
                     break;
             }
-
-            if (hasError)
-            {
-                IsTryStoreMessageOpen = true;
-            }
-        }
-
-#endif
-
-        [ComImport]
-        [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        public interface IInitializeWithWindow
-        {
-            void Initialize(IntPtr hwnd);
         }
     }
 }

@@ -2,6 +2,13 @@
 
 namespace SnapScreen.Library.Entities
 {
+    public enum LicenseStatus
+    {
+        InTrial,
+        TrialEnded,
+        Licensed
+    }
+
     public enum MouseButton
     {
         Left,

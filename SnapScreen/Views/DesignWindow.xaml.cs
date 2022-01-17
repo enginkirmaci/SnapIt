@@ -18,7 +18,7 @@ namespace SnapScreen.Views
         public void SetViewModel(Library.Entities.SnapScreen snapScreen, Layout layout)
         {
             var model = DataContext as DesignWindowViewModel;
-            if (model == null)
+            if (model != null)
             {
                 model.Window = this;
                 model.SnapScreen = snapScreen;

@@ -37,6 +37,13 @@
             </wpfui:CardControl>
 
             <wpfui:CardControl
+                Title="Start Snap Screen minimized to tray"
+                Margin="0,0,0,8"
+                Icon="Empty">
+                <ToggleButton BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding IsMinimizeTray}" />
+            </wpfui:CardControl>
+
+            <wpfui:CardControl
                 Title="Run as administrator (needs to be restarted)"
                 Margin="0,0,0,8"
                 Icon="Empty"

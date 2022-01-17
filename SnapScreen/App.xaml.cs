@@ -104,6 +104,8 @@ namespace SnapScreen
             containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
             containerRegistry.Register<IWindowService, WindowService>();
             containerRegistry.RegisterSingleton<IStandaloneLicenseService, StandaloneLicenseService>();
+            containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
+            containerRegistry.RegisterSingleton<IScreenChangeService, ScreenChangeService>();
 
             ViewModelLocationProvider.Register<SettingsView, SnapIt.ViewModels.SettingsViewModel>();
         }

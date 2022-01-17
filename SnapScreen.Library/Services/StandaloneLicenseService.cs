@@ -4,13 +4,6 @@ using ThinkSharp.Licensing;
 
 namespace SnapScreen.Library.Services
 {
-    public enum LicenseStatus
-    {
-        InTrial,
-        TrialEnded,
-        Licensed
-    }
-
     public class StandaloneLicenseService : IStandaloneLicenseService
     {
         private readonly ISettingService settingService;

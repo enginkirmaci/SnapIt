@@ -12,7 +12,6 @@ namespace SnapIt.ViewModels
         private readonly ISettingService settingService;
 
         private bool isStartupTaskActive;
-
         private UITheme selectedTheme;
 
         private bool isStandalone;
@@ -53,6 +52,9 @@ namespace SnapIt.ViewModels
                 settingService.SetStartupTaskStatusAsync(value);
             }
         }
+
+        public bool IsMinimizeTray
+        { get => !settingService.Settings.ShowMainWindow; set { settingService.Settings.ShowMainWindow = !value; } }
 
         public bool CheckForNewVersion
         { get => settingService.Settings.CheckForNewVersion; set { settingService.Settings.CheckForNewVersion = value; } }

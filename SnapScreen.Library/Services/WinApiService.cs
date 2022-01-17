@@ -24,6 +24,7 @@ namespace SnapScreen.Library.Services
                 if (hWnd == shellWindow) return true;
                 if (!User32.IsWindowVisible(hWnd)) return true;
 
+                //PInvoke.User32
                 var length = User32.GetWindowTextLength(hWnd);
                 if (length == 0) return true;
 

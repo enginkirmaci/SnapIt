@@ -4,8 +4,7 @@
     xmlns:controls="clr-namespace:SnapScreen.Library.Controls;assembly=SnapScreen.Library"
     xmlns:extension="clr-namespace:SnapScreen.Library.Extensions;assembly=SnapScreen.Library"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
-    xmlns:wpfuiCommon="clr-namespace:WPFUI.Common;assembly=WPFUI">
+    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI">
 
     <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{DynamicResource ApplicationBackgroundColor}" />
 
@@ -200,8 +199,7 @@
                                             <MenuItem
                                                 Command="{Binding Parent.PlacementTarget.Tag.DesignLayoutCommand, RelativeSource={RelativeSource Self}}"
                                                 CommandParameter="{Binding}"
-                                                Header="Open in Designer"
-                                                Icon="{x:Static wpfuiCommon:Icon.Play24}" />
+                                                Header="Open in Designer" />
                                             <Separator />
                                             <MenuItem
                                                 Command="{Binding Parent.PlacementTarget.Tag.OpenRenameDialogCommand, RelativeSource={RelativeSource Self}}"
