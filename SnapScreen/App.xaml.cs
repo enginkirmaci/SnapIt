@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using DryIoc;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -17,8 +19,16 @@ namespace SnapScreen
     /// </summary>
     public partial class App
     {
+        public static NotifyIcon NotifyIcon { get; set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
+            //todo change this
+            NotifyIcon = new NotifyIcon
+            {
+                Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream)
+            };
+
 #if STANDALONE
             if (SnapScreen.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
             {
@@ -26,7 +36,8 @@ namespace SnapScreen
                 {
                     if (!ApplicationInstance.RegisterSingleInstance())
                     {
-                        MessageBox.Show("only one instance at a time");
+                        NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
+                        NotifyIcon.Visible = true;
 
                         Shutdown();
                         return;
@@ -44,13 +55,8 @@ namespace SnapScreen
             {
                 if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
                 {
-                    var notification = new System.Windows.Forms.NotifyIcon
-                    {
-                        Visible = true,
-                        Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream),
-                    };
-
-                    notification.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", System.Windows.Forms.ToolTipIcon.Warning);
+                    NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
+                    NotifyIcon.Visible = true;
 
                     Shutdown();
                     return;
@@ -77,6 +83,8 @@ namespace SnapScreen
             };
 
             Telemetry.TrackEvent("OnStartup");
+
+            WPFUI.Theme.Manager.SetSystemTheme(true, false);
 
             base.OnStartup(e);
         }

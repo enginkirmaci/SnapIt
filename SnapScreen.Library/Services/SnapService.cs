@@ -20,6 +20,7 @@ namespace SnapScreen.Library.Services
         private readonly IWinApiService winApiService;
 
         private static List<Keys> keysDown = new List<Keys>();
+        private static IKeyboardMouseEvents globalHook;
 
         private ActiveWindow activeWindow;
         private SnapAreaInfo snapAreaInfo;
@@ -30,7 +31,6 @@ namespace SnapScreen.Library.Services
         private bool holdKeyUsed = false;
         private DateTime delayStartTime;
         private System.Drawing.Point startLocation;
-        private IKeyboardMouseEvents globalHook;
         private List<ExcludedApplication> matchRulesForMouse;
         private List<ExcludedApplication> matchRulesForKeyboard;
 

@@ -112,16 +112,9 @@
                 <ListBox
                     Height="334"
                     ItemsSource="{Binding RunningApplications}"
-                    SelectedItem="{Binding SelectedExcludedApplication.Keyword}">
-                    <!--<i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding CloseRunningApplicationsDialogCommand}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>-->
-                </ListBox>
+                    SelectedItem="{Binding SelectedExcludedApplication.Keyword}" />
             </StackPanel>
         </wpfui:Dialog>
-        <!--</simpleChildWindow:ChildWindow>-->
 
         <ScrollViewer Style="{StaticResource UiScrollViewer}">
             <StackPanel>
@@ -129,7 +122,7 @@
                     Title="Disable snapping for fullscreen application and games (recommended)"
                     Margin="0,0,0,8"
                     Icon="Empty">
-                    <ToggleButton BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding DisableForFullscreen}" />
+                    <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding DisableForFullscreen}" />
                 </wpfui:CardControl>
 
                 <wpfui:CardControl
@@ -137,21 +130,21 @@
                     Margin="0,0,0,8"
                     Icon="Empty"
                     Subtitle="If enable snapping for modal, you need to exclude Start, Action Center and etc, to work correctly for windows.">
-                    <ToggleButton BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding DisableForModal}" />
+                    <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding DisableForModal}" />
                 </wpfui:CardControl>
 
                 <wpfui:CardControl
                     Title="Exclude Windows Default Modals"
                     Margin="0,0,0,8"
                     Icon="Empty"
-                    Subtitle="This option excludes Windows modals like Start, Action Center and etc">
+                    Subtitle="This option excludes Windows modals like Start, Action Center and etc"
+                    Visibility="{Binding DisableForModal, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}">
                     <wpfui:Button
                         Margin="0,0,0,8"
                         HorizontalAlignment="Left"
                         Appearance="Secondary"
                         Command="{Binding ExcludeWindowsModalCommand}"
-                        Content="Exclude"
-                        Visibility="{Binding DisableForModal, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
+                        Content="Exclude" />
                 </wpfui:CardControl>
 
                 <wpfui:CardExpander

@@ -89,15 +89,15 @@ namespace SnapIt.ViewModels
             switch (settingService.Settings.AppTheme)
             {
                 case UITheme.Dark:
-                    Manager.Switch(Style.Dark, true);
+                    Manager.Switch(Style.Dark, true, false);
                     break;
 
                 case UITheme.Light:
-                    Manager.Switch(Style.Light, true);
+                    Manager.Switch(Style.Light, true, false);
                     break;
 
                 case UITheme.System:
-                    Manager.SetSystemTheme(true);
+                    Manager.SetSystemTheme(true, false);
 
                     break;
             }

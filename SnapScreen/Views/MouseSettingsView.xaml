@@ -25,7 +25,7 @@
             Title="Use mouse to snap window"
             Margin="0,0,0,8"
             Icon="Empty">
-            <ToggleButton BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding EnableMouse}" />
+            <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding EnableMouse}" />
         </wpfui:CardControl>
 
         <wpfui:CardControl
@@ -47,8 +47,8 @@
             Title="Only use window title to snap window"
             Margin="0,0,0,8"
             Icon="Empty"
-            Subtitle=" It is recommend to enable it if you choose Left mouse button for snapping">
-            <ToggleButton BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding DragByTitle}" />
+            Subtitle="It is recommend to enable it if you choose Left mouse button for snapping">
+            <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding DragByTitle}" />
         </wpfui:CardControl>
 
         <wpfui:CardControl
@@ -65,7 +65,7 @@
             Title="Use Hold key"
             Margin="0,0,0,8"
             Icon="Empty">
-            <ToggleButton BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding EnableHoldKey}" />
+            <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding EnableHoldKey}" />
         </wpfui:CardControl>
 
         <wpfui:CardControl
@@ -87,8 +87,7 @@
             <ComboBox
                 Width="200"
                 ItemsSource="{Binding HoldKeyBehaviours}"
-                SelectedItem="{Binding HoldKeyBehaviour, Mode=TwoWay}"
-                Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                SelectedItem="{Binding HoldKeyBehaviour, Mode=TwoWay}" />
         </wpfui:CardControl>
     </StackPanel>
 </Page>
