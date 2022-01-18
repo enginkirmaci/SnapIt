@@ -485,10 +485,11 @@ namespace SnapScreen.ViewModels
 
         public void ShowNotification(string title, string message, int timeout = 1000, System.Windows.Forms.ToolTipIcon tipIcon = System.Windows.Forms.ToolTipIcon.None)
         {
-            var notification = new System.Windows.Forms.NotifyIcon()
+            //TODO change here, this duplicates notifyicon in taskbar
+            var notification = new System.Windows.Forms.NotifyIcon
             {
                 Visible = true,
-                Icon = System.Drawing.SystemIcons.Information
+                Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream),
             };
 
             notification.ShowBalloonTip(timeout, title, message, tipIcon);
