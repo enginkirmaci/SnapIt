@@ -26,7 +26,7 @@
             Title="Use keyboard to snap window"
             Margin="0,0,0,8"
             Icon="Empty">
-            <ToggleButton BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding EnableKeyboard}" />
+            <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding EnableKeyboard}" />
         </wpfui:CardControl>
 
         <wpfui:CardControl

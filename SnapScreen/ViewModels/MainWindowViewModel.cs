@@ -117,8 +117,8 @@ namespace SnapScreen.ViewModels
             {
                 mainWindow = window;
 
-                WPFUI.Background.Manager.Apply(mainWindow);
                 ChangeTheme();
+                WPFUI.Background.Manager.Apply(mainWindow);
 
                 var contentControl = window.FindChildren<ContentControl>("MainFrame");
 
@@ -423,15 +423,15 @@ namespace SnapScreen.ViewModels
             switch (settingService.Settings.AppTheme)
             {
                 case UITheme.Dark:
-                    Manager.Switch(WPFUI.Theme.Style.Dark, true);
+                    Manager.Switch(WPFUI.Theme.Style.Dark, true, false);
                     break;
 
                 case UITheme.Light:
-                    Manager.Switch(WPFUI.Theme.Style.Light, true);
+                    Manager.Switch(WPFUI.Theme.Style.Light, true, false);
                     break;
 
                 case UITheme.System:
-                    Manager.SetSystemTheme(true);
+                    Manager.SetSystemTheme(true, false);
 
                     break;
             }
@@ -485,14 +485,8 @@ namespace SnapScreen.ViewModels
 
         public void ShowNotification(string title, string message, int timeout = 1000, System.Windows.Forms.ToolTipIcon tipIcon = System.Windows.Forms.ToolTipIcon.None)
         {
-            //TODO change here, this duplicates notifyicon in taskbar
-            var notification = new System.Windows.Forms.NotifyIcon
-            {
-                Visible = true,
-                Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream),
-            };
-
-            notification.ShowBalloonTip(timeout, title, message, tipIcon);
+            App.NotifyIcon.ShowBalloonTip(timeout, title, message, tipIcon);
+            App.NotifyIcon.Visible = true;
         }
 
         private async void CheckForNewVersion()

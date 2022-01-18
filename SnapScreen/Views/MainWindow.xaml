@@ -134,7 +134,7 @@
 
             <StackPanel Grid.Row="2">
                 <Separator Margin="0,0,0,8" />
-                <ToggleButton
+                <wpfui:ToggleSwitch
                     BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}"
                     Command="{Binding StartStopCommand}"
                     Content="{Binding Status}"

@@ -55,6 +55,7 @@
 
             <wpfui:Hyperlink
                 Content="{x:Static c:Constants.AppUrl}"
+                Foreground="{StaticResource PaletteBlueBrush}"
                 Icon="Link24"
                 NavigateUri="{Binding Source={x:Static c:Constants.AppUrl}, Converter={StaticResource UriConverter}}" />
 
@@ -67,12 +68,14 @@
                     <wpfui:Hyperlink
                         Margin="0,0,0,4"
                         Content="New ideas or report a bug"
+                        Foreground="{StaticResource PaletteBlueBrush}"
                         Icon="Link24"
                         NavigateUri="{Binding Source={x:Static c:Constants.AppFeedbackUrl}, Converter={StaticResource UriConverter}}" />
 
                     <wpfui:Hyperlink
                         Command="{Binding RateReviewStoreClick}"
                         Content="Rate and review on Microsoft Store"
+                        Foreground="{StaticResource PaletteBlueBrush}"
                         Icon="Link24" />
                 </StackPanel>
             </wpfui:CardExpander>
@@ -114,74 +117,20 @@
                         Icon="Link24" />
                 </StackPanel>
             </wpfui:CardControl>
-
-            <!--<TextBlock
-                Margin="0,24,0,0"
-                FontSize="18"
-                Text="Follow Me" />
-
-            <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                <wpfui:Button
-                    Margin="0,0,12,0"
-                    Appearance="Secondary"
-                    Command="{Binding HandleLinkClick}"
-                    CommandParameter="{x:Static c:Constants.LinkedinUrl}"
-                    Content="Linkedin"
-                    Icon="Empty" />
-
-                <wpfui:Button
-                    Appearance="Secondary"
-                    Command="{Binding HandleLinkClick}"
-                    CommandParameter="{x:Static c:Constants.GithubUrl}"
-                    Content="Github"
-                    Icon="Empty" />
-
-            -->
-            <!--<Button
-                    Margin="0,0,12,0"
-                    Padding="4"
-                    Command="{Binding HandleLinkClick}"
-                    CommandParameter="{x:Static c:Constants.LinkedinUrl}"
-                    Content="Linkedin"
-                    Foreground="#FF4875B4">
-            -->
-            <!--<Button.Content>
-                            <iconPacks:PackIconMaterial
-                                Width="24"
-                                Height="24"
-                                Kind="Linkedin" />
-                        </Button.Content>-->
-            <!--
-                </Button>
-                <Button
-                    Margin="0,0,12,0"
-                    Padding="4"
-                    Command="{Binding HandleLinkClick}"
-                    CommandParameter="{x:Static c:Constants.GithubUrl}"
-                    Foreground="#7DBBE6">
-            -->
-            <!--<Button.Content>
-                            <iconPacks:PackIconMaterial
-                                Width="24"
-                                Height="24"
-                                Kind="Github" />
-                        </Button.Content>-->
-            <!--
-                </Button>-->
-            <!--
-            </StackPanel>-->
         </StackPanel>
 
         <Grid Grid.Row="2" Margin="0,24,0,0">
             <wpfui:Hyperlink
                 HorizontalAlignment="Left"
                 Content="{x:Static c:Constants.CompanyName}"
+                Foreground="{StaticResource PaletteBlueBrush}"
                 Icon="Empty"
                 NavigateUri="{Binding Source={x:Static c:Constants.CompanyUrl}, Converter={StaticResource UriConverter}}" />
 
             <wpfui:Hyperlink
                 HorizontalAlignment="Right"
                 Content="Privacy policy"
+                Foreground="{StaticResource PaletteBlueBrush}"
                 Icon="Empty"
                 NavigateUri="{Binding Source={x:Static c:Constants.AppPrivacyUrl}, Converter={StaticResource UriConverter}}" />
         </Grid>
