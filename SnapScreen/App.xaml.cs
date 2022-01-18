@@ -6,6 +6,7 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using SnapScreen.Library;
 using SnapScreen.Library.Applications;
+using SnapScreen.Library.Entities;
 using SnapScreen.Library.Services;
 using SnapScreen.Views;
 
@@ -43,8 +44,13 @@ namespace SnapScreen
             {
                 if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
                 {
-                    MessageBox.Show("Only one instance of Snap Screen can run at the same time."); //TODO change here
-                    //notifyIcon.ShowBalloonTip(3000, null, "Only one instance of Snap Screen can run at the same time.", System.Windows.Forms.ToolTipIcon.Warning);
+                    var notification = new System.Windows.Forms.NotifyIcon
+                    {
+                        Visible = true,
+                        Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream),
+                    };
+
+                    notification.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", System.Windows.Forms.ToolTipIcon.Warning);
 
                     Shutdown();
                     return;

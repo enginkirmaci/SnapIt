@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -27,25 +26,29 @@ namespace SnapScreen.Library.Services
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            //switch ((uint)msg)
-            //{
-            //    case WM_DISPLAYCHANGE:
-            //        screenChanged = true;
-            //        ScreenChangedTask(snapService);
-            //        break;
+            switch ((uint)msg)
+            {
+                case WM_DISPLAYCHANGE:
+                    screenChanged = true;
+                    ScreenChangedTask(snapService);
 
-            //    case WM_SETTINGCHANGE:
-            //        screenChanged = true;
-            //        ScreenChangedTask(snapService);
-            //        break;
-            //}
+                    break;
+
+                    //case WM_SETTINGCHANGE:
+                    //    screenChanged = true;
+                    //    ScreenChangedTask(snapService);
+
+                    //    DevMode.Log($"WM_SETTINGCHANGE change");
+
+                    //    break;
+            }
 
             return IntPtr.Zero;
         }
 
         private async void ScreenChangedTask(ISnapService snapService)
         {
-            await Task.Delay(5000);
+            //await Task.Delay(5000);
 
             Application.Current.Dispatcher.Invoke(() =>
             {

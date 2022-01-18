@@ -93,7 +93,7 @@ namespace SnapScreen.ViewModels
 
             Layouts = new ObservableCollection<Layout>(settingService.Layouts);
             SnapScreens = new ObservableCollectionWithItemNotify<Library.Entities.SnapScreen>(settingService.SnapScreens);
-            SelectedSnapScreen = SnapScreens.FirstOrDefault(); //TODO this causes two times initialization on startup
+            SelectedSnapScreen = SnapScreens.FirstOrDefault();
 
             SnapScreens.CollectionChanged += SnapScreens_CollectionChanged;
 
