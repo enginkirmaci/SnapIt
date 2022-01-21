@@ -57,7 +57,17 @@ namespace SnapScreen.Library.Services
 
         public void Save()
         {
-            Settings.ActiveScreens = SnapScreens.Where(s => s.IsActive).Select(s => s.Base.DeviceName).ToList();
+            foreach (var screen in SnapScreens)
+            {
+                if (screen.IsActive && Settings.DeactivedScreens.Contains(screen.DeviceName))
+                {
+                    Settings.DeactivedScreens.Remove(screen.DeviceName);
+                }
+                else if (!screen.IsActive && !Settings.DeactivedScreens.Contains(screen.DeviceName))
+                {
+                    Settings.DeactivedScreens.Add(screen.DeviceName);
+                }
+            }
 
             fileOperationService.Save(Settings);
 
@@ -104,15 +114,15 @@ namespace SnapScreen.Library.Services
 
         public void LinkScreenLayout(Entities.SnapScreen snapScreen, Layout layout)
         {
-            SnapScreens.First(screen => screen.Base.DeviceName == snapScreen.Base.DeviceName).Layout = layout;
+            SnapScreens.First(screen => screen.DeviceName == snapScreen.DeviceName).Layout = layout;
 
-            if (Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName))
+            if (Settings.ScreensLayouts.ContainsKey(snapScreen.DeviceName))
             {
-                Settings.ScreensLayouts[snapScreen.Base.DeviceName] = layout.Guid.ToString();
+                Settings.ScreensLayouts[snapScreen.DeviceName] = layout.Guid.ToString();
             }
             else
             {
-                Settings.ScreensLayouts.Add(snapScreen.Base.DeviceName, layout.Guid.ToString());
+                Settings.ScreensLayouts.Add(snapScreen.DeviceName, layout.Guid.ToString());
             }
         }
 
@@ -120,11 +130,20 @@ namespace SnapScreen.Library.Services
         {
             var snapScreens = new List<Entities.SnapScreen>();
 
+            var displays = WindowsDisplayAPI.Display.GetDisplays();
+
             foreach (var screen in Screen.AllScreens)
             {
-                var snapScreen = new Entities.SnapScreen(screen);
-                var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName)
+                var display = displays.FirstOrDefault(display => display.DisplayName == screen.DeviceName);
+                var snapScreen = new Entities.SnapScreen(screen, display?.DevicePath);
+                var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.DeviceName)
+                    ? Settings.ScreensLayouts[snapScreen.DeviceName] : string.Empty;
+
+                if (string.IsNullOrWhiteSpace(layoutGuid)) //fallback for older version
+                {
+                    layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName)
                     ? Settings.ScreensLayouts[snapScreen.Base.DeviceName] : string.Empty;
+                }
 
                 if (!string.IsNullOrWhiteSpace(layoutGuid))
                 {
@@ -135,15 +154,15 @@ namespace SnapScreen.Library.Services
                     snapScreen.Layout = Layouts.FirstOrDefault();
                 }
 
-                snapScreen.IsActive = Settings.ActiveScreens.Contains(snapScreen.Base.DeviceName);
+                snapScreen.IsActive = !Settings.DeactivedScreens.Contains(snapScreen.DeviceName);
 
                 snapScreens.Add(snapScreen);
             }
 
-            if (snapScreens.Any(s => !s.IsActive))
-            {
-                snapScreens.ForEach(s => s.IsActive = true);
-            }
+            //if (snapScreens.Any(s => !s.IsActive))
+            //{
+            //    snapScreens.ForEach(s => s.IsActive = true);
+            //}
 
             return snapScreens;
         }
@@ -185,7 +204,7 @@ namespace SnapScreen.Library.Services
 #if !STANDALONE
             try
             {
-                var startupTask = await StartupTask.GetAsync("SnapItStartupTask");
+                var startupTask = await StartupTask.GetAsync("SnapScreenStartupTask");
                 if (isActive)
                 {
                     await startupTask.RequestEnableAsync();

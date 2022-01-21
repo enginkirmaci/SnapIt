@@ -10,7 +10,7 @@ namespace SnapScreen.Library.Entities
         public Settings()
         {
             ScreensLayouts = new Dictionary<string, string>();
-            ActiveScreens = new List<string>();
+            DeactivedScreens = new List<string>();
         }
 
         public string Version = "1.0";
@@ -44,7 +44,7 @@ namespace SnapScreen.Library.Entities
         };
 
         public Dictionary<string, string> ScreensLayouts { get; set; }
-        public List<string> ActiveScreens { get; set; }
+        public List<string> DeactivedScreens { get; set; }
         public string MoveUpShortcut { get; set; } = "Control + Alt + Up";
         public string MoveDownShortcut { get; set; } = "Control + Alt + Down";
         public string MoveLeftShortcut { get; set; } = "Control + Alt + Left";

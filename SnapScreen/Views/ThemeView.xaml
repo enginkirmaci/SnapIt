@@ -10,125 +10,27 @@
     xmlns:controls="clr-namespace:SnapScreen.Library.Controls;assembly=SnapScreen.Library"
     xmlns:design="clr-namespace:SnapScreen.ViewModels.DesignTime"
     xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
+    x:Name="ThemeViewPage"
     Title="ThemeView"
     d:DataContext="{d:DesignInstance design:ThemeDesignView,
                                      IsDesignTimeCreatable=True}"
-    d:DesignWidth="500"
+    d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Style="{StaticResource UiPageScrollable}"
+    Style="{StaticResource UiPage}"
     mc:Ignorable="d">
-    <d:DesignerProperties.DesignStyle>
-        <Style TargetType="Page">
-            <Setter Property="Background" Value="White" />
-        </Style>
-    </d:DesignerProperties.DesignStyle>
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=ThemeViewUserControl}" />
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=ThemeViewPage}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <StackPanel>
-                <TextBlock
-                    Margin="0,0,0,6"
-                    FontSize="18"
-                    Text="Preview" />
-                <Grid HorizontalAlignment="Left">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill" />
-                    </Grid.Background>
-
-                    <controls:SnapControl
-                        Width="480"
-                        Height="240"
-                        Layout="{Binding Layout}"
-                        Theme="{Binding Theme, Mode=TwoWay}" />
-                </Grid>
-            </StackPanel>
-
-            <Grid Grid.Row="1" Margin="0,0,0,60">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <TextBlock
-                    Grid.ColumnSpan="2"
-                    Margin="0,16,0,6"
-                    FontSize="18"
-                    Text="Snap Area" />
-
-                <StackPanel Grid.Row="1">
-                    <TextBlock Margin="0,6" Text="Overlay color" />
-                    <color:ColorPicker
-                        Margin="0,6,18,0"
-                        ColorMode="ColorCanvas"
-                        SelectedColor="{Binding Theme.OverlayColor}"
-                        ShowAvailableColors="False"
-                        ShowDropDownButton="False"
-                        ShowRecentColors="False" />
-
-                    <TextBlock Margin="0,6" Text="Highlight color" />
-                    <color:ColorPicker
-                        Margin="0,6,18,0"
-                        ColorMode="ColorCanvas"
-                        SelectedColor="{Binding Theme.HighlightColor}"
-                        ShowAvailableColors="False"
-                        ShowDropDownButton="False"
-                        ShowRecentColors="False" />
-                </StackPanel>
-
-                <StackPanel Grid.Row="1" Grid.Column="1">
-                    <TextBlock Margin="0,6" Text="Opacity" />
-                    <Slider
-                        Width="256"
-                        Margin="0,6,0,0"
-                        HorizontalAlignment="Left"
-                        AutoToolTipPlacement="TopLeft"
-                        LargeChange="5"
-                        Maximum="100"
-                        Minimum="0"
-                        SmallChange="1"
-                        Value="{Binding Theme.Opacity, Converter={StaticResource DoubleMultiplierConverter}}" />
-
-                    <TextBlock Margin="0,6" Text="Border thickness" />
-                    <Slider
-                        Width="256"
-                        Margin="0,6,0,0"
-                        HorizontalAlignment="Left"
-                        AutoToolTipPlacement="TopLeft"
-                        Maximum="25"
-                        Minimum="0"
-                        SmallChange="1"
-                        Value="{Binding Theme.BorderThickness}" />
-
-                    <TextBlock Margin="0,6" Text="Border color" />
-                    <color:ColorPicker
-                        Margin="0,6,18,0"
-                        ColorMode="ColorCanvas"
-                        SelectedColor="{Binding Theme.BorderColor}"
-                        ShowAvailableColors="False"
-                        ShowDropDownButton="False"
-                        ShowRecentColors="False" />
-                </StackPanel>
-            </Grid>
-        </Grid>
-
         <wpfui:Snackbar
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="1"
+            Panel.ZIndex="9"
             Icon="Empty"
             Show="{Binding OpenApplyChangesBar, Mode=TwoWay}">
             <i:Interaction.Triggers>
@@ -154,5 +56,110 @@
                     Content="Apply Changes" />
             </Grid>
         </wpfui:Snackbar>
+
+        <ScrollViewer Style="{StaticResource UiScrollViewer}">
+            <StackPanel Margin="0,0,0,100">
+                <Border
+                    x:Name="CardBorder"
+                    MinHeight="68"
+                    Padding="12"
+                    HorizontalAlignment="Left"
+                    Background="{StaticResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{StaticResource ControlElevationBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <StackPanel>
+                        <TextBlock
+                            Margin="0,0,0,6"
+                            VerticalAlignment="Center"
+                            FontWeight="Medium"
+                            Text="Preview" />
+
+                        <Grid>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill" />
+                            </Grid.Background>
+
+                            <controls:SnapControl
+                                Width="480"
+                                Height="240"
+                                Layout="{Binding Layout}"
+                                Theme="{Binding Theme, Mode=TwoWay}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock
+                    Margin="0,16,0,6"
+                    FontWeight="Medium"
+                    Text="Snap Area" />
+
+                <wpfui:CardControl
+                    Title="Overlay color"
+                    Margin="0,0,0,8"
+                    Icon="Empty">
+                    <color:ColorPicker
+                        Width="256"
+                        ColorMode="ColorCanvas"
+                        SelectedColor="{Binding Theme.OverlayColor}"
+                        ShowAvailableColors="False"
+                        ShowDropDownButton="False"
+                        ShowRecentColors="False" />
+                </wpfui:CardControl>
+
+                <wpfui:CardControl
+                    Title="Highlight color"
+                    Margin="0,0,0,8"
+                    Icon="Empty">
+                    <color:ColorPicker
+                        Width="256"
+                        ColorMode="ColorCanvas"
+                        SelectedColor="{Binding Theme.HighlightColor}"
+                        ShowAvailableColors="False"
+                        ShowDropDownButton="False"
+                        ShowRecentColors="False" />
+                </wpfui:CardControl>
+
+                <wpfui:CardControl
+                    Title="Overall Opacity"
+                    Margin="0,0,0,8"
+                    Icon="Empty">
+                    <Slider
+                        Width="256"
+                        AutoToolTipPlacement="TopLeft"
+                        LargeChange="5"
+                        Maximum="100"
+                        Minimum="0"
+                        SmallChange="1"
+                        Value="{Binding Theme.Opacity, Converter={StaticResource DoubleMultiplierConverter}}" />
+                </wpfui:CardControl>
+
+                <wpfui:CardControl
+                    Title="Border color"
+                    Margin="0,0,0,8"
+                    Icon="Empty">
+                    <color:ColorPicker
+                        Width="256"
+                        ColorMode="ColorCanvas"
+                        SelectedColor="{Binding Theme.BorderColor}"
+                        ShowAvailableColors="False"
+                        ShowDropDownButton="False"
+                        ShowRecentColors="False" />
+                </wpfui:CardControl>
+
+                <wpfui:CardControl
+                    Title="Border thickness"
+                    Margin="0,0,0,8"
+                    Icon="Empty">
+                    <Slider
+                        Width="256"
+                        AutoToolTipPlacement="TopLeft"
+                        Maximum="25"
+                        Minimum="0"
+                        SmallChange="1"
+                        Value="{Binding Theme.BorderThickness}" />
+                </wpfui:CardControl>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

@@ -12,8 +12,8 @@
     xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
     x:Name="MainWindowView"
     Title="{x:Static c:Constants.AppName}"
-    Width="950"
-    Height="660"
+    Width="760"
+    Height="600"
     MinWidth="640"
     MinHeight="440"
     d:DataContext="{d:DesignInstance design:MainWindowDesignViewModel,
@@ -36,138 +36,15 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1" Margin="12,6,12,12">
-            <!--  Here we separate CardProfile, Navigation and Frame  -->
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!--  Profile card displays the app's icon, name, and subtitle  -->
-            <Grid Grid.Row="0" Margin="6,0,0,24">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <!--<Border
-                    Grid.Column="0"
-                    Width="40"
-                    Height="40"
-                    CornerRadius="20">
-                    <Border.Background>
-                        <ImageBrush ImageSource="/Themes/snapit.png" />
-                    </Border.Background>
-                </Border>-->
-
-                <!--<Image Width="40" Source="/Themes/snapit.png" />-->
-
-                <StackPanel
-                    Grid.Column="1"
-                    Margin="12,0,0,0"
-                    VerticalAlignment="Center">
-                    <TextBlock FontWeight="Medium" Text="{x:Static c:Constants.AppName}" />
-                    <TextBlock
-                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                        Text="{Binding LicenseText}"
-                        Visibility="{Binding LicenseText, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
-                </StackPanel>
-            </Grid>
-
-            <!--  This element displays the navigation items  -->
-            <wpfui:NavigationFluent
-                x:Name="RootNavigation"
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="0,0,12,0"
-                Frame="{Binding ElementName=MainFrame}">
-                <wpfui:NavigationFluent.Items>
-                    <wpfui:NavigationItem
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="LayoutView"
-                        Content="Layout"
-                        Icon="DataTreemap24"
-                        Tag="layout" />
-                    <wpfui:NavigationItem
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="MouseSettingsView"
-                        Content="Mouse"
-                        FontIcon="&#xe962;"
-                        Tag="mouse" />
-                    <wpfui:NavigationItem
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="KeyboardSettingsView"
-                        Content="Keyboard"
-                        Icon="Keyboard24"
-                        Tag="keyboard" />
-                    <wpfui:NavigationItem
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="WindowsView"
-                        Content="Window"
-                        Icon="CalendarMultiple24"
-                        Tag="window" />
-                    <wpfui:NavigationItem
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="ThemeView"
-                        Content="Theme"
-                        Icon="Color24"
-                        Tag="theme" />
-                    <wpfui:NavigationItem
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="SettingsView"
-                        Content="Settings"
-                        Icon="Settings24"
-                        Tag="settings" />
-                    <wpfui:NavigationItem
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="AboutView"
-                        Content="About"
-                        Icon="Info24"
-                        Tag="about" />
-                </wpfui:NavigationFluent.Items>
-            </wpfui:NavigationFluent>
-
-            <StackPanel Grid.Row="2">
-                <Separator Margin="0,0,0,8" />
-                <wpfui:ToggleSwitch
-                    BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}"
-                    Command="{Binding StartStopCommand}"
-                    Content="{Binding Status}"
-                    IsChecked="{Binding IsRunning}" />
-            </StackPanel>
-
-            <!--  Pages are presented here  -->
-            <Grid
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <wpfui:Breadcrumb
-                    Grid.Row="0"
-                    Margin="0,0,0,18"
-                    Navigation="{Binding ElementName=RootNavigation}" />
-                <Frame
-                    x:Name="MainFrame"
-                    Grid.Row="1"
-                    prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}"
-                    Navigating="MainFrame_Navigating" />
-            </Grid>
-        </Grid>
-
         <wpfui:TitleBar
             x:Name="RootTitleBar"
+            Title="{x:Static c:Constants.AppName}"
             ApplicationNavigation="False"
+            Icon="/Themes/snapit.png"
             MinimizeToTray="True"
             NotifyIconImage="pack://application:,,,/Themes/notifyicon.ico"
             NotifyIconTooltip="{x:Static c:Constants.AppName}"
+            Subtitle="{Binding LicenseText}"
             UseNotifyIcon="True"
             UseSnapLayout="True">
             <i:Interaction.Triggers>
@@ -245,6 +122,7 @@
             Margin="0,-4,150,0"
             Padding="30,10,30,6"
             HorizontalAlignment="Right"
+            VerticalAlignment="Top"
             Appearance="Secondary"
             Command="{Binding TrialVersionCommand}"
             Content="Trial Version"
@@ -252,6 +130,147 @@
             FontWeight="Light"
             ToolTip="Trial Version"
             Visibility="{Binding IsTrial, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+
+        <!--<TextBlock
+            Margin="48,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="{Binding LicenseText}"
+            Visibility="{Binding LicenseText, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />-->
+
+        <Grid Grid.Row="1" Margin="12,6,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <wpfui:NavigationStore
+                x:Name="RootNavigation"
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,0,12,0"
+                Frame="{Binding ElementName=MainFrame}">
+                <wpfui:NavigationStore.Items>
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="HomeView"
+                        Content="Home"
+                        Icon="Home24"
+                        Tag="home"
+                        Visibility="Collapsed" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="LayoutView"
+                        Content="Layout"
+                        Icon="DataTreemap24"
+                        Tag="layout" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="MouseSettingsView"
+                        Content="Mouse"
+                        FontIcon="&#xe962;"
+                        Tag="mouse" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="KeyboardSettingsView"
+                        Content="Keyboard"
+                        Icon="Keyboard24"
+                        Tag="keyboard" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="WindowsView"
+                        Content="Window"
+                        Icon="CalendarMultiple24"
+                        Tag="window" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="ThemeView"
+                        Content="Theme"
+                        Icon="Color24"
+                        Tag="theme" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="SettingsView"
+                        Content="Settings"
+                        Icon="Settings24"
+                        Tag="settings" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="AboutView"
+                        Content="About"
+                        Icon="Info24"
+                        Tag="about" />
+                </wpfui:NavigationStore.Items>
+            </wpfui:NavigationStore>
+
+            <StackPanel Grid.Row="2" Margin="0,0,12,0">
+
+                <Separator Margin="0,8" />
+
+                <wpfui:ToggleSwitch
+                    HorizontalAlignment="Center"
+                    Command="{Binding StartStopCommand}"
+                    IsChecked="{Binding IsRunning}"
+                    ToolTip="{Binding Status}" />
+
+                <!--<ToggleButton
+                    Width="60"
+                    Height="60"
+                    Margin="0"
+                    Padding="0"
+                    HorizontalAlignment="Left"
+                    Command="{Binding StartStopCommand}"
+                    IsChecked="{Binding IsRunning}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <wpfui:Icon
+                            FontSize="24"
+                            Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                            Glyph="Play24" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Height="15"
+                            Margin="0,2,0,0"
+                            HorizontalAlignment="Center"
+                            FontSize="10"
+                            Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                            Text="{Binding Status}"
+                            TextWrapping="Wrap" />
+                    </Grid>
+                </ToggleButton>-->
+            </StackPanel>
+
+            <!--  Pages are presented here  -->
+            <Grid
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <wpfui:Breadcrumb
+                    Grid.Row="0"
+                    Margin="0,0,0,18"
+                    Navigation="{Binding ElementName=RootNavigation}" />
+                <Frame
+                    x:Name="MainFrame"
+                    Grid.Row="1"
+                    prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}"
+                    Navigating="MainFrame_Navigating" />
+            </Grid>
+        </Grid>
 
         <wpfui:Dialog
             Grid.RowSpan="2"

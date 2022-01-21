@@ -33,14 +33,14 @@
                 Title="Start Snap Screen when I start Windows"
                 Margin="0,0,0,8"
                 Icon="Empty">
-                <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding IsStartupTaskActive}" />
+                <wpfui:ToggleSwitch IsChecked="{Binding IsStartupTaskActive}" />
             </wpfui:CardControl>
 
             <wpfui:CardControl
                 Title="Start Snap Screen minimized to tray"
                 Margin="0,0,0,8"
                 Icon="Empty">
-                <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding IsMinimizeTray}" />
+                <wpfui:ToggleSwitch IsChecked="{Binding IsMinimizeTray}" />
             </wpfui:CardControl>
 
             <wpfui:CardControl
@@ -48,7 +48,7 @@
                 Margin="0,0,0,8"
                 Icon="Empty"
                 Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
-                <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding IsRunAsAdmin}" />
+                <wpfui:ToggleSwitch IsChecked="{Binding IsRunAsAdmin}" />
             </wpfui:CardControl>
 
             <wpfui:CardControl
@@ -56,7 +56,7 @@
                 Margin="0,0,0,8"
                 Icon="Empty"
                 Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
-                <wpfui:ToggleSwitch BorderBrush="{DynamicResource FocusStrokeColorOuterBrush}" IsChecked="{Binding CheckForNewVersion}" />
+                <wpfui:ToggleSwitch IsChecked="{Binding CheckForNewVersion}" />
             </wpfui:CardControl>
 
             <wpfui:CardControl

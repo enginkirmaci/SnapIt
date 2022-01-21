@@ -84,8 +84,6 @@ namespace SnapScreen
 
             Telemetry.TrackEvent("OnStartup");
 
-            WPFUI.Theme.Manager.SetSystemTheme(true, false);
-
             base.OnStartup(e);
         }
 
@@ -103,6 +101,7 @@ namespace SnapScreen
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterForNavigation<HomeView>();
             containerRegistry.RegisterForNavigation<LayoutView>();
             containerRegistry.RegisterForNavigation<MouseSettingsView>();
             containerRegistry.RegisterForNavigation<KeyboardSettingsView>();
@@ -134,6 +133,7 @@ namespace SnapScreen
                 if (snapServiceContainer != null)
                 {
                     snapServiceContainer.Release();
+                    NotifyIcon.Dispose();
                 }
             }
         }

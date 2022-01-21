@@ -16,6 +16,7 @@
     <AssemblyVersion></AssemblyVersion>
     <Configurations>Debug;Release;Standalone</Configurations>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
