@@ -10,6 +10,7 @@ namespace SnapScreen.Library.Entities
         public bool IsActive
         { get => isActive; set { SetProperty(ref isActive, value); } }
 
+        public string DeviceName { get; set; }
         public string Primary { get => Base.Primary ? "Primary" : null; }
 
         public string DeviceNumber { get => Base.DeviceName.Replace(@"\\.\DISPLAY", string.Empty); }
@@ -32,9 +33,18 @@ namespace SnapScreen.Library.Entities
             }
         }
 
-        public SnapScreen(Screen screen)
+        public SnapScreen(Screen screen, string devicePath)
         {
             Base = screen;
+
+            if (!string.IsNullOrEmpty(devicePath))
+            {
+                DeviceName = devicePath;
+            }
+            else
+            {
+                DeviceName = screen.DeviceName;
+            }
         }
     }
 }

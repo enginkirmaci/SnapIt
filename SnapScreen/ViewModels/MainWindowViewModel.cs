@@ -118,7 +118,6 @@ namespace SnapScreen.ViewModels
                 mainWindow = window;
 
                 ChangeTheme();
-                WPFUI.Background.Manager.Apply(mainWindow);
 
                 var contentControl = window.FindChildren<ContentControl>("MainFrame");
 
@@ -140,12 +139,16 @@ namespace SnapScreen.ViewModels
                     NavigateView("LayoutView");
                 }
 
-                CheckIfTrialAsync();
-
                 if (isStandalone)
                 {
                     CheckForNewVersion();
                 }
+                else
+                {
+                    storeLicenseService.Init(mainWindow);
+                }
+
+                CheckIfTrialAsync();
             });
 
             TrialVersionCommand = new DelegateCommand(() =>
@@ -227,7 +230,7 @@ namespace SnapScreen.ViewModels
 
             TryStoreMessageClosingCommand = new DelegateCommand<object>(async (isConfirm) =>
             {
-                if ((bool)isConfirm && latestVersion != null)
+                if ((bool)isConfirm)
                 {
                     await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-windows-store://pdp/?ProductId={Constants.AppStoreId}"));
                 }
@@ -305,7 +308,6 @@ namespace SnapScreen.ViewModels
                 {
                     var screenMenu = new MenuItem()
                     {
-                        //Name = screen.Base.DeviceName,
                         Header = $"Display {screen.DeviceNumber} ({screen.Resolution}) - {screen.Primary}"
                     };
 
@@ -319,7 +321,7 @@ namespace SnapScreen.ViewModels
                         var layoutMenuItem = new MenuItem()
                         {
                             Header = layout.Name,
-                            Tag = screen.Base.DeviceName,
+                            Tag = screen.DeviceName,
                             Uid = layout.Guid.ToString(),
                             Icon = null
                         };
@@ -398,7 +400,7 @@ namespace SnapScreen.ViewModels
 
         private void NavigateView(string navigatePath)
         {
-            var rootNavigation = mainWindow.FindChildren<NavigationFluent>("RootNavigation");
+            var rootNavigation = mainWindow.FindChildren<NavigationStore>("RootNavigation");
 
             var index = 0;
             if (rootNavigation != null)
@@ -461,7 +463,7 @@ namespace SnapScreen.ViewModels
 
             if (settingService.SnapScreens.Count > 1)
             {
-                var snapScreen = settingService.SnapScreens.FirstOrDefault(screen => screen.Base.DeviceName == layoutMenuItem.Tag.ToString());
+                var snapScreen = settingService.SnapScreens.FirstOrDefault(screen => screen.DeviceName == layoutMenuItem.Tag.ToString());
 
                 if (snapScreen != null)
                 {

@@ -26,18 +26,13 @@ namespace SnapScreen.ViewModels
         private bool openApplyChangesBar;
         private SnapArea snapArea;
 
-        //private IEnumerable<Color> accentColors = ThemeManager.Current.Themes
-        //                                   .GroupBy(x => x.ColorScheme)
-        //                                   .OrderBy(a => a.Key)
-        //                                   .Select(a => ((SolidColorBrush)a.First().ShowcaseBrush).Color);
-
         public Layout Layout { get; set; }
+
         public SnapAreaTheme Theme
         { get => theme; set { SetProperty(ref theme, value); } }
+
         public BitmapImage BackgroundImage { get => backgroundImage; set => SetProperty(ref backgroundImage, value); }
         public bool OpenApplyChangesBar { get => openApplyChangesBar; set => SetProperty(ref openApplyChangesBar, value); }
-
-        //public IEnumerable<Color> AccentColors { get => accentColors; }
 
         public DelegateCommand<object> LoadedCommand { get; }
         public DelegateCommand ApplyChangesCommand { get; }
@@ -69,7 +64,7 @@ namespace SnapScreen.ViewModels
             {
                 var grid = mainSnapGrid as DependencyObject;
 
-                snapArea = grid.FindChildren<SnapArea>().FirstOrDefault();
+                snapArea = grid?.FindChildren<SnapArea>().FirstOrDefault();
 
                 if (snapArea != null)
                 {

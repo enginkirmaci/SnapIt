@@ -16,11 +16,13 @@ namespace SnapIt.Library.Entities
         public string Version = "1.0";
         public bool EnableMouse { get; set; } = true;
         public bool DragByTitle { get; set; } = true;
+
         [JsonConverter(typeof(StringEnumConverter))]
         public MouseButton MouseButton { get; set; } = MouseButton.Left;
 
         public int MouseDragDelay { get; set; } = 200;
         public bool EnableHoldKey { get; set; } = false;
+
         [JsonConverter(typeof(StringEnumConverter))]
         public HoldKey HoldKey { get; set; } = HoldKey.Control;
 
@@ -31,6 +33,7 @@ namespace SnapIt.Library.Entities
         public bool DisableForFullscreen { get; set; } = true;
         public bool DisableForModal { get; set; } = true;
         public bool ShowMainWindow { get; set; } = true;
+
         [JsonConverter(typeof(StringEnumConverter))]
         public UITheme AppTheme { get; set; } = UITheme.Dark;
 

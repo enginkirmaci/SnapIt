@@ -12,11 +12,6 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     Style="{StaticResource UiPageScrollable}"
     mc:Ignorable="d">
-    <d:DesignerProperties.DesignStyle>
-        <Style TargetType="Page">
-            <Setter Property="Background" Value="White" />
-        </Style>
-    </d:DesignerProperties.DesignStyle>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -55,7 +50,6 @@
 
             <wpfui:Hyperlink
                 Content="{x:Static c:Constants.AppUrl}"
-                Foreground="{StaticResource PaletteBlueBrush}"
                 Icon="Link24"
                 NavigateUri="{Binding Source={x:Static c:Constants.AppUrl}, Converter={StaticResource UriConverter}}" />
 
@@ -68,14 +62,12 @@
                     <wpfui:Hyperlink
                         Margin="0,0,0,4"
                         Content="New ideas or report a bug"
-                        Foreground="{StaticResource PaletteBlueBrush}"
                         Icon="Link24"
                         NavigateUri="{Binding Source={x:Static c:Constants.AppFeedbackUrl}, Converter={StaticResource UriConverter}}" />
 
                     <wpfui:Hyperlink
                         Command="{Binding RateReviewStoreClick}"
                         Content="Rate and review on Microsoft Store"
-                        Foreground="{StaticResource PaletteBlueBrush}"
                         Icon="Link24" />
                 </StackPanel>
             </wpfui:CardExpander>
@@ -123,14 +115,12 @@
             <wpfui:Hyperlink
                 HorizontalAlignment="Left"
                 Content="{x:Static c:Constants.CompanyName}"
-                Foreground="{StaticResource PaletteBlueBrush}"
                 Icon="Empty"
                 NavigateUri="{Binding Source={x:Static c:Constants.CompanyUrl}, Converter={StaticResource UriConverter}}" />
 
             <wpfui:Hyperlink
                 HorizontalAlignment="Right"
                 Content="Privacy policy"
-                Foreground="{StaticResource PaletteBlueBrush}"
                 Icon="Empty"
                 NavigateUri="{Binding Source={x:Static c:Constants.AppPrivacyUrl}, Converter={StaticResource UriConverter}}" />
         </Grid>

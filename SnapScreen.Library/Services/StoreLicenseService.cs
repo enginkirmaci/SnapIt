@@ -19,8 +19,10 @@ namespace SnapScreen.Library.Services
             storeContext = StoreContext.GetDefault();
             storeContext.OfflineLicensesChanged += StoreOfflineLicensesChanged;
 
-            IInitializeWithWindow initWindow = (IInitializeWithWindow)(object)storeContext;
-            initWindow.Initialize(new WindowInteropHelper(window).Handle);
+            //IInitializeWithWindow initWindow = (IInitializeWithWindow)(object)storeContext;
+            //initWindow.Initialize(new WindowInteropHelper(window).Handle);
+
+            WinRT.Interop.InitializeWithWindow.Initialize(storeContext, new WindowInteropHelper(window).Handle);
         }
 
         public async Task<PurchaseStatus> RequestPurchaseAsync()
