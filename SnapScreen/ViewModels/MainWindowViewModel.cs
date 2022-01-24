@@ -119,7 +119,7 @@ namespace SnapScreen.ViewModels
 
                 ChangeTheme();
 
-                var contentControl = window.FindChildren<ContentControl>("MainFrame");
+                var contentControl = window.FindChild<ContentControl>("MainFrame");
 
                 RegionManager.SetRegionName(contentControl, Constants.MainRegion);
                 RegionManager.SetRegionManager(contentControl, regionManager);
@@ -290,9 +290,9 @@ namespace SnapScreen.ViewModels
 
             NotifyIconOpenedCommand = new DelegateCommand<object>((obj) =>
             {
-                var rootTitleBar = mainWindow.FindChildren<TitleBar>("RootTitleBar");
+                var rootTitleBar = mainWindow.FindChild<TitleBar>("RootTitleBar");
 
-                var layoutsMenu = rootTitleBar.NotifyIconMenu.FindChildren<MenuItem>("LayoutMenuItem");
+                var layoutsMenu = rootTitleBar.NotifyIconMenu.FindChild<MenuItem>("LayoutMenuItem");
 
                 if (layoutsMenu == null)
                 {
@@ -400,7 +400,7 @@ namespace SnapScreen.ViewModels
 
         private void NavigateView(string navigatePath)
         {
-            var rootNavigation = mainWindow.FindChildren<NavigationStore>("RootNavigation");
+            var rootNavigation = mainWindow.FindChild<NavigationStore>("RootNavigation");
 
             var index = 0;
             if (rootNavigation != null)

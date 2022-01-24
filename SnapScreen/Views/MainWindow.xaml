@@ -12,8 +12,8 @@
     xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
     x:Name="MainWindowView"
     Title="{x:Static c:Constants.AppName}"
-    Width="760"
-    Height="600"
+    Width="960"
+    Height="730"
     MinWidth="640"
     MinHeight="440"
     d:DataContext="{d:DesignInstance design:MainWindowDesignViewModel,

@@ -51,7 +51,7 @@ namespace SnapScreen.Library.Services
 
             if (LatestActiveScreen == null)
             {
-                LatestActiveScreen = SnapScreens.FirstOrDefault(screen => screen.Base.Primary);
+                LatestActiveScreen = SnapScreens.FirstOrDefault(screen => screen.IsPrimary);
             }
         }
 
@@ -141,8 +141,8 @@ namespace SnapScreen.Library.Services
 
                 if (string.IsNullOrWhiteSpace(layoutGuid)) //fallback for older version
                 {
-                    layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.Base.DeviceName)
-                    ? Settings.ScreensLayouts[snapScreen.Base.DeviceName] : string.Empty;
+                    layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.DeviceName)
+                    ? Settings.ScreensLayouts[snapScreen.DeviceName] : string.Empty;
                 }
 
                 if (!string.IsNullOrWhiteSpace(layoutGuid))

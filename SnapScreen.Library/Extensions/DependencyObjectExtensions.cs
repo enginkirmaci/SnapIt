@@ -26,7 +26,22 @@ namespace SnapScreen.Library.Extensions
             }
         }
 
-        public static T FindChildren<T>(this DependencyObject depObj, string childName) where T : DependencyObject
+        public static IEnumerable<T> FindChildren<T>(this DependencyObject depObj, string childName) where T : DependencyObject
+        {
+            var collection = FindChildren<T>(depObj);
+
+            foreach (var child in collection)
+            {
+                var frameworkElement = child as FrameworkElement;
+
+                if (frameworkElement != null && frameworkElement.Name == childName)
+                {
+                    yield return child;
+                }
+            }
+        }
+
+        public static T FindChild<T>(this DependencyObject depObj, string childName) where T : DependencyObject
         {
             var collection = FindChildren<T>(depObj);
             T foundChild = null;
@@ -37,7 +52,7 @@ namespace SnapScreen.Library.Extensions
 
                 if (frameworkElement != null && frameworkElement.Name == childName)
                 {
-                    foundChild = (T)child;
+                    foundChild = child;
                     break;
                 }
             }

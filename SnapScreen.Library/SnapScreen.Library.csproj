@@ -49,6 +49,9 @@
     <Page Update="Controls\SnapOverlayEditor.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Controls\Styles\SnapScreenViewer.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 
 </Project>

@@ -9,8 +9,8 @@ namespace SnapScreen.ViewModels.DesignTime
 {
     public class LayoutDesignView
     {
-        public ObservableCollection<SnapScreen> SnapScreens { get; set; }
-        public SnapScreen SelectedSnapScreen { get; set; }
+        public ObservableCollection<Library.Entities.SnapScreen> SnapScreens { get; set; }
+        public Library.Entities.SnapScreen SelectedSnapScreen { get; set; }
         public ObservableCollection<Layout> Layouts { get; set; }
         public Layout SelectedLayout { get; set; }
         public SnapAreaTheme Theme { get; set; }
@@ -28,10 +28,6 @@ namespace SnapScreen.ViewModels.DesignTime
                 BorderThickness = 1,
                 Opacity = 1
             };
-
-            SnapScreens = new ObservableCollection<SnapScreen>();
-            SnapScreens.Add(new SnapScreen() { DeviceNumber = "1", Primary = "Primary", Resolution = "1920 x 1080" });
-            SnapScreens.Add(new SnapScreen() { DeviceNumber = "2", IsActive = true, Primary = null, Resolution = "3440 x 1440" });
 
             Layouts = new ObservableCollection<Layout>
             {
@@ -58,6 +54,14 @@ namespace SnapScreen.ViewModels.DesignTime
                             Size = new System.Windows.Size(0,100)
                         }
                     },
+                    LayoutOverlays = new List<LayoutOverlay>
+                    {
+                        new LayoutOverlay
+                        {
+                            Point= new System.Windows.Point(100,0),
+                            Size= new System.Windows.Size(100,100)
+                        }
+                    },
                     Theme = Theme
                 },
                 new Layout
@@ -65,50 +69,58 @@ namespace SnapScreen.ViewModels.DesignTime
                     Name = "Layout 2",
                     Size = new System.Windows.Size(1436, 700.8),
                     LayoutLines = new List<LayoutLine>
-                {
-                    new LayoutLine
                     {
-                        Point=new System.Windows.Point(259.904414003044,0),
-                        Size = new System.Windows.Size(0,700.8)
+                        new LayoutLine
+                        {
+                            Point=new System.Windows.Point(259.904414003044,0),
+                            Size = new System.Windows.Size(0,700.8)
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point( 1230.4596651446,0),
+                            Size = new System.Windows.Size(0,700.8 )
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(259.904414003044,471.072897196262 ),
+                            Size = new System.Windows.Size(970.555251141553,0 ),
+                            SplitDirection = SplitDirection.Horizontal
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(455.331811263318,471.072897196262 ),
+                            Size = new System.Windows.Size(0,229.727102803738 )
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(567.733637747336,0 ),
+                            Size = new System.Windows.Size( 0,471.072897196262)
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(567,235.5 ),
+                            Size = new System.Windows.Size(663,0 ),
+                            SplitDirection = SplitDirection.Horizontal
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(898.5,235 ),
+                            Size = new System.Windows.Size( 0,236)
+                        },
+                         new LayoutLine
+                        {
+                            Point=new System.Windows.Point(842.5,471 ),
+                            Size = new System.Windows.Size( 0,229)
+                        }
                     },
-                     new LayoutLine
+                    LayoutOverlays = new List<LayoutOverlay>
                     {
-                        Point=new System.Windows.Point( 1230.4596651446,0),
-                        Size = new System.Windows.Size(0,700.8 )
+                        new LayoutOverlay
+                        {
+                            Point= new System.Windows.Point(100,0),
+                            Size= new System.Windows.Size(1000,600)
+                        }
                     },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(259.904414003044,471.072897196262 ),
-                        Size = new System.Windows.Size(970.555251141553,0 ),
-                        SplitDirection = SplitDirection.Horizontal
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(455.331811263318,471.072897196262 ),
-                        Size = new System.Windows.Size(0,229.727102803738 )
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(567.733637747336,0 ),
-                        Size = new System.Windows.Size( 0,471.072897196262)
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(567,235.5 ),
-                        Size = new System.Windows.Size(663,0 ),
-                        SplitDirection = SplitDirection.Horizontal
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(898.5,235 ),
-                        Size = new System.Windows.Size( 0,236)
-                    },
-                     new LayoutLine
-                    {
-                        Point=new System.Windows.Point(842.5,471 ),
-                        Size = new System.Windows.Size( 0,229)
-                    }
-                },
                     Theme = Theme
                 },
                 new Layout
@@ -123,19 +135,63 @@ namespace SnapScreen.ViewModels.DesignTime
                 }
             };
 
+            var first = new System.Windows.Rect
+            {
+                X = 0,
+                Y = 0,
+                Width = 300,
+                Height = 200
+            };
+            var second = new System.Windows.Rect
+            {
+                X = 300,
+                Y = 100,
+                Width = 100,
+                Height = 100
+            };
+
+            SnapScreens = new ObservableCollection<Library.Entities.SnapScreen>
+            {
+                new Library.Entities.SnapScreen( )
+                {
+                    DeviceNumber = "1",
+                    Primary = "Primary",
+                    Resolution = "1920 x 1080",
+                    Layout = Layouts[0],
+                    WorkingArea = first,
+                    Bounds = first,
+                    IsActive = false
+                },
+                new Library.Entities.SnapScreen() {
+                    DeviceNumber = "2",
+                    IsActive = true,
+                    Primary = null,
+                    Resolution = "3440 x 1440",
+                    Layout = Layouts[1],
+                    WorkingArea = second,
+                    Bounds = second
+                }
+            };
+
             SelectedLayout = Layouts.First();
             SelectedSnapScreen = SnapScreens.First();
-            SnapScreens[0].Layout = Layouts[2];
+            SnapScreens[0].Layout = Layouts[1];
             SnapScreens[1].Layout = SelectedLayout;
         }
     }
 
-    public class SnapScreen
-    {
-        public string Primary { get; set; }
-        public string DeviceNumber { get; set; }
-        public string Resolution { get; set; }
-        public bool IsActive { get; set; }
-        public Layout Layout { get; set; }
-    }
+    //public class SnapScreen : Bindable
+    //{
+    //    private Layout layout;
+
+    //    public string Primary { get; set; }
+    //    public string DeviceNumber { get; set; }
+    //    public string Resolution { get; set; }
+    //    public bool IsActive { get; set; }
+
+    //    public Layout Layout
+    //    { get => layout; set { SetProperty(ref layout, value); } }
+
+    //    public System.Windows.Rect WorkingArea { get; set; }
+    //}
 }

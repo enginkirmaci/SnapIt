@@ -1,12 +1,13 @@
 ﻿<Page
     x:Class="SnapScreen.Views.LayoutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:prism="http://prismlibrary.com/"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SnapScreen.Library.Controls;assembly=SnapScreen.Library"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:SnapScreen.ViewModels.DesignTime"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:design="clr-namespace:SnapScreen.ViewModels.DesignTime"
+    xmlns:prism="http://prismlibrary.com/"
     xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
     x:Name="LayoutViewPage"
     Title="LayoutView"
@@ -17,7 +18,11 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     Style="{StaticResource UiPage}"
     mc:Ignorable="d">
-
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <wpfui:Dialog
             Panel.ZIndex="9"
@@ -49,28 +54,131 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel>
-                    <wpfui:CardExpander
+                    <wpfui:CardControl
+                        Title="Screens"
                         Margin="0,0,0,8"
-                        Header="Screens"
                         Icon="RectangleLandscape48"
-                        IsExpanded="True"
-                        Subtitle="Select screen and proceed to layout section.">
-                        <ListView
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Top"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            ItemContainerStyle="{DynamicResource SnapScreen.Styles.ScreenListView}"
+                        Subtitle="Select screen and proceed to layout section." />
+
+                    <Border
+                        Margin="0,0,0,8"
+                        Padding="20"
+                        Background="#1A1A1A"
+                        BorderBrush="{StaticResource ControlElevationBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <controls:SnapScreenViewer
+                            Height="280"
+                            Background="#1A1A1A"
                             ItemsSource="{Binding SnapScreens}"
                             SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                        </ListView>
-                    </wpfui:CardExpander>
+                            <controls:SnapScreenViewer.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="Foreground">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource SystemAccentColor}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                                    <Setter Property="OverridesDefaultStyle" Value="True" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                <Border
+                                                    x:Name="ItemBorder"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    Background="{DynamicResource SystemAccentBrush}"
+                                                    BorderBrush="Transparent"
+                                                    BorderThickness="5"
+                                                    CornerRadius="12">
+                                                    <Grid>
+                                                        <controls:SnapControl IsDesignMode="False" Layout="{Binding Layout}" />
+
+                                                        <ToggleButton
+                                                            Width="30"
+                                                            Height="30"
+                                                            Margin="8,12"
+                                                            Padding="0"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Top"
+                                                            Panel.ZIndex="9"
+                                                            IsChecked="{Binding IsActive, Converter={StaticResource InverseBoolConverter}}">
+                                                            <wpfui:Icon Glyph="CircleOff16" />
+                                                        </ToggleButton>
+
+                                                        <Grid Background="#FF1A1A1A" Visibility="{Binding IsActive, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}">
+                                                            <wpfui:Icon
+                                                                Panel.ZIndex="9"
+                                                                FontSize="80"
+                                                                Glyph="CircleOff16"
+                                                                Opacity="0.5" />
+                                                        </Grid>
+
+                                                        <Grid Background="#991A1A1A">
+                                                            <Border
+                                                                Margin="12"
+                                                                Padding="6"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Bottom"
+                                                                Background="#FF282828"
+                                                                CornerRadius="4">
+
+                                                                <StackPanel Grid.Row="1">
+                                                                    <TextBlock Text="{Binding Resolution}" />
+                                                                    <TextBlock Text="{Binding Primary, TargetNullValue=''}" Visibility="{Binding Primary, TargetNullValue=Collapsed}" />
+                                                                    <TextBlock Text="{Binding Layout.Name}" TextTrimming="CharacterEllipsis" />
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Border>
+
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Trigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="ItemBorder"
+                                                                        Storyboard.TargetProperty="(Border.Background).(Brush.Opacity)"
+                                                                        From="0.0"
+                                                                        To="1.0"
+                                                                        Duration="0:0:.16" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.EnterActions>
+                                                        <Trigger.ExitActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="ItemBorder"
+                                                                        Storyboard.TargetProperty="(Border.Background).(Brush.Opacity)"
+                                                                        From="1.0"
+                                                                        To="0.0"
+                                                                        Duration="0:0:.16" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.ExitActions>
+                                                        <Setter TargetName="ItemBorder" Property="BorderBrush">
+                                                            <Setter.Value>
+                                                                <SolidColorBrush Color="{DynamicResource SystemAccentColorLight3}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </controls:SnapScreenViewer.ItemContainerStyle>
+                        </controls:SnapScreenViewer>
+                    </Border>
 
                     <wpfui:CardControl
                         Title="Change Layouts"

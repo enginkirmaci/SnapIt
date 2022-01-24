@@ -282,7 +282,7 @@ namespace SnapScreen.Library.Controls
             leftBorder.SetPos(new Point(-SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
             rightBorder.SetPos(new Point(MainGrid.ActualWidth - SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
 
-            if (Layout != null)
+            if (Layout != null && ActualWidth != 0)
             {
                 var factorX = ActualWidth / Layout.Size.Width;
                 var factorY = ActualHeight / Layout.Size.Height;

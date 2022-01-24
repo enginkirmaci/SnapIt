@@ -1,7 +1,6 @@
 ﻿using System;
 using PInvoke;
 using SnapScreen.Library.Entities;
-using WpfScreenHelper;
 
 namespace SnapIt.Library.Extensions
 {
@@ -31,7 +30,7 @@ namespace SnapIt.Library.Extensions
 
     public static class ScreenExtensions
     {
-        public static Dpi GetDpi(this Screen screen)
+        public static Dpi GetDpi(this SnapScreen.Library.Entities.SnapScreen screen)
         {
             return DpiHelper.GetDpiFromPoint((int)screen.PixelBounds.Left, (int)screen.PixelBounds.Top);
         }

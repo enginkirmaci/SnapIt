@@ -83,7 +83,7 @@ namespace SnapScreen.Library.Controls
 
         private void CalculateDpi()
         {
-            Dpi = Screen.Base.GetDpi();
+            Dpi = Screen.GetDpi();
         }
 
         public void ApplyLayout()
