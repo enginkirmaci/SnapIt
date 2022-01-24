@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="pack://application:,,,/WPFUI;component/Styles/Theme/Dark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/WPFUI;component/Styles/WPFUI.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/CustomStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SnapScreen.Library;component/Controls/Styles/SnapScreenViewer.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />

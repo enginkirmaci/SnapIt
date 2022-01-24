@@ -1,4 +1,4 @@
-﻿using WpfScreenHelper;
+﻿using System.Windows;
 
 namespace SnapScreen.Library.Entities
 {
@@ -6,37 +6,52 @@ namespace SnapScreen.Library.Entities
     {
         private Layout layout;
         private bool isActive = true;
+        private string primary;
+        private bool isPrimary = false;
+        private string deviceNumber;
+        private string resolution;
+
+        public string DeviceName { get; set; }
+        public Rect WorkingArea { get; set; }
+        public Rect PixelBounds { get; set; }
+        public Rect Bounds { get; set; }
 
         public bool IsActive
         { get => isActive; set { SetProperty(ref isActive, value); } }
 
-        public string DeviceName { get; set; }
-        public string Primary { get => Base.Primary ? "Primary" : null; }
+        public bool IsPrimary
+        { get => isPrimary; set { SetProperty(ref isPrimary, value); } }
 
-        public string DeviceNumber { get => Base.DeviceName.Replace(@"\\.\DISPLAY", string.Empty); }
-        public string Resolution { get => $"{Base.PixelBounds.Width} X {Base.PixelBounds.Height}"; }
+        public string Primary
+        { get => primary; set { SetProperty(ref primary, value); } }
 
-        public Screen Base { get; set; }
+        public string DeviceNumber
+        { get => deviceNumber; set { SetProperty(ref deviceNumber, value); } }
+
+        public string Resolution
+        { get => resolution; set { SetProperty(ref resolution, value); } }
 
         public Layout Layout
         { get => layout; set { SetProperty(ref layout, value); } }
 
-        public System.Windows.Rect WorkingArea
-        {
-            get
-            {
-                return new System.Windows.Rect(
-                    Base.WorkingArea.X * Base.ScaleFactor,
-                    Base.WorkingArea.Y * Base.ScaleFactor,
-                    Base.WorkingArea.Width * Base.ScaleFactor,
-                    Base.WorkingArea.Height * Base.ScaleFactor);
-            }
-        }
+        public SnapScreen()
+        { }
 
-        public SnapScreen(Screen screen, string devicePath)
+        public SnapScreen(WpfScreenHelper.Screen screen, string devicePath)
         {
-            Base = screen;
+            IsPrimary = screen.Primary;
+            Primary = IsPrimary ? "Primary" : "";
+            DeviceNumber = screen.DeviceName.Replace(@"\\.\DISPLAY", string.Empty);
+            Resolution = $"{screen.PixelBounds.Width} X {screen.PixelBounds.Height}";
 
+            WorkingArea = new Rect(
+                    screen.WorkingArea.X * screen.ScaleFactor,
+                    screen.WorkingArea.Y * screen.ScaleFactor,
+                    screen.WorkingArea.Width * screen.ScaleFactor,
+                    screen.WorkingArea.Height * screen.ScaleFactor);
+
+            PixelBounds = screen.PixelBounds;
+            Bounds = screen.Bounds;
             if (!string.IsNullOrEmpty(devicePath))
             {
                 DeviceName = devicePath;

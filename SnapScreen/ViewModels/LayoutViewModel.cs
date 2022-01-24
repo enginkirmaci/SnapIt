@@ -25,6 +25,7 @@ namespace SnapScreen.ViewModels
         private bool isRenameDialogOpen;
         private Layout popupLayout;
         private string renameDialogLayoutName;
+        private System.Windows.Window mainWindow;
 
         public ObservableCollectionWithItemNotify<Library.Entities.SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
 
@@ -67,6 +68,7 @@ namespace SnapScreen.ViewModels
         public DelegateCommand<object> RenameDialogClosingCommand { get; private set; }
         public DelegateCommand<Layout> DeleteLayoutCommand { get; private set; }
         public DelegateCommand<Layout> ExportLayoutCommand { get; private set; }
+        public DelegateCommand<System.Windows.Window> LoadedCommand { get; private set; }
 
         public LayoutViewModel(
             ISnapService snapService,
@@ -97,27 +99,32 @@ namespace SnapScreen.ViewModels
 
             SnapScreens.CollectionChanged += SnapScreens_CollectionChanged;
 
-            ImportLayoutCommand = new DelegateCommand(() =>
+            LoadedCommand = new DelegateCommand<System.Windows.Window>((window) =>
             {
-                try
-                {
-                    var fileDialog = new OpenFileDialog
-                    {
-                        DefaultExt = ".json",
-                        Filter = "Json (.json)|*.json"
-                    };
-
-                    if (fileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        var imported = settingService.ImportLayout(fileDialog.FileName);
-                        Layouts.Insert(0, imported);
-                    }
-                }
-                catch
-                {
-                    MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
-                }
+                mainWindow = window;
             });
+
+            ImportLayoutCommand = new DelegateCommand(() =>
+        {
+            try
+            {
+                var fileDialog = new OpenFileDialog
+                {
+                    DefaultExt = ".json",
+                    Filter = "Json (.json)|*.json"
+                };
+
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var imported = settingService.ImportLayout(fileDialog.FileName);
+                    Layouts.Insert(0, imported);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
+            }
+        });
 
             OpenRenameDialogCommand = new DelegateCommand<Layout>((layout) =>
             {
