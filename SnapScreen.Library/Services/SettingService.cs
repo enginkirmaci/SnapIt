@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SnapScreen.Library.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SnapScreen.Library.Entities;
 using Windows.ApplicationModel;
 using WpfScreenHelper;
 
@@ -172,7 +172,7 @@ namespace SnapScreen.Library.Services
 #if !STANDALONE
             try
             {
-                var startupTask = await StartupTask.GetAsync("SnapItStartupTask"); // Pass the task ID you specified in the appxmanifest file
+                var startupTask = await StartupTask.GetAsync("SnapScreenStartupTask"); // Pass the task ID you specified in the appxmanifest file
                 switch (startupTask.State)
                 {
                     case StartupTaskState.Disabled:

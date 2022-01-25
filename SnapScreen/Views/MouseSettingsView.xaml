@@ -24,18 +24,25 @@
         </wpfui:CardControl>
 
         <wpfui:CardControl
-            Title="Delay time to activate snapping (in milliseconds)"
+            Title="Delay movement to activate snapping (in pixel)"
             Margin="0,0,0,8"
             Icon="Empty"
-            Subtitle="{Binding EnableHoldKey, Converter={StaticResource BooleanToStringConverter}, ConverterParameter='Delay time is disabled when hold key in use'}">
+            Subtitle="{Binding EnableHoldKey, Converter={StaticResource BooleanToStringConverter}, ConverterParameter='Delay movement is disabled when hold key in use'}">
+            <!--<Slider
+                Width="200"
+                AutoToolTipPlacement="TopLeft"
+                Maximum="250"
+                Minimum="0"
+                SmallChange="10"
+                Value="{Binding MouseDragDelay}" />-->
             <wpfui:NumberBox
                 Width="96"
                 DecimalPlaces="0"
                 IsEnabled="{Binding EnableHoldKey, Converter={StaticResource InverseBoolConverter}}"
-                Max="1000"
+                Max="250"
                 Min="0"
-                Step="50"
-                Value="{Binding MouseDragDelay}" />
+                Step="10"
+                Value="{Binding MouseDragDelay, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
         </wpfui:CardControl>
 
         <wpfui:CardControl

@@ -198,12 +198,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SnapIt.Library\SnapIt.Library.csproj">
-      <Project>{6ae4f0c8-0283-4d08-838e-072e6d55f878}</Project>
-      <Name>SnapIt.Library</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Themes\app.ico" />
   </ItemGroup>
   <ItemGroup>

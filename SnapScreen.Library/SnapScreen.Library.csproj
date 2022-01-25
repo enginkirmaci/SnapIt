@@ -8,6 +8,7 @@
 	  <Company>Engin KIRMACI</Company>
 	  <Authors>Engin KIRMACI</Authors>
 	  <Configurations>Debug;Release;Standalone</Configurations>
+	  <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
