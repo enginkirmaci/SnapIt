@@ -6,6 +6,9 @@
     xmlns:extension="clr-namespace:SnapScreen.Library.Extensions;assembly=SnapScreen.Library"
     xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI">
 
+    <!--  Color picker background  -->
+    <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{StaticResource ApplicationBackgroundColor}" />
+
     <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ScrollViewer">
         <Setter Property="extension:ScrollViewerHelper.FixMouseWheel" Value="True" />
     </Style>

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Windows.Media;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace SnapScreen.Library.Entities
 {
@@ -20,7 +20,7 @@ namespace SnapScreen.Library.Entities
         [JsonConverter(typeof(StringEnumConverter))]
         public MouseButton MouseButton { get; set; } = MouseButton.Left;
 
-        public int MouseDragDelay { get; set; } = 200;
+        public int MouseDragDelay { get; set; } = 20;
         public bool EnableHoldKey { get; set; } = false;
 
         [JsonConverter(typeof(StringEnumConverter))]

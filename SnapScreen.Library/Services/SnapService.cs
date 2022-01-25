@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Gma.System.MouseKeyHook;
+using SnapIt.Library.Extensions;
+using SnapScreen.Library.Entities;
+using SnapScreen.Library.Mappers;
+using SnapScreen.Library.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
-using Gma.System.MouseKeyHook;
-using SnapIt.Library.Extensions;
-using SnapScreen.Library.Entities;
-using SnapScreen.Library.Mappers;
-using SnapScreen.Library.Tools;
 
 namespace SnapScreen.Library.Services
 {
@@ -29,8 +29,10 @@ namespace SnapScreen.Library.Services
         private bool isListening = false;
         private bool isHoldingKey = false;
         private bool holdKeyUsed = false;
-        private DateTime delayStartTime;
+
+        //private DateTime delayStartTime;
         private System.Drawing.Point startLocation;
+
         private List<ExcludedApplication> matchRulesForMouse;
         private List<ExcludedApplication> matchRulesForKeyboard;
 
@@ -483,12 +485,12 @@ namespace SnapScreen.Library.Services
             if (settingService.Settings.EnableHoldKey)
                 return true;
 
-            var elapsedMillisecs = (DateTime.Now - delayStartTime).TotalMilliseconds;
+            //var elapsedMillisecs = (DateTime.Now - delayStartTime).TotalMilliseconds;
 
             //TODO consider change miliseconds to pixel, like below
-            //var move = Math.Abs(endLocation.X - startLocation.X) + Math.Abs(endLocation.Y - startLocation.Y);
-
-            return elapsedMillisecs > settingService.Settings.MouseDragDelay;
+            var move = Math.Abs(endLocation.X - startLocation.X) + Math.Abs(endLocation.Y - startLocation.Y);
+            return move > settingService.Settings.MouseDragDelay;
+            //return elapsedMillisecs > settingService.Settings.MouseDragDelay;
         }
 
         private void MouseMoveEvent(object sender, MouseEventArgs e)
@@ -560,7 +562,7 @@ namespace SnapScreen.Library.Services
                 isWindowDetected = false;
                 isListening = true;
 
-                delayStartTime = DateTime.Now;
+                //delayStartTime = DateTime.Now;
                 startLocation = e.Location;
             }
         }
