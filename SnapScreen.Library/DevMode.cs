@@ -15,7 +15,7 @@ namespace SnapScreen.Library
         public const bool IsActive = false;
         public const bool ShowSnapWindowOnStartup = false;
         public const bool IsTopmostDisabled = false;
-        public const bool SkipLicense = false;
+        public const bool SkipLicense = true;
 #else
         public const bool IsActive = false;
         public const bool ShowSnapWindowOnStartup = false;
