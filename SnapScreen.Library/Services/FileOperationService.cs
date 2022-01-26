@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SnapScreen.Library.Entities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using SnapScreen.Library.Entities;
 
 namespace SnapScreen.Library.Services
 {
@@ -63,7 +63,7 @@ namespace SnapScreen.Library.Services
 
                 foreach (var layout in layouts)
                 {
-                    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"SnapIt.Library.Layouts.{layout}.json"))
+                    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"SnapScreen.Library.Layouts.{layout}.json"))
                     {
                         using (TextReader tr = new StreamReader(stream))
                         {

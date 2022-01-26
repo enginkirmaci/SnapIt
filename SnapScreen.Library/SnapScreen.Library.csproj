@@ -12,6 +12,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Layouts\097d074b-0eed-4878-a035-b2eb76a324ce.json" />
+    <None Remove="Layouts\1ff17736-c6cf-49be-b63e-a5affefd31d9.json" />
+    <None Remove="Layouts\338106eb-1ae5-4185-bc00-f46339e1888d.json" />
+    <None Remove="Layouts\61c00b23-5cdf-4c27-9a6d-a73693f16d47.json" />
+    <None Remove="Layouts\6a86804e-c948-47ea-a1c3-1387736a8a80.json" />
+    <None Remove="Layouts\6a91f112-af26-4505-86cb-a1983e4f4e14.json" />
+    <None Remove="Layouts\97565260-e874-41dd-849e-0351e5dcbc6e.json" />
+    <None Remove="Layouts\a4e1eb3d-376d-473c-afac-cb253cd8ee8e.json" />
+    <None Remove="Layouts\b94079de-54a2-49d0-b31c-878a8f63ba75.json" />
+    <None Remove="Layouts\edcedeaf-acb2-483a-86ae-ccc7c021f9c9.json" />
+    <None Remove="Layouts\f1cb61d1-d38a-4e80-adab-e4be62d057f3.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MouseKeyHook" Version="5.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PInvoke.SHCore" Version="0.7.104" />
@@ -23,6 +37,20 @@
   <ItemGroup>
     <ProjectReference Include="..\..\WpfScreenHelper\src\WpfScreenHelper\WpfScreenHelper.csproj" />
     <ProjectReference Include="..\..\wpfui\WPFUI\WPFUI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Layouts\097d074b-0eed-4878-a035-b2eb76a324ce.json" />
+    <EmbeddedResource Include="Layouts\1ff17736-c6cf-49be-b63e-a5affefd31d9.json" />
+    <EmbeddedResource Include="Layouts\338106eb-1ae5-4185-bc00-f46339e1888d.json" />
+    <EmbeddedResource Include="Layouts\61c00b23-5cdf-4c27-9a6d-a73693f16d47.json" />
+    <EmbeddedResource Include="Layouts\6a86804e-c948-47ea-a1c3-1387736a8a80.json" />
+    <EmbeddedResource Include="Layouts\6a91f112-af26-4505-86cb-a1983e4f4e14.json" />
+    <EmbeddedResource Include="Layouts\97565260-e874-41dd-849e-0351e5dcbc6e.json" />
+    <EmbeddedResource Include="Layouts\a4e1eb3d-376d-473c-afac-cb253cd8ee8e.json" />
+    <EmbeddedResource Include="Layouts\b94079de-54a2-49d0-b31c-878a8f63ba75.json" />
+    <EmbeddedResource Include="Layouts\edcedeaf-acb2-483a-86ae-ccc7c021f9c9.json" />
+    <EmbeddedResource Include="Layouts\f1cb61d1-d38a-4e80-adab-e4be62d057f3.json" />
   </ItemGroup>
 
   <ItemGroup>

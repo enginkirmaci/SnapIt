@@ -57,7 +57,7 @@
                 Margin="0,8,0,0"
                 Header="Give Feedback"
                 Icon="Heart28"
-                Subtitle="Help me make SnapIt better. You can add new ideas and features, as well as vote other ideas and submit a bug here.">
+                Subtitle="Help me make Snap Screen better. You can add new ideas and features, as well as vote other ideas and submit a bug here.">
                 <StackPanel>
                     <wpfui:Hyperlink
                         Margin="0,0,0,4"

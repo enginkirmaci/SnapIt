@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using SnapScreen.Library.Entities;
 using SnapScreen.Library.Services;
+using System.Collections.ObjectModel;
 using WPFUI.Theme;
 
-namespace SnapIt.ViewModels
+namespace SnapScreen.ViewModels
 {
     public class SettingsViewModel : BindableBase
     {

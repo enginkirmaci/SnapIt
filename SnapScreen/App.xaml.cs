@@ -1,16 +1,15 @@
-﻿using System;
-using System.Drawing;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Forms;
-using DryIoc;
+﻿using DryIoc;
 using Prism.Ioc;
-using Prism.Mvvm;
 using SnapScreen.Library;
 using SnapScreen.Library.Applications;
 using SnapScreen.Library.Entities;
 using SnapScreen.Library.Services;
 using SnapScreen.Views;
+using System;
+using System.Drawing;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
 
 namespace SnapScreen
 {
@@ -119,8 +118,6 @@ namespace SnapScreen
             containerRegistry.RegisterSingleton<IStandaloneLicenseService, StandaloneLicenseService>();
             containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
             containerRegistry.RegisterSingleton<IScreenChangeService, ScreenChangeService>();
-
-            ViewModelLocationProvider.Register<SettingsView, SnapIt.ViewModels.SettingsViewModel>();
         }
 
         protected override void OnExit(ExitEventArgs e)
