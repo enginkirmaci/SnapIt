@@ -141,11 +141,17 @@ namespace SnapScreen.ViewModels
 
                 if (isStandalone)
                 {
-                    CheckForNewVersion();
+                    if (!DevMode.SkipLicense)
+                    {
+                        CheckForNewVersion();
+                    }
                 }
                 else
                 {
-                    storeLicenseService.Init(mainWindow);
+                    if (!DevMode.SkipLicense)
+                    {
+                        storeLicenseService.Init(mainWindow);
+                    }
                 }
 
                 CheckIfTrialAsync();
