@@ -1,0 +1,36 @@
+﻿ <Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms> 
+    <Product>Snap Screen Test</Product>
+    <Copyright>Copyright ©  2019</Copyright>
+    <Company>Engin KIRMACI</Company>
+    <FileVersion></FileVersion>
+    <AssemblyVersion></AssemblyVersion>
+    <Configurations>Debug;Release;Standalone</Configurations>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup> 
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Prism.DryIoc" Version="8.1.97" /> 
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\wpfui\WPFUI\WPFUI.csproj" />
+    <ProjectReference Include="..\SnapScreen.Library\SnapScreen.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Themes\CustomStyles.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+ 
+
+</Project>
