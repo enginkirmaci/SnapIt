@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using SnapScreen.Library.Entities;
+using System;
+using System.Diagnostics;
 
 namespace SnapScreen.ViewModels
 {

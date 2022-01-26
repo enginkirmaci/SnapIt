@@ -63,13 +63,13 @@
                     <Border
                         Margin="0,0,0,8"
                         Padding="20"
-                        Background="#1A1A1A"
-                        BorderBrush="{StaticResource ControlElevationBorderBrush}"
+                        Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
+                        BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                         BorderThickness="1"
                         CornerRadius="4">
                         <controls:SnapScreenViewer
                             Height="280"
-                            Background="#1A1A1A"
+                            Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
                             ItemsSource="{Binding SnapScreens}"
                             SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
                             <controls:SnapScreenViewer.ItemContainerStyle>
@@ -112,7 +112,7 @@
                                                             <wpfui:Icon Glyph="CircleOff16" />
                                                         </ToggleButton>
 
-                                                        <Grid Background="#FF1A1A1A" Visibility="{Binding IsActive, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}">
+                                                        <Grid Background="{DynamicResource SolidBackgroundFillColorQuarternaryBrush}" Visibility="{Binding IsActive, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}">
                                                             <wpfui:Icon
                                                                 Panel.ZIndex="9"
                                                                 FontSize="80"
@@ -120,13 +120,14 @@
                                                                 Opacity="0.5" />
                                                         </Grid>
 
-                                                        <Grid Background="#991A1A1A">
+                                                        <Grid Background="{DynamicResource SolidBackgroundFillColorQuarternaryBrush}" Opacity="0.4" />
+                                                        <Grid>
                                                             <Border
                                                                 Margin="12"
                                                                 Padding="6"
                                                                 HorizontalAlignment="Left"
                                                                 VerticalAlignment="Bottom"
-                                                                Background="#FF282828"
+                                                                Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
                                                                 CornerRadius="4">
 
                                                                 <StackPanel Grid.Row="1">

@@ -4,7 +4,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "SnapIt.Packaging", "SnapIt.Packaging\SnapIt.Packaging.wapproj", "{DFA67F46-7ADC-4946-A4B9-1407543E5820}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapIt.Test", "SnapIt.Test\SnapIt.Test.csproj", "{5B3FE18F-DF50-416D-8B0E-8B1701D0D45E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapScreen.Test", "SnapIt.Test\SnapScreen.Test.csproj", "{5B3FE18F-DF50-416D-8B0E-8B1701D0D45E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapScreen", "SnapScreen\SnapScreen.csproj", "{A2EC88D2-02B1-4A1C-B310-08C9F7B7C872}"
 EndProject

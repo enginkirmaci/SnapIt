@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Media;
 
 namespace SnapScreen.Views
 {
@@ -11,11 +10,6 @@ namespace SnapScreen.Views
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
         }
 
         private void MainFrame_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
