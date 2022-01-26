@@ -1,13 +1,12 @@
-﻿using System;
+﻿using SnapScreen.Library.Entities;
+using SnapScreen.Library.Extensions;
+using SnapScreen.Library.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-using SnapIt.Library.Extensions;
-using SnapScreen.Library.Entities;
-using SnapScreen.Library.Extensions;
-using SnapScreen.Library.Services;
 
 namespace SnapScreen.Library.Controls
 {

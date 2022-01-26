@@ -1,8 +1,8 @@
-﻿using System;
-using PInvoke;
+﻿using PInvoke;
 using SnapScreen.Library.Entities;
+using System;
 
-namespace SnapIt.Library.Extensions
+namespace SnapScreen.Library.Extensions
 {
     public class DpiHelper
     {

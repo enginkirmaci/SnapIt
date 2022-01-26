@@ -18,7 +18,7 @@ namespace SnapScreen.Library.Applications
                 Verb = "runas",
                 Arguments = "-runas",
                 UseShellExecute = true,
-                FileName = Application.ExecutablePath // localAppDataPath + @"\microsoft\windowsapps\SnapIt.exe" // path to the appExecutionAlias
+                FileName = Application.ExecutablePath // localAppDataPath + @"\microsoft\windowsapps\SnapScreen.exe" // path to the appExecutionAlias
             };
             Process.Start(info);
         }
