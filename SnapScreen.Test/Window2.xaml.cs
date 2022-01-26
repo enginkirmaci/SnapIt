@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace SnapIt.Test
+namespace SnapScreen.Test
 {
     /// <summary>
     /// Interaction logic for Window2.xaml

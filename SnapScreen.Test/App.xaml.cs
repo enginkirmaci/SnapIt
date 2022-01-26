@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SnapIt.Test
+namespace SnapScreen.Test
 {
     /// <summary>
     /// Interaction logic for App.xaml

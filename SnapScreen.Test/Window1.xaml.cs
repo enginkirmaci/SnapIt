@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using SnapScreen.Library.Entities;
+using System.Collections.Generic;
 using System.Windows;
-using SnapIt.Library.Entities;
 
-namespace SnapIt.Test
+namespace SnapScreen.Test
 {
     /// <summary>
     /// Interaction logic for Window1.xaml

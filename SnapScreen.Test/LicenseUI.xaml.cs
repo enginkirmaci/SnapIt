@@ -4,7 +4,7 @@ using System.Windows;
 using ThinkSharp.Licensing;
 using ThinkSharp.Licensing.Signing;
 
-namespace SnapIt.Test
+namespace SnapScreen.Test
 {
     /// <summary>
     /// Interaction logic for License.xaml

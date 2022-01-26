@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace SnapIt.Test.DesignTime
+namespace SnapScreen.Test.DesignTime
 {
     public enum Themes
     {
