@@ -1,5 +1,6 @@
 ﻿using DryIoc;
 using Prism.Ioc;
+using Serilog;
 using SnapScreen.Library;
 using SnapScreen.Library.Applications;
 using SnapScreen.Library.Entities;
@@ -10,6 +11,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace SnapScreen
 {
@@ -22,6 +24,12 @@ namespace SnapScreen
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            Log.Logger = new LoggerConfiguration()
+                       .MinimumLevel.Debug()
+                       .WriteTo.File("logs\\log.txt", rollingInterval: RollingInterval.Day)
+                       .CreateLogger();
+            RegisterGlobalExceptionHandling(Log.Logger);
+
             //todo change this
             NotifyIcon = new NotifyIcon
             {
@@ -62,33 +70,78 @@ namespace SnapScreen
                 }
             }
 
-            AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
-            {
-                LogUnhandledException((Exception)ex.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
-            };
+            //AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
+            //{
+            //    LogUnhandledException((Exception)ex.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
+            //};
 
-            DispatcherUnhandledException += (s, ex) =>
-            {
-                LogUnhandledException(ex.Exception,
-                "Application.Current.DispatcherUnhandledException");
-                ex.Handled = true;
-            };
+            //DispatcherUnhandledException += (s, ex) =>
+            //{
+            //    LogUnhandledException(ex.Exception,
+            //    "Application.Current.DispatcherUnhandledException");
+            //    ex.Handled = true;
+            //};
 
-            TaskScheduler.UnobservedTaskException += (s, ex) =>
-            {
-                LogUnhandledException(ex.Exception,
-                "TaskScheduler.UnobservedTaskException");
-                ex.SetObserved();
-            };
+            //TaskScheduler.UnobservedTaskException += (s, ex) =>
+            //{
+            //    LogUnhandledException(ex.Exception,
+            //    "TaskScheduler.UnobservedTaskException");
+            //    ex.SetObserved();
+            //};
 
             Telemetry.TrackEvent("OnStartup");
+            Log.Logger.Information("Snap Screen Started");
 
             base.OnStartup(e);
         }
 
-        private void LogUnhandledException(Exception e, string @event)
+        //private void LogUnhandledException(Exception e, string @event)
+        //{
+        //    Telemetry.TrackException(e);
+        //}
+
+        private void RegisterGlobalExceptionHandling(ILogger log)
         {
-            Telemetry.TrackException(e);
+            // this is the line you really want
+            AppDomain.CurrentDomain.UnhandledException +=
+                (sender, args) => CurrentDomainOnUnhandledException(args, log);
+
+            // optional: hooking up some more handlers
+            // remember that you need to hook up additional handlers when
+            // logging from other dispatchers, shedulers, or applications
+            DispatcherUnhandledException += (sender, args) => CurrentOnDispatcherUnhandledException(args, log);
+
+            Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args, log);
+
+            TaskScheduler.UnobservedTaskException +=
+                (sender, args) => TaskSchedulerOnUnobservedTaskException(args, log);
+        }
+
+        private static void CurrentDomainOnUnhandledException(UnhandledExceptionEventArgs args, ILogger log)
+        {
+            var exception = args.ExceptionObject as Exception;
+            var terminatingMessage = args.IsTerminating ? " The application is terminating." : string.Empty;
+            var exceptionMessage = exception?.Message ?? "An unmanaged exception occured.";
+            var message = string.Concat(exceptionMessage, terminatingMessage);
+            log.Error(exception, message);
+        }
+
+        private static void CurrentOnDispatcherUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)
+        {
+            log.Error(args.Exception, args.Exception.Message);
+            args.Handled = true;
+        }
+
+        private static void DispatcherOnUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)
+        {
+            log.Error(args.Exception, args.Exception.Message);
+            args.Handled = true;
+        }
+
+        private static void TaskSchedulerOnUnobservedTaskException(UnobservedTaskExceptionEventArgs args, ILogger log)
+        {
+            log.Error(args.Exception, args.Exception.Message);
+            args.SetObserved();
         }
 
         protected override Window CreateShell()
@@ -133,6 +186,8 @@ namespace SnapScreen
                     NotifyIcon.Dispose();
                 }
             }
+
+            Log.Logger.Information("Snap Screen Exited");
         }
     }
 }
