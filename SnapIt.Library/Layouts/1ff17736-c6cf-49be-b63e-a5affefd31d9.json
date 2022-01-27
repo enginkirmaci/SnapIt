@@ -1,0 +1,22 @@
+{
+  "Version": "2.0",
+  "Guid": "1ff17736-c6cf-49be-b63e-a5affefd31d9",
+  "Name": "SnapIt Logo",
+  "Size": "1536,824",
+  "LayoutLines": [
+    {
+      "Point": "511.2,0",
+      "Size": "0,824"
+    },
+    {
+      "Point": "511,412",
+      "Size": "1025,0",
+      "SplitDirection": 1
+    },
+    {
+      "Point": "1023.5,412",
+      "Size": "0,412"
+    }
+  ],
+  "LayoutOverlays": []
+}

@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>Themes\app.ico</ApplicationIcon>
+    <Product>SnapIt</Product>
+    <Description>SnapIt is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens.</Description>
+    <Version>4.0.6.0</Version>
+    <Copyright>Copyright ©  2019</Copyright>
+    <Company>Engin KIRMACI</Company>
+    <FileVersion></FileVersion>
+    <AssemblyVersion></AssemblyVersion>
+    <Configurations>Debug;Release;Standalone</Configurations>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Themes\app.ico" />
+    <None Remove="Themes\notifyicon.ico" />
+    <None Remove="Themes\Segoe Fluent Icons.ttf" />
+    <None Remove="Themes\snapit.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Themes\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dirkster.ColorPickerLib" Version="1.6.2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\wpfui\WPFUI\WPFUI.csproj" />
+    <ProjectReference Include="..\SnapIt.Library\SnapIt.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Themes\app.ico" />
+    <Resource Include="Themes\notifyicon.ico" />
+    <Resource Include="Themes\Segoe Fluent Icons.ttf" />
+    <Resource Include="Themes\snapit.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\DesignWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>
