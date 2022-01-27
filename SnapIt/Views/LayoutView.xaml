@@ -1,0 +1,225 @@
+﻿<Page
+    x:Class="SnapIt.Views.LayoutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
+    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
+    x:Name="LayoutViewPage"
+    Title="LayoutView"
+    d:DataContext="{d:DesignInstance design:LayoutDesignView,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="1000"
+    d:DesignWidth="650"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Style="{StaticResource UiPage}"
+    mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <wpfui:Dialog
+            Panel.ZIndex="9"
+            ButtonLeftName="Save"
+            DialogHeight="180"
+            Show="{Binding IsRenameDialogOpen, Mode=TwoWay}"
+            Visibility="{Binding IsRenameDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ButtonRightClick">
+                    <i:InvokeCommandAction Command="{Binding RenameDialogClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction Command="{Binding RenameDialogClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <StackPanel>
+                <TextBlock FontWeight="Medium" Text="Layout Name" />
+                <TextBox
+                    Margin="0,6,0,0"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding RenameDialogLayoutName}" />
+            </StackPanel>
+        </wpfui:Dialog>
+
+        <ScrollViewer Style="{StaticResource UiScrollViewer}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <wpfui:CardControl
+                        Title="Screens"
+                        Margin="0,0,0,8"
+                        Icon="RectangleLandscape48"
+                        Subtitle="Select screen and proceed to layout section." />
+
+                    <Border
+                        Margin="0,0,0,8"
+                        Padding="20"
+                        Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
+                        BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <controls:SnapScreenViewer
+                            Height="280"
+                            Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
+                            ItemsSource="{Binding SnapScreens}"
+                            SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
+                            <controls:SnapScreenViewer.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="Foreground">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource SystemAccentColor}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                                    <Setter Property="OverridesDefaultStyle" Value="True" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                <Border
+                                                    x:Name="ItemBorder"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    Background="{DynamicResource SystemAccentBrush}"
+                                                    BorderBrush="Transparent"
+                                                    BorderThickness="5"
+                                                    CornerRadius="12">
+                                                    <Grid>
+                                                        <controls:SnapControl IsDesignMode="False" Layout="{Binding Layout}" />
+
+                                                        <ToggleButton
+                                                            Width="30"
+                                                            Height="30"
+                                                            Margin="8,12"
+                                                            Padding="0"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Top"
+                                                            Panel.ZIndex="9"
+                                                            IsChecked="{Binding IsActive, Converter={StaticResource InverseBoolConverter}}">
+                                                            <wpfui:Icon Glyph="CircleOff16" />
+                                                        </ToggleButton>
+
+                                                        <Grid Background="{DynamicResource SolidBackgroundFillColorQuarternaryBrush}" Visibility="{Binding IsActive, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}">
+                                                            <wpfui:Icon
+                                                                Panel.ZIndex="9"
+                                                                FontSize="80"
+                                                                Glyph="CircleOff16"
+                                                                Opacity="0.5" />
+                                                        </Grid>
+
+                                                        <Grid Background="{DynamicResource SolidBackgroundFillColorQuarternaryBrush}" Opacity="0.4" />
+                                                        <Grid>
+                                                            <Border
+                                                                Margin="12"
+                                                                Padding="6"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Bottom"
+                                                                Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+                                                                CornerRadius="4">
+
+                                                                <StackPanel Grid.Row="1">
+                                                                    <TextBlock Text="{Binding Resolution}" />
+                                                                    <TextBlock Text="{Binding Primary, TargetNullValue=null}" Visibility="{Binding Primary, TargetNullValue=Collapsed}" />
+                                                                    <TextBlock Text="{Binding Layout.Name}" TextTrimming="CharacterEllipsis" />
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Border>
+
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Trigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="ItemBorder"
+                                                                        Storyboard.TargetProperty="(Border.Background).(Brush.Opacity)"
+                                                                        From="0.0"
+                                                                        To="1.0"
+                                                                        Duration="0:0:.16" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.EnterActions>
+                                                        <Trigger.ExitActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="ItemBorder"
+                                                                        Storyboard.TargetProperty="(Border.Background).(Brush.Opacity)"
+                                                                        From="1.0"
+                                                                        To="0.0"
+                                                                        Duration="0:0:.16" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.ExitActions>
+                                                        <Setter TargetName="ItemBorder" Property="BorderBrush">
+                                                            <Setter.Value>
+                                                                <SolidColorBrush Color="{DynamicResource SystemAccentColorLight3}" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </controls:SnapScreenViewer.ItemContainerStyle>
+                        </controls:SnapScreenViewer>
+                    </Border>
+
+                    <wpfui:CardControl
+                        Title="Change Layouts"
+                        Margin="0,0,0,8"
+                        Icon="DataTreemap24"
+                        Subtitle="Select layout to apply it to selected screen. You can also create new layout or edit layout by clicking three-dots menu.">
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:Button
+                                Margin="0,0,12,0"
+                                Appearance="Secondary"
+                                Command="{Binding NewLayoutCommand}"
+                                Content="New"
+                                Icon="New24" />
+
+                            <wpfui:Button
+                                Appearance="Secondary"
+                                Command="{Binding ImportLayoutCommand}"
+                                Content="Import"
+                                Icon="ArrowImport24" />
+                        </StackPanel>
+                    </wpfui:CardControl>
+                </StackPanel>
+
+                <ListView
+                    Grid.Row="1"
+                    VerticalContentAlignment="Top"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    ItemContainerStyle="{DynamicResource SnapIt.Styles.LayoutListView}"
+                    ItemsSource="{Binding Layouts}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    SelectedItem="{Binding SelectedLayout, Mode=TwoWay}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

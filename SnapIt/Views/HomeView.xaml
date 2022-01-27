@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="SnapIt.Views.HomeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
+    Title="HomeView"
+    d:DesignWidth="500"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Style="{StaticResource UiPageScrollable}"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel>
+            <wpfui:CardAction Margin="0,0,0,8" Icon="AlignSpaceEvenlyHorizontal20">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,4"
+                        FontWeight="Medium"
+                        Text="Controls" />
+                    <TextBlock
+                        FontSize="11"
+                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                        Text="Check out the available custom components" />
+                </StackPanel>
+            </wpfui:CardAction>
+        </StackPanel>
+    </Grid>
+</Page>
