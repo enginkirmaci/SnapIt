@@ -1,10 +1,10 @@
-﻿using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
-using SnapIt.Library.FindRectangle;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
+using SnapIt.Library.FindRectangle;
 
 namespace SnapIt.Library.Controls
 {
@@ -44,7 +44,7 @@ namespace SnapIt.Library.Controls
             {
                 if (snapControl.IsDesignMode)
                 {
-                    var snapAreas = snapControl.FindChildren<SnapAreaEditor>();
+                    var snapAreas = snapControl.FindChildren<SnapAreaEditorNew>();
                     foreach (var snapArea in snapAreas)
                     {
                         snapArea.Theme = snapControl.Theme;
@@ -439,7 +439,7 @@ namespace SnapIt.Library.Controls
             {
                 if (IsDesignMode)
                 {
-                    var snapArea = new SnapAreaEditor()
+                    var snapArea = new SnapAreaEditorNew()
                     {
                         Margin = new Thickness(rectangle.TopLeft.X, rectangle.TopLeft.Y, 0, 0),
                         Width = rectangle.Width,
