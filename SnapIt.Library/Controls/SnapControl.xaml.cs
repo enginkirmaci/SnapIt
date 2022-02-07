@@ -44,7 +44,7 @@ namespace SnapIt.Library.Controls
             {
                 if (snapControl.IsDesignMode)
                 {
-                    var snapAreas = snapControl.FindChildren<SnapAreaEditorNew>();
+                    var snapAreas = snapControl.FindChildren<SnapAreaEditor>();
                     foreach (var snapArea in snapAreas)
                     {
                         snapArea.Theme = snapControl.Theme;
@@ -130,8 +130,28 @@ namespace SnapIt.Library.Controls
 
         public void AddBorder(SnapBorder snapBorder)
         {
+            if (IsDesignMode)
+            {
+                var borderTool = new SnapBorderTool
+                {
+                    SnapBorder = snapBorder
+                };
+                MainGrid.Children.Add(borderTool);
+
+                snapBorder.SnapBorderTool = borderTool;
+            }
+
             MainGrid.Children.Add(snapBorder);
             GenerateSnapAreas();
+        }
+
+        public void ResetBorderTool()
+        {
+            var borderTools = MainGrid.FindChildren<SnapBorderTool>();
+            foreach (var borderTool in borderTools)
+            {
+                borderTool.ResetPos();
+            }
         }
 
         public void AddOverlay()
@@ -232,7 +252,7 @@ namespace SnapIt.Library.Controls
                     LayoutLine = layoutLine
                 };
 
-                MainGrid.Children.Add(snapBorder);
+                AddBorder(snapBorder);
             }
 
             if (IsDesignMode)
@@ -439,7 +459,7 @@ namespace SnapIt.Library.Controls
             {
                 if (IsDesignMode)
                 {
-                    var snapArea = new SnapAreaEditorNew()
+                    var snapArea = new SnapAreaEditor()
                     {
                         Margin = new Thickness(rectangle.TopLeft.X, rectangle.TopLeft.Y, 0, 0),
                         Width = rectangle.Width,

@@ -4,12 +4,13 @@
     xmlns:control="clr-namespace:SnapIt.Library.Controls"
     xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI">
 
-    <Style TargetType="{x:Type control:SnapAreaEditorNew}">
+    <Style TargetType="{x:Type control:SnapAreaEditor}">
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type control:SnapAreaEditorNew}">
+                <ControlTemplate TargetType="{x:Type control:SnapAreaEditor}">
                     <Grid>
                         <Grid
                             x:Name="Area"
@@ -50,7 +51,8 @@
                                     Margin="4,0"
                                     Appearance="Secondary"
                                     Command="{Binding Path=SplitVerticallyCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Icon="Empty">
+                                    Icon="Empty"
+                                    IsTabStop="False">
                                     <wpfui:Icon Glyph="SplitVertical28" />
                                 </wpfui:Button>
 
@@ -60,7 +62,8 @@
                                     Margin="4,0"
                                     Appearance="Secondary"
                                     Command="{Binding Path=SplitHorizantallyCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Icon="Empty">
+                                    Icon="Empty"
+                                    IsTabStop="False">
                                     <wpfui:Icon Glyph="SplitHorizontal28" />
                                 </wpfui:Button>
                             </StackPanel>

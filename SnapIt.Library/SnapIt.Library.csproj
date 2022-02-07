@@ -60,9 +60,6 @@
     <Page Update="Controls\SnapArea.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\SnapAreaEditor.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Controls\SnapBorder.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -78,10 +75,17 @@
     <Page Update="Controls\SnapOverlayEditor.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Styles\SnapAreaEditorNew.xaml">
+    <Page Update="Controls\Styles\SnapBorderTool.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Styles\SnapAreaEditor.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Controls\Styles\SnapScreenViewer.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Controls\Styles\SnapIt.Library.UI.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>

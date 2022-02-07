@@ -1,9 +1,9 @@
-﻿using Prism.Commands;
+﻿using System.Windows.Interop;
+using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 using SnapIt.Views;
-using System.Windows.Interop;
 
 namespace SnapIt.ViewModels
 {
@@ -77,6 +77,8 @@ namespace SnapIt.ViewModels
                                  (int)SnapScreen.WorkingArea.Height);
 
             snapService.Release();
+
+            Window.SnapControl.ResetBorderTool();
         }
 
         private void SaveLayoutCommandExecute()

@@ -5,7 +5,7 @@ using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
-    public class SnapAreaEditorNew : Control
+    public class SnapAreaEditor : Control
     {
         public SnapControl SnapControl { get; set; }
 
@@ -16,7 +16,7 @@ namespace SnapIt.Library.Controls
         }
 
         public static readonly DependencyProperty IsAreaMouseOverProperty = DependencyProperty.Register("IsAreaMouseOver",
-            typeof(bool), typeof(SnapAreaEditorNew), new PropertyMetadata(null));
+            typeof(bool), typeof(SnapAreaEditor), new PropertyMetadata(null));
 
         public SnapAreaTheme Theme
         {
@@ -25,7 +25,7 @@ namespace SnapIt.Library.Controls
         }
 
         public static readonly DependencyProperty ThemeProperty
-         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapAreaEditorNew),
+         = DependencyProperty.Register("Theme", typeof(SnapAreaTheme), typeof(SnapAreaEditor),
            new FrameworkPropertyMetadata()
            {
                BindsTwoWayByDefault = true,
@@ -34,7 +34,7 @@ namespace SnapIt.Library.Controls
 
         private static void ThemePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var SnapAreaEditor = (SnapAreaEditorNew)d;
+            var SnapAreaEditor = (SnapAreaEditor)d;
             SnapAreaEditor.Theme = (SnapAreaTheme)e.NewValue;
 
             //if (SnapAreaEditor.Theme != null)
@@ -46,17 +46,17 @@ namespace SnapIt.Library.Controls
 
         public static readonly DependencyProperty SplitVerticallyCommandProperty =
             DependencyProperty.Register("SplitVerticallyCommand",
-                typeof(WPFUI.Common.RelayCommand), typeof(SnapAreaEditorNew), new PropertyMetadata(null));
+                typeof(WPFUI.Common.RelayCommand), typeof(SnapAreaEditor), new PropertyMetadata(null));
 
         public WPFUI.Common.RelayCommand SplitVerticallyCommand => (WPFUI.Common.RelayCommand)GetValue(SplitHorizantallyCommandProperty);
 
         public static readonly DependencyProperty SplitHorizantallyCommandProperty =
             DependencyProperty.Register("SplitHorizantallyCommand",
-                typeof(WPFUI.Common.RelayCommand), typeof(SnapAreaEditorNew), new PropertyMetadata(null));
+                typeof(WPFUI.Common.RelayCommand), typeof(SnapAreaEditor), new PropertyMetadata(null));
 
         public WPFUI.Common.RelayCommand SplitHorizantallyCommand => (WPFUI.Common.RelayCommand)GetValue(SplitHorizantallyCommandProperty);
 
-        public SnapAreaEditorNew()
+        public SnapAreaEditor()
         {
             SetValue(SplitVerticallyCommandProperty,
                 new WPFUI.Common.RelayCommand(o =>
