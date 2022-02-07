@@ -1,10 +1,14 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
-    public partial class SnapArea : Control
+    public class SnapArea : Control
     {
         public SnapControl SnapControl { get; set; }
 
@@ -29,15 +33,6 @@ namespace SnapIt.Library.Controls
             snapAreaEditor.AreaPadding = (Thickness)e.NewValue;
         }
 
-        public bool IsAreaMouseOver
-        {
-            get => (bool)GetValue(IsAreaMouseOverProperty);
-            set => SetValue(IsAreaMouseOverProperty, value);
-        }
-
-        public static readonly DependencyProperty IsAreaMouseOverProperty = DependencyProperty.Register("IsAreaMouseOver",
-            typeof(bool), typeof(SnapArea), new PropertyMetadata(null));
-
         public SnapAreaTheme Theme
         {
             get => (SnapAreaTheme)GetValue(ThemeProperty);
@@ -58,14 +53,47 @@ namespace SnapIt.Library.Controls
             snapArea.Theme = (SnapAreaTheme)e.NewValue;
         }
 
+        public SnapArea()
+        {
+            Name = $"snaparea_{Guid.NewGuid():N}";
+        }
+
         public void NormalStyle()
         {
-            IsAreaMouseOver = false;
+            ColorAnimation animation = new ColorAnimation
+            {
+                From = Theme.HighlightColor,
+                To = Theme.OverlayColor,
+                Duration = new Duration(TimeSpan.FromMilliseconds(160))
+            };
+
+            SolidColorBrush brush = new SolidColorBrush(Theme.OverlayColor);
+
+            var area = this.FindChild<Grid>("Area");
+            if (area != null)
+            {
+                area.Background = brush;
+                brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+            }
         }
 
         public void OnHoverStyle()
         {
-            IsAreaMouseOver = true;
+            ColorAnimation animation = new ColorAnimation
+            {
+                From = Theme.OverlayColor,
+                To = Theme.HighlightColor,
+                Duration = new Duration(TimeSpan.FromMilliseconds(160))
+            };
+
+            SolidColorBrush brush = new SolidColorBrush(Theme.OverlayColor);
+
+            var area = this.FindChild<Grid>("Area");
+            if (area != null)
+            {
+                area.Background = brush;
+                brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+            }
         }
 
         public Rectangle ScreenSnapArea(Dpi dpi)
