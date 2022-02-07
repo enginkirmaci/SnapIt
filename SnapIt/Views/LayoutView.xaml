@@ -98,7 +98,10 @@
                                                     BorderThickness="5"
                                                     CornerRadius="12">
                                                     <Grid>
-                                                        <controls:SnapControl IsDesignMode="False" Layout="{Binding Layout}" />
+                                                        <controls:SnapControl
+                                                            IsDesignMode="False"
+                                                            IsPreview="True"
+                                                            Layout="{Binding Layout}" />
 
                                                         <ToggleButton
                                                             Width="30"

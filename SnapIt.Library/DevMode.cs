@@ -12,8 +12,8 @@ namespace SnapIt.Library
     public static class DevMode
     {
 #if DEBUG
-        public const bool IsActive = true;
-        public const bool ShowSnapWindowOnStartup = false;
+        public const bool IsActive = false;
+        public const bool ShowSnapWindowOnStartup = true;
         public const bool IsTopmostDisabled = true;
         public const bool SkipLicense = true;
 #else

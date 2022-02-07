@@ -1,10 +1,10 @@
 ﻿<Window
     x:Class="SnapIt.Test.Window1"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Window1"
     Width="973.6"
     Height="545.6"
@@ -17,6 +17,10 @@
             Orientation="Horizontal">
             <Button x:Name="AddOverlay" Click="AddOverlay_Click">Add Overlay</Button>
             <Button x:Name="Load" Click="Load_Click">Load Layout</Button>
+            <Button
+                x:Name="HideOverlay"
+                Click="HideOverlay_Click"
+                Content="Hide Overlay" />
         </StackPanel>
         <Controls:SnapControl
             x:Name="SnapControl"

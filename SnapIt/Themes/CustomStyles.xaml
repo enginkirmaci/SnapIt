@@ -71,6 +71,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         IsDesignMode="False"
+                                        IsPreview="True"
                                         Layout="{Binding Mode=OneWay}" />
                                 </Border>
 

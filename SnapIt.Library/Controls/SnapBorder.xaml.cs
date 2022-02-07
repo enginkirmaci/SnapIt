@@ -42,7 +42,27 @@ namespace SnapIt.Library.Controls
             }
         }
 
-        public SplitDirection SplitDirection { get; set; }
+        public SplitDirection SplitDirection
+        {
+            get => (SplitDirection)GetValue(SplitDirectionProperty);
+            set => SetValue(SplitDirectionProperty, value);
+        }
+
+        public static readonly DependencyProperty SplitDirectionProperty
+         = DependencyProperty.Register("SplitDirection", typeof(SplitDirection), typeof(SnapBorder),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               DefaultValue = SplitDirection.Vertical,
+               PropertyChangedCallback = new PropertyChangedCallback(SplitDirectionPropertyChanged)
+           });
+
+        private static void SplitDirectionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapBorder = (SnapBorder)d;
+            snapBorder.SplitDirection = (SplitDirection)e.NewValue;
+        }
+
         public bool IsDraggable { get; set; } = true;
         public SnapControl SnapControl { get; }
         public LayoutLine LayoutLine { get; internal set; }

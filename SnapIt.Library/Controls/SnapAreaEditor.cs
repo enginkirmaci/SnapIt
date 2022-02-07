@@ -9,6 +9,27 @@ namespace SnapIt.Library.Controls
     {
         public SnapControl SnapControl { get; set; }
 
+        public Thickness AreaPadding
+        {
+            get => (Thickness)GetValue(AreaPaddingProperty);
+            set => SetValue(AreaPaddingProperty, value);
+        }
+
+        public static readonly DependencyProperty AreaPaddingProperty
+         = DependencyProperty.Register("AreaPadding", typeof(Thickness), typeof(SnapAreaEditor),
+           new FrameworkPropertyMetadata()
+           {
+               DefaultValue = new Thickness(0),
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(AreaPaddingPropertyChanged)
+           });
+
+        private static void AreaPaddingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapAreaEditor = (SnapAreaEditor)d;
+            snapAreaEditor.AreaPadding = (Thickness)e.NewValue;
+        }
+
         public bool IsAreaMouseOver
         {
             get => (bool)GetValue(IsAreaMouseOverProperty);
@@ -72,16 +93,21 @@ namespace SnapIt.Library.Controls
 
             //DesignPanel.Visibility = Visibility.Hidden;
 
-            Loaded += SnapAreaEditorNew_Loaded;
+            Loaded += SnapAreaEditor_Loaded;
         }
 
-        private void SnapAreaEditorNew_Loaded(object sender, RoutedEventArgs e)
+        private void SnapAreaEditor_Loaded(object sender, RoutedEventArgs e)
         {
             var area = this.FindChild<Grid>("Area");
             if (area != null)
             {
                 area.IsMouseDirectlyOverChanged += SnapAreaEditor_IsMouseDirectlyOverChanged;
             }
+        }
+
+        private void SnapAreaEditor_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            IsAreaMouseOver = IsMouseOver;
         }
 
         private void Split(SplitDirection direction)
@@ -106,11 +132,6 @@ namespace SnapIt.Library.Controls
             newBorder.SetPos(point, size, direction);
 
             SnapControl.AddBorder(newBorder);
-        }
-
-        private void SnapAreaEditor_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            IsAreaMouseOver = IsMouseOver;
         }
 
         public Rect GetRect()

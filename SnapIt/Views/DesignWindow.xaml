@@ -13,7 +13,7 @@
     Title="SnapIt - Layout Designer"
     d:DataContext="{d:DesignInstance {x:Type design:DesignWindowDesignView},
                                      IsDesignTimeCreatable=True}"
-    d:DesignHeight="450"
+    d:DesignHeight="700"
     d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
@@ -39,61 +39,90 @@
             Layout="{Binding Layout}"
             Theme="{Binding Theme, Mode=TwoWay}" />
 
-        <wpfui:CardExpander
+        <StackPanel
             Margin="0,20,20,0"
             HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Header="Layout Designer"
-            Icon="DataTreemap24"
-            IsExpanded="True">
-            <wpfui:CardExpander.Background>
-                <SolidColorBrush Color="{DynamicResource SolidBackgroundFillColorSecondary}" />
-            </wpfui:CardExpander.Background>
-            <StackPanel>
-                <TextBlock Margin="0,0,0,6" Text="Designer Opacity" />
-                <Slider
-                    Width="250"
-                    HorizontalAlignment="Left"
-                    Maximum="1"
-                    Minimum="0"
-                    TickFrequency="0.1"
-                    Value="{Binding Theme.Opacity}" />
+            VerticalAlignment="Top">
+            <Grid Margin="0,0,0,8" Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}">
+                <wpfui:CardExpander
+                    Header="Layout Properties"
+                    Icon="DataTreemap24"
+                    IsExpanded="True">
+                    <wpfui:CardExpander.Background>
+                        <SolidColorBrush Color="{DynamicResource SolidBackgroundFillColorSecondary}" />
+                    </wpfui:CardExpander.Background>
+                    <StackPanel>
+                        <TextBlock Margin="0,0,0,6" Text="Layout Name" />
+                        <TextBox Margin="0,0,0,16" Text="{Binding Layout.Name}" />
 
-                <Separator Margin="0,8" />
+                        <Separator Margin="0,8" />
+                        <TextBlock Margin="0,0,0,6" Text="Space between areas" />
+                        <Slider
+                            Width="256"
+                            AutoToolTipPlacement="TopLeft"
+                            LargeChange="5"
+                            Maximum="50"
+                            Minimum="0"
+                            SmallChange="1"
+                            Value="{Binding AreaPadding, ElementName=SnapControl}" />
+                        <Separator Margin="0,8" />
 
-                <TextBlock Margin="0,0,0,6" Text="Layout Name" />
-                <TextBox Margin="0,0,0,16" Text="{Binding Layout.Name}" />
-                <wpfui:Button
-                    Margin="0,0,0,6"
-                    HorizontalAlignment="Left"
-                    Appearance="Secondary"
-                    Command="{Binding AddOverlayLayoutCommand}"
-                    Content="Add Overlay"
-                    Icon="Layer24" />
-                <wpfui:Button
-                    HorizontalAlignment="Left"
-                    Appearance="Secondary"
-                    Command="{Binding ClearLayoutCommand}"
-                    Content="Clear Layout"
-                    Icon="ArrowClockwise24" />
+                        <wpfui:Button
+                            Margin="0,0,0,6"
+                            HorizontalAlignment="Left"
+                            Appearance="Secondary"
+                            Command="{Binding AddOverlayLayoutCommand}"
+                            Content="Add Overlay"
+                            Icon="Layer24" />
+                        <wpfui:Button
+                            HorizontalAlignment="Left"
+                            Appearance="Secondary"
+                            Command="{Binding ClearLayoutCommand}"
+                            Content="Clear Layout"
+                            Icon="ArrowClockwise24" />
+                    </StackPanel>
+                </wpfui:CardExpander>
+            </Grid>
+            <Grid Margin="0,0,0,8" Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}">
+                <wpfui:CardExpander
+                    Margin="0"
+                    Header="Designer Settings"
+                    Icon="EditSettings24"
+                    IsExpanded="True">
+                    <wpfui:CardExpander.Background>
+                        <SolidColorBrush Color="{DynamicResource SolidBackgroundFillColorSecondary}" />
+                    </wpfui:CardExpander.Background>
+                    <StackPanel>
+                        <TextBlock Margin="0,0,0,6" Text="Designer Opacity" />
+                        <Slider
+                            Width="250"
+                            Margin="0,0,0,6"
+                            HorizontalAlignment="Left"
+                            Maximum="1"
+                            Minimum="0"
+                            TickFrequency="0.1"
+                            Value="{Binding Theme.Opacity}" />
+                        <wpfui:ToggleSwitch Content="Show Overlays" IsChecked="{Binding IsOverlayVisible, ElementName=SnapControl}" />
 
-                <Separator Margin="0,8" />
+                        <Separator Margin="0,8" />
 
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                    <wpfui:Button
-                        Margin="0,0,6,0"
-                        Command="{Binding SaveLayoutCommand}"
-                        Content="Save"
-                        Icon="Save24" />
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <wpfui:Button
+                                Margin="0,0,6,0"
+                                Command="{Binding SaveLayoutCommand}"
+                                Content="Save"
+                                Icon="Save24" />
 
-                    <wpfui:Button
-                        Margin="0,0,6,0"
-                        Appearance="Secondary"
-                        Command="{Binding CloseLayoutCommand}"
-                        Content="Close"
-                        Icon="Dismiss24" />
-                </StackPanel>
-            </StackPanel>
-        </wpfui:CardExpander>
+                            <wpfui:Button
+                                Margin="0,0,6,0"
+                                Appearance="Secondary"
+                                Command="{Binding CloseLayoutCommand}"
+                                Content="Close"
+                                Icon="Dismiss24" />
+                        </StackPanel>
+                    </StackPanel>
+                </wpfui:CardExpander>
+            </Grid>
+        </StackPanel>
     </Grid>
 </Window>

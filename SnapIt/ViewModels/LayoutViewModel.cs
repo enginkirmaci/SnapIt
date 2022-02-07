@@ -1,15 +1,15 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using SnapIt.Library;
-using SnapIt.Library.Entities;
-using SnapIt.Library.Services;
-using SnapIt.Views;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Media;
+using Prism.Commands;
+using Prism.Mvvm;
+using SnapIt.Library;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Services;
+using SnapIt.Views;
 
 namespace SnapIt.ViewModels
 {
@@ -18,8 +18,8 @@ namespace SnapIt.ViewModels
         private readonly ISnapService snapService;
         private readonly ISettingService settingService;
 
-        private ObservableCollectionWithItemNotify<Library.Entities.SnapScreen> snapScreens;
-        private Library.Entities.SnapScreen selectedSnapScreen;
+        private ObservableCollectionWithItemNotify<SnapScreen> snapScreens;
+        private SnapScreen selectedSnapScreen;
         private ObservableCollection<Layout> layouts;
         private Layout selectedLayout;
         private bool isRenameDialogOpen;
@@ -27,9 +27,9 @@ namespace SnapIt.ViewModels
         private string renameDialogLayoutName;
         private System.Windows.Window mainWindow;
 
-        public ObservableCollectionWithItemNotify<Library.Entities.SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
+        public ObservableCollectionWithItemNotify<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
 
-        public Library.Entities.SnapScreen SelectedSnapScreen
+        public SnapScreen SelectedSnapScreen
         {
             get => selectedSnapScreen;
             set
@@ -94,7 +94,7 @@ namespace SnapIt.ViewModels
             }
 
             Layouts = new ObservableCollection<Layout>(settingService.Layouts);
-            SnapScreens = new ObservableCollectionWithItemNotify<Library.Entities.SnapScreen>(settingService.SnapScreens);
+            SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
             SelectedSnapScreen = SnapScreens.FirstOrDefault();
 
             SnapScreens.CollectionChanged += SnapScreens_CollectionChanged;
@@ -210,7 +210,7 @@ namespace SnapIt.ViewModels
             ApplyChanges();
         }
 
-        private void SnapService_ScreenChanged(System.Collections.Generic.IList<Library.Entities.SnapScreen> snapScreens)
+        private void SnapService_ScreenChanged(System.Collections.Generic.IList<SnapScreen> snapScreens)
         {
             try
             {
@@ -218,7 +218,7 @@ namespace SnapIt.ViewModels
                 {
                     var deviceNumber = selectedSnapScreen.DeviceNumber;
 
-                    SnapScreens = new ObservableCollectionWithItemNotify<Library.Entities.SnapScreen>(settingService.SnapScreens);
+                    SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
                     SelectedSnapScreen = SnapScreens.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
                 }
             }
@@ -242,6 +242,13 @@ namespace SnapIt.ViewModels
 
                     Layouts.Remove(PopupLayout);
                     Layouts.Insert(position, PopupLayout);
+
+                    var selected = SnapScreens.FirstOrDefault(item => item.Layout == PopupLayout);
+                    if (selected != null)
+                    {
+                        selected.Layout = null;
+                        selected.Layout = PopupLayout;
+                    }
                 }
 
                 if (SelectedLayout == null)

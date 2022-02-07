@@ -12,8 +12,16 @@ namespace SnapIt.ViewModels
         private readonly IWinApiService winApiService;
         private readonly ISnapService snapService;
 
+        //private bool isOverlayVisible ;
         private Layout layout;
+
         private SnapAreaTheme theme;
+
+        public bool IsOverlayVisible
+        { get { return Window.SnapControl.IsOverlayVisible; } set { Window.SnapControl.IsOverlayVisible = value; } }
+
+        //public int AreaPadding
+        //{ get { return Window != null ? Window.SnapControl.AreaPadding : 0; } set { Window.SnapControl.AreaPadding = value; } }
 
         public Layout Layout
         { get => layout; set { SetProperty(ref layout, value); } }
@@ -22,7 +30,7 @@ namespace SnapIt.ViewModels
         { get => theme; set { SetProperty(ref theme, value); } }
 
         public DesignWindow Window { get; set; }
-        public Library.Entities.SnapScreen SnapScreen { get; set; }
+        public SnapScreen SnapScreen { get; set; }
 
         public DelegateCommand LoadedCommand { get; }
         public DelegateCommand SaveLayoutCommand { get; }
@@ -59,11 +67,6 @@ namespace SnapIt.ViewModels
 
         private void LoadedCommandExecute()
         {
-            //Window.Width = SnapScreen.WorkingArea.Width;
-            //Window.Height = SnapScreen.WorkingArea.Height;
-            //Window.Left = SnapScreen.WorkingArea.X;
-            //Window.Top = SnapScreen.WorkingArea.Y;
-
             var wih = new WindowInteropHelper(Window);
             var activeWindow = new ActiveWindow
             {
