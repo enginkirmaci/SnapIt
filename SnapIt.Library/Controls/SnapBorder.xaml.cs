@@ -1,10 +1,10 @@
-﻿using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
@@ -12,6 +12,7 @@ namespace SnapIt.Library.Controls
     {
         public const int THICKNESS = 12;
         public const int THICKNESSHALF = 6;
+        public SnapBorderTool SnapBorderTool { get; set; }
 
         public SnapAreaTheme Theme
         {
@@ -106,70 +107,88 @@ namespace SnapIt.Library.Controls
 
                 var p = new Point(mousePosition.X - _positionInBlock.X, mousePosition.Y - _positionInBlock.Y);
 
-                if (!IsCollided(p))
-                {
-                    var thisRect = this.GetRect();
-
-                    //foreach (var col in Parent.FindChildren<SnapBorder>())
-                    //{
-                    //    col.Border.Background = new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
-                    //}
-
-                    var nearBorders = this.GetCollisions(thisRect);
-
-                    //foreach (var col in nearBorders)
-                    //{
-                    //    col.Border.Background = new SolidColorBrush(Colors.Red);
-                    //}
-
-                    foreach (var near in nearBorders.Where(b => b.IsDraggable))
-                    {
-                        if (SplitDirection == SplitDirection.Vertical && near.SplitDirection == SplitDirection.Horizontal)
-                        {
-                            if (Margin.Left >= near.Margin.Left + near.Width - THICKNESS) //left
-                            {
-                                near.Width = Math.Abs(p.X - near.Margin.Left + THICKNESSHALF);
-                            }
-                            else if (Margin.Left < near.Margin.Left) //right
-                            {
-                                var newWidth = p.X - near.Margin.Left + THICKNESSHALF;
-
-                                near.Width -= newWidth;
-                                near.Margin = new Thickness(near.Margin.Left + newWidth, near.Margin.Top, 0, 0);
-                            }
-                        }
-                        else if (SplitDirection == SplitDirection.Horizontal && near.SplitDirection == SplitDirection.Vertical)
-                        {
-                            if (Margin.Top >= near.Margin.Top + near.Height - THICKNESS) //top
-                            {
-                                near.Height = Math.Abs(p.Y - near.Margin.Top + THICKNESSHALF);
-                            }
-                            else if (Margin.Top < near.Margin.Top)  //bottom
-                            {
-                                var newHeight = p.Y - near.Margin.Top + THICKNESSHALF;
-
-                                near.Height -= newHeight;
-                                near.Margin = new Thickness(near.Margin.Left, near.Margin.Top + newHeight, 0, 0);
-                            }
-                        }
-                    }
-
-                    //////////////////////////////////////////////////
-
-                    if (SplitDirection == SplitDirection.Horizontal)
-                    {
-                        Margin = new Thickness(Margin.Left, p.Y, 0, 0);
-                    }
-                    else
-                    {
-                        Margin = new Thickness(p.X, Margin.Top, 0, 0);
-                    }
-                }
-                else
+                if (!MoveBorder(p))
                 {
                     StopDragging();
                 }
             }
+        }
+
+        public bool MoveBorder(Point p, bool resetBorderToolPos = true)
+        {
+            if (!IsCollided(p))
+            {
+                var thisRect = this.GetRect();
+
+                //foreach (var col in Parent.FindChildren<SnapBorder>())
+                //{
+                //    col.Border.Background = new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
+                //}
+
+                var nearBorders = this.GetCollisions(thisRect);
+
+                //foreach (var col in nearBorders)
+                //{
+                //    col.Border.Background = new SolidColorBrush(Colors.Red);
+                //}
+
+                foreach (var near in nearBorders.Where(b => b.IsDraggable))
+                {
+                    if (SplitDirection == SplitDirection.Vertical && near.SplitDirection == SplitDirection.Horizontal)
+                    {
+                        if (Margin.Left >= near.Margin.Left + near.Width - THICKNESS) //left
+                        {
+                            near.Width = Math.Abs(p.X - near.Margin.Left + THICKNESSHALF);
+                        }
+                        else if (Margin.Left < near.Margin.Left) //right
+                        {
+                            var newWidth = p.X - near.Margin.Left + THICKNESSHALF;
+
+                            near.Width -= newWidth;
+                            near.Margin = new Thickness(near.Margin.Left + newWidth, near.Margin.Top, 0, 0);
+                        }
+                    }
+                    else if (SplitDirection == SplitDirection.Horizontal && near.SplitDirection == SplitDirection.Vertical)
+                    {
+                        if (Margin.Top >= near.Margin.Top + near.Height - THICKNESS) //top
+                        {
+                            near.Height = Math.Abs(p.Y - near.Margin.Top + THICKNESSHALF);
+                        }
+                        else if (Margin.Top < near.Margin.Top)  //bottom
+                        {
+                            var newHeight = p.Y - near.Margin.Top + THICKNESSHALF;
+
+                            near.Height -= newHeight;
+                            near.Margin = new Thickness(near.Margin.Left, near.Margin.Top + newHeight, 0, 0);
+                        }
+                    }
+
+                    if (resetBorderToolPos)
+                    {
+                        nearBorders.ForEach(border => border.SnapBorderTool?.ResetPos());
+                    }
+                }
+
+                //////////////////////////////////////////////////
+
+                if (SplitDirection == SplitDirection.Horizontal)
+                {
+                    Margin = new Thickness(Margin.Left, p.Y, 0, 0);
+                }
+                else
+                {
+                    Margin = new Thickness(p.X, Margin.Top, 0, 0);
+                }
+
+                if (resetBorderToolPos)
+                {
+                    SnapBorderTool?.ResetPos();
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         private bool IsCollided(Point p)
@@ -272,6 +291,15 @@ namespace SnapIt.Library.Controls
                     ReferenceBorder.Margin = new Thickness(0, ActualHeight / 2, 0, 0);
                 }
             }
+        }
+
+        public Rect GetRect()
+        {
+            return new Rect(
+                new Point(Margin.Left, Margin.Top),
+                new Size(
+                    ActualWidth == 0 ? Width : ActualWidth,
+                    ActualHeight == 0 ? Height : ActualHeight));
         }
 
         public LayoutLine GetLine()
