@@ -20,55 +20,15 @@
                             BorderBrush="{Binding Path=Theme.BorderBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=#FFC8C8C8}"
                             BorderThickness="{Binding Path=Theme.BorderThickness, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=1}" />
                     </Grid>
-                    <ControlTemplate.Triggers>
-                        <!--<Trigger SourceName="SplitVertically" Property="IsMouseOver" Value="True">
-                            <Setter TargetName="DesignPanel" Property="Visibility" Value="Visible" />
-                        </Trigger>
-                        <Trigger SourceName="SplitHorizantally" Property="IsMouseOver" Value="True">
-                            <Setter TargetName="DesignPanel" Property="Visibility" Value="Visible" />
-                        </Trigger>-->
 
+                    <!--<ControlTemplate.Triggers>
                         <Trigger Property="IsAreaMouseOver" Value="True">
                             <Setter TargetName="Area" Property="Background" Value="{Binding Path=Theme.HighlightBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}" />
-                            <!--<Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation
-                                            Storyboard.TargetName="Area"
-                                            Storyboard.TargetProperty="Background"
-                                            To="{Binding Path=Theme.HighlightBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}"
-                                            Duration="0:0:0.16" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>-->
-
-                            <!--<Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="DesignPanel"
-                                            Storyboard.TargetProperty="Opacity"
-                                            To="1"
-                                            Duration="0:0:0.16" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>-->
                         </Trigger>
                         <Trigger Property="IsAreaMouseOver" Value="False">
                             <Setter TargetName="Area" Property="Background" Value="{Binding Path=Theme.OverlayBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}" />
-                            <!--<Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation
-                                            Storyboard.TargetName="Area"
-                                            Storyboard.TargetProperty="Background"
-                                            To="{Binding Path=Theme.OverlayBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}"
-                                            Duration="0:0:0.16" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>-->
                         </Trigger>
-                    </ControlTemplate.Triggers>
+                    </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

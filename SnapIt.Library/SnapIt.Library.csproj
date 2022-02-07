@@ -63,13 +63,14 @@
     <Page Update="Controls\SnapControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\SnapFullOverlay.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Controls\SnapOverlay.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controls\SnapOverlayEditor.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Styles\SnapFullOverlay.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controls\Styles\SnapArea.xaml">

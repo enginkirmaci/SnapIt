@@ -1,7 +1,7 @@
-﻿using SnapIt.Library.Controls;
-using SnapIt.Library.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using SnapIt.Library.Controls;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
@@ -77,7 +77,10 @@ namespace SnapIt.Library.Services
 
         public void Hide()
         {
-            snapWindows.ForEach(window => window.Hide());
+            snapWindows.ForEach(window =>
+            {
+                window.Hide();
+            });
         }
 
         public IList<Rectangle> SnapAreaBoundries()

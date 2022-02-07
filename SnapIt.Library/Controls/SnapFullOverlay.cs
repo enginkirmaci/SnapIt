@@ -1,10 +1,13 @@
-﻿using SnapIt.Library.Entities;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
-    public partial class SnapFullOverlay : UserControl
+    public class SnapFullOverlay : Control
     {
         public LayoutOverlay LayoutOverlay { get; internal set; }
 
@@ -27,22 +30,18 @@ namespace SnapIt.Library.Controls
             var snapOverlayEditor = (SnapFullOverlay)d;
             snapOverlayEditor.Theme = (SnapAreaTheme)e.NewValue;
 
-            if (snapOverlayEditor.Theme != null)
-            {
-                snapOverlayEditor.Overlay.Opacity = snapOverlayEditor.Theme.Opacity;
-                snapOverlayEditor.Overlay.Background = snapOverlayEditor.Theme.HighlightBrush;
-                snapOverlayEditor.OverlayBorder.BorderBrush = snapOverlayEditor.Theme.BorderBrush;
-                snapOverlayEditor.OverlayBorder.BorderThickness = new Thickness(snapOverlayEditor.Theme.BorderThickness);
-            }
+            //if (snapOverlayEditor.Theme != null)
+            //{
+            //    snapOverlayEditor.Overlay.Opacity = snapOverlayEditor.Theme.Opacity;
+            //    snapOverlayEditor.Overlay.Background = snapOverlayEditor.Theme.HighlightBrush;
+            //    snapOverlayEditor.OverlayBorder.BorderBrush = snapOverlayEditor.Theme.BorderBrush;
+            //    snapOverlayEditor.OverlayBorder.BorderThickness = new Thickness(snapOverlayEditor.Theme.BorderThickness);
+            //}
         }
 
         public SnapFullOverlay(SnapAreaTheme theme)
         {
-            InitializeComponent();
-
             Theme = theme;
-
-            Overlay.Visibility = Visibility.Hidden;
         }
 
         public void SetPos(Point point, Size size)
@@ -55,12 +54,25 @@ namespace SnapIt.Library.Controls
 
         public void NormalStyle()
         {
-            Overlay.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
         public void OnHoverStyle()
         {
-            Overlay.Visibility = Visibility.Visible;
+            DoubleAnimation animation = new DoubleAnimation
+            {
+                From = 0,
+                To = Theme.Opacity,
+                Duration = new Duration(TimeSpan.FromMilliseconds(160))
+            };
+
+            var overlay = this.FindChild<Grid>("Overlay");
+            if (overlay != null)
+            {
+                Visibility = Visibility.Visible;
+
+                overlay.BeginAnimation(OpacityProperty, animation);
+            }
         }
 
         public Rectangle ScreenSnapArea(Dpi dpi)

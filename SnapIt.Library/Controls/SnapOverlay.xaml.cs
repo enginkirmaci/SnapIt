@@ -1,7 +1,8 @@
-﻿using SnapIt.Library.Entities;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Controls
 {
@@ -42,6 +43,8 @@ namespace SnapIt.Library.Controls
         public SnapOverlay(SnapAreaTheme theme, SnapFullOverlay snapFullOverlay)
         {
             InitializeComponent();
+
+            Name = $"snapoverlay_{Guid.NewGuid():N}";
 
             Theme = theme;
             SnapFullOverlay = snapFullOverlay;

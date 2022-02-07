@@ -1,12 +1,12 @@
-﻿using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
-using SnapIt.Library.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
+using SnapIt.Library.Services;
 
 namespace SnapIt.Library.Controls
 {
@@ -110,6 +110,14 @@ namespace SnapIt.Library.Controls
             }
         }
 
+        public new void Hide()
+        {
+            //currentArea?.NormalStyle(false);
+            //currentOverlay?.NormalStyle(false);
+
+            base.Hide();
+        }
+
         public Rectangle SelectElementWithPoint(int x, int y)
         {
             if (IsVisible)
@@ -128,30 +136,54 @@ namespace SnapIt.Library.Controls
                     }
                 }
 
-                if (currentArea != null)
+                if (dependencyObject is SnapArea && currentArea?.Name != ((SnapArea)dependencyObject).Name)
                 {
-                    currentArea.NormalStyle();
+                    currentArea?.NormalStyle();
+                    currentOverlay?.NormalStyle();
                 }
-                if (currentOverlay != null)
+                else if (dependencyObject is not SnapArea)
                 {
-                    currentOverlay.NormalStyle();
+                    currentArea?.NormalStyle();
+                }
+
+                if (dependencyObject is SnapOverlay && currentOverlay?.Name != ((SnapOverlay)dependencyObject).Name)
+                {
+                    currentArea?.NormalStyle();
+                    currentOverlay?.NormalStyle();
+                }
+                else if (dependencyObject is not SnapOverlay)
+                {
+                    currentOverlay?.NormalStyle();
                 }
 
                 if (dependencyObject != null)
                 {
                     if (dependencyObject is SnapArea)
                     {
-                        var snapArea = currentArea = (SnapArea)dependencyObject;
+                        var snapArea = (SnapArea)dependencyObject;
 
-                        snapArea.OnHoverStyle();
+                        if (!(currentArea != null && currentArea.Name == ((SnapArea)dependencyObject).Name))
+                        {
+                            snapArea.OnHoverStyle();
+                        }
+
+                        currentArea = snapArea;
+                        currentOverlay = null;
 
                         return snapArea.ScreenSnapArea(Dpi);
                     }
+
                     if (dependencyObject is SnapOverlay)
                     {
-                        var snapOverlay = currentOverlay = (SnapOverlay)dependencyObject;
+                        var snapOverlay = (SnapOverlay)dependencyObject;
 
-                        snapOverlay.OnHoverStyle();
+                        if (!(currentOverlay != null && currentOverlay?.Name == ((SnapOverlay)dependencyObject).Name))
+                        {
+                            snapOverlay.OnHoverStyle();
+                        }
+
+                        currentArea = null;
+                        currentOverlay = snapOverlay;
 
                         return snapOverlay.ScreenSnapArea(Dpi);
                     }
