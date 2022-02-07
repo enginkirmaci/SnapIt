@@ -12,7 +12,14 @@ namespace SnapIt.Library.Controls
         private const decimal STEP = 8;
         public SnapBorder SnapBorder { get; set; }
 
-        public SplitDirection SplitDirection { get => SnapBorder.SplitDirection; }
+        public SplitDirection SplitDirection
+        {
+            get => (SplitDirection)GetValue(SplitDirectionProperty);
+            set => SetValue(SplitDirectionProperty, value);
+        }
+
+        public static readonly DependencyProperty SplitDirectionProperty = DependencyProperty.Register(nameof(SplitDirection),
+            typeof(SplitDirection), typeof(SnapBorderTool), new PropertyMetadata(null));
 
         public string PositionX
         {
@@ -22,16 +29,6 @@ namespace SnapIt.Library.Controls
 
         public static readonly DependencyProperty PositionXProperty = DependencyProperty.Register(nameof(PositionX),
             typeof(string), typeof(SnapBorderTool), new PropertyMetadata(null));
-
-        //private static void PositionXPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    var SnapBorderTool = (SnapBorderTool)d;
-
-        //    if (e.OldValue != null && double.TryParse(e.NewValue as string, out var positionX))
-        //    {
-        //        SnapBorderTool.SnapBorder.MoveBorder(new Point(positionX, SnapBorderTool.SnapBorder.ReferenceBorder.Margin.Top));
-        //    }
-        //}
 
         public string PositionY
         {
@@ -142,12 +139,6 @@ namespace SnapIt.Library.Controls
                 }));
         }
 
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            //ResetPos();
-        }
-
         public void ResetPos()
         {
             if (SnapBorder != null)
@@ -161,6 +152,7 @@ namespace SnapIt.Library.Controls
 
                 PositionX = (borderRect.X + SnapBorder.ReferenceBorder.Margin.Left).ToString("0.00");
                 PositionY = (borderRect.Y + SnapBorder.ReferenceBorder.Margin.Top).ToString("0.00");
+                SplitDirection = SnapBorder.SplitDirection;
             }
         }
 

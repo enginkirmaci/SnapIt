@@ -1,6 +1,6 @@
-﻿using SnapIt.Library.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Test
 {
@@ -47,6 +47,14 @@ namespace SnapIt.Test
         private void AddOverlay_Click(object sender, RoutedEventArgs e)
         {
             SnapControl.AddOverlay();
+        }
+
+        private void HideOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            if (SnapControl.IsOverlayVisible)
+                SnapControl.IsOverlayVisible = false;
+            else
+                SnapControl.IsOverlayVisible = true;
         }
     }
 }

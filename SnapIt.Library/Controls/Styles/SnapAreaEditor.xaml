@@ -11,7 +11,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type control:SnapAreaEditor}">
-                    <Grid>
+                    <Grid Margin="{Binding Path=AreaPadding, RelativeSource={RelativeSource TemplatedParent}}">
                         <Grid
                             x:Name="Area"
                             Background="{Binding Path=Theme.OverlayBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}"

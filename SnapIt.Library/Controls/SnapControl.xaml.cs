@@ -18,8 +18,71 @@ namespace SnapIt.Library.Controls
         private double overlayMargin = 0;
         private bool firstLoad = true;
         private string currentName;
+        private int currentAreaPadding;
         private List<LayoutLine> currentLayoutLines;
         private List<LayoutOverlay> currentLayoutOverlays;
+
+        public int AreaPadding
+        {
+            get => (int)GetValue(AreaPaddingProperty);
+            set => SetValue(AreaPaddingProperty, value);
+        }
+
+        public static readonly DependencyProperty AreaPaddingProperty
+         = DependencyProperty.Register("AreaPadding", typeof(int), typeof(SnapControl),
+           new FrameworkPropertyMetadata()
+           {
+               DefaultValue = 0,
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(AreaPaddingPropertyChanged)
+           });
+
+        private static void AreaPaddingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapControl = (SnapControl)d;
+            snapControl.AreaPadding = (int)e.NewValue;
+            //snapControl.Layout.AreaPadding = snapControl.AreaPadding;
+
+            if (snapControl.IsDesignMode)
+            {
+                var snapAreas = snapControl.FindChildren<SnapAreaEditor>();
+                foreach (var snapArea in snapAreas)
+                {
+                    snapArea.AreaPadding = new Thickness(snapControl.AreaPadding);
+                }
+            }
+            else
+            {
+                var snapAreas = snapControl.FindChildren<SnapArea>();
+                foreach (var snapArea in snapAreas)
+                {
+                    snapArea.AreaPadding = new Thickness(snapControl.AreaPadding);
+                }
+            }
+        }
+
+        public bool IsOverlayVisible
+        {
+            get => (bool)GetValue(IsOverlayVisibleProperty);
+            set => SetValue(IsOverlayVisibleProperty, value);
+        }
+
+        public static readonly DependencyProperty IsOverlayVisibleProperty
+         = DependencyProperty.Register("IsOverlayVisible", typeof(bool), typeof(SnapControl),
+           new FrameworkPropertyMetadata()
+           {
+               DefaultValue = true,
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(IsOverlayVisiblePropertyChanged)
+           });
+
+        private static void IsOverlayVisiblePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapControl = (SnapControl)d;
+            snapControl.IsOverlayVisible = (bool)e.NewValue;
+
+            snapControl.MainOverlay.Visibility = snapControl.IsOverlayVisible ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         public SnapAreaTheme Theme
         {
@@ -85,6 +148,27 @@ namespace SnapIt.Library.Controls
             }
         }
 
+        public bool IsPreview
+        {
+            get => (bool)GetValue(IsPreviewProperty);
+            set => SetValue(IsPreviewProperty, value);
+        }
+
+        public static readonly DependencyProperty IsPreviewProperty
+         = DependencyProperty.Register("IsPreview", typeof(bool), typeof(SnapControl),
+           new FrameworkPropertyMetadata()
+           {
+               DefaultValue = false,
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(IsPreviewPropertyChanged)
+           });
+
+        private static void IsPreviewPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapControl = (SnapControl)d;
+            snapControl.IsPreview = (bool)e.NewValue;
+        }
+
         public Layout Layout
         {
             get => (Layout)GetValue(LayoutProperty);
@@ -121,6 +205,12 @@ namespace SnapIt.Library.Controls
             rightBorder = new SnapBorder(this, Theme) { IsDraggable = false };
 
             SizeChanged += SnapControl_SizeChanged;
+            this.LayoutUpdated += SnapControl_LayoutUpdated;
+        }
+
+        private void SnapControl_LayoutUpdated(object sender, System.EventArgs e)
+        {
+            ResetBorderTool();
         }
 
         private void SnapControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -203,6 +293,7 @@ namespace SnapIt.Library.Controls
             switch (status)
             {
                 case LayoutStatus.Saved:
+                    Layout.AreaPadding = AreaPadding;
                     Layout.Size = new Size(ActualWidth, ActualHeight);
                     Layout.Status = LayoutStatus.NotSaved;
 
@@ -210,6 +301,7 @@ namespace SnapIt.Library.Controls
 
                 case LayoutStatus.Ignored:
                     Layout.Name = currentName;
+                    Layout.AreaPadding = currentAreaPadding;
                     Layout.LayoutLines = currentLayoutLines;
                     Layout.LayoutOverlays = currentLayoutOverlays;
                     Layout.Status = LayoutStatus.Ignored;
@@ -232,9 +324,12 @@ namespace SnapIt.Library.Controls
             {
                 firstLoad = false;
                 currentName = layout.Name;
+                currentAreaPadding = layout.AreaPadding;
                 currentLayoutLines = new List<LayoutLine>(layout.LayoutLines);
                 currentLayoutOverlays = new List<LayoutOverlay>(layout.LayoutOverlays);
             };
+
+            AreaPadding = layout.AreaPadding;
 
             MainGrid.Children.Clear();
             MainFullOverlay.Children.Clear();
@@ -324,6 +419,11 @@ namespace SnapIt.Library.Controls
                         };
 
                         border.SetPos(newPoint, newSize, border.LayoutLine.SplitDirection);
+                    }
+
+                    if (IsPreview)
+                    {
+                        AreaPadding = (int)(Layout.AreaPadding * factorX);
                     }
                 }
 
@@ -465,7 +565,8 @@ namespace SnapIt.Library.Controls
                         Width = rectangle.Width,
                         Height = rectangle.Height,
                         SnapControl = this,
-                        Theme = Theme
+                        Theme = Theme,
+                        AreaPadding = new Thickness(AreaPadding)
                     };
 
                     MainAreas.Children.Add(snapArea);
@@ -478,7 +579,8 @@ namespace SnapIt.Library.Controls
                         Width = rectangle.Width,
                         Height = rectangle.Height,
                         SnapControl = this,
-                        Theme = Theme
+                        Theme = Theme,
+                        AreaPadding = new Thickness(AreaPadding)
                     };
 
                     MainAreas.Children.Add(snapArea);

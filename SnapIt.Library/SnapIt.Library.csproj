@@ -57,9 +57,6 @@
     <Page Update="Controls\HotkeyEditorControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\SnapArea.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Controls\SnapBorder.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -73,6 +70,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controls\SnapOverlayEditor.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Styles\SnapArea.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controls\Styles\SnapBorderTool.xaml">
