@@ -1,7 +1,7 @@
-﻿using SnapIt.Library.Entities;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Controls
 {
@@ -11,10 +11,20 @@ namespace SnapIt.Library.Controls
 
         private Point _lastPointInContiner;
         private ResizeHitType _mouseHitType = ResizeHitType.None;
+        private FrameworkElement selectedElement = null;
 
         public SnapControl SnapControl { get; }
 
         public LayoutOverlay LayoutOverlay { get; internal set; }
+
+        public bool ShowMiniOverlay
+        {
+            get => (bool)GetValue(ShowMiniOverlayProperty);
+            set => SetValue(ShowMiniOverlayProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowMiniOverlayProperty = DependencyProperty.Register(nameof(ShowMiniOverlay),
+            typeof(bool), typeof(SnapOverlayEditor), new PropertyMetadata(null));
 
         public SnapAreaTheme Theme
         {
@@ -54,22 +64,34 @@ namespace SnapIt.Library.Controls
             SnapControl = snapControl;
             Theme = theme;
 
-            DesignPanel.Visibility = Visibility.Hidden;
-            FullOverlay.Visibility = Visibility.Hidden;
-            FullOverlay.PreviewKeyDown += FullOverlay_PreviewKeyDown;
-            FullOverlay.Focusable = true;
+            MiniOverlay.SizeChanged += MiniOverlay_SizeChanged;
 
-            SizeChanged += SnapOverlayEditor_SizeChanged;
+            ShowMiniOverlay = false;
+            FullOverlay.Visibility = Visibility.Visible;
+            MiniOverlay.Visibility = Visibility.Hidden;
+
+            Loaded += SnapOverlayEditor_Loaded;
+
+            DesignPanel.Visibility = Visibility.Hidden;
+            OutlineBorder.Visibility = Visibility.Hidden;
         }
 
-        private void SnapOverlayEditor_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void SnapOverlayEditor_Loaded(object sender, RoutedEventArgs e)
         {
-            var factor = 0.3;
-            MiniOverlay.Width = Width * factor;
-            MiniOverlay.Height = Height * factor;
+            ResetDesignPanel();
+        }
 
+        private void MiniOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
             var iconFactor = 0.2;
-            MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = MiniOverlay.Height * iconFactor;
+            if (MiniOverlay.Width > MiniOverlay.Height)
+            {
+                MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = MiniOverlay.Width * iconFactor;
+            }
+            else
+            {
+                MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = MiniOverlay.Height * iconFactor;
+            }
         }
 
         public LayoutOverlay GetOverlay()
@@ -77,39 +99,75 @@ namespace SnapIt.Library.Controls
             return new LayoutOverlay
             {
                 Point = new Point(Margin.Left, Margin.Top),
-                Size = new Size(Width, Height)
+                Size = new Size(Width, Height),
+                MiniOverlay = new LayoutOverlay
+                {
+                    Point = new Point(Margin.Left + MiniOverlay.Margin.Left, Margin.Top + MiniOverlay.Margin.Top),
+                    Size = new Size(MiniOverlay.Width, MiniOverlay.Height)
+                }
             };
+        }
+
+        public void ResetDesignPanel()
+        {
+            if (ShowMiniOverlay)
+            {
+                DesignPanel.Margin = new Thickness(
+                    MiniOverlay.Margin.Left + (MiniOverlay.Width / 2) - (DesignPanel.ActualWidth / 2),
+                    MiniOverlay.Margin.Top + (MiniOverlay.Height / 2) - (DesignPanel.ActualHeight / 2),
+                    0, 0);
+            }
+            else
+            {
+                DesignPanel.Margin = new Thickness(
+                    (Width / 2) - (DesignPanel.ActualWidth / 2),
+                    (Height / 2) - (DesignPanel.ActualHeight / 2),
+                    0, 0);
+            }
+        }
+
+        public void SetPos(FrameworkElement element, Point point, Size size)
+        {
+            element.Margin = new Thickness(point.X, point.Y, 0, 0);
+
+            element.Width = size.Width;
+            element.Height = size.Height;
         }
 
         public void SetPos(Point point, Size size)
         {
-            Margin = new Thickness(point.X, point.Y, 0, 0);
-
-            Width = size.Width;
-            Height = size.Height;
+            SetPos(this, point, size);
         }
 
-        private bool isEscapeKeyPressed = false;
-
-        private void FullOverlay_PreviewKeyDown(object sender, KeyEventArgs e)
+        public void SetPos(Point point, Size size, LayoutOverlay miniOverlay)
         {
-            isEscapeKeyPressed = e.Key == Key.Escape;
-            Cursor = Cursors.Arrow;
-            MiniOverlay.Visibility = Visibility.Visible;
-            FullOverlay.Visibility = Visibility.Hidden;
-            DesignPanel.Visibility = Visibility.Hidden;
+            SetPos(this, point, size);
+
+            if (miniOverlay != null)
+            {
+                SetPos(MiniOverlay, miniOverlay.Point, miniOverlay.Size);
+            }
+            else
+            {
+                var factor = 0.3;
+                MiniOverlay.Width = Width * factor;
+                MiniOverlay.Height = Height * factor;
+
+                MiniOverlay.Margin = new Thickness(
+                    (Width / 2) - MiniOverlay.Width / 2,
+                    (Height / 2) - MiniOverlay.Height / 2,
+                    0, 0);
+            }
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
 
-            if (isEscapeKeyPressed) { return; }
+            _mouseHitType = SetHitType(selectedElement, Mouse.GetPosition(selectedElement));
+            SetMouseCursor();
 
             _lastPointInContiner = Mouse.GetPosition(SnapControl);
-
-            _mouseHitType = SetHitType(Mouse.GetPosition(this));
-            SetMouseCursor();
 
             if (_mouseHitType == ResizeHitType.None) { return; }
 
@@ -133,27 +191,36 @@ namespace SnapIt.Library.Controls
         {
             base.OnMouseLeave(e);
 
-            isEscapeKeyPressed = false;
-
-            MiniOverlay.Visibility = Visibility.Visible;
-            FullOverlay.Visibility = Visibility.Hidden;
             DesignPanel.Visibility = Visibility.Hidden;
+            OutlineBorder.Visibility = Visibility.Hidden;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
 
-            Keyboard.Focus(FullOverlay);
-            if (isEscapeKeyPressed) { return; }
-
-            MiniOverlay.Visibility = Visibility.Hidden;
-            FullOverlay.Visibility = Visibility.Visible;
             DesignPanel.Visibility = Visibility.Visible;
+            OutlineBorder.Visibility = Visibility.Visible;
+
+            Keyboard.Focus(FullOverlay);
 
             if (!IsMouseCaptured)
             {
-                _mouseHitType = SetHitType(Mouse.GetPosition(this));
+                var element = InputHitTest(Mouse.GetPosition(this));
+
+                if (element != null)
+                {
+                    if (ShowMiniOverlay)
+                    {
+                        selectedElement = MiniOverlay;
+                    }
+                    else
+                    {
+                        selectedElement = this;
+                    }
+                }
+
+                _mouseHitType = SetHitType(selectedElement, Mouse.GetPosition(selectedElement));
                 SetMouseCursor();
             }
             else
@@ -162,10 +229,10 @@ namespace SnapIt.Library.Controls
                 double offset_x = mousePosition.X - _lastPointInContiner.X;
                 double offset_y = mousePosition.Y - _lastPointInContiner.Y;
 
-                double new_x = this.Margin.Left;
-                double new_y = this.Margin.Top;
-                double new_width = this.Width;
-                double new_height = this.Height;
+                double new_x = selectedElement.Margin.Left;
+                double new_y = selectedElement.Margin.Top;
+                double new_width = selectedElement.Width;
+                double new_height = selectedElement.Height;
 
                 switch (_mouseHitType)
                 {
@@ -222,19 +289,30 @@ namespace SnapIt.Library.Controls
                     var point = new Point(new_x, new_y);
                     var size = new Size(new_width, new_height);
 
-                    SetPos(point, size);
+                    DevMode.Log($"{selectedElement.Name}, {selectedElement.GetType()}");
+
+                    if (selectedElement.Name == "MiniOverlay")
+                    {
+                        SetPos(selectedElement, point, size);
+                    }
+                    else
+                    {
+                        SetPos(point, size);
+                    }
+
+                    ResetDesignPanel();
 
                     _lastPointInContiner = Mouse.GetPosition(SnapControl);
                 }
             }
         }
 
-        private ResizeHitType SetHitType(Point point)
+        private ResizeHitType SetHitType(FrameworkElement element, Point point)
         {
             double left = 0;
             double top = 0;
-            double right = left + this.Width;
-            double bottom = top + this.Height;
+            double right = left + element.Width;
+            double bottom = top + element.Height;
             if (point.X < left) return ResizeHitType.None;
             if (point.X > right) return ResizeHitType.None;
             if (point.Y < top) return ResizeHitType.None;
@@ -302,6 +380,26 @@ namespace SnapIt.Library.Controls
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
             SnapControl.RemoveOverlay(this);
+        }
+
+        private void ToggleOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            if (ShowMiniOverlay)
+            {
+                ShowMiniOverlay = false;
+
+                FullOverlay.Visibility = Visibility.Visible;
+                MiniOverlay.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                ShowMiniOverlay = true;
+
+                FullOverlay.Visibility = Visibility.Hidden;
+                MiniOverlay.Visibility = Visibility.Visible;
+            }
+
+            ResetDesignPanel();
         }
     }
 }

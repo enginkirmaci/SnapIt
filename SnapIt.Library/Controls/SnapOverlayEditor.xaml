@@ -11,11 +11,58 @@
     d:DesignWidth="300"
     mc:Ignorable="d">
     <Grid>
-        <Grid x:Name="Overlay" Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
+        <Grid
+            x:Name="Overlay"
+            ClipToBounds="True"
+            Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
+            <Grid.ContextMenu>
+                <ContextMenu Style="{StaticResource UiNotifyIconContextMenuStyle}">
+                    <MenuItem Click="RemoveButton_Click">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <wpfui:Icon Margin="0,0,6,0" Glyph="Delete28" />
+                                <ContentPresenter Content="Remove Overlay" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Click="ToggleOverlay_Click">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <wpfui:Icon Margin="0,0,6,0" Glyph="ResizeSmall24" />
+                                <ContentPresenter Content="ToggleOverlay" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </ContextMenu>
+            </Grid.ContextMenu>
+
+            <Border x:Name="OutlineBorder" BorderThickness="1">
+                <Border.BorderBrush>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Rectangle
+                                Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                                Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"
+                                Stroke="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
+                                StrokeDashArray="4 2"
+                                StrokeThickness="2" />
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Border.BorderBrush>
+            </Border>
+
+            <Grid x:Name="FullOverlay" Background="{Binding Theme.HighlightBrush, FallbackValue=#FF212121}">
+
+                <Border
+                    x:Name="FullOverlayBorder"
+                    BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
+                    BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
+            </Grid>
+
             <Grid
                 x:Name="MiniOverlay"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
                 Background="{Binding Theme.OverlayBrush, FallbackValue=#FF636363}">
                 <Border
                     x:Name="Border"
@@ -32,43 +79,38 @@
                     Foreground="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
                     Glyph="ResizeLarge24" />
             </Grid>
-
-            <Grid x:Name="FullOverlay" Background="{Binding Theme.HighlightBrush, FallbackValue=#FF212121}">
-                <Grid.ContextMenu>
-                    <ContextMenu Style="{StaticResource UiNotifyIconContextMenuStyle}">
-                        <MenuItem Click="RemoveButton_Click">
-                            <MenuItem.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <wpfui:Icon Margin="0,0,6,0" Glyph="Delete28" />
-                                    <ContentPresenter Content="Remove Overlay" />
-                                </StackPanel>
-                            </MenuItem.Header>
-                        </MenuItem>
-                    </ContextMenu>
-                </Grid.ContextMenu>
-
-                <Border
-                    x:Name="FullOverlayBorder"
-                    BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
-                    BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
-            </Grid>
         </Grid>
 
-        <Grid
+        <StackPanel
             x:Name="DesignPanel"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Panel.ZIndex="99">
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Panel.ZIndex="99"
+            Orientation="Horizontal">
 
             <wpfui:Button
                 x:Name="RemoveButton"
                 Height="36"
                 Margin="4,0"
+                Padding="12,0"
                 Appearance="Secondary"
                 Click="RemoveButton_Click"
-                Icon="Empty">
+                Icon="Empty"
+                ToolTip="Remove Overlay">
                 <wpfui:Icon Glyph="Delete28" />
             </wpfui:Button>
-        </Grid>
+
+            <wpfui:Button
+                x:Name="ToggleOverlay"
+                Height="36"
+                Margin="4,0"
+                Padding="12,0"
+                Appearance="Secondary"
+                Click="ToggleOverlay_Click"
+                Icon="Empty"
+                ToolTip="Toggle Overlay">
+                <wpfui:Icon Glyph="ResizeSmall24" />
+            </wpfui:Button>
+        </StackPanel>
     </Grid>
 </UserControl>

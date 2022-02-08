@@ -13,7 +13,7 @@ namespace SnapIt.Library
     {
 #if DEBUG
         public const bool IsActive = false;
-        public const bool ShowSnapWindowOnStartup = true;
+        public const bool ShowSnapWindowOnStartup = false;
         public const bool IsTopmostDisabled = true;
         public const bool SkipLicense = true;
 #else

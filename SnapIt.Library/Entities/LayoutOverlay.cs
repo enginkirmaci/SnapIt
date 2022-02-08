@@ -6,5 +6,6 @@ namespace SnapIt.Library.Entities
     {
         public Point Point { get; set; }
         public Size Size { get; set; }
+        public LayoutOverlay MiniOverlay { get; set; }
     }
 }
