@@ -262,7 +262,7 @@ namespace SnapIt.Library.Controls
 
             overlayMargin += 20;
 
-            overlayEditor.SetPos(point, size);
+            overlayEditor.SetPos(point, size, null);
 
             MainOverlay.Children.Add(overlayEditor);
 
@@ -429,48 +429,47 @@ namespace SnapIt.Library.Controls
 
                 if (IsDesignMode)
                 {
-                    var overlays = this.FindChildren<SnapOverlayEditor>();
-                    foreach (var overlay in overlays)
+                    var overlayEditors = this.FindChildren<SnapOverlayEditor>();
+                    foreach (var overlayEditor in overlayEditors)
                     {
-                        if (overlay.LayoutOverlay != null)
+                        if (overlayEditor.LayoutOverlay != null)
                         {
                             var newPoint = new Point
                             {
-                                X = overlay.LayoutOverlay.Point.X * factorX,
-                                Y = overlay.LayoutOverlay.Point.Y * factorY
+                                X = overlayEditor.LayoutOverlay.Point.X * factorX,
+                                Y = overlayEditor.LayoutOverlay.Point.Y * factorY
                             };
                             var newSize = new Size
                             {
-                                Width = overlay.LayoutOverlay.Size.Width * factorX,
-                                Height = overlay.LayoutOverlay.Size.Height * factorY
+                                Width = overlayEditor.LayoutOverlay.Size.Width * factorX,
+                                Height = overlayEditor.LayoutOverlay.Size.Height * factorY
                             };
 
-                            overlay.SetPos(newPoint, newSize);
+                            if (overlayEditor.LayoutOverlay.MiniOverlay != null)
+                            {
+                                var miniPoint = new Point
+                                {
+                                    X = overlayEditor.LayoutOverlay.MiniOverlay.Point.X * factorX,
+                                    Y = overlayEditor.LayoutOverlay.MiniOverlay.Point.Y * factorY
+                                };
+
+                                var miniSize = new Size
+                                {
+                                    Width = overlayEditor.LayoutOverlay.MiniOverlay.Size.Width * factorX,
+                                    Height = overlayEditor.LayoutOverlay.MiniOverlay.Size.Height * factorY
+                                };
+
+                                overlayEditor.SetPos(newPoint, newSize, new LayoutOverlay { Point = miniPoint, Size = miniSize });
+                            }
+                            else
+                            {
+                                overlayEditor.SetPos(newPoint, newSize, null);
+                            }
                         }
                     }
                 }
                 else
                 {
-                    var overlays = this.FindChildren<SnapOverlay>();
-                    foreach (var overlay in overlays)
-                    {
-                        if (overlay.LayoutOverlay != null)
-                        {
-                            var newPoint = new Point
-                            {
-                                X = overlay.LayoutOverlay.Point.X * factorX,
-                                Y = overlay.LayoutOverlay.Point.Y * factorY
-                            };
-                            var newSize = new Size
-                            {
-                                Width = overlay.LayoutOverlay.Size.Width * factorX,
-                                Height = overlay.LayoutOverlay.Size.Height * factorY
-                            };
-
-                            overlay.SetPos(newPoint, newSize);
-                        }
-                    }
-
                     var fullOverlays = this.FindChildren<SnapFullOverlay>();
                     foreach (var fullOverlay in fullOverlays)
                     {
@@ -490,6 +489,34 @@ namespace SnapIt.Library.Controls
                             fullOverlay.SetPos(newPoint, newSize);
                         }
                     }
+
+                    var overlays = this.FindChildren<SnapOverlay>();
+                    foreach (var overlay in overlays)
+                    {
+                        if (overlay.LayoutOverlay != null)
+                        {
+                            if (overlay.LayoutOverlay.MiniOverlay != null)
+                            {
+                                var miniPoint = new Point
+                                {
+                                    X = overlay.LayoutOverlay.MiniOverlay.Point.X * factorX,
+                                    Y = overlay.LayoutOverlay.MiniOverlay.Point.Y * factorY
+                                };
+
+                                var miniSize = new Size
+                                {
+                                    Width = overlay.LayoutOverlay.MiniOverlay.Size.Width * factorX,
+                                    Height = overlay.LayoutOverlay.MiniOverlay.Size.Height * factorY
+                                };
+
+                                overlay.SetPos(new LayoutOverlay { Point = miniPoint, Size = miniSize });
+                            }
+                            else
+                            {
+                                overlay.SetPos(null);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -506,9 +533,9 @@ namespace SnapIt.Library.Controls
 
                 foreach (var overlay in overlays)
                 {
-                    var line = overlay.GetOverlay();
+                    var layoutOverlay = overlay.GetOverlay();
 
-                    newLayoutOverlays.Add(line);
+                    newLayoutOverlays.Add(layoutOverlay);
                 }
 
                 if (Layout != null)

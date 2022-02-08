@@ -52,12 +52,31 @@ namespace SnapIt.Library.Controls
             SizeChanged += SnapOverlay_SizeChanged;
         }
 
-        public void SetPos(Point point, Size size)
+        public void SetPos(FrameworkElement element, Point point, Size size)
         {
-            Margin = new Thickness(point.X, point.Y, 0, 0);
+            element.Margin = new Thickness(point.X, point.Y, 0, 0);
 
-            Width = size.Width;
-            Height = size.Height;
+            element.Width = size.Width;
+            element.Height = size.Height;
+        }
+
+        public void SetPos(LayoutOverlay layoutOverlay)
+        {
+            if (layoutOverlay != null)
+            {
+                SetPos(this, layoutOverlay.Point, layoutOverlay.Size);
+            }
+            else
+            {
+                var factor = 0.3;
+                Width = SnapFullOverlay.Width * factor;
+                Height = SnapFullOverlay.Height * factor;
+
+                Margin = new Thickness(
+                   SnapFullOverlay.Margin.Left + ((SnapFullOverlay.Width / 2) - Width / 2),
+                   SnapFullOverlay.Margin.Top + ((SnapFullOverlay.Height / 2) - Height / 2),
+                    0, 0);
+            }
         }
 
         public void NormalStyle()
@@ -80,12 +99,15 @@ namespace SnapIt.Library.Controls
 
         private void SnapOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var factor = 0.3;
-            Overlay.Width = Width * factor;
-            Overlay.Height = Height * factor;
-
             var iconFactor = 0.2;
-            MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = Overlay.Height * iconFactor;
+            if (ActualWidth > ActualHeight)
+            {
+                MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = ActualWidth * iconFactor;
+            }
+            else
+            {
+                MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = ActualHeight * iconFactor;
+            }
         }
 
         public Rectangle ScreenSnapArea(Dpi dpi)
