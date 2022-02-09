@@ -79,10 +79,10 @@ namespace SnapIt.Test
 
         private void AddOverlay_Click(object sender, RoutedEventArgs e)
         {
-            var c = SnapControl.FindChildren<SnapFullOverlay>();
-            var one = c.FirstOrDefault();
-            one.OnHoverStyle();
-            //SnapControl.AddOverlay();
+            //var c = SnapControl.FindChildren<SnapFullOverlay>();
+            //var one = c.FirstOrDefault();
+            //one.OnHoverStyle();
+            SnapControl.AddOverlay();
         }
 
         private void HideOverlay_Click(object sender, RoutedEventArgs e)

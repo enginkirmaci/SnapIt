@@ -1,7 +1,7 @@
-﻿using Prism.Mvvm;
-using SnapIt.Library.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Prism.Mvvm;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.ViewModels
 {
@@ -9,6 +9,16 @@ namespace SnapIt.ViewModels
     {
         private readonly List<ChangeLogItem> changeLogs = new List<ChangeLogItem>
         {
+            new ChangeLogItem()
+            {
+                Header = "v4.0.9.0",
+                Lines = new List<string>() {
+                    "Changed overlay activator and overlay designing, you can now freely move activator",
+                    "Added animation to areas and overlay when hovering",
+                    "Added designer option to space between areas",
+                    "Added border tool to set border X and Y coordinates"
+                }
+            },
             new ChangeLogItem()
             {
                 Header = "v4.0.0.0",
