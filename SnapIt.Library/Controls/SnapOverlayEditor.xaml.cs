@@ -24,7 +24,26 @@ namespace SnapIt.Library.Controls
         }
 
         public static readonly DependencyProperty ShowMiniOverlayProperty = DependencyProperty.Register(nameof(ShowMiniOverlay),
-            typeof(bool), typeof(SnapOverlayEditor), new PropertyMetadata(null));
+            typeof(bool), typeof(SnapOverlayEditor), new PropertyMetadata(ShowMiniOverlayPropertyChanged));
+
+        private static void ShowMiniOverlayPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapOverlayEditor = (SnapOverlayEditor)d;
+            snapOverlayEditor.ShowMiniOverlay = (bool)e.NewValue;
+
+            if (snapOverlayEditor.ShowMiniOverlay)
+            {
+                snapOverlayEditor.RemoveButton.Visibility = Visibility.Collapsed;
+                snapOverlayEditor.FullOverlay.Visibility = Visibility.Hidden;
+                snapOverlayEditor.MiniOverlay.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                snapOverlayEditor.RemoveButton.Visibility = Visibility.Visible;
+                snapOverlayEditor.FullOverlay.Visibility = Visibility.Visible;
+                snapOverlayEditor.MiniOverlay.Visibility = Visibility.Hidden;
+            }
+        }
 
         public SnapAreaTheme Theme
         {
@@ -67,6 +86,7 @@ namespace SnapIt.Library.Controls
             MiniOverlay.SizeChanged += MiniOverlay_SizeChanged;
 
             ShowMiniOverlay = false;
+            RemoveButton.Visibility = Visibility.Visible;
             FullOverlay.Visibility = Visibility.Visible;
             MiniOverlay.Visibility = Visibility.Hidden;
 
@@ -185,6 +205,13 @@ namespace SnapIt.Library.Controls
             Border.Background = Theme.OverlayBrush;
 
             SnapControl.GenerateSnapOverlays();
+        }
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            base.OnMouseEnter(e);
+
+            ResetDesignPanel();
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
@@ -389,6 +416,7 @@ namespace SnapIt.Library.Controls
                 ShowMiniOverlay = false;
 
                 FullOverlay.Visibility = Visibility.Visible;
+                RemoveButton.Visibility = Visibility.Visible;
                 MiniOverlay.Visibility = Visibility.Hidden;
             }
             else
@@ -396,10 +424,9 @@ namespace SnapIt.Library.Controls
                 ShowMiniOverlay = true;
 
                 FullOverlay.Visibility = Visibility.Hidden;
+                RemoveButton.Visibility = Visibility.Collapsed;
                 MiniOverlay.Visibility = Visibility.Visible;
             }
-
-            ResetDesignPanel();
         }
     }
 }

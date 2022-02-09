@@ -52,7 +52,6 @@
             </Border>
 
             <Grid x:Name="FullOverlay" Background="{Binding Theme.HighlightBrush, FallbackValue=#FF212121}">
-
                 <Border
                     x:Name="FullOverlayBorder"
                     BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"

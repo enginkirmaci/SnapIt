@@ -15,7 +15,7 @@
         <Setter Property="Panel.ZIndex" Value="9" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="Opacity" Value="0.7" />
+        <Setter Property="Opacity" Value="0.85" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>

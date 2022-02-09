@@ -358,7 +358,8 @@ namespace SnapIt.Library.Controls
                     {
                         var overlayEditor = new SnapOverlayEditor(this, Theme)
                         {
-                            LayoutOverlay = layoutOverlay
+                            LayoutOverlay = layoutOverlay,
+                            ShowMiniOverlay = true
                         };
 
                         MainOverlay.Children.Add(overlayEditor);
@@ -447,11 +448,16 @@ namespace SnapIt.Library.Controls
 
                             if (overlayEditor.LayoutOverlay.MiniOverlay != null)
                             {
-                                var miniPoint = new Point
-                                {
-                                    X = overlayEditor.LayoutOverlay.MiniOverlay.Point.X * factorX,
-                                    Y = overlayEditor.LayoutOverlay.MiniOverlay.Point.Y * factorY
-                                };
+                                var miniPoint = !IsDesignMode ?
+                                    new Point
+                                    {
+                                        X = (overlayEditor.LayoutOverlay.MiniOverlay.Point.X) * factorX,
+                                        Y = (overlayEditor.LayoutOverlay.MiniOverlay.Point.Y) * factorY
+                                    } : new Point
+                                    {
+                                        X = (overlayEditor.LayoutOverlay.MiniOverlay.Point.X - overlayEditor.LayoutOverlay.Point.X) * factorX,
+                                        Y = (overlayEditor.LayoutOverlay.MiniOverlay.Point.Y - overlayEditor.LayoutOverlay.Point.Y) * factorY
+                                    };
 
                                 var miniSize = new Size
                                 {

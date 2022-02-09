@@ -61,7 +61,7 @@
                             Width="256"
                             AutoToolTipPlacement="TopLeft"
                             LargeChange="5"
-                            Maximum="50"
+                            Maximum="100"
                             Minimum="0"
                             SmallChange="1"
                             Value="{Binding AreaPadding, ElementName=SnapControl}" />
@@ -103,25 +103,31 @@
                             TickFrequency="0.1"
                             Value="{Binding Theme.Opacity}" />
                         <wpfui:ToggleSwitch Content="Show Overlays" IsChecked="{Binding IsOverlayVisible, ElementName=SnapControl}" />
-
-                        <Separator Margin="0,8" />
-
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <wpfui:Button
-                                Margin="0,0,6,0"
-                                Command="{Binding SaveLayoutCommand}"
-                                Content="Save"
-                                Icon="Save24" />
-
-                            <wpfui:Button
-                                Margin="0,0,6,0"
-                                Appearance="Secondary"
-                                Command="{Binding CloseLayoutCommand}"
-                                Content="Close"
-                                Icon="Dismiss24" />
-                        </StackPanel>
                     </StackPanel>
                 </wpfui:CardExpander>
+            </Grid>
+            <Grid Margin="0,0,0,8">
+                <Border
+                    Padding="12"
+                    Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
+                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <wpfui:Button
+                            Margin="0,0,6,0"
+                            Command="{Binding SaveLayoutCommand}"
+                            Content="Save"
+                            Icon="Save24" />
+
+                        <wpfui:Button
+                            Margin="6,0,0,0"
+                            Appearance="Secondary"
+                            Command="{Binding CloseLayoutCommand}"
+                            Content="Close"
+                            Icon="Dismiss24" />
+                    </StackPanel>
+                </Border>
             </Grid>
         </StackPanel>
     </Grid>
