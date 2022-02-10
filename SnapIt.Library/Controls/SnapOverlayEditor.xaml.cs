@@ -90,15 +90,8 @@ namespace SnapIt.Library.Controls
             FullOverlay.Visibility = Visibility.Visible;
             MiniOverlay.Visibility = Visibility.Hidden;
 
-            Loaded += SnapOverlayEditor_Loaded;
-
             DesignPanel.Visibility = Visibility.Hidden;
             OutlineBorder.Visibility = Visibility.Hidden;
-        }
-
-        private void SnapOverlayEditor_Loaded(object sender, RoutedEventArgs e)
-        {
-            ResetDesignPanel();
         }
 
         private void MiniOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -133,8 +126,8 @@ namespace SnapIt.Library.Controls
             if (ShowMiniOverlay)
             {
                 DesignPanel.Margin = new Thickness(
-                    MiniOverlay.Margin.Left + (MiniOverlay.Width / 2) - (DesignPanel.ActualWidth / 2),
-                    MiniOverlay.Margin.Top + (MiniOverlay.Height / 2) - (DesignPanel.ActualHeight / 2),
+                    MiniOverlay.Margin.Left + MiniOverlay.Width - DesignPanel.ActualWidth - 20,
+                    MiniOverlay.Margin.Top + 20,
                     0, 0);
             }
             else
@@ -249,6 +242,8 @@ namespace SnapIt.Library.Controls
 
                 _mouseHitType = SetHitType(selectedElement, Mouse.GetPosition(selectedElement));
                 SetMouseCursor();
+
+                ResetDesignPanel();
             }
             else
             {
@@ -415,16 +410,16 @@ namespace SnapIt.Library.Controls
             {
                 ShowMiniOverlay = false;
 
+                MiniOverlay.Visibility = Visibility.Hidden;
                 FullOverlay.Visibility = Visibility.Visible;
                 RemoveButton.Visibility = Visibility.Visible;
-                MiniOverlay.Visibility = Visibility.Hidden;
             }
             else
             {
                 ShowMiniOverlay = true;
 
-                FullOverlay.Visibility = Visibility.Hidden;
                 RemoveButton.Visibility = Visibility.Collapsed;
+                FullOverlay.Visibility = Visibility.Hidden;
                 MiniOverlay.Visibility = Visibility.Visible;
             }
         }

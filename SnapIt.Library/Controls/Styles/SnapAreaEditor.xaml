@@ -49,7 +49,9 @@
                                     x:Name="SplitVertically"
                                     Height="36"
                                     Margin="4,0"
+                                    Padding="12,0"
                                     Appearance="Secondary"
+                                    Background="#DD444444"
                                     Command="{Binding Path=SplitVerticallyCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                     Icon="Empty"
                                     IsTabStop="False">
@@ -60,7 +62,9 @@
                                     x:Name="SplitHorizantally"
                                     Height="36"
                                     Margin="4,0"
+                                    Padding="12,0"
                                     Appearance="Secondary"
+                                    Background="#DD444444"
                                     Command="{Binding Path=SplitHorizantallyCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                     Icon="Empty"
                                     IsTabStop="False">
