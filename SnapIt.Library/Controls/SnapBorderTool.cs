@@ -94,8 +94,6 @@ namespace SnapIt.Library.Controls
 
                             while (inProgress && Math.Abs(delta) > decimal.Zero)
                             {
-                                DevMode.Log($"delta: {delta}, X: {deltaX}, Y: {deltaY}");
-
                                 previousRect = borderRect;
 
                                 inProgress = SnapBorder.MoveBorder(new Point((double)((decimal)borderRect.Left + deltaX), (double)((decimal)borderRect.Top + deltaY)), false);
@@ -145,14 +143,18 @@ namespace SnapIt.Library.Controls
             {
                 var borderRect = SnapBorder.GetRect();
                 var toolRect = GetRect();
-                Margin = new Thickness(
-                    borderRect.X + (borderRect.Width / 2) - (toolRect.Width / 2),
-                    borderRect.Y + (borderRect.Height / 2) - (toolRect.Height / 2),
-                    0, 0);
 
-                PositionX = (borderRect.X + SnapBorder.ReferenceBorder.Margin.Left).ToString("0.00");
-                PositionY = (borderRect.Y + SnapBorder.ReferenceBorder.Margin.Top).ToString("0.00");
-                SplitDirection = SnapBorder.SplitDirection;
+                if (!borderRect.Width.Equals(double.NaN) && !borderRect.Height.Equals(double.NaN))
+                {
+                    Margin = new Thickness(
+                        borderRect.X + (borderRect.Width / 2) - (toolRect.Width / 2),
+                        borderRect.Y + (borderRect.Height / 2) - (toolRect.Height / 2),
+                        0, 0);
+
+                    PositionX = (borderRect.X + SnapBorder.ReferenceBorder.Margin.Left).ToString("0.00");
+                    PositionY = (borderRect.Y + SnapBorder.ReferenceBorder.Margin.Top).ToString("0.00");
+                    SplitDirection = SnapBorder.SplitDirection;
+                }
             }
         }
 

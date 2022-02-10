@@ -11,7 +11,7 @@
 	<Identity
 	  Name="30071EnginKrmac.SnapIt"
 	  Publisher="CN=5CFA03AE-FF07-4595-B025-C45A2265838F"
-	  Version="4.0.6.0" />
+	  Version="4.0.9.0" />
 
 	<Properties>
 		<DisplayName>SnapIt</DisplayName>

@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rc="clr-namespace:RulerControl;assembly=RulerControl"
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
@@ -33,6 +34,30 @@
     </i:Interaction.Triggers>
 
     <Grid>
+        <rc:RulerControl
+            Name="horizontalRuler"
+            Width="{Binding ActualWidth, ElementName=DesignWindowView, Mode=OneWay, ValidatesOnNotifyDataErrors=True}"
+            Height="20"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Panel.ZIndex="9"
+            LittleMarkLength="1"
+            MajorInterval="100"
+            MarkLength="10"
+            Opacity="0.8"
+            Orientation="Horizontal" />
+        <rc:RulerControl
+            Name="verticalRuler"
+            Width="30"
+            Height="{Binding ActualHeight, ElementName=DesignWindowView, Mode=OneWay, ValidatesOnNotifyDataErrors=True}"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Panel.ZIndex="9"
+            LittleMarkLength="1"
+            MajorInterval="100"
+            MarkLength="10"
+            Opacity="0.8"
+            Orientation="Vertical" />
         <Controls:SnapControl
             x:Name="SnapControl"
             IsDesignMode="True"
@@ -75,6 +100,7 @@
                             Content="Add Overlay"
                             Icon="Layer24" />
                         <wpfui:Button
+                            Margin="0,0,0,6"
                             HorizontalAlignment="Left"
                             Appearance="Secondary"
                             Command="{Binding ClearLayoutCommand}"
@@ -86,7 +112,7 @@
             <Grid Margin="0,0,0,8" Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}">
                 <wpfui:CardExpander
                     Margin="0"
-                    Header="Designer Settings"
+                    Header="Designer"
                     Icon="EditSettings24"
                     IsExpanded="True">
                     <wpfui:CardExpander.Background>
@@ -102,7 +128,15 @@
                             Minimum="0"
                             TickFrequency="0.1"
                             Value="{Binding Theme.Opacity}" />
-                        <wpfui:ToggleSwitch Content="Show Overlays" IsChecked="{Binding IsOverlayVisible, ElementName=SnapControl}" />
+                        <wpfui:ToggleSwitch
+                            Margin="0,0,0,6"
+                            Content="Show Overlays"
+                            IsChecked="{Binding IsOverlayVisible, ElementName=SnapControl}" />
+                        <Separator Margin="0,8" />
+                        <TextBlock
+                            x:Name="mousePositionText"
+                            Margin="0,0,0,6"
+                            Text="Mouse Position: 0 x 0" />
                     </StackPanel>
                 </wpfui:CardExpander>
             </Grid>

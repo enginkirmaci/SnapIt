@@ -13,6 +13,7 @@
     <Grid>
         <Grid
             x:Name="Overlay"
+            Panel.ZIndex="9"
             ClipToBounds="True"
             Opacity="{Binding Theme.Opacity, FallbackValue=0.85}">
             <Grid.ContextMenu>
@@ -93,6 +94,7 @@
                 Margin="4,0"
                 Padding="12,0"
                 Appearance="Secondary"
+                Background="#DD444444"
                 Click="RemoveButton_Click"
                 Icon="Empty"
                 ToolTip="Remove Overlay">
@@ -105,6 +107,7 @@
                 Margin="4,0"
                 Padding="12,0"
                 Appearance="Secondary"
+                Background="#DD444444"
                 Click="ToggleOverlay_Click"
                 Icon="Empty"
                 ToolTip="Toggle Overlay">

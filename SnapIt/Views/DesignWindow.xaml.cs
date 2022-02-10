@@ -1,7 +1,7 @@
-﻿using SnapIt.Library;
+﻿using System.Windows;
+using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.ViewModels;
-using System.Windows;
 
 namespace SnapIt.Views
 {
@@ -13,9 +13,19 @@ namespace SnapIt.Views
         public DesignWindow()
         {
             InitializeComponent();
+
+            MouseMove += DesignWindow_MouseMove;
         }
 
-        public void SetViewModel(Library.Entities.SnapScreen snapScreen, Layout layout)
+        private void DesignWindow_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Point myPoint = e.GetPosition(this);
+            mousePositionText.Text = $"Mouse Position: {myPoint.X:0.00} x {myPoint.Y:0.00}";
+            horizontalRuler.RaiseHorizontalRulerMoveEvent(e);
+            verticalRuler.RaiseVerticalRulerMoveEvent(e);
+        }
+
+        public void SetViewModel(SnapScreen snapScreen, Layout layout)
         {
             var model = DataContext as DesignWindowViewModel;
             if (model != null)
