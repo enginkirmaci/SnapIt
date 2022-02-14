@@ -19,7 +19,7 @@ namespace SnapIt.Library.Entities
         public const string AppFeedbackUrl = "getsnapit.com/support";
         public const string AppPurchaseUrl = "getsnapit.com/checkout";
         public const string AppVersionCheckUrl = "dl.getsnapit.com/latest.json";
-        public const string AppNewVersionUrl = "dl.getsnapit.com/setup_SnapScreenPro_{0}.exe";
+        public const string AppNewVersionUrl = "dl.getsnapit.com/setup_SnapItPro_{0}.exe";
         public const string AppPrivacyUrl = "getsnapit.com/features/privacy-policy";
         public const string AppRegistryKey = "SnapItPro";
         public static string CompanyName => Application.CompanyName;

@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
 
 namespace SnapIt.Test
 {
