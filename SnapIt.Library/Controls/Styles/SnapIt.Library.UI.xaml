@@ -6,5 +6,6 @@
         <ResourceDictionary Source="pack://application:,,,/SnapIt.Library;component/Controls/Styles/SnapAreaEditor.xaml" />
         <ResourceDictionary Source="pack://application:,,,/SnapIt.Library;component/Controls/Styles/SnapFullOverlay.xaml" />
         <ResourceDictionary Source="pack://application:,,,/SnapIt.Library;component/Controls/Styles/SnapBorderTool.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/SnapIt.Library;component/Controls/Styles/SnapRuler.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

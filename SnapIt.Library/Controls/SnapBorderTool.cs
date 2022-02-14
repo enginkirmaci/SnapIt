@@ -137,6 +137,13 @@ namespace SnapIt.Library.Controls
                 }));
         }
 
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            ResetPos();
+        }
+
         public void ResetPos()
         {
             if (SnapBorder != null)

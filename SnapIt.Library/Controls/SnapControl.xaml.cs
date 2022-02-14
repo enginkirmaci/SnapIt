@@ -205,13 +205,13 @@ namespace SnapIt.Library.Controls
             rightBorder = new SnapBorder(this, Theme) { IsDraggable = false };
 
             SizeChanged += SnapControl_SizeChanged;
-            this.LayoutUpdated += SnapControl_LayoutUpdated;
+            //LayoutUpdated += SnapControl_LayoutUpdated;
         }
 
-        private void SnapControl_LayoutUpdated(object sender, System.EventArgs e)
-        {
-            ResetBorderTool();
-        }
+        //private void SnapControl_LayoutUpdated(object sender, System.EventArgs e)
+        //{
+        //    ResetBorderTool();
+        //}
 
         private void SnapControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {

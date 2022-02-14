@@ -1,4 +1,10 @@
-﻿using DryIoc;
+﻿using System;
+using System.Drawing;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Threading;
+using DryIoc;
 using Prism.Ioc;
 using Serilog;
 using SnapIt.Library;
@@ -6,12 +12,6 @@ using SnapIt.Library.Applications;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 using SnapIt.Views;
-using System;
-using System.Drawing;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Threading;
 
 namespace SnapIt
 {

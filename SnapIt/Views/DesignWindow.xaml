@@ -6,7 +6,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:rc="clr-namespace:RulerControl;assembly=RulerControl"
     xmlns:Controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
@@ -34,28 +33,30 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <rc:RulerControl
+        <Controls:SnapRuler
             Name="horizontalRuler"
             Width="{Binding ActualWidth, ElementName=DesignWindowView, Mode=OneWay, ValidatesOnNotifyDataErrors=True}"
             Height="20"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Panel.ZIndex="9"
-            LittleMarkLength="1"
+            LittleMarkLength="4"
             MajorInterval="100"
-            MarkLength="10"
+            MarkLength="12"
+            MiddleMarkLength="8"
             Opacity="0.8"
             Orientation="Horizontal" />
-        <rc:RulerControl
+        <Controls:SnapRuler
             Name="verticalRuler"
             Width="30"
             Height="{Binding ActualHeight, ElementName=DesignWindowView, Mode=OneWay, ValidatesOnNotifyDataErrors=True}"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Panel.ZIndex="9"
-            LittleMarkLength="1"
+            LittleMarkLength="4"
             MajorInterval="100"
-            MarkLength="10"
+            MarkLength="12"
+            MiddleMarkLength="8"
             Opacity="0.8"
             Orientation="Vertical" />
         <Controls:SnapControl
