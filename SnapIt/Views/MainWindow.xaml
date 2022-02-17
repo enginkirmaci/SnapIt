@@ -202,6 +202,13 @@
                         Tag="settings" />
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
+                        CommandParameter="TutorialsView"
+                        Content="Tutorials"
+                        FontIcon="&#xe7be;"
+                        Tag="tutorials"
+                        Visibility="Collapsed" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
                         CommandParameter="AboutView"
                         Content="About"
                         Icon="Info24"
