@@ -19,7 +19,7 @@ namespace SnapIt.Library.Services
 
         public FileOperationService()
         {
-            rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), global::System.Windows.Forms.Application.ProductName);
 
             Directory.CreateDirectory(rootFolder);
 

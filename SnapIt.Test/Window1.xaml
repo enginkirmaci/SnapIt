@@ -24,35 +24,11 @@
         </StackPanel>
 
         <Grid Margin="10,40,10,10">
-            <Controls:SnapControl x:Name="SnapControl" IsDesignMode="True" />
 
-            <Controls:SnapRuler
-                Name="horizontalRuler"
-                Width="800"
-                Height="20"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Panel.ZIndex="9"
-                LittleMarkLength="1"
-                MajorInterval="100"
-                MarkLength="10"
-                Opacity="0.8"
-                Orientation="Horizontal" />
-
-            <Grid Height="20">
-                <Grid.Children>
-                    <Line
-                        x:Name="horizontalTrackLine"
-                        Height="20"
-                        Margin="-1,0,0,0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Stroke="Red"
-                        StrokeThickness="3"
-                        Visibility="Visible"
-                        Y1="300" />
-                </Grid.Children>
-            </Grid>
+            <Controls:SnapControl
+                x:Name="SnapControl"
+                IsDesignMode="False"
+                IsNumberVisible="True" />
         </Grid>
     </Grid>
 </Window>

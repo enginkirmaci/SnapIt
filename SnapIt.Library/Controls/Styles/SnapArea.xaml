@@ -14,7 +14,14 @@
                         <Grid
                             x:Name="Area"
                             Background="{Binding Path=Theme.OverlayBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}"
-                            Opacity="{Binding Path=Theme.Opacity, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=0.85}" />
+                            Opacity="{Binding Path=Theme.Opacity, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=0.85}">
+                            <TextBlock
+                                Margin="12"
+                                FontSize="36"
+                                Foreground="{Binding Path=Theme.BorderBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=White}"
+                                Text="{Binding Path=AreaNumber, RelativeSource={RelativeSource TemplatedParent}}"
+                                Visibility="{Binding Path=AreaNumberVisible, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
                         <Border
                             x:Name="Border"
                             BorderBrush="{Binding Path=Theme.BorderBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=#FFC8C8C8}"

@@ -59,33 +59,33 @@
 
         <ScrollViewer Style="{StaticResource UiScrollViewer}">
             <StackPanel Margin="0,0,0,100">
-                <Border
-                    Padding="12"
-                    HorizontalAlignment="Left"
-                    Background="{StaticResource ControlFillColorDefaultBrush}"
-                    BorderBrush="{StaticResource ControlElevationBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="4">
-                    <StackPanel>
-                        <TextBlock
-                            Margin="0,0,0,6"
-                            VerticalAlignment="Center"
-                            FontWeight="Medium"
-                            Text="Preview" />
 
-                        <Grid>
+                <StackPanel>
+                    <wpfui:CardControl
+                        Title="Preview"
+                        Margin="0,0,0,8"
+                        Icon="DataTreemap24" />
+
+                    <Border
+                        Margin="0,0,0,8"
+                        Padding="20"
+                        Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
+                        BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.Background>
                                 <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill" />
                             </Grid.Background>
 
                             <controls:SnapControl
-                                Width="480"
-                                Height="240"
+                                Width="560"
+                                Height="280"
                                 Layout="{Binding Layout}"
                                 Theme="{Binding Theme, Mode=TwoWay}" />
                         </Grid>
-                    </StackPanel>
-                </Border>
+                    </Border>
+                </StackPanel>
 
                 <TextBlock
                     Margin="0,16,0,6"

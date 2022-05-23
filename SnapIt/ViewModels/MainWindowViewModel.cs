@@ -1,12 +1,4 @@
-﻿using Newtonsoft.Json;
-using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Regions;
-using SnapIt.Library;
-using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
-using SnapIt.Library.Services;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -14,6 +6,15 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Newtonsoft.Json;
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Regions;
+using SnapIt.Library;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
+using SnapIt.Library.Services;
+using SnapIt.Views;
 using WPFUI.Controls;
 using WPFUI.Theme;
 
@@ -63,7 +64,8 @@ namespace SnapIt.ViewModels
         public DelegateCommand<Window> LoadedCommand { get; private set; }
         public DelegateCommand<CancelEventArgs> ClosingWindowCommand { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
-        public DelegateCommand<string> NotifyIconViewCommand { get; private set; }
+        public DelegateCommand NotifyIconClickViewCommand { get; private set; }
+        public DelegateCommand<string> NotifyIconDoubleClickViewCommand { get; private set; }
         public DelegateCommand<object> NotifyIconOpenedCommand { get; private set; }
         public DelegateCommand<string> HandleLinkClick { get; private set; }
         public DelegateCommand RateReviewStoreClick { get; private set; }
@@ -273,7 +275,14 @@ namespace SnapIt.ViewModels
                 }
             });
 
-            NotifyIconViewCommand = new DelegateCommand<string>((navigatePath) =>
+            NotifyIconClickViewCommand = new DelegateCommand(() =>
+            {
+                var popupWindow = new PopupWindow();
+
+                popupWindow.Show();
+            });
+
+            NotifyIconDoubleClickViewCommand = new DelegateCommand<string>((navigatePath) =>
             {
                 if (mainWindow != null && mainWindow.IsVisible)
                 {
@@ -404,7 +413,7 @@ namespace SnapIt.ViewModels
             }
         }
 
-        private void NavigateView(string navigatePath)
+        public void NavigateView(string navigatePath)
         {
             var rootNavigation = mainWindow.FindChild<NavigationStore>("RootNavigation");
 

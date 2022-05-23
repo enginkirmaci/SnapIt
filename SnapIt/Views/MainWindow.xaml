@@ -48,9 +48,12 @@
             UseNotifyIcon="True"
             UseSnapLayout="True">
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="NotifyIconDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding NotifyIconViewCommand}" CommandParameter="LayoutView" />
+                <i:EventTrigger EventName="NotifyIconClick">
+                    <i:InvokeCommandAction Command="{Binding NotifyIconClickViewCommand}" />
                 </i:EventTrigger>
+                <!--<i:EventTrigger EventName="NotifyIconDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding NotifyIconDoubleClickViewCommand}" CommandParameter="LayoutView" />
+                </i:EventTrigger>-->
             </i:Interaction.Triggers>
             <wpfui:TitleBar.NotifyIconMenu>
                 <ContextMenu>
@@ -74,7 +77,7 @@
                     <Separator />
                     <MenuItem
                         x:Name="LayoutMenuItem"
-                        Command="{Binding NotifyIconViewCommand}"
+                        Command="{Binding NotifyIconDoubleClickViewCommand}"
                         CommandParameter="LayoutView">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
@@ -86,7 +89,7 @@
                         <MenuItem Header="SubComm2" />
                     </MenuItem>
                     <MenuItem
-                        Command="{Binding NotifyIconViewCommand}"
+                        Command="{Binding NotifyIconDoubleClickViewCommand}"
                         CommandParameter="SettingsView"
                         Header="Settings"
                         Icon="{x:Static wpfuiCommon:Icon.Settings24}" />
@@ -105,7 +108,7 @@
                         <MenuItem Command="{Binding RateReviewStoreClick}" Header="Rate and review on Microsoft Store" />
                     </MenuItem>
                     <MenuItem
-                        Command="{Binding NotifyIconViewCommand}"
+                        Command="{Binding NotifyIconDoubleClickViewCommand}"
                         CommandParameter="AboutView"
                         Header="About"
                         Icon="{x:Static wpfuiCommon:Icon.Info24}" />
@@ -172,6 +175,12 @@
                         Tag="layout" />
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
+                        CommandParameter="ApplicationView"
+                        Content="Apps"
+                        Icon="Apps24"
+                        Tag="application" />
+                    <wpfui:NavigationItem
+                        Command="{Binding NavigateCommand}"
                         CommandParameter="MouseSettingsView"
                         Content="Mouse"
                         FontIcon="&#xe962;"
@@ -182,6 +191,7 @@
                         Content="Keyboard"
                         Icon="Keyboard24"
                         Tag="keyboard" />
+
                     <wpfui:NavigationItem
                         Command="{Binding NavigateCommand}"
                         CommandParameter="WindowsView"

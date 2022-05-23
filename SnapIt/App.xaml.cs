@@ -155,6 +155,7 @@ namespace SnapIt
         {
             containerRegistry.RegisterForNavigation<HomeView>();
             containerRegistry.RegisterForNavigation<LayoutView>();
+            containerRegistry.RegisterForNavigation<ApplicationView>();
             containerRegistry.RegisterForNavigation<MouseSettingsView>();
             containerRegistry.RegisterForNavigation<KeyboardSettingsView>();
             containerRegistry.RegisterForNavigation<WindowsView>();
@@ -162,6 +163,7 @@ namespace SnapIt
             containerRegistry.RegisterForNavigation<SettingsView>();
             containerRegistry.RegisterForNavigation<WhatsNewView>();
             containerRegistry.RegisterForNavigation<AboutView>();
+            containerRegistry.RegisterForNavigation<PopupWindow>();
 
             containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
             containerRegistry.RegisterSingleton<ISettingService, SettingService>();
