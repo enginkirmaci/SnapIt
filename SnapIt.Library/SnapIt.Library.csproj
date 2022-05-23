@@ -36,10 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\wpfui\WPFUI\WPFUI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Layouts\097d074b-0eed-4878-a035-b2eb76a324ce.json" />
     <EmbeddedResource Include="Layouts\1ff17736-c6cf-49be-b63e-a5affefd31d9.json" />
     <EmbeddedResource Include="Layouts\338106eb-1ae5-4185-bc00-f46339e1888d.json" />
@@ -51,6 +47,10 @@
     <EmbeddedResource Include="Layouts\b94079de-54a2-49d0-b31c-878a8f63ba75.json" />
     <EmbeddedResource Include="Layouts\edcedeaf-acb2-483a-86ae-ccc7c021f9c9.json" />
     <EmbeddedResource Include="Layouts\f1cb61d1-d38a-4e80-adab-e4be62d057f3.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ThirdParty\wpfui\WPFUI\WPFUI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

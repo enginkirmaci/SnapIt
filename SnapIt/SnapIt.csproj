@@ -39,8 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\wpfui\WPFUI\WPFUI.csproj" />
     <ProjectReference Include="..\SnapIt.Library\SnapIt.Library.csproj" />
+    <ProjectReference Include="..\ThirdParty\wpfui\WPFUI\WPFUI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
