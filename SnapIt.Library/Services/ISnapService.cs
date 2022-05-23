@@ -1,5 +1,5 @@
-﻿using SnapIt.Library.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
@@ -18,6 +18,8 @@ namespace SnapIt.Library.Services
         void SetIsTrialEnded(bool isEnded);
 
         void ScreenChangedEvent();
+
+        void StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup);
 
         void Initialize();
 

@@ -20,7 +20,7 @@
     mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MainWindowView}" />
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=LayoutViewPage}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
@@ -68,7 +68,7 @@
                         BorderThickness="1"
                         CornerRadius="4">
                         <controls:SnapScreenViewer
-                            Height="280"
+                            Height="400"
                             Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
                             ItemsSource="{Binding SnapScreens}"
                             SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">

@@ -23,6 +23,7 @@
             <converter:EqualVisibilityConverter x:Key="EqualVisibilityConverter" />
             <converter:InputDeviceConverter x:Key="InputDeviceConverter" />
             <converter:DoubleMultiplierConverter x:Key="DoubleMultiplierConverter" />
+            <converter:NullVisibilityConverter x:Key="NullVisibilityConverter" />
 
             <sys:Boolean x:Key="FalseValue">False</sys:Boolean>
             <sys:Boolean x:Key="TrueValue">True</sys:Boolean>

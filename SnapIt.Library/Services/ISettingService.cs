@@ -1,6 +1,6 @@
-﻿using SnapIt.Library.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.Library.Services
 {
@@ -10,8 +10,8 @@ namespace SnapIt.Library.Services
         ExcludedApplicationSettings ExcludedApplicationSettings { get; }
         StandaloneLicense StandaloneLicense { get; }
         IList<Layout> Layouts { get; }
-        IList<Entities.SnapScreen> SnapScreens { get; }
-        Entities.SnapScreen LatestActiveScreen { get; set; }
+        IList<SnapScreen> SnapScreens { get; }
+        SnapScreen LatestActiveScreen { get; set; }
 
         void ReInitialize();
 
@@ -29,7 +29,9 @@ namespace SnapIt.Library.Services
 
         Layout ImportLayout(string layoutPath);
 
-        void LinkScreenLayout(Entities.SnapScreen snapScreen, Layout layout);
+        void LinkScreenLayout(SnapScreen snapScreen, Layout layout);
+
+        void LinkScreenApplicationGroups(SnapScreen snapScreen, List<ApplicationGroup> applicationGroups);
 
         Task<bool> GetStartupTaskStatusAsync();
 

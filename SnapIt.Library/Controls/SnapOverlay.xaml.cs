@@ -12,6 +12,46 @@ namespace SnapIt.Library.Controls
 
         public SnapFullOverlay SnapFullOverlay { get; }
 
+        public bool AreaNumberVisible
+        {
+            get => (bool)GetValue(AreaNumberVisibleProperty);
+            set => SetValue(AreaNumberVisibleProperty, value);
+        }
+
+        public static readonly DependencyProperty AreaNumberVisibleProperty
+         = DependencyProperty.Register("AreaNumberVisibleProperty", typeof(bool), typeof(SnapOverlay),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(AreaNumberVisiblePropertyChanged)
+           });
+
+        private static void AreaNumberVisiblePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapOverlay = (SnapOverlay)d;
+            snapOverlay.AreaNumberVisible = (bool)e.NewValue;
+        }
+
+        public int AreaNumber
+        {
+            get => (int)GetValue(AreaNumberProperty) + 1;
+            set => SetValue(AreaNumberProperty, value);
+        }
+
+        public static readonly DependencyProperty AreaNumberProperty
+         = DependencyProperty.Register("AreaNumberProperty", typeof(int), typeof(SnapOverlay),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(AreaNumberPropertyChanged)
+           });
+
+        private static void AreaNumberPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapOverlay = (SnapOverlay)d;
+            snapOverlay.AreaNumber = (int)e.NewValue;
+        }
+
         public SnapAreaTheme Theme
         {
             get => (SnapAreaTheme)GetValue(ThemeProperty);
@@ -43,6 +83,7 @@ namespace SnapIt.Library.Controls
         public SnapOverlay(SnapAreaTheme theme, SnapFullOverlay snapFullOverlay)
         {
             InitializeComponent();
+            DataContext = this;
 
             Name = $"snapoverlay_{Guid.NewGuid():N}";
 

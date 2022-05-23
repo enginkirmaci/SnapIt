@@ -32,10 +32,10 @@
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
     <PackageReference Include="ThinkSharp.Licensing" Version="1.0.0" />
     <PackageReference Include="WindowsDisplayAPI" Version="1.3.0.13" />
+    <PackageReference Include="WpfScreenHelper" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\WpfScreenHelper\src\WpfScreenHelper\WpfScreenHelper.csproj" />
     <ProjectReference Include="..\..\wpfui\WPFUI\WPFUI.csproj" />
   </ItemGroup>
 

@@ -60,7 +60,7 @@ namespace SnapIt.Library.Controls
                         {
                             positionY -= 6;
                         }
-                        Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
+                        global::System.Windows.Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
                         {
                             var inProgress = true;
 

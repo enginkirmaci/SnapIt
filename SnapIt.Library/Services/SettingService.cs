@@ -1,8 +1,8 @@
-﻿using SnapIt.Library.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SnapIt.Library.Entities;
 using Windows.ApplicationModel;
 using WpfScreenHelper;
 
@@ -14,10 +14,11 @@ namespace SnapIt.Library.Services
 
         public Settings Settings { get; private set; }
         public ExcludedApplicationSettings ExcludedApplicationSettings { get; private set; }
+        public ApplicationGroupSettings ApplicationGroupSettings { get; private set; }
         public StandaloneLicense StandaloneLicense { get; private set; }
         public IList<Layout> Layouts { get; private set; }
-        public IList<Entities.SnapScreen> SnapScreens { get; private set; }
-        public Entities.SnapScreen LatestActiveScreen { get; set; }
+        public IList<SnapScreen> SnapScreens { get; private set; }
+        public SnapScreen LatestActiveScreen { get; set; }
 
         public SettingService(
             IFileOperationService fileOperationService)
@@ -31,6 +32,8 @@ namespace SnapIt.Library.Services
             }
 
             ExcludedApplicationSettings = this.fileOperationService.Load<ExcludedApplicationSettings>();
+            ApplicationGroupSettings = this.fileOperationService.Load<ApplicationGroupSettings>();
+
             Layouts = this.fileOperationService.GetLayouts();
 
 #if STANDALONE
@@ -112,7 +115,7 @@ namespace SnapIt.Library.Services
             return fileOperationService.ImportLayout(layoutPath);
         }
 
-        public void LinkScreenLayout(Entities.SnapScreen snapScreen, Layout layout)
+        public void LinkScreenLayout(SnapScreen snapScreen, Layout layout)
         {
             SnapScreens.First(screen => screen.DeviceName == snapScreen.DeviceName).Layout = layout;
 
@@ -126,16 +129,37 @@ namespace SnapIt.Library.Services
             }
         }
 
-        private IList<Entities.SnapScreen> GetSnapScreens()
+        public void LinkScreenApplicationGroups(SnapScreen snapScreen, List<ApplicationGroup> applicationGroups)
         {
-            var snapScreens = new List<Entities.SnapScreen>();
+            SnapScreens.First(screen => screen.DeviceName == snapScreen.DeviceName).ApplicationGroups = applicationGroups;
+
+            if (ApplicationGroupSettings.ScreensApplicationGroups== null)
+            {
+                ApplicationGroupSettings.ScreensApplicationGroups = new Dictionary<string, List<ApplicationGroup>>();
+            }
+
+            if (ApplicationGroupSettings.ScreensApplicationGroups.ContainsKey(snapScreen.DeviceName))
+            {
+                ApplicationGroupSettings.ScreensApplicationGroups[snapScreen.DeviceName] = applicationGroups;
+            }
+            else
+            {
+                ApplicationGroupSettings.ScreensApplicationGroups.Add(snapScreen.DeviceName, applicationGroups);
+            }
+
+            SaveApplicationGroupSettings();
+        }
+
+        private IList<SnapScreen> GetSnapScreens()
+        {
+            var snapScreens = new List<SnapScreen>();
 
             var displays = WindowsDisplayAPI.Display.GetDisplays();
 
             foreach (var screen in Screen.AllScreens)
             {
                 var display = displays.FirstOrDefault(display => display.DisplayName == screen.DeviceName);
-                var snapScreen = new Entities.SnapScreen(screen, display?.DevicePath);
+                var snapScreen = new SnapScreen(screen, display?.DevicePath);
                 var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.DeviceName)
                     ? Settings.ScreensLayouts[snapScreen.DeviceName] : string.Empty;
 
@@ -153,6 +177,11 @@ namespace SnapIt.Library.Services
                 {
                     snapScreen.Layout = Layouts.FirstOrDefault();
                 }
+
+                snapScreen.ApplicationGroups = ApplicationGroupSettings.ScreensApplicationGroups != null ?
+                    ApplicationGroupSettings.ScreensApplicationGroups.ContainsKey(snapScreen.DeviceName)
+                    ? ApplicationGroupSettings.ScreensApplicationGroups[snapScreen.DeviceName] : new List<ApplicationGroup>()
+                    : new List<ApplicationGroup>();
 
                 snapScreen.IsActive = !Settings.DeactivedScreens.Contains(snapScreen.DeviceName);
 
@@ -231,6 +260,11 @@ namespace SnapIt.Library.Services
                 }
             }
 #endif
+        }
+
+        private void SaveApplicationGroupSettings()
+        {
+            fileOperationService.Save(ApplicationGroupSettings);
         }
     }
 }

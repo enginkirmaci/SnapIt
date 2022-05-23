@@ -14,7 +14,7 @@
     d:DataContext="{d:DesignInstance {x:Type design:DesignWindowDesignView},
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="700"
-    d:DesignWidth="600"
+    d:DesignWidth="1000"
     prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
     Background="Transparent"

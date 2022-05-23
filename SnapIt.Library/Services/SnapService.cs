@@ -1,15 +1,17 @@
-﻿using Gma.System.MouseKeyHook;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
+using Gma.System.MouseKeyHook;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Mappers;
 using SnapIt.Library.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows;
-using System.Windows.Forms;
 
 namespace SnapIt.Library.Services
 {
@@ -90,6 +92,17 @@ namespace SnapIt.Library.Services
                 { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> StartStop() }
             };
 
+            foreach (var snapScreen in settingService.SnapScreens)
+            {
+                foreach (var applicationGroup in snapScreen.ApplicationGroups)
+                {
+                    if (!string.IsNullOrWhiteSpace(applicationGroup.ActivateHotkey))
+                    {
+                        map.Add(Combination.FromString(applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin")), () => StartApplications(snapScreen, applicationGroup));
+                    }
+                }
+            }
+
             if (settingService.Settings.EnableKeyboard)
             {
                 map.Add(Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Left));
@@ -131,6 +144,72 @@ namespace SnapIt.Library.Services
             IsRunning = true;
             StatusChanged?.Invoke(true);
             ScreenLayoutLoaded?.Invoke(settingService.SnapScreens, settingService.Layouts);
+        }
+
+        public void StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
+        {
+            var areaProcesses = new Dictionary<int, List<Process>>();
+            var areaRectangles = windowService.GetSnapAreaRectangles(snapScreen);
+
+            foreach (var area in applicationGroup.ApplicationAreas)
+            {
+                if (area.Applications != null)
+                {
+                    foreach (var application in area.Applications)
+                    {
+                        _ = StartApplication(application, areaRectangles[application.AreaNumber]);
+                    }
+                }
+            }
+        }
+
+        private async Task StartApplication(ApplicationItem application, Rectangle rectangle)
+        {
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = application.Path,
+                Arguments = application.Arguments,
+                WorkingDirectory = application.StartIn,
+                UseShellExecute = true
+            });
+
+            var maxCount = 20;
+            while (string.IsNullOrEmpty(process.MainWindowTitle) && maxCount > 0)
+            {
+                await Task.Delay(400);
+                process.Refresh();
+
+                maxCount--;
+                DevMode.Log(application.Guid + " " + maxCount + " " + process.MainWindowTitle);
+            }
+
+            DevMode.Log("wait begins: " + process.MainWindowTitle);
+
+            if (application.DelayAfterOpen <= 0)
+            {
+                application.DelayAfterOpen = 1;
+            }
+
+            await Task.Delay(1000 * application.DelayAfterOpen);
+            process.Refresh();
+
+            DevMode.Log("wait ended: " + process.MainWindowTitle);
+
+            var openedWindow = new ActiveWindow
+            {
+                Handle = process.MainWindowHandle,
+                Title = process.MainWindowTitle
+            };
+
+            if (PInvoke.User32.GetWindowRect(openedWindow.Handle, out PInvoke.RECT rct))
+            {
+                openedWindow.Boundry = new Rectangle(rct.left, rct.top, rct.right, rct.bottom);
+            }
+
+            if (openedWindow.Handle == IntPtr.Zero || openedWindow.Boundry.Equals(Rectangle.Empty))
+                openedWindow = ActiveWindow.Empty;
+
+            MoveWindow(openedWindow, rectangle, false);
         }
 
         private void StartStop()
@@ -580,21 +659,26 @@ namespace SnapIt.Library.Services
 
         private void MoveActiveWindow(Rectangle rectangle, bool isLeftClick)
         {
-            if (activeWindow != ActiveWindow.Empty)
+            MoveWindow(activeWindow, rectangle, isLeftClick);
+        }
+
+        private void MoveWindow(ActiveWindow currentWindow, Rectangle rectangle, bool isLeftClick)
+        {
+            if (currentWindow != ActiveWindow.Empty)
             {
                 if (!rectangle.Equals(Rectangle.Empty))
                 {
-                    winApiService.GetWindowMargin(activeWindow, out Rectangle withMargin);
+                    winApiService.GetWindowMargin(currentWindow, out Rectangle withMargin);
 
                     if (!withMargin.Equals(default(Rectangle)))
                     {
-                        var marginHorizontal = (activeWindow.Boundry.Width - withMargin.Width) / 2;
+                        var marginHorizontal = (currentWindow.Boundry.Width - withMargin.Width) / 2;
                         var systemMargin = new Rectangle
                         {
                             Left = marginHorizontal,
                             Right = marginHorizontal,
                             Top = 0,
-                            Bottom = activeWindow.Boundry.Height - withMargin.Height
+                            Bottom = currentWindow.Boundry.Height - withMargin.Height
                         };
 
                         rectangle.Left -= systemMargin.Left;
@@ -609,21 +693,21 @@ namespace SnapIt.Library.Services
                         {
                             Thread.Sleep(100);
 
-                            winApiService.MoveWindow(activeWindow, rectangle);
+                            winApiService.MoveWindow(currentWindow, rectangle);
 
-                            if (!rectangle.Dpi.Equals(activeWindow.Dpi))
+                            if (!rectangle.Dpi.Equals(currentWindow.Dpi))
                             {
-                                winApiService.MoveWindow(activeWindow, rectangle);
+                                winApiService.MoveWindow(currentWindow, rectangle);
                             }
                         }).Start();
                     }
                     else
                     {
-                        winApiService.MoveWindow(activeWindow, rectangle);
+                        winApiService.MoveWindow(currentWindow, rectangle);
 
-                        if (!rectangle.Dpi.Equals(activeWindow.Dpi))
+                        if (!rectangle.Dpi.Equals(currentWindow.Dpi))
                         {
-                            winApiService.MoveWindow(activeWindow, rectangle);
+                            winApiService.MoveWindow(currentWindow, rectangle);
                         }
                     }
 

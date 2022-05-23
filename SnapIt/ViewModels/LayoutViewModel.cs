@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Prism.Commands;
@@ -68,7 +69,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand<object> RenameDialogClosingCommand { get; private set; }
         public DelegateCommand<Layout> DeleteLayoutCommand { get; private set; }
         public DelegateCommand<Layout> ExportLayoutCommand { get; private set; }
-        public DelegateCommand<System.Windows.Window> LoadedCommand { get; private set; }
+        public DelegateCommand<Page> LoadedCommand { get; private set; }
 
         public LayoutViewModel(
             ISnapService snapService,
@@ -99,9 +100,8 @@ namespace SnapIt.ViewModels
 
             SnapScreens.CollectionChanged += SnapScreens_CollectionChanged;
 
-            LoadedCommand = new DelegateCommand<System.Windows.Window>((window) =>
+            LoadedCommand = new DelegateCommand<Page>((page) =>
             {
-                mainWindow = window;
             });
 
             ImportLayoutCommand = new DelegateCommand(() =>
