@@ -131,7 +131,7 @@
                         Max="60"
                         Min="0"
                         Step="1"
-                        Value="{Binding SelectedApplicationItem.DelayAfterOpen, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        Value="{Binding SelectedApplicationItem.DelayAfterOpen, Mode=TwoWay}" />
                 </Grid>
             </StackPanel>
         </wpfui:Dialog>
