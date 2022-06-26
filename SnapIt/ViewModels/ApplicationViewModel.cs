@@ -29,7 +29,12 @@ namespace SnapIt.ViewModels
 
         public ObservableCollectionWithItemNotify<ApplicationGroup> ApplicationGroups { get => applicationGroups; set => SetProperty(ref applicationGroups, value); }
         public ObservableCollection<int> AreaNumbers { get => areaNumbers; set => SetProperty(ref areaNumbers, value); }
-        public ApplicationGroup SelectedApplicationGroup { get => selectedApplicationGroup; set => SetProperty(ref selectedApplicationGroup, value); }
+
+        public ApplicationGroup SelectedApplicationGroup
+        {
+            get => selectedApplicationGroup;
+            set => SetProperty(ref selectedApplicationGroup, value);
+        }
 
         public bool IsApplicationItemOpen { get => isApplicationItemOpen; set => SetProperty(ref isApplicationItemOpen, value); }
         public bool IsMoveApplicationItemOpen { get => isMoveApplicationItemOpen; set => SetProperty(ref isMoveApplicationItemOpen, value); }
@@ -80,6 +85,8 @@ namespace SnapIt.ViewModels
                 var applicationGroupList = page.FindChild<ListView>("ApplicationGroupList");
                 applicationGroupList.SelectionChanged += ApplicationGroupList_SelectionChanged;
                 ApplicationGroupList_SelectionChanged(null, null);
+
+                SelectedApplicationGroup.PropertyChanged += SelectedApplicationGroup_PropertyChanged;
             });
 
             AreaHighlightCommand = new DelegateCommand<object>((number) =>
@@ -218,6 +225,14 @@ namespace SnapIt.ViewModels
                     SelectedApplicationItem.Path = openFileDialog.FileName;
                 }
             });
+        }
+
+        private void SelectedApplicationGroup_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ActivateHotkey" || e.PropertyName == "Name")
+            {
+                ApplyChanges();
+            }
         }
 
         private void ApplicationGroupList_SelectionChanged(object sender, SelectionChangedEventArgs e)
