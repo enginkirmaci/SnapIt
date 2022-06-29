@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -20,7 +19,7 @@ namespace SnapIt.Library.Services
         private readonly IWindowService windowService;
         private readonly ISettingService settingService;
         private readonly IWinApiService winApiService;
-
+        private readonly IApplicationService applicationService;
         private static List<Keys> keysDown = new List<Keys>();
         private static IKeyboardMouseEvents globalHook;
 
@@ -51,11 +50,13 @@ namespace SnapIt.Library.Services
         public SnapService(
             IWindowService windowService,
             ISettingService settingService,
-            IWinApiService winApiService)
+            IWinApiService winApiService,
+            IApplicationService applicationService)
         {
             this.windowService = windowService;
             this.settingService = settingService;
             this.winApiService = winApiService;
+            this.applicationService = applicationService;
         }
 
         public void SetIsTrialEnded(bool isEnded)
@@ -148,8 +149,30 @@ namespace SnapIt.Library.Services
 
         public void StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
         {
-            var areaProcesses = new Dictionary<int, List<Process>>();
+            //Windows.Management.Deployment.PackageManager packageManager = new Windows.Management.Deployment.PackageManager();
+            //var packages = packageManager.FindPackagesForUser("").ToList();
+
+            //// GUID taken from https://docs.microsoft.com/en-us/windows/win32/shell/knownfolderid
+            //var FOLDERID_AppsFolder = new Guid("{1e87508d-89c2-42f0-8a7e-645a0f50ca58}");
+            //ShellObject appsFolder = (ShellObject)KnownFolderHelper.FromKnownFolderId(FOLDERID_AppsFolder);
+
+            //var asd = new List<ShellObject>();
+            //foreach (var app in (IKnownFolder)appsFolder)
+            //{
+            //    // The friendly app name
+            //    string name = app.Name;
+            //    // The ParsingName property is the AppUserModelID
+            //    string appUserModelID = app.ParsingName; // or app.Properties.System.AppUserModel.ID
+            //                                             // You can even get the Jumbo icon in one shot
+
+            //    asd.Add(app);
+            //}
+
+            applicationService.Initialize();
+
             var areaRectangles = windowService.GetSnapAreaRectangles(snapScreen);
+
+            //List<Task> tasks = new List<Task>();
 
             foreach (var area in applicationGroup.ApplicationAreas)
             {
@@ -157,49 +180,19 @@ namespace SnapIt.Library.Services
                 {
                     foreach (var application in area.Applications)
                     {
-                        _ = StartApplication(application, areaRectangles[application.AreaNumber]);
+                        Task.Run(() => StartApplication(application, areaRectangles[application.AreaNumber])).Wait();
                     }
                 }
             }
+
+            //Task.WaitAll(tasks.ToArray());
+
+            applicationService.Clear();
         }
 
         private async Task StartApplication(ApplicationItem application, Rectangle rectangle)
         {
-            var process = Process.Start(new ProcessStartInfo
-            {
-                FileName = application.Path,
-                Arguments = application.Arguments,
-                WorkingDirectory = application.StartIn,
-                UseShellExecute = true
-            });
-
-            var maxCount = 20;
-            while (string.IsNullOrEmpty(process.MainWindowTitle) && maxCount > 0)
-            {
-                await Task.Delay(400);
-                process.Refresh();
-
-                maxCount--;
-                DevMode.Log(application.Guid + " " + maxCount + " " + process.MainWindowTitle);
-            }
-
-            DevMode.Log("wait begins: " + process.MainWindowTitle);
-
-            if (application.DelayAfterOpen <= 0)
-            {
-                application.DelayAfterOpen = 1;
-            }
-
-            await Task.Delay(1000 * application.DelayAfterOpen);
-            process.Refresh();
-
-            DevMode.Log("wait ended: " + process.MainWindowTitle);
-
-            var openedWindow = new ActiveWindow
-            {
-                Handle = process.MainWindowHandle,
-                Title = process.MainWindowTitle
-            };
+            var openedWindow = await applicationService.StartApplication(application, rectangle);
 
             if (PInvoke.User32.GetWindowRect(openedWindow.Handle, out PInvoke.RECT rct))
             {

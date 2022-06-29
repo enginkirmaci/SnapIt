@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
-    xmlns:extension="clr-namespace:SnapIt.Library.Extensions;assembly=SnapIt.Library"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI">
+    xmlns:controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:extension="clr-namespace:SnapIt.Library.Extensions;assembly=SnapIt.Library">
 
     <!--  Color picker background  -->
     <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{StaticResource ApplicationBackgroundColor}" />
@@ -125,7 +125,7 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
 
-                                    <wpfui:Icon Glyph="ChevronDown24" />
+                                    <wpfui:SymbolIcon Symbol="ChevronDown24" />
                                 </wpfui:Button>
                             </Grid>
                         </Border>
@@ -158,7 +158,7 @@
                             </Trigger.ExitActions>
                             <Setter TargetName="Border" Property="BorderBrush">
                                 <Setter.Value>
-                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorLight3}" />
+                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorTertiary}" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>

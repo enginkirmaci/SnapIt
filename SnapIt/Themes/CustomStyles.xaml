@@ -4,13 +4,194 @@
     xmlns:controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:extension="clr-namespace:SnapIt.Library.Extensions;assembly=SnapIt.Library"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI">
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <!--  Color picker background  -->
     <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{StaticResource ApplicationBackgroundColor}" />
 
     <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ScrollViewer">
         <Setter Property="extension:ScrollViewerHelper.FixMouseWheel" Value="True" />
+    </Style>
+
+    <Style x:Key="NavigationStoreItemMouse" TargetType="{x:Type wpfui:NavigationItem}">
+        <Setter Property="Width" Value="60" />
+        <Setter Property="Height" Value="60" />
+        <Setter Property="Margin" Value="0,0,0,4" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="IconSize" Value="24" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource TextFillColorSecondary}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="IconForeground">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource TextFillColorSecondary}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <SolidColorBrush Opacity="0.0" Color="{DynamicResource ControlStrokeColorDefault}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type wpfui:NavigationItem}">
+                    <Border
+                        x:Name="MainBorder"
+                        Padding="4"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <Grid>
+                            <Border
+                                x:Name="ActiveBorder"
+                                Width="4"
+                                Height="24"
+                                Margin="-4,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                CornerRadius="2" />
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <wpfui:FontIcon
+                                    x:Name="ElementIcon"
+                                    Grid.Row="0"
+                                    Margin="0"
+                                    FontSize="{TemplateBinding IconSize}"
+                                    Foreground="{TemplateBinding IconForeground}"
+                                    Glyph="&#xe962;" />
+
+                                <Grid
+                                    x:Name="ContentGrid"
+                                    Grid.Row="1"
+                                    Height="15"
+                                    Margin="0,2,0,0">
+                                    <ContentPresenter
+                                        x:Name="ElementContentPresenter"
+                                        HorizontalAlignment="Center"
+                                        Content="{TemplateBinding Content}"
+                                        TextElement.FontSize="10"
+                                        TextElement.Foreground="{TemplateBinding Foreground}" />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsActive" Value="True">
+                            <Setter TargetName="MainBorder" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="ActiveBorder" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="ElementIcon" Property="Foreground">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="ElementContentPresenter" Property="Margin" Value="0" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ContentGrid"
+                                            Storyboard.TargetProperty="Height"
+                                            From="15"
+                                            To="0"
+                                            Duration="0:0:.16" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ContentGrid"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="1"
+                                            To="0"
+                                            Duration="0:0:.16" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="MainBorder"
+                                            Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:.16" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ContentGrid"
+                                            Storyboard.TargetProperty="Height"
+                                            From="0"
+                                            To="15"
+                                            Duration="0:0:.16" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ContentGrid"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:.16" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="MainBorder"
+                                            Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
+                                            From="1"
+                                            To="0"
+                                            Duration="0:0:.16" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="MainBorder" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.5" Color="{DynamicResource ControlFillColorDefault}" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsActive" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="ElementIcon" Property="Foreground">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="ContentGrid" Property="TextElement.Foreground">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+                                    </Setter.Value>
+                                </Setter>
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="SnapIt.Styles.ApplicationGroup" TargetType="{x:Type ListViewItem}">
@@ -50,7 +231,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <wpfui:Icon Glyph="ChevronDown24" />
+                                    <wpfui:SymbolIcon Symbol="ChevronDown24" />
 
                                     <TextBlock
                                         Grid.Row="1"
@@ -104,7 +285,7 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
 
-                                    <wpfui:Icon Glyph="ChevronDown24" />
+                                    <wpfui:SymbolIcon Symbol="ChevronDown24" />
                                 </wpfui:Button>
                             </Grid>
                         </Border>
@@ -137,7 +318,7 @@
                             </Trigger.ExitActions>
                             <Setter TargetName="Border" Property="BorderBrush">
                                 <Setter.Value>
-                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorLight3}" />
+                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorTertiary}" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
@@ -226,7 +407,7 @@
                                     Tag="{Binding DataContext, ElementName=LayoutViewPage}">
 
                                     <wpfui:Button.ContextMenu>
-                                        <ContextMenu Style="{StaticResource UiNotifyIconContextMenuStyle}">
+                                        <ContextMenu>
                                             <MenuItem
                                                 Command="{Binding Parent.PlacementTarget.Tag.DesignLayoutCommand, RelativeSource={RelativeSource Self}}"
                                                 CommandParameter="{Binding}"
@@ -260,7 +441,7 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
 
-                                    <wpfui:Icon Glyph="ChevronDown24" />
+                                    <wpfui:SymbolIcon Symbol="ChevronDown24" />
                                 </wpfui:Button>
                             </Grid>
                         </Border>
@@ -293,7 +474,7 @@
                             </Trigger.ExitActions>
                             <Setter TargetName="Border" Property="BorderBrush">
                                 <Setter.Value>
-                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorLight3}" />
+                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorTertiary}" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>

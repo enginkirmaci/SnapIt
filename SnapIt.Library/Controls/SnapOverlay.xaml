@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     HorizontalAlignment="Left"
     VerticalAlignment="Top"
     d:DesignHeight="300"
@@ -20,7 +20,7 @@
             BorderBrush="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
             BorderThickness="{Binding Theme.BorderThickness, FallbackValue=1}" />
 
-        <wpfui:Icon
+        <wpfui:SymbolIcon
             x:Name="MergedIcon"
             Width="64"
             Height="64"
@@ -28,7 +28,7 @@
             VerticalAlignment="Center"
             FontSize="64"
             Foreground="{Binding Theme.BorderBrush, FallbackValue=#FFC8C8C8}"
-            Glyph="ResizeLarge24" />
+            Symbol="ResizeLarge24" />
 
         <TextBlock
             Margin="2"

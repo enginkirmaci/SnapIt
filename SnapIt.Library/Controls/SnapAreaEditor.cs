@@ -67,26 +67,26 @@ namespace SnapIt.Library.Controls
 
         public static readonly DependencyProperty SplitVerticallyCommandProperty =
             DependencyProperty.Register("SplitVerticallyCommand",
-                typeof(WPFUI.Common.RelayCommand), typeof(SnapAreaEditor), new PropertyMetadata(null));
+                typeof(Wpf.Ui.Common.RelayCommand), typeof(SnapAreaEditor), new PropertyMetadata(null));
 
-        public WPFUI.Common.RelayCommand SplitVerticallyCommand => (WPFUI.Common.RelayCommand)GetValue(SplitHorizantallyCommandProperty);
+        public Wpf.Ui.Common.RelayCommand SplitVerticallyCommand => (Wpf.Ui.Common.RelayCommand)GetValue(SplitHorizantallyCommandProperty);
 
         public static readonly DependencyProperty SplitHorizantallyCommandProperty =
             DependencyProperty.Register("SplitHorizantallyCommand",
-                typeof(WPFUI.Common.RelayCommand), typeof(SnapAreaEditor), new PropertyMetadata(null));
+                typeof(Wpf.Ui.Common.RelayCommand), typeof(SnapAreaEditor), new PropertyMetadata(null));
 
-        public WPFUI.Common.RelayCommand SplitHorizantallyCommand => (WPFUI.Common.RelayCommand)GetValue(SplitHorizantallyCommandProperty);
+        public Wpf.Ui.Common.RelayCommand SplitHorizantallyCommand => (Wpf.Ui.Common.RelayCommand)GetValue(SplitHorizantallyCommandProperty);
 
         public SnapAreaEditor()
         {
             SetValue(SplitVerticallyCommandProperty,
-                new WPFUI.Common.RelayCommand(o =>
+                new Wpf.Ui.Common.RelayCommand(o =>
                 {
                     Split(SplitDirection.Vertical);
                 }));
 
             SetValue(SplitHorizantallyCommandProperty,
-                new WPFUI.Common.RelayCommand(o =>
+                new Wpf.Ui.Common.RelayCommand(o =>
                 {
                     Split(SplitDirection.Horizontal);
                 }));
