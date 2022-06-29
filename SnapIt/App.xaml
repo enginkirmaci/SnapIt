@@ -9,8 +9,8 @@
     <prism:PrismApplication.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/WPFUI;component/Styles/Theme/Dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/WPFUI;component/Styles/WPFUI.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Wpf.Ui;component/Styles/Theme/Dark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Wpf.Ui;component/Styles/Wpf.Ui.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/CustomStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/SnapIt.Library;component/Controls/Styles/SnapIt.Library.UI.xaml" />
             </ResourceDictionary.MergedDictionaries>

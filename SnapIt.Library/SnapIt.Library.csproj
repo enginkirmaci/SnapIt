@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft-Windows10-APICodePack-Shell" Version="1.1.7" />
     <PackageReference Include="MouseKeyHook" Version="5.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PInvoke.SHCore" Version="0.7.104" />
@@ -50,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\wpfui\WPFUI\WPFUI.csproj" />
+    <ProjectReference Include="..\..\ThirdParty\wpfui\src\Wpf.Ui\Wpf.Ui.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,11 +2,11 @@
     x:Class="SnapIt.Views.AboutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
     d:DesignHeight="450"
     d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -53,11 +53,20 @@
                 Icon="Link24"
                 NavigateUri="{Binding Source={x:Static c:Constants.AppUrl}, Converter={StaticResource UriConverter}}" />
 
-            <wpfui:CardExpander
-                Margin="0,8,0,0"
-                Header="Give Feedback"
-                Icon="Heart28"
-                Subtitle="Help me make SnapIt better. You can add new ideas and features, as well as vote other ideas and submit a bug here.">
+            <wpfui:CardExpander Margin="0,8,0,0" Icon="Heart28">
+                <wpfui:CardExpander.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock
+                            FontSize="13"
+                            FontWeight="Medium"
+                            Text="Give Feedback" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="Help me make SnapIt better. You can add new ideas and features, as well as vote other ideas and submit a bug here."
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </wpfui:CardExpander.Header>
                 <StackPanel>
                     <wpfui:Hyperlink
                         Margin="0,0,0,4"
@@ -89,8 +98,8 @@
             </wpfui:CardAction>
 
             <wpfui:CardControl
-                Title="Follow Me"
                 Margin="0,8,0,0"
+                Header="Follow Me"
                 Icon="Person48">
                 <StackPanel Orientation="Horizontal">
                     <wpfui:Button

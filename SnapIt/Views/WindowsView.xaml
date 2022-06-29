@@ -2,13 +2,12 @@
     x:Class="SnapIt.Views.WindowsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
-    xmlns:wpfuiCommon="clr-namespace:WPFUI.Common;assembly=WPFUI"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
     x:Name="WindowsViewPage"
     Title="WindowsView"
     d:DataContext="{d:DesignInstance design:WindowsDesignView,
@@ -24,13 +23,13 @@
             ButtonLeftName="Save"
             DialogHeight="380"
             DialogWidth="500"
-            Show="{Binding IsExcludeApplicationDialogOpen, Mode=TwoWay}"
+            IsShown="{Binding IsExcludeApplicationDialogOpen, Mode=TwoWay}"
             Visibility="{Binding IsExcludeApplicationDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="ButtonRightClick">
                     <i:InvokeCommandAction Command="{Binding ExcludeApplicationDialogClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
                 </i:EventTrigger>
-                <i:EventTrigger EventName="Click">
+                <i:EventTrigger EventName="ButtonLeftClick">
                     <i:InvokeCommandAction Command="{Binding ExcludeApplicationDialogClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
@@ -91,13 +90,13 @@
             ButtonLeftName="Save"
             DialogHeight="480"
             DialogWidth="500"
-            Show="{Binding IsRunningApplicationsDialogOpen, Mode=TwoWay}"
+            IsShown="{Binding IsRunningApplicationsDialogOpen, Mode=TwoWay}"
             Visibility="{Binding IsRunningApplicationsDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="ButtonRightClick">
                     <i:InvokeCommandAction Command="{Binding CloseRunningApplicationsDialogCommand}" CommandParameter="{StaticResource FalseValue}" />
                 </i:EventTrigger>
-                <i:EventTrigger EventName="Click">
+                <i:EventTrigger EventName="ButtonLeftClick">
                     <i:InvokeCommandAction Command="{Binding CloseRunningApplicationsDialogCommand}" CommandParameter="{StaticResource TrueValue}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
@@ -114,26 +113,46 @@
         <ScrollViewer Style="{StaticResource UiScrollViewer}">
             <StackPanel>
                 <wpfui:CardControl
-                    Title="Disable snapping for fullscreen application and games (recommended)"
                     Margin="0,0,0,8"
+                    Header="Disable snapping for fullscreen application and games (recommended)"
                     Icon="Empty">
                     <wpfui:ToggleSwitch IsChecked="{Binding DisableForFullscreen}" />
                 </wpfui:CardControl>
 
-                <wpfui:CardControl
-                    Title="Disable snapping for modal window (recommended)"
-                    Margin="0,0,0,8"
-                    Icon="Empty"
-                    Subtitle="If enable snapping for modal, you need to exclude Start, Action Center and etc, to work correctly for windows.">
+                <wpfui:CardControl Margin="0,0,0,8" Icon="Empty">
+                    <wpfui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="13"
+                                FontWeight="Medium"
+                                Text="Disable snapping for modal window (recommended)" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                Text="If enable snapping for modal, you need to exclude Start, Action Center and etc, to work correctly for windows."
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </wpfui:CardControl.Header>
                     <wpfui:ToggleSwitch IsChecked="{Binding DisableForModal}" />
                 </wpfui:CardControl>
 
                 <wpfui:CardControl
-                    Title="Exclude Windows Default Modals"
                     Margin="0,0,0,8"
                     Icon="Empty"
-                    Subtitle="This option excludes Windows modals like Start, Action Center and etc"
                     Visibility="{Binding DisableForModal, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}">
+                    <wpfui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="13"
+                                FontWeight="Medium"
+                                Text="Exclude Windows Default Modals" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                Text="This option excludes Windows modals like Start, Action Center and etc"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </wpfui:CardControl.Header>
                     <wpfui:Button
                         Margin="0,0,0,8"
                         HorizontalAlignment="Left"
@@ -142,24 +161,42 @@
                         Content="Exclude" />
                 </wpfui:CardControl>
 
-                <wpfui:CardExpander
-                    Header="Excluded Applications"
-                    IsExpanded="True"
-                    Subtitle="If you don't want to use snapping functionility for certain applications, you can add them to Excluded Applications.">
-                    <wpfui:CardExpander.HeaderContent>
-                        <wpfui:Button
-                            Margin="0,0,8,0"
-                            Appearance="Secondary"
-                            Command="{Binding NewExcludeApplicationCommand}"
-                            Content="New"
-                            Icon="New24" />
-                    </wpfui:CardExpander.HeaderContent>
+                <wpfui:CardExpander IsExpanded="True">
+                    <wpfui:CardExpander.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock
+                                    FontSize="13"
+                                    FontWeight="Medium"
+                                    Text="Excluded Applications" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                    Text="If you don't want to use snapping functionility for certain applications, you can add them to Excluded Applications."
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                            <wpfui:Button
+                                Grid.Column="1"
+                                Margin="0,0,16,0"
+                                Padding="30,6"
+                                VerticalAlignment="Center"
+                                Appearance="Secondary"
+                                Command="{Binding NewExcludeApplicationCommand}"
+                                Content="New"
+                                Icon="New24" />
+                        </Grid>
+                    </wpfui:CardExpander.Header>
 
                     <DataGrid
                         Grid.Row="1"
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         CanUserSortColumns="True"
+                        GridLinesVisibility="Horizontal"
                         IsReadOnly="True"
                         ItemsSource="{Binding ExcludedApplications}">
                         <DataGrid.Columns>
@@ -177,25 +214,25 @@
                                     <DataTemplate>
                                         <wpfui:Button
                                             x:Name="editButton"
-                                            Margin="12"
+                                            Margin="6"
                                             Padding="4"
                                             HorizontalAlignment="Right"
-                                            VerticalAlignment="Top"
                                             Appearance="Secondary"
                                             Tag="{Binding DataContext, ElementName=WindowsViewPage}">
 
                                             <wpfui:Button.ContextMenu>
-                                                <ContextMenu Style="{StaticResource UiNotifyIconContextMenuStyle}">
-                                                    <MenuItem
+                                                <ContextMenu>
+                                                    <!--<ContextMenu Style="{StaticResource UiNotifyIconContextMenuStyle}">-->
+                                                    <wpfui:MenuItem
                                                         Command="{Binding Parent.PlacementTarget.Tag.EditExcludedApplicationCommand, RelativeSource={RelativeSource Self}}"
                                                         CommandParameter="{Binding}"
                                                         Header="Edit"
-                                                        Icon="{x:Static wpfuiCommon:Icon.Edit24}" />
-                                                    <MenuItem
+                                                        SymbolIcon="Edit24" />
+                                                    <wpfui:MenuItem
                                                         Command="{Binding Parent.PlacementTarget.Tag.RemoveExcludedApplicationCommand, RelativeSource={RelativeSource Self}}"
                                                         CommandParameter="{Binding}"
                                                         Header="Delete"
-                                                        Icon="{x:Static wpfuiCommon:Icon.Delete24}" />
+                                                        SymbolIcon="Delete24" />
                                                 </ContextMenu>
                                             </wpfui:Button.ContextMenu>
                                             <i:Interaction.Triggers>
@@ -211,7 +248,7 @@
                                                 </i:EventTrigger>
                                             </i:Interaction.Triggers>
 
-                                            <wpfui:Icon Glyph="ChevronDown24" />
+                                            <wpfui:SymbolIcon Symbol="ChevronDown24" />
                                         </wpfui:Button>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

@@ -5,24 +5,20 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Mvvm;
-using Prism.Regions;
 using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Services;
 using SnapIt.Views;
-using WPFUI.Controls;
-using WPFUI.Theme;
+using Wpf.Ui.Controls;
 
 namespace SnapIt.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private readonly IRegionManager regionManager;
         private readonly ISettingService settingService;
         private readonly ISnapService snapService;
         private readonly IStandaloneLicenseService standaloneLicenseService;
@@ -63,7 +59,6 @@ namespace SnapIt.ViewModels
 
         public DelegateCommand<Window> LoadedCommand { get; private set; }
         public DelegateCommand<CancelEventArgs> ClosingWindowCommand { get; private set; }
-        public DelegateCommand<string> NavigateCommand { get; private set; }
         public DelegateCommand NotifyIconClickViewCommand { get; private set; }
         public DelegateCommand<string> NotifyIconDoubleClickViewCommand { get; private set; }
         public DelegateCommand<object> NotifyIconOpenedCommand { get; private set; }
@@ -78,7 +73,6 @@ namespace SnapIt.ViewModels
         public DelegateCommand<object> TryStoreMessageClosingCommand { get; private set; }
 
         public MainWindowViewModel(
-                IRegionManager regionManager,
                 ISettingService settingService,
                 ISnapService snapService,
                 IWindowService windowService,
@@ -86,7 +80,6 @@ namespace SnapIt.ViewModels
                 IStoreLicenseService storeLicenseService,
                 IScreenChangeService screenChangeService)
         {
-            this.regionManager = regionManager;
             this.settingService = settingService;
             this.snapService = snapService;
             this.standaloneLicenseService = standaloneLicenseService;
@@ -121,24 +114,11 @@ namespace SnapIt.ViewModels
 
                 ChangeTheme();
 
-                var contentControl = window.FindChild<ContentControl>("MainFrame");
-
-                RegionManager.SetRegionName(contentControl, Constants.MainRegion);
-                RegionManager.SetRegionManager(contentControl, regionManager);
-
-                var mainregion = regionManager.Regions[Constants.MainRegion];
-                mainregion.NavigationService.Navigating += NavigationService_Navigating;
-                //Journal.GoForward();
-
                 screenChangeService.Init(mainWindow);
 
                 if (!settingService.Settings.ShowMainWindow && !DevMode.IsActive)
                 {
                     mainWindow.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    NavigateView("LayoutView");
                 }
 
                 if (isStandalone)
@@ -267,19 +247,13 @@ namespace SnapIt.ViewModels
                 }
             });
 
-            NavigateCommand = new DelegateCommand<string>((navigatePath) =>
-            {
-                if (navigatePath != null)
-                {
-                    this.regionManager.RequestNavigate(Constants.MainRegion, navigatePath, NavigationCompleted);
-                }
-            });
-
             NotifyIconClickViewCommand = new DelegateCommand(() =>
             {
                 var popupWindow = new PopupWindow();
 
                 popupWindow.Show();
+                popupWindow.Activate();
+                popupWindow.Focus();
             });
 
             NotifyIconDoubleClickViewCommand = new DelegateCommand<string>((navigatePath) =>
@@ -307,7 +281,7 @@ namespace SnapIt.ViewModels
             {
                 var rootTitleBar = mainWindow.FindChild<TitleBar>("RootTitleBar");
 
-                var layoutsMenu = rootTitleBar.NotifyIconMenu.FindChild<MenuItem>("LayoutMenuItem");
+                var layoutsMenu = rootTitleBar.Tray.Menu.FindChild<MenuItem>("LayoutMenuItem");
 
                 if (layoutsMenu == null)
                 {
@@ -338,13 +312,17 @@ namespace SnapIt.ViewModels
                             Header = layout.Name,
                             Tag = screen.DeviceName,
                             Uid = layout.Guid.ToString(),
-                            Icon = null
+                            SymbolIcon = Wpf.Ui.Common.SymbolRegular.Empty
                         };
                         layoutMenuItem.Click += LayoutItem_Click;
 
                         if (screen.Layout == layout)
                         {
-                            layoutMenuItem.Icon = WPFUI.Common.Icon.Checkmark24;
+                            layoutMenuItem.SymbolIcon = Wpf.Ui.Common.SymbolRegular.Checkmark24;
+                        }
+                        else
+                        {
+                            layoutMenuItem.Header = "     " + layout.Name;
                         }
 
                         if (snapScreens.Count > 1)
@@ -401,18 +379,6 @@ namespace SnapIt.ViewModels
             });
         }
 
-        private void NavigationService_Navigating(object? sender, RegionNavigationEventArgs e)
-        {
-        }
-
-        private void NavigationCompleted(NavigationResult navigationResult)
-        {
-            if (navigationResult.Error != null)
-            {
-                //throw navigationResult.Error;
-            }
-        }
-
         public void NavigateView(string navigatePath)
         {
             var rootNavigation = mainWindow.FindChild<NavigationStore>("RootNavigation");
@@ -422,10 +388,9 @@ namespace SnapIt.ViewModels
             {
                 foreach (var item in rootNavigation.Items)
                 {
-                    if (item.CommandParameter != null && item.CommandParameter.Equals(navigatePath))
+                    if (((NavigationItem)item).PageTag != null && ((NavigationItem)item).PageTag.Equals(navigatePath))
                     {
-                        rootNavigation.Navigate(item.Tag.ToString());
-                        regionManager.RequestNavigate(Constants.MainRegion, navigatePath, NavigationCompleted);
+                        rootNavigation.Navigate(((NavigationItem)item).PageTag);
 
                         break;
                     }
@@ -440,15 +405,29 @@ namespace SnapIt.ViewModels
             switch (settingService.Settings.AppTheme)
             {
                 case UITheme.Dark:
-                    Manager.Switch(WPFUI.Theme.Style.Dark, true, false);
+                    Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Dark, Wpf.Ui.Appearance.BackgroundType.Mica, false, true);
                     break;
 
                 case UITheme.Light:
-                    Manager.Switch(WPFUI.Theme.Style.Light, true, false);
+                    Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Light, Wpf.Ui.Appearance.BackgroundType.Mica, false, true);
                     break;
 
                 case UITheme.System:
-                    Manager.SetSystemTheme(true, false);
+                    var system = Wpf.Ui.Appearance.Theme.GetSystemTheme();
+                    switch (system)
+                    {
+                        case Wpf.Ui.Appearance.SystemThemeType.Light:
+                        case Wpf.Ui.Appearance.SystemThemeType.Sunrise:
+                        case Wpf.Ui.Appearance.SystemThemeType.Flow:
+                            Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Light, Wpf.Ui.Appearance.BackgroundType.Mica, true, true);
+                            break;
+
+                        case Wpf.Ui.Appearance.SystemThemeType.Dark:
+                        case Wpf.Ui.Appearance.SystemThemeType.Glow:
+                        case Wpf.Ui.Appearance.SystemThemeType.CapturedMotion:
+                            Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Dark, Wpf.Ui.Appearance.BackgroundType.Mica, true, true);
+                            break;
+                    }
 
                     break;
             }
@@ -495,7 +474,7 @@ namespace SnapIt.ViewModels
             snapService.Initialize();
         }
 
-        private void SnapService_LayoutChanged(Library.Entities.SnapScreen snapScreen, Layout layout)
+        private void SnapService_LayoutChanged(SnapScreen snapScreen, Layout layout)
         {
             ShowNotification("Layout changed", $"{layout.Name} layout is set to Display {snapScreen.DeviceNumber} ({snapScreen.Resolution})");
         }

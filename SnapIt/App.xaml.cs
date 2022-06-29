@@ -168,6 +168,7 @@ namespace SnapIt
             containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
             containerRegistry.RegisterSingleton<ISettingService, SettingService>();
             containerRegistry.RegisterSingleton<ISnapService, SnapService>();
+            containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
             containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
             containerRegistry.Register<IWindowService, WindowService>();
             containerRegistry.RegisterSingleton<IStandaloneLicenseService, StandaloneLicenseService>();

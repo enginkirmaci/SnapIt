@@ -2,7 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="clr-namespace:SnapIt.Library.Controls"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI">
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <Style TargetType="{x:Type control:SnapAreaEditor}">
         <Setter Property="VerticalAlignment" Value="Top" />
@@ -17,11 +17,12 @@
                             Background="{Binding Path=Theme.OverlayBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}"
                             Opacity="{Binding Path=Theme.Opacity, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=0.85}">
                             <Grid.ContextMenu>
-                                <ContextMenu Style="{DynamicResource UiNotifyIconContextMenuStyle}">
+                                <ContextMenu>
+                                    <!--<ContextMenu Style="{DynamicResource UiNotifyIconContextMenuStyle}">-->
                                     <MenuItem Command="{Binding Path=SplitVerticallyCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                         <MenuItem.Header>
                                             <StackPanel Orientation="Horizontal">
-                                                <wpfui:Icon Margin="0,0,6,0" Glyph="SplitVertical28" />
+                                                <wpfui:SymbolIcon Margin="0,0,6,0" Symbol="SplitVertical28" />
                                                 <ContentPresenter Content="Split Vertically" />
                                             </StackPanel>
                                         </MenuItem.Header>
@@ -29,7 +30,7 @@
                                     <MenuItem Command="{Binding Path=SplitHorizantallyCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                         <MenuItem.Header>
                                             <StackPanel Orientation="Horizontal">
-                                                <wpfui:Icon Margin="0,0,6,0" Glyph="SplitHorizontal28" />
+                                                <wpfui:SymbolIcon Margin="0,0,6,0" Symbol="SplitHorizontal28" />
                                                 <ContentPresenter Content="Split Horizantally" />
                                             </StackPanel>
                                         </MenuItem.Header>
@@ -55,7 +56,7 @@
                                     Command="{Binding Path=SplitVerticallyCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                     Icon="Empty"
                                     IsTabStop="False">
-                                    <wpfui:Icon Glyph="SplitVertical28" />
+                                    <wpfui:SymbolIcon Symbol="SplitVertical28" />
                                 </wpfui:Button>
 
                                 <wpfui:Button
@@ -68,7 +69,7 @@
                                     Command="{Binding Path=SplitHorizantallyCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                     Icon="Empty"
                                     IsTabStop="False">
-                                    <wpfui:Icon Glyph="SplitHorizontal28" />
+                                    <wpfui:SymbolIcon Symbol="SplitHorizontal28" />
                                 </wpfui:Button>
                             </StackPanel>
                         </Grid>

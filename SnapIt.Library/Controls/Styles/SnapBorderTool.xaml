@@ -4,7 +4,7 @@
     xmlns:control="clr-namespace:SnapIt.Library.Controls"
     xmlns:converter="clr-namespace:SnapIt.Library.Converters"
     xmlns:enum="clr-namespace:SnapIt.Library.Entities"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI">
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <converter:EqualBooleanConverter x:Key="EqualBooleanConverter" />
 
@@ -47,7 +47,7 @@
                                 Appearance="Secondary"
                                 Command="{Binding Path=ApplyCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Icon="Empty">
-                                <wpfui:Icon Glyph="Checkmark24" />
+                                <wpfui:SymbolIcon Symbol="Checkmark24" />
                             </wpfui:Button>
                         </StackPanel>
                     </Border>
