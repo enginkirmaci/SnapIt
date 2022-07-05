@@ -1,7 +1,4 @@
 # Universal Windows Platform
-# Build a Universal Windows Platform project using Visual Studio.
-# Add steps that test and distribute an app, save build artifacts, and more:
-# https://aka.ms/yaml
 
 trigger:
 - main
@@ -29,12 +26,14 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2
   inputs:
-    platform: 'x86'
-    solution: '$(solution)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    command: 'publish'
+    publishWebProjects: false
+    projects: '../SnapIt'
+    arguments: '-c Standalone -a x86 -o ./build --self-contained false'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 # Execute install script
 - task: PowerShell@2
