@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
+using Serilog;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Mappers;
@@ -184,8 +185,10 @@ namespace SnapIt.Library.Services
         {
             activeWindow = winApiService.GetActiveWindow();
 
-            if (activeWindow != ActiveWindow.Empty && settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
+            if (activeWindow != ActiveWindow.Empty && (!string.IsNullOrWhiteSpace(activeWindow.Title) && !activeWindow.Title.Equals("Program Manager")) && settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
             {
+                Log.Logger.Information($"StartApplications, isfullscreeen {winApiService.IsFullscreen(activeWindow)}");
+
                 return;
             }
 
@@ -193,21 +196,16 @@ namespace SnapIt.Library.Services
 
             var areaRectangles = windowService.GetSnapAreaRectangles(snapScreen);
 
-            //var tasks = new List<Task>();
             foreach (var area in applicationGroup.ApplicationAreas)
             {
                 if (area.Applications != null)
                 {
                     foreach (var application in area.Applications)
                     {
-                        //_ = StartApplication(application, areaRectangles[application.AreaNumber]);
                         Task.Run(() => StartApplication(application, areaRectangles[application.AreaNumber])).Wait();
-                        //tasks.Add(appTask);
                     }
                 }
             }
-
-            //Task.WaitAll(tasks.ToArray());
 
             applicationService.Clear();
         }
