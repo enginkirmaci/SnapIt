@@ -21,7 +21,7 @@
         <wpfui:Dialog
             Panel.ZIndex="9"
             ButtonLeftName="Save"
-            DialogHeight="380"
+            DialogHeight="390"
             DialogWidth="500"
             IsShown="{Binding IsExcludeApplicationDialogOpen, Mode=TwoWay}"
             Visibility="{Binding IsExcludeApplicationDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}">

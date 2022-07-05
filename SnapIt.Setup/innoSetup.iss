@@ -22,12 +22,12 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf32}\{#MyAppName}
+DefaultDirName={commonpf32}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 ;PrivilegesRequired=lowest
 OutputDir=E:\repos\SnapIt\SnapIt.Setup\setup
-OutputBaseFilename=setup_SnapScreenPro_{#SetupSetting("AppVersion")}
+OutputBaseFilename=setup_SnapItPro_{#SetupSetting("AppVersion")}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
