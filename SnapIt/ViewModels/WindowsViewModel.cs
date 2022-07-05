@@ -1,10 +1,10 @@
-﻿using Prism.Commands;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace SnapIt.ViewModels
 {
@@ -95,7 +95,6 @@ namespace SnapIt.ViewModels
                         Keyboard = true
                     });
                 }
-
                 if (!ExcludedApplications.Any(e => e.Keyword == "New notification"))
                 {
                     ExcludedApplications.Add(new ExcludedApplication

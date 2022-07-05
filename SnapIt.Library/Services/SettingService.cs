@@ -32,6 +32,22 @@ namespace SnapIt.Library.Services
             }
 
             ExcludedApplicationSettings = this.fileOperationService.Load<ExcludedApplicationSettings>();
+
+            if (ExcludedApplicationSettings.Applications == null)
+            {
+                ExcludedApplicationSettings.Applications = new List<ExcludedApplication>();
+            }
+
+            if (!ExcludedApplicationSettings.Applications.Any(e => e.Keyword == "Program Manager"))
+            {
+                ExcludedApplicationSettings.Applications.Add(new ExcludedApplication
+                {
+                    Keyword = "Program Manager",
+                    MatchRule = MatchRule.Contains,
+                    Mouse = true,
+                    Keyboard = true
+                });
+            }
             ApplicationGroupSettings = this.fileOperationService.Load<ApplicationGroupSettings>();
 
             Layouts = this.fileOperationService.GetLayouts();
@@ -133,7 +149,7 @@ namespace SnapIt.Library.Services
         {
             SnapScreens.First(screen => screen.DeviceName == snapScreen.DeviceName).ApplicationGroups = applicationGroups;
 
-            if (ApplicationGroupSettings.ScreensApplicationGroups== null)
+            if (ApplicationGroupSettings.ScreensApplicationGroups == null)
             {
                 ApplicationGroupSettings.ScreensApplicationGroups = new Dictionary<string, List<ApplicationGroup>>();
             }
