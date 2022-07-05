@@ -19,22 +19,22 @@
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <!--<ContextMenu Style="{DynamicResource UiNotifyIconContextMenuStyle}">-->
-                                    <MenuItem Command="{Binding Path=SplitVerticallyCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <wpfui:MenuItem Command="{Binding Path=SplitVerticallyCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                         <MenuItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <wpfui:SymbolIcon Margin="0,0,6,0" Symbol="SplitVertical28" />
                                                 <ContentPresenter Content="Split Vertically" />
                                             </StackPanel>
                                         </MenuItem.Header>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding Path=SplitHorizantallyCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                                    </wpfui:MenuItem>
+                                    <wpfui:MenuItem Command="{Binding Path=SplitHorizantallyCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                         <MenuItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <wpfui:SymbolIcon Margin="0,0,6,0" Symbol="SplitHorizontal28" />
                                                 <ContentPresenter Content="Split Horizantally" />
                                             </StackPanel>
                                         </MenuItem.Header>
-                                    </MenuItem>
+                                    </wpfui:MenuItem>
                                 </ContextMenu>
                             </Grid.ContextMenu>
                         </Grid>

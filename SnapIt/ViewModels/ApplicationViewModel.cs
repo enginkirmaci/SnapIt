@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
 using Prism.Commands;
@@ -15,19 +16,27 @@ namespace SnapIt.ViewModels
     {
         private readonly ISnapService snapService;
         private readonly ISettingService settingService;
-
+        private readonly IApplicationService applicationService;
         private ObservableCollectionWithItemNotify<ApplicationGroup> applicationGroups;
+        private ObservableCollection<ApplicationItem> listApplicationItem;
+        private ObservableCollection<ApplicationItem> filteredlistApplicationItem;
         private ApplicationGroup selectedApplicationGroup;
         private ApplicationItem selectedApplicationItem;
+        private ApplicationItem selectedListApplicationItem;
         private ApplicationItem unmodifiedApplicationItem;
         private bool isApplicationItemOpen;
         private bool isMoveApplicationItemOpen;
+        private bool isListApplicationItemDialogOpen;
         private ObservableCollectionWithItemNotify<SnapScreen> snapScreens;
         private SnapScreen selectedSnapScreen;
         private SnapScreenViewer snapScreenViewer;
+        public ScrollViewer pageScrollViewer;
         private ObservableCollection<int> areaNumbers;
+        private string titleFilter;
 
         public ObservableCollectionWithItemNotify<ApplicationGroup> ApplicationGroups { get => applicationGroups; set => SetProperty(ref applicationGroups, value); }
+        public ObservableCollection<ApplicationItem> ListApplicationItem { get => listApplicationItem; set => SetProperty(ref listApplicationItem, value); }
+        public ObservableCollection<ApplicationItem> FilteredlistApplicationItem { get => filteredlistApplicationItem; set => SetProperty(ref filteredlistApplicationItem, value); }
         public ObservableCollection<int> AreaNumbers { get => areaNumbers; set => SetProperty(ref areaNumbers, value); }
 
         public ApplicationGroup SelectedApplicationGroup
@@ -36,9 +45,39 @@ namespace SnapIt.ViewModels
             set => SetProperty(ref selectedApplicationGroup, value);
         }
 
+        public string TitleFilter
+        {
+            get => titleFilter;
+            set
+            {
+                SetProperty(ref titleFilter, value);
+
+                DevMode.Log($"{titleFilter}, {TitleFilter}");
+                if (string.IsNullOrWhiteSpace(titleFilter))
+                {
+                    FilteredlistApplicationItem = ListApplicationItem;
+                }
+                else
+                {
+                    //if (FilteredlistApplicationItem == null)
+                    //{
+                    FilteredlistApplicationItem = new ObservableCollection<ApplicationItem>(ListApplicationItem.Where(i => i.Title.Contains(titleFilter, System.StringComparison.OrdinalIgnoreCase)));
+                    //}
+                    //else
+                    //{
+                    //    FilteredlistApplicationItem.Clear();
+                    //    FilteredlistApplicationItem.AddRange(ListApplicationItem.Where(i => i.Title.Contains(titleFilter)));
+                    //}
+                }
+            }
+        }
+
         public bool IsApplicationItemOpen { get => isApplicationItemOpen; set => SetProperty(ref isApplicationItemOpen, value); }
         public bool IsMoveApplicationItemOpen { get => isMoveApplicationItemOpen; set => SetProperty(ref isMoveApplicationItemOpen, value); }
+        public bool IsListApplicationItemDialogOpen { get => isListApplicationItemDialogOpen; set => SetProperty(ref isListApplicationItemDialogOpen, value); }
         public ApplicationItem SelectedApplicationItem { get => selectedApplicationItem; set => SetProperty(ref selectedApplicationItem, value); }
+        public ApplicationItem SelectedListApplicationItem { get => selectedListApplicationItem; set => SetProperty(ref selectedListApplicationItem, value); }
+
         public ObservableCollectionWithItemNotify<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
 
         public SnapScreen SelectedSnapScreen
@@ -62,17 +101,21 @@ namespace SnapIt.ViewModels
         public DelegateCommand<object> EditApplicationItemDialogCommand { get; private set; }
         public DelegateCommand<object> MoveAreaItemDialogCommand { get; private set; }
         public DelegateCommand<object> AddApplicationItemDialogCommand { get; private set; }
+        public DelegateCommand<object> CloseListApplicationItemDialogCommand { get; private set; }
         public DelegateCommand AddApplicationGroupCommand { get; private set; }
+        public DelegateCommand DeleteApplicationGroupCommand { get; private set; }
         public DelegateCommand BrowseApplicationItemCommand { get; private set; }
+        public DelegateCommand ListApplicationItemCommand { get; private set; }
         public DelegateCommand ImportLayoutCommand { get; private set; }
 
         public ApplicationViewModel(
             ISnapService snapService,
-            ISettingService settingService)
+            ISettingService settingService,
+            IApplicationService applicationService)
         {
             this.snapService = snapService;
             this.settingService = settingService;
-
+            this.applicationService = applicationService;
             snapService.ScreenChanged += SnapService_ScreenChanged;
 
             SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
@@ -81,6 +124,7 @@ namespace SnapIt.ViewModels
             LoadedCommand = new DelegateCommand<Page>((page) =>
             {
                 snapScreenViewer = page.FindChild<SnapScreenViewer>("SnapScreenViewer");
+                pageScrollViewer = page.FindChild<ScrollViewer>("PageScrollViewer");
 
                 var applicationGroupList = page.FindChild<ListView>("ApplicationGroupList");
                 applicationGroupList.SelectionChanged += ApplicationGroupList_SelectionChanged;
@@ -92,6 +136,7 @@ namespace SnapIt.ViewModels
             AreaHighlightCommand = new DelegateCommand<object>((number) =>
             {
                 GetSelectSnapControl()?.HighlightArea((int)number);
+                pageScrollViewer?.ScrollToTop();
             });
 
             EditAreaItemCommand = new DelegateCommand<object>((item) =>
@@ -137,6 +182,12 @@ namespace SnapIt.ViewModels
                     {
                         if ((bool)isSave)
                         {
+                            if (string.IsNullOrEmpty(item.Title))
+                            {
+                                var fileVersion = FileVersionInfo.GetVersionInfo(item.Path);
+                                item.Title = !string.IsNullOrWhiteSpace(fileVersion.ProductName) ? fileVersion.ProductName : fileVersion.FileDescription;
+                            }
+
                             var appPos = area.Applications.IndexOf(item);
                             area.Applications.RemoveAt(appPos);
                             area.Applications.Insert(appPos, item);
@@ -214,7 +265,13 @@ namespace SnapIt.ViewModels
             AddApplicationGroupCommand = new DelegateCommand(() =>
             {
                 ApplicationGroups.Add(new ApplicationGroup());
-                SelectedApplicationGroup = ApplicationGroups.FirstOrDefault();
+                SelectedApplicationGroup = ApplicationGroups?.FirstOrDefault();
+            });
+
+            DeleteApplicationGroupCommand = new DelegateCommand(() =>
+            {
+                ApplicationGroups.Remove(SelectedApplicationGroup);
+                ApplyChanges();
             });
 
             BrowseApplicationItemCommand = new DelegateCommand(() =>
@@ -223,6 +280,26 @@ namespace SnapIt.ViewModels
                 if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     SelectedApplicationItem.Path = openFileDialog.FileName;
+                }
+            });
+
+            ListApplicationItemCommand = new DelegateCommand(() =>
+            {
+                IsListApplicationItemDialogOpen = true;
+
+                ListApplicationItem = new ObservableCollection<ApplicationItem>(applicationService.ListInstalledApplications());
+                TitleFilter = string.Empty;
+            });
+
+            CloseListApplicationItemDialogCommand = new DelegateCommand<object>((isSelected) =>
+            {
+                IsListApplicationItemDialogOpen = false;
+
+                if ((bool)isSelected)
+                {
+                    SelectedApplicationItem.Title = SelectedListApplicationItem.Title;
+                    SelectedApplicationItem.Arguments = SelectedListApplicationItem.Arguments;
+                    SelectedApplicationItem.Path = SelectedListApplicationItem.Path;
                 }
             });
         }

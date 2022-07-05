@@ -11,10 +11,15 @@ namespace SnapIt.ViewModels.DesignTime
         public ObservableCollection<Layout> Layouts { get; set; }
         public SnapAreaTheme Theme { get; set; } = new SnapAreaTheme();
         public ObservableCollectionWithItemNotify<ApplicationGroup> ApplicationGroups { get; set; }
+        public ObservableCollection<ApplicationItem> ListApplicationItem { get; set; }
+        public ObservableCollection<ApplicationItem> FilteredlistApplicationItem { get; set; }
         public ApplicationGroup SelectedApplicationGroup { get; set; }
         public bool IsApplicationItemOpen { get; set; } = false;
         public bool IsMoveApplicationItemOpen { get; set; } = false;
+        public bool IsListApplicationItemDialogOpen { get; set; } = true;
         public ApplicationItem SelectedApplicationItem { get; set; }
+        public ApplicationItem SelectedListApplicationItem { get; set; }
+
         public ObservableCollection<int> AreaNumbers { get; set; }
 
         public ApplicationDesignView()
@@ -183,11 +188,15 @@ namespace SnapIt.ViewModels.DesignTime
                             {
                                 new ApplicationItem
                                 {
-                                    Path ="Test 1"
+                                    Title= "Title 1",
+                                    Path ="Test 1",
+                                    Arguments = "Arguments 1"
                                 },
                                 new ApplicationItem
                                 {
-                                    Path ="Test 2"
+                                    Title= "Cider",
+                                    Path ="explorer.exe",
+                                    Arguments = "shell:appsFolder\\27554FireDevElijahKlauman.CiderAlpha_270bejk4xgzqp!CiderAlpha"
                                 }
                             }
                         }
@@ -205,11 +214,15 @@ namespace SnapIt.ViewModels.DesignTime
                                 new ApplicationItem
                                 {
                                     AreaNumber =4,
-                                    Path ="Test 1"
+                                    Title= "Cider",
+                                    Path ="explorer.exe",
+                                    Arguments = "shell:appsFolder\\27554FireDevElijahKlauman.CiderAlpha_270bejk4xgzqp!CiderAlpha"
                                 },
                                 new ApplicationItem
                                 {
-                                    Path ="Test 2"
+                                    Title= "Title 2",
+                                    Path ="Test 2",
+                                    Arguments = "Arguments 2"
                                 }
                             }
                         },
@@ -219,14 +232,37 @@ namespace SnapIt.ViewModels.DesignTime
                             {
                                 new ApplicationItem
                                 {
+                                    Title= "Title 1",
                                     Path ="Test 1"
                                 },
                                 new ApplicationItem
                                 {
+                                    Title= "Title 2",
                                     Path ="Test 2"
                                 },
                                 new ApplicationItem
                                 {
+                                    Title= "Title 3",
+                                    Path ="Test 3"
+                                },
+                                new ApplicationItem
+                                {
+                                    Title= "Title 2",
+                                    Path ="Test 2"
+                                },
+                                new ApplicationItem
+                                {
+                                    Title= "Title 3",
+                                    Path ="Test 3"
+                                },
+                                new ApplicationItem
+                                {
+                                    Title= "Title 2",
+                                    Path ="Test 2"
+                                },
+                                new ApplicationItem
+                                {
+                                    Title= "Title 3",
                                     Path ="Test 3"
                                 }
                             }
@@ -235,8 +271,16 @@ namespace SnapIt.ViewModels.DesignTime
                 }
             };
 
+            //ApplicationGroups = null;
+
+            //return;
+
             SelectedApplicationGroup = ApplicationGroups.Last();
             SelectedApplicationItem = SelectedApplicationGroup.ApplicationAreas.First().Applications.First();
+
+            ListApplicationItem = new ObservableCollection<ApplicationItem>(ApplicationGroups.SelectMany(i => i.ApplicationAreas.SelectMany(j => j.Applications)).ToList());
+            FilteredlistApplicationItem = ListApplicationItem;
+            SelectedListApplicationItem = ListApplicationItem.First();
         }
     }
 }

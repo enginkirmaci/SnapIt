@@ -1,15 +1,15 @@
 ﻿<wpfui:UiWindow
     x:Class="SnapIt.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:prism="http://prismlibrary.com/"
-    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
-    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
+    xmlns:prism="http://prismlibrary.com/"
     xmlns:views="clr-namespace:SnapIt.Views"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     x:Name="MainWindowView"
     Title="{x:Static c:Constants.AppName}"
     Width="980"
@@ -46,20 +46,27 @@
             Icon="/Themes/snapit.png"
             MinimizeToTray="True"
             UseSnapLayout="True">
-            <!--  Subtitle="{Binding LicenseText}"  -->
             <wpfui:TitleBar.Header>
-                <wpfui:Button
-                    Margin="0,-18,12,0"
-                    Padding="8,4"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Appearance="Secondary"
-                    Command="{Binding TrialVersionCommand}"
-                    Content="Trial Version"
-                    FontSize="12"
-                    FontWeight="Light"
-                    ToolTip="Trial Version"
-                    Visibility="{Binding IsTrial, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                <Grid>
+                    <TextBlock
+                        Margin="48,0,0,6"
+                        VerticalAlignment="Bottom"
+                        FontSize="10"
+                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                        Text="{Binding LicenseText}" />
+                    <wpfui:Button
+                        Margin="0,-18,12,0"
+                        Padding="8,4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Appearance="Secondary"
+                        Command="{Binding TrialVersionCommand}"
+                        Content="Trial Version"
+                        FontSize="12"
+                        FontWeight="Light"
+                        ToolTip="Trial Version"
+                        Visibility="{Binding IsTrial, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                </Grid>
             </wpfui:TitleBar.Header>
             <wpfui:TitleBar.Tray>
                 <wpfui:NotifyIcon
@@ -349,7 +356,7 @@
             Panel.ZIndex="9"
             ButtonLeftName="OK"
             ButtonRightName="{Binding LicenseMessageCloseButtonText}"
-            DialogHeight="204"
+            DialogHeight="215"
             IsShown="{Binding IsLicenseMessageOpen, Mode=TwoWay}"
             Visibility="{Binding IsLicenseMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
             <i:Interaction.Triggers>
@@ -380,7 +387,7 @@
             Panel.ZIndex="9"
             ButtonLeftName="Update Now"
             ButtonRightName="Later"
-            DialogHeight="216"
+            DialogHeight="230"
             IsShown="{Binding NewVersionMessageOpen, Mode=TwoWay}"
             Visibility="{Binding NewVersionMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
             <i:Interaction.Triggers>
