@@ -216,14 +216,6 @@ namespace SnapIt.Library.Services
 
             if (openedWindow != null)
             {
-                if (PInvoke.User32.GetWindowRect(openedWindow.Handle, out PInvoke.RECT rct))
-                {
-                    openedWindow.Boundry = new Rectangle(rct.left, rct.top, rct.right, rct.bottom);
-                }
-
-                if (openedWindow.Handle == IntPtr.Zero || openedWindow.Boundry.Equals(Rectangle.Empty))
-                    openedWindow = ActiveWindow.Empty;
-
                 MoveWindow(openedWindow, rectangle, false);
             }
         }
