@@ -57,13 +57,11 @@ namespace SnapIt.Library.Services
         {
             try
             {
-                var process = Process.Start(new ProcessStartInfo
-                {
-                    FileName = application.Path,
-                    Arguments = application.Arguments,
-                    WorkingDirectory = application.StartIn,
-                    UseShellExecute = true,
-                });
+                var window = new ActiveWindow();
+
+                DevMode.Log($"{application.Path} - {application.Title} - StartProcess");
+
+                var process = StartProcess(application);
 
                 if (application.DelayAfterOpen < 1)
                 {
@@ -72,80 +70,101 @@ namespace SnapIt.Library.Services
 
                 await Task.Delay(new TimeSpan(0, 0, application.DelayAfterOpen));
 
-                var openedWindow = new ActiveWindow();
+                DevMode.Log($"{application.Path} - {application.Title} - GetWindowFromProcess");
 
-                DevMode.Log($"{application.Path} - {application.Title} - started");
-                openedWindow = GetOpenedWindow(application, process);
-
-                await Task.Delay(500);
-
-                if (string.IsNullOrEmpty(openedWindow.Title))
+                window = await GetWindowFromProcess(process);
+                if (IsWindowOpened(window))
                 {
-                    DevMode.Log($"{application.Path} - {openedWindow.Title} tryTitleParts");
-                    openedWindow = GetOpenedWindow(application, process, tryTitleParts: true);
-                }
-                if (string.IsNullOrEmpty(openedWindow.Title))
-                {
-                    DevMode.Log($"{application.Path} - {openedWindow.Title} useFirstOne");
-                    openedWindow = GetOpenedWindow(application, process, useFirstOne: true);
+                    return window;
                 }
 
-                return openedWindow;
+                await Task.Delay(1000);
+
+                DevMode.Log($"{application.Path} - {application.Title} - GetOpenedWindow");
+                window = GetWindowFromOpenedWindows(application, process);
+                if (IsWindowOpened(window))
+                {
+                    return window;
+                }
+
+                await Task.Delay(1000);
+
+                DevMode.Log($"{application.Path} - tryTitleParts");
+                window = GetWindowFromOpenedWindows(application, process, tryTitleParts: true);
+                if (IsWindowOpened(window))
+                {
+                    DevMode.Log($"{application.Path} - {window?.Title} tryTitleParts");
+                    return window;
+                }
+
+                await Task.Delay(1000);
+
+                DevMode.Log($"{application.Path} - useFirstOne");
+                window = GetWindowFromOpenedWindows(application, process, useFirstOne: true);
+                if (IsWindowOpened(window))
+                {
+                    DevMode.Log($"{application.Path} - {window?.Title} useFirstOne");
+                    return window;
+                }
             }
             catch (Exception ex)
             {
-                return null;
+                DevMode.Log(ex);
             }
+
+            return null;
         }
 
-        private ActiveWindow GetOpenedWindow(ApplicationItem application, Process process, bool tryTitleParts = false, bool useFirstOne = false)
+        private Process StartProcess(ApplicationItem application)
+        {
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = application.Path,
+                Arguments = application.Arguments,
+                WorkingDirectory = application.StartIn,
+                UseShellExecute = true,
+            });
+
+            return process;
+        }
+
+        private async Task<ActiveWindow> GetWindowFromProcess(Process process)
+        {
+            var tryCount = 1;
+            while (string.IsNullOrEmpty(process.MainWindowTitle) && tryCount > 0)
+            {
+                await Task.Delay(400);
+                process.Refresh();
+
+                tryCount--;
+                DevMode.Log($"{tryCount} - {process.MainWindowTitle}");
+            }
+
+            if (!string.IsNullOrEmpty(process.MainWindowTitle))
+            {
+                return new ActiveWindow
+                {
+                    Handle = process.MainWindowHandle,
+                    Title = process.MainWindowTitle
+                };
+            }
+
+            return null;
+        }
+
+        private ActiveWindow GetWindowFromOpenedWindows(ApplicationItem application, Process process, bool tryTitleParts = false, bool useFirstOne = false)
         {
             var openedApps = winApiService.GetOpenWindows();
             var result = openedApps
                 .Where(kvp => !cachedWindowHandles.ContainsKey(kvp.Key))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            var activeWindow = new ActiveWindow();
-
             foreach (var handle in result.Keys)
             {
                 PInvoke.User32.GetWindowThreadProcessId(handle, out int processId);
                 var proc = Process.GetProcessById(processId);
 
-                if (proc.ProcessExecutablePath() == application.Path)
-                {
-                    cachedWindowHandles.Add(handle, proc.MainWindowTitle);
-                    //result.Remove(handle);
-
-                    return new ActiveWindow
-                    {
-                        Handle = handle,
-                        Title = proc.MainWindowTitle
-                    };
-                }
-                else if (proc.MainWindowTitle == application.Title || (!string.IsNullOrEmpty(application.Title) && proc.MainWindowTitle.Contains(application.Title)))
-                {
-                    cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
-                    //result.Remove(proc.MainWindowHandle);
-
-                    return new ActiveWindow
-                    {
-                        Handle = proc.MainWindowHandle,
-                        Title = proc.MainWindowTitle
-                    };
-                }
-                else if (result[handle] == application.Title || (!string.IsNullOrEmpty(application.Title) && result[handle].Contains(application.Title)))
-                {
-                    cachedWindowHandles.Add(handle, result[handle]);
-                    //result.Remove(handle);
-
-                    return new ActiveWindow
-                    {
-                        Handle = handle,
-                        Title = result[handle]
-                    };
-                }
-                else if (tryTitleParts || useFirstOne)
+                if (tryTitleParts || useFirstOne)
                 {
                     if (tryTitleParts)
                     {
@@ -158,7 +177,6 @@ namespace SnapIt.Library.Services
                             if (count >= 1)
                             {
                                 cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
-                                //result.Remove(proc.MainWindowHandle);
 
                                 return new ActiveWindow
                                 {
@@ -176,7 +194,6 @@ namespace SnapIt.Library.Services
                             if (count >= 1)
                             {
                                 cachedWindowHandles.Add(handle, result[handle]);
-                                //result.Remove(handle);
 
                                 return new ActiveWindow
                                 {
@@ -190,7 +207,6 @@ namespace SnapIt.Library.Services
                     if (useFirstOne)
                     {
                         cachedWindowHandles.Add(handle, result[handle]);
-                        //result.Remove(handle);
 
                         return new ActiveWindow
                         {
@@ -199,9 +215,60 @@ namespace SnapIt.Library.Services
                         };
                     }
                 }
+                else if (proc.ProcessExecutablePath() == application.Path)
+                {
+                    cachedWindowHandles.Add(handle, proc.MainWindowTitle);
+
+                    return new ActiveWindow
+                    {
+                        Handle = handle,
+                        Title = proc.MainWindowTitle
+                    };
+                }
+                else if (proc.MainWindowTitle == application.Title || (!string.IsNullOrEmpty(application.Title) && proc.MainWindowTitle.Contains(application.Title)))
+                {
+                    cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
+
+                    return new ActiveWindow
+                    {
+                        Handle = proc.MainWindowHandle,
+                        Title = proc.MainWindowTitle
+                    };
+                }
+                else if (result[handle] == application.Title || (!string.IsNullOrEmpty(application.Title) && result[handle].Contains(application.Title)))
+                {
+                    cachedWindowHandles.Add(handle, result[handle]);
+
+                    return new ActiveWindow
+                    {
+                        Handle = handle,
+                        Title = result[handle]
+                    };
+                }
             }
 
-            return activeWindow;
+            return null;
+        }
+
+        private bool IsWindowOpened(ActiveWindow window)
+        {
+            if (window == null || window.Handle == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            if (PInvoke.User32.GetWindowRect(window.Handle, out PInvoke.RECT rct))
+            {
+                window.Boundry = new Rectangle(rct.left, rct.top, rct.right, rct.bottom);
+                window.Dpi = DpiHelper.GetDpiFromPoint(window.Boundry.Left, window.Boundry.Right);
+            }
+
+            if (window.Boundry.Equals(Rectangle.Empty))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

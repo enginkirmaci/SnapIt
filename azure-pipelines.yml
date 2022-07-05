@@ -18,6 +18,13 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
+# Install Inno Setup with chocolatey
+- task: PowerShell@2
+  displayName: 'Inno setup download'
+  inputs:
+    targetType: 'inline'
+    script: 'choco install innosetup'
+
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
@@ -28,3 +35,25 @@ steps:
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
     msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+
+# Execute install script
+- task: PowerShell@2
+  displayName: 'Execute Inno Setup script'
+  inputs:
+    targetType: 'inline'
+    script: 'iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=4.2.0.0'
+
+# Copy setup into ArtifactStaging folder
+- task: CopyFiles@2
+  displayName: 'Copy setup to artifact'
+  inputs:
+    SourceFolder: 'SnapIt.Setup\\setup'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# Publish artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
