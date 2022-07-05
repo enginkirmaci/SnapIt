@@ -183,7 +183,7 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
-                        <!--<ColumnDefinition Width="Auto" />-->
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <wpfui:ToggleSwitch
                         Command="{Binding StartStopCommand}"
@@ -209,12 +209,14 @@
                         Content="Apps"
                         Icon="Apps24" />
 
-                    <!--<wpfui:Button
+                    <wpfui:Button
                         Grid.Column="3"
                         Padding="12,6,12,6"
                         Appearance="Transparent"
-                        Content="About"
-                        Icon="Info24" />-->
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="settings"
+                        Content="Settings"
+                        Icon="Settings24" />
                 </Grid>
             </StackPanel>
         </Grid>
