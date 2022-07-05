@@ -1,9 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
     xmlns:extension="clr-namespace:SnapIt.Library.Extensions;assembly=SnapIt.Library"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <!--  Color picker background  -->
@@ -194,7 +192,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="SnapIt.Styles.ApplicationGroup" TargetType="{x:Type ListViewItem}">
+    <!--<Style x:Key="SnapIt.Styles.ApplicationGroup" TargetType="{x:Type ListViewItem}">
         <Setter Property="Foreground">
             <Setter.Value>
                 <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
@@ -326,9 +324,9 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
-    <Style x:Key="SnapIt.Styles.LayoutListView" TargetType="{x:Type ListViewItem}">
+    <!--<Style x:Key="SnapIt.Styles.LayoutListView" TargetType="{x:Type ListViewItem}">
         <Setter Property="Foreground">
             <Setter.Value>
                 <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
@@ -482,5 +480,5 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 </ResourceDictionary>

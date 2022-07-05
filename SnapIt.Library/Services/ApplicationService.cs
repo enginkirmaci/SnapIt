@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.WindowsAPICodePack.Shell;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 
@@ -29,51 +30,72 @@ namespace SnapIt.Library.Services
             cachedWindowHandles?.Clear();
         }
 
-        public async Task<ActiveWindow> StartApplication(ApplicationItem application, Rectangle rectangle)
+        public List<ApplicationItem> ListInstalledApplications()
         {
-            DevMode.Log($"{application.Path} started");
-            var process = Process.Start(new ProcessStartInfo
-            {
-                FileName = application.Path,
-                Arguments = application.Arguments,
-                WorkingDirectory = application.StartIn,
-                UseShellExecute = true,
-            });
+            Windows.Management.Deployment.PackageManager packageManager = new Windows.Management.Deployment.PackageManager();
+            var packages = packageManager.FindPackagesForUser("").ToList();
 
-            if (application.DelayAfterOpen < 1)
+            // GUID taken from https://docs.microsoft.com/en-us/windows/win32/shell/knownfolderid
+            var FOLDERID_AppsFolder = new Guid("{1e87508d-89c2-42f0-8a7e-645a0f50ca58}");
+            ShellObject appsFolder = (ShellObject)KnownFolderHelper.FromKnownFolderId(FOLDERID_AppsFolder);
+
+            var result = new List<ApplicationItem>();
+            foreach (var app in (IKnownFolder)appsFolder)
             {
-                application.DelayAfterOpen = 1;
+                result.Add(new ApplicationItem
+                {
+                    Title = app.Name,
+                    Arguments = $"shell:appsFolder\\{app.ParsingName}",
+                    Path = "explorer.exe"
+                });
             }
 
-            await Task.Delay(new TimeSpan(0, 0, application.DelayAfterOpen));
+            return result.OrderBy(i => i.Title).ToList();
+        }
 
-            var openedWindow = new ActiveWindow();
-
-            var maxCount = 20;
-            while (string.IsNullOrEmpty(openedWindow.Title) && maxCount > 0)
+        public async Task<ActiveWindow> StartApplication(ApplicationItem application, Rectangle rectangle)
+        {
+            try
             {
-                DevMode.Log($"{application.Path} - {maxCount} - 20 try started");
-                openedWindow = GetOpenedWindow(application, process);
+                var process = Process.Start(new ProcessStartInfo
+                {
+                    FileName = application.Path,
+                    Arguments = application.Arguments,
+                    WorkingDirectory = application.StartIn,
+                    UseShellExecute = true,
+                });
 
-                maxCount--;
+                if (application.DelayAfterOpen < 1)
+                {
+                    application.DelayAfterOpen = 1;
+                }
+
+                await Task.Delay(new TimeSpan(0, 0, application.DelayAfterOpen));
+
+                var openedWindow = new ActiveWindow();
+
+                DevMode.Log($"{application.Path} - {application.Title} - started");
+                openedWindow = GetOpenedWindow(application, process);
 
                 await Task.Delay(500);
 
-                DevMode.Log($"{application.Path} - {maxCount} - 20 try ended");
-            }
+                if (string.IsNullOrEmpty(openedWindow.Title))
+                {
+                    openedWindow = GetOpenedWindow(application, process, tryTitleParts: true);
+                    DevMode.Log($"{application.Path} - {openedWindow.Title} tryTitleParts");
+                }
+                if (string.IsNullOrEmpty(openedWindow.Title))
+                {
+                    openedWindow = GetOpenedWindow(application, process, useFirstOne: true);
+                    DevMode.Log($"{application.Path} - {openedWindow.Title} useFirstOne");
+                }
 
-            if (string.IsNullOrEmpty(openedWindow.Title))
-            {
-                openedWindow = GetOpenedWindow(application, process, tryTitleParts: true);
-                DevMode.Log($"{application.Path} - {openedWindow.Title} tryTitleParts");
+                return openedWindow;
             }
-            if (string.IsNullOrEmpty(openedWindow.Title))
+            catch (Exception ex)
             {
-                openedWindow = GetOpenedWindow(application, process, useFirstOne: true);
-                DevMode.Log($"{application.Path} - {openedWindow.Title} useFirstOne");
+                return null;
             }
-
-            return openedWindow;
         }
 
         private ActiveWindow GetOpenedWindow(ApplicationItem application, Process process, bool tryTitleParts = false, bool useFirstOne = false)
@@ -100,7 +122,7 @@ namespace SnapIt.Library.Services
                         Title = proc.MainWindowTitle
                     };
                 }
-                else if (proc.MainWindowTitle == application.Title)
+                else if (proc.MainWindowTitle == application.Title || (!string.IsNullOrEmpty(application.Title) && proc.MainWindowTitle.Contains(application.Title)))
                 {
                     cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
 
@@ -110,33 +132,56 @@ namespace SnapIt.Library.Services
                         Title = proc.MainWindowTitle
                     };
                 }
+                else if (result[handle] == application.Title || (!string.IsNullOrEmpty(application.Title) && result[handle].Contains(application.Title)))
+                {
+                    cachedWindowHandles.Add(handle, result[handle]);
+
+                    return new ActiveWindow
+                    {
+                        Handle = handle,
+                        Title = result[handle]
+                    };
+                }
                 else if (tryTitleParts || useFirstOne)
                 {
-                    if (tryTitleParts && !string.IsNullOrEmpty(proc.MainWindowTitle) && !string.IsNullOrEmpty(application.Title))
+                    if (tryTitleParts)
                     {
-                        string[] vs = proc.MainWindowTitle.Split(new char[] { ' ', '-', '/', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] vs1 = application.Title.Split(new char[] { ' ', '-', '/', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        var count = vs.Intersect(vs1, StringComparer.OrdinalIgnoreCase).Count();
-                        if (count >= 1)
+                        if (!string.IsNullOrEmpty(proc.MainWindowTitle) && !string.IsNullOrEmpty(application.Title))
                         {
-                            cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
+                            string[] vs = proc.MainWindowTitle.Split(new char[] { ' ', '-', '/', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] vs1 = application.Title.Split(new char[] { ' ', '-', '/', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            var count = vs.Intersect(vs1, StringComparer.OrdinalIgnoreCase).Count();
+                            if (count >= 1)
+                            {
+                                cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
+
+                                return new ActiveWindow
+                                {
+                                    Handle = proc.MainWindowHandle,
+                                    Title = proc.MainWindowTitle
+                                };
+                            }
+                        }
+                        else if (!string.IsNullOrEmpty(result[handle]) && !string.IsNullOrEmpty(application.Title))
+                        {
+                            cachedWindowHandles.Add(handle, result[handle]);
 
                             return new ActiveWindow
                             {
-                                Handle = proc.MainWindowHandle,
-                                Title = proc.MainWindowTitle
+                                Handle = handle,
+                                Title = result[handle]
                             };
                         }
                     }
                     if (useFirstOne)
                     {
-                        cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
+                        cachedWindowHandles.Add(handle, result[handle]);
 
                         return new ActiveWindow
                         {
-                            Handle = proc.MainWindowHandle,
-                            Title = proc.MainWindowTitle
+                            Handle = handle,
+                            Title = result[handle]
                         };
                     }
                 }

@@ -149,30 +149,16 @@ namespace SnapIt.Library.Services
 
         public void StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
         {
-            //Windows.Management.Deployment.PackageManager packageManager = new Windows.Management.Deployment.PackageManager();
-            //var packages = packageManager.FindPackagesForUser("").ToList();
+            activeWindow = winApiService.GetActiveWindow();
 
-            //// GUID taken from https://docs.microsoft.com/en-us/windows/win32/shell/knownfolderid
-            //var FOLDERID_AppsFolder = new Guid("{1e87508d-89c2-42f0-8a7e-645a0f50ca58}");
-            //ShellObject appsFolder = (ShellObject)KnownFolderHelper.FromKnownFolderId(FOLDERID_AppsFolder);
-
-            //var asd = new List<ShellObject>();
-            //foreach (var app in (IKnownFolder)appsFolder)
-            //{
-            //    // The friendly app name
-            //    string name = app.Name;
-            //    // The ParsingName property is the AppUserModelID
-            //    string appUserModelID = app.ParsingName; // or app.Properties.System.AppUserModel.ID
-            //                                             // You can even get the Jumbo icon in one shot
-
-            //    asd.Add(app);
-            //}
+            if (activeWindow != ActiveWindow.Empty && settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
+            {
+                return;
+            }
 
             applicationService.Initialize();
 
             var areaRectangles = windowService.GetSnapAreaRectangles(snapScreen);
-
-            //List<Task> tasks = new List<Task>();
 
             foreach (var area in applicationGroup.ApplicationAreas)
             {
@@ -180,12 +166,11 @@ namespace SnapIt.Library.Services
                 {
                     foreach (var application in area.Applications)
                     {
-                        Task.Run(() => StartApplication(application, areaRectangles[application.AreaNumber])).Wait();
+                        _ = StartApplication(application, areaRectangles[application.AreaNumber]);
+                        //Task.Run(() => StartApplication(application, areaRectangles[application.AreaNumber])).Wait();
                     }
                 }
             }
-
-            //Task.WaitAll(tasks.ToArray());
 
             applicationService.Clear();
         }
@@ -194,15 +179,18 @@ namespace SnapIt.Library.Services
         {
             var openedWindow = await applicationService.StartApplication(application, rectangle);
 
-            if (PInvoke.User32.GetWindowRect(openedWindow.Handle, out PInvoke.RECT rct))
+            if (openedWindow != null)
             {
-                openedWindow.Boundry = new Rectangle(rct.left, rct.top, rct.right, rct.bottom);
+                if (PInvoke.User32.GetWindowRect(openedWindow.Handle, out PInvoke.RECT rct))
+                {
+                    openedWindow.Boundry = new Rectangle(rct.left, rct.top, rct.right, rct.bottom);
+                }
+
+                if (openedWindow.Handle == IntPtr.Zero || openedWindow.Boundry.Equals(Rectangle.Empty))
+                    openedWindow = ActiveWindow.Empty;
+
+                MoveWindow(openedWindow, rectangle, false);
             }
-
-            if (openedWindow.Handle == IntPtr.Zero || openedWindow.Boundry.Equals(Rectangle.Empty))
-                openedWindow = ActiveWindow.Empty;
-
-            MoveWindow(openedWindow, rectangle, false);
         }
 
         private void StartStop()

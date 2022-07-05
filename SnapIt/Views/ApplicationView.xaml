@@ -28,7 +28,7 @@
     <Grid>
         <wpfui:Dialog
             Panel.ZIndex="9"
-            ButtonLeftName="Move`"
+            ButtonLeftName="Move"
             DialogHeight="200"
             DialogWidth="500"
             IsShown="{Binding IsMoveApplicationItemOpen, Mode=TwoWay}"
@@ -80,6 +80,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBox Text="{Binding SelectedApplicationItem.Path}" />
@@ -89,6 +90,12 @@
                         Appearance="Secondary"
                         Command="{Binding BrowseApplicationItemCommand}"
                         Content="Browse" />
+                    <wpfui:Button
+                        Grid.Column="2"
+                        Margin="12,0,0,0"
+                        Appearance="Secondary"
+                        Command="{Binding ListApplicationItemCommand}"
+                        Content="Apps" />
                 </Grid>
 
                 <Grid Margin="0,12,0,0">
@@ -136,7 +143,46 @@
             </StackPanel>
         </wpfui:Dialog>
 
-        <ScrollViewer Style="{StaticResource UiScrollViewer}">
+        <wpfui:Dialog
+            Panel.ZIndex="10"
+            ButtonLeftName="Select"
+            DialogHeight="480"
+            DialogWidth="500"
+            IsShown="{Binding IsListApplicationItemDialogOpen, Mode=TwoWay}"
+            Visibility="{Binding IsListApplicationItemDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ButtonRightClick">
+                    <i:InvokeCommandAction Command="{Binding CloseListApplicationItemDialogCommand}" CommandParameter="{StaticResource FalseValue}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="ButtonLeftClick">
+                    <i:InvokeCommandAction Command="{Binding CloseListApplicationItemDialogCommand}" CommandParameter="{StaticResource TrueValue}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock FontWeight="Medium" Text="Applications" />
+                <wpfui:TextBox
+                    x:Name="filterBox"
+                    Grid.Row="1"
+                    Margin="0,8"
+                    PlaceholderText="Filter"
+                    Text="{Binding TitleFilter, Mode=TwoWay, Delay=333, UpdateSourceTrigger=PropertyChanged}" />
+
+                <ListBox
+                    Grid.Row="2"
+                    Height="284"
+                    DisplayMemberPath="Title"
+                    ItemsSource="{Binding FilteredlistApplicationItem}"
+                    SelectedItem="{Binding SelectedListApplicationItem}" />
+            </Grid>
+        </wpfui:Dialog>
+
+        <ScrollViewer x:Name="PageScrollViewer" Style="{StaticResource UiScrollViewer}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -240,11 +286,17 @@
                         Icon="MatchAppLayout24">
                         <StackPanel Orientation="Horizontal">
                             <wpfui:Button
-                                Margin="0,0,1.2,0"
+                                Margin="6,0,0,0"
                                 Appearance="Secondary"
                                 Command="{Binding AddApplicationGroupCommand}"
                                 Content="Add"
                                 Icon="New24" />
+                            <wpfui:Button
+                                Margin="6,0,0,0"
+                                Appearance="Secondary"
+                                Command="{Binding DeleteApplicationGroupCommand}"
+                                Content="Delete"
+                                Icon="Delete24" />
                             <wpfui:Button
                                 Appearance="Secondary"
                                 Command="{Binding ImportLayoutCommand}"
@@ -254,14 +306,13 @@
                         </StackPanel>
                     </wpfui:CardControl>
 
-                    <!--  ItemContainerStyle="{DynamicResource SnapIt.Styles.ApplicationGroup}"  -->
-
                     <ListView
                         x:Name="ApplicationGroupList"
                         Grid.Row="1"
                         Height="100"
                         ItemsSource="{Binding ApplicationGroups}"
-                        SelectedItem="{Binding SelectedApplicationGroup, Mode=TwoWay}">
+                        SelectedItem="{Binding SelectedApplicationGroup, Mode=TwoWay}"
+                        Visibility="{Binding ApplicationGroups, Converter={StaticResource NullVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}">
                         <ListView.ItemTemplate>
                             <DataTemplate DataType="Brush">
                                 <Border
@@ -329,7 +380,8 @@
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    ItemsSource="{Binding ApplicationAreas}">
+                                    ItemsSource="{Binding ApplicationAreas}"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <wpfui:CardExpander Margin="0,0,0,12" IsExpanded="True">
@@ -378,7 +430,8 @@
                                                     Background="Transparent"
                                                     BorderThickness="0"
                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    ItemsSource="{Binding Applications}">
+                                                    ItemsSource="{Binding Applications}"
+                                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                                     <ListView.ItemTemplate>
                                                         <DataTemplate>
                                                             <Grid Margin="0,0,0,6">
@@ -389,7 +442,16 @@
                                                                     <ColumnDefinition Width="Auto" />
                                                                 </Grid.ColumnDefinitions>
 
-                                                                <TextBlock Text="{Binding Path}" />
+                                                                <StackPanel Orientation="Vertical">
+                                                                    <TextBlock Text="{Binding Title}" />
+                                                                    <TextBlock
+                                                                        FontSize="12"
+                                                                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                                                        TextTrimming="CharacterEllipsis">
+                                                                        <Run Text="{Binding Path}" />
+                                                                        <Run Text="{Binding Arguments}" />
+                                                                    </TextBlock>
+                                                                </StackPanel>
                                                                 <wpfui:Button
                                                                     x:Name="editButton"
                                                                     Grid.Column="1"

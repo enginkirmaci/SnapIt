@@ -19,6 +19,7 @@ namespace SnapIt.Library.Entities
             Guid = selectedApplicationItem.Guid;
             AreaNumber = selectedApplicationItem.AreaNumber;
             Path = selectedApplicationItem.Path;
+            Title = selectedApplicationItem.Title;
             Arguments = selectedApplicationItem.Arguments;
             DelayAfterOpen = selectedApplicationItem.DelayAfterOpen;
         }

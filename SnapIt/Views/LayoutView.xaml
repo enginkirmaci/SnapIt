@@ -1,14 +1,14 @@
 ﻿<Page
     x:Class="SnapIt.Views.LayoutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:prism="http://prismlibrary.com/"
-    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="clr-namespace:SnapIt.Library.Controls;assembly=SnapIt.Library"
-    xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     x:Name="LayoutViewPage"
     Title="LayoutView"
     d:DataContext="{d:DesignInstance design:LayoutDesignView,
@@ -282,21 +282,21 @@
 
                                         <wpfui:Button.ContextMenu>
                                             <ContextMenu>
-                                                <MenuItem
+                                                <wpfui:MenuItem
                                                     Command="{Binding Parent.PlacementTarget.Tag.DesignLayoutCommand, RelativeSource={RelativeSource Self}}"
                                                     CommandParameter="{Binding}"
                                                     Header="Open in Designer" />
                                                 <Separator />
-                                                <MenuItem
+                                                <wpfui:MenuItem
                                                     Command="{Binding Parent.PlacementTarget.Tag.OpenRenameDialogCommand, RelativeSource={RelativeSource Self}}"
                                                     CommandParameter="{Binding}"
                                                     Header="Rename" />
-                                                <MenuItem
+                                                <wpfui:MenuItem
                                                     Command="{Binding Parent.PlacementTarget.Tag.DeleteLayoutCommand, RelativeSource={RelativeSource Self}}"
                                                     CommandParameter="{Binding}"
                                                     Header="Delete" />
                                                 <Separator />
-                                                <MenuItem
+                                                <wpfui:MenuItem
                                                     Command="{Binding Parent.PlacementTarget.Tag.ExportLayoutCommand, RelativeSource={RelativeSource Self}}"
                                                     CommandParameter="{Binding}"
                                                     Header="Export" />
