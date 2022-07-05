@@ -15,6 +15,13 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
+- task: UseDotNet@2
+  displayName: "Install .NET Core SDK"
+  inputs:
+    version: 6.0
+    performMultiLevelLookup: true
+    includePreviewVersions: false # Required for preview versions
+
 # Install Inno Setup with chocolatey
 - task: PowerShell@2
   displayName: 'Inno setup download'
@@ -30,7 +37,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: '../SnapIt'
+    projects: 'SnapIt/*.csproj'
     arguments: '-c Standalone -a x86 -o ./build --self-contained false'
     zipAfterPublish: false
     modifyOutputPath: false
