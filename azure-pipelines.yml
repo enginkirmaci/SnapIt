@@ -31,7 +31,10 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
-    restoreSolution: '$(solution)'
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+    vstsFeed: '6841502d-6ae7-4982-9bb7-35d93dc99ce0'
 
 - task: DotNetCoreCLI@2
   inputs:
