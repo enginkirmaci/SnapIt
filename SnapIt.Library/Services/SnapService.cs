@@ -93,14 +93,47 @@ namespace SnapIt.Library.Services
                 { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> StartStop() }
             };
 
+            Dictionary<string, Dictionary<SnapScreen, List<ApplicationGroup>>> screenApplicationGroupHotKeyMap = new Dictionary<string, Dictionary<SnapScreen, List<ApplicationGroup>>>();
+
             foreach (var snapScreen in settingService.SnapScreens)
             {
                 foreach (var applicationGroup in snapScreen.ApplicationGroups)
                 {
                     if (!string.IsNullOrWhiteSpace(applicationGroup.ActivateHotkey))
                     {
-                        map.Add(Combination.FromString(applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin")), () => StartApplications(snapScreen, applicationGroup));
+                        var applicationGroupHotkey = applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin");
+
+                        if (!screenApplicationGroupHotKeyMap.ContainsKey(applicationGroupHotkey))
+                        {
+                            screenApplicationGroupHotKeyMap.Add(applicationGroupHotkey, new Dictionary<SnapScreen, List<ApplicationGroup>>());
+                        }
+
+                        if (!screenApplicationGroupHotKeyMap[applicationGroupHotkey].ContainsKey(snapScreen))
+                        {
+                            screenApplicationGroupHotKeyMap[applicationGroupHotkey].Add(snapScreen, new List<ApplicationGroup>());
+                        }
+
+                        screenApplicationGroupHotKeyMap[applicationGroupHotkey][snapScreen].Add(applicationGroup);
+
+                        //map.Add(Combination.FromString(applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin")), () => StartApplications(snapScreen, applicationGroup));
                     }
+                }
+            }
+
+            if (screenApplicationGroupHotKeyMap.Count > 0)
+            {
+                foreach (var screenApplicationGroupHotkey in screenApplicationGroupHotKeyMap)
+                {
+                    map.Add(Combination.FromString(screenApplicationGroupHotkey.Key), () =>
+                    {
+                        foreach (var screenApplicationGroup in screenApplicationGroupHotkey.Value)
+                        {
+                            foreach (var applicationGroup in screenApplicationGroup.Value)
+                            {
+                                StartApplications(screenApplicationGroup.Key, applicationGroup);
+                            }
+                        }
+                    });
                 }
             }
 
@@ -160,17 +193,21 @@ namespace SnapIt.Library.Services
 
             var areaRectangles = windowService.GetSnapAreaRectangles(snapScreen);
 
+            //var tasks = new List<Task>();
             foreach (var area in applicationGroup.ApplicationAreas)
             {
                 if (area.Applications != null)
                 {
                     foreach (var application in area.Applications)
                     {
-                        _ = StartApplication(application, areaRectangles[application.AreaNumber]);
-                        //Task.Run(() => StartApplication(application, areaRectangles[application.AreaNumber])).Wait();
+                        //_ = StartApplication(application, areaRectangles[application.AreaNumber]);
+                        Task.Run(() => StartApplication(application, areaRectangles[application.AreaNumber])).Wait();
+                        //tasks.Add(appTask);
                     }
                 }
             }
+
+            //Task.WaitAll(tasks.ToArray());
 
             applicationService.Clear();
         }

@@ -81,13 +81,13 @@ namespace SnapIt.Library.Services
 
                 if (string.IsNullOrEmpty(openedWindow.Title))
                 {
-                    openedWindow = GetOpenedWindow(application, process, tryTitleParts: true);
                     DevMode.Log($"{application.Path} - {openedWindow.Title} tryTitleParts");
+                    openedWindow = GetOpenedWindow(application, process, tryTitleParts: true);
                 }
                 if (string.IsNullOrEmpty(openedWindow.Title))
                 {
-                    openedWindow = GetOpenedWindow(application, process, useFirstOne: true);
                     DevMode.Log($"{application.Path} - {openedWindow.Title} useFirstOne");
+                    openedWindow = GetOpenedWindow(application, process, useFirstOne: true);
                 }
 
                 return openedWindow;
@@ -115,6 +115,7 @@ namespace SnapIt.Library.Services
                 if (proc.ProcessExecutablePath() == application.Path)
                 {
                     cachedWindowHandles.Add(handle, proc.MainWindowTitle);
+                    //result.Remove(handle);
 
                     return new ActiveWindow
                     {
@@ -125,6 +126,7 @@ namespace SnapIt.Library.Services
                 else if (proc.MainWindowTitle == application.Title || (!string.IsNullOrEmpty(application.Title) && proc.MainWindowTitle.Contains(application.Title)))
                 {
                     cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
+                    //result.Remove(proc.MainWindowHandle);
 
                     return new ActiveWindow
                     {
@@ -135,6 +137,7 @@ namespace SnapIt.Library.Services
                 else if (result[handle] == application.Title || (!string.IsNullOrEmpty(application.Title) && result[handle].Contains(application.Title)))
                 {
                     cachedWindowHandles.Add(handle, result[handle]);
+                    //result.Remove(handle);
 
                     return new ActiveWindow
                     {
@@ -155,6 +158,7 @@ namespace SnapIt.Library.Services
                             if (count >= 1)
                             {
                                 cachedWindowHandles.Add(proc.MainWindowHandle, proc.MainWindowTitle);
+                                //result.Remove(proc.MainWindowHandle);
 
                                 return new ActiveWindow
                                 {
@@ -163,20 +167,30 @@ namespace SnapIt.Library.Services
                                 };
                             }
                         }
-                        else if (!string.IsNullOrEmpty(result[handle]) && !string.IsNullOrEmpty(application.Title))
+                        if (!string.IsNullOrEmpty(result[handle]) && !string.IsNullOrEmpty(application.Title))
                         {
-                            cachedWindowHandles.Add(handle, result[handle]);
+                            string[] vs = result[handle].Split(new char[] { ' ', '-', '/', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] vs1 = application.Title.Split(new char[] { ' ', '-', '/', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
 
-                            return new ActiveWindow
+                            var count = vs.Intersect(vs1, StringComparer.OrdinalIgnoreCase).Count();
+                            if (count >= 1)
                             {
-                                Handle = handle,
-                                Title = result[handle]
-                            };
+                                cachedWindowHandles.Add(handle, result[handle]);
+                                //result.Remove(handle);
+
+                                return new ActiveWindow
+                                {
+                                    Handle = handle,
+                                    Title = result[handle]
+                                };
+                            }
                         }
                     }
+
                     if (useFirstOne)
                     {
                         cachedWindowHandles.Add(handle, result[handle]);
+                        //result.Remove(handle);
 
                         return new ActiveWindow
                         {
