@@ -18,7 +18,7 @@ steps:
 - task: UseDotNet@2
   displayName: "Install .NET Core SDK"
   inputs:
-    version: 6.x
+    version: 6.0.x
     performMultiLevelLookup: true
     includePreviewVersions: false # Required for preview versions
 
@@ -29,12 +29,13 @@ steps:
     targetType: 'inline'
     script: 'choco install innosetup'
 
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: '6.2.x'
+
 - task: NuGetCommand@2
   inputs:
-    command: 'restore'
-    restoreSolution: '**/*.sln'
-    feedsToUse: 'select'
-    vstsFeed: '6841502d-6ae7-4982-9bb7-35d93dc99ce0'
+    restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
   inputs:
