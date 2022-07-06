@@ -10,10 +10,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Library", "SnapIt.Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Test", "SnapIt.Test\SnapIt.Test.csproj", "{B44433D1-1AB9-4BCE-ADC3-2DADE403EF4D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "thirdparty", "thirdparty", "{0FC1EF48-4390-46B1-AECE-FF5E573EE66C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wpf.Ui", "..\ThirdParty\wpfui\src\Wpf.Ui\Wpf.Ui.csproj", "{1ADC87D1-8963-4100-845A-18477824718E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -168,42 +164,9 @@ Global
 		{B44433D1-1AB9-4BCE-ADC3-2DADE403EF4D}.Standalone|x64.Build.0 = Standalone|Any CPU
 		{B44433D1-1AB9-4BCE-ADC3-2DADE403EF4D}.Standalone|x86.ActiveCfg = Standalone|x86
 		{B44433D1-1AB9-4BCE-ADC3-2DADE403EF4D}.Standalone|x86.Build.0 = Standalone|x86
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|ARM.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|x64.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Debug|x86.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|ARM.ActiveCfg = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|ARM.Build.0 = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|ARM64.Build.0 = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|x64.ActiveCfg = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|x64.Build.0 = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|x86.ActiveCfg = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Release|x86.Build.0 = Release|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|Any CPU.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|Any CPU.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|ARM.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|ARM.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|ARM64.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|ARM64.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|x64.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|x64.Build.0 = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|x86.ActiveCfg = Debug|Any CPU
-		{1ADC87D1-8963-4100-845A-18477824718E}.Standalone|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{1ADC87D1-8963-4100-845A-18477824718E} = {0FC1EF48-4390-46B1-AECE-FF5E573EE66C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2CD2A70-F1BB-4025-9B69-FF36BB086691}
