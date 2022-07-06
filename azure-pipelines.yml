@@ -1,3 +1,9 @@
+parameters:
+  - name: version
+    displayName: Version
+    type: string
+    default: '4.2.0.1'
+
 pool:
   vmImage: 'windows-latest'
 
@@ -6,7 +12,6 @@ variables:
   buildPlatform: 'x86|x64|ARM'
   buildConfiguration: 'Release'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
-  version: 4.2.0.1
 
 steps:
 - task: NuGetToolInstaller@1
@@ -47,7 +52,7 @@ steps:
   displayName: 'Execute Inno Setup script'
   inputs:
     targetType: 'inline'
-    script: 'iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=$(version)'
+    script: 'iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=${{ parameters.version }}'
 
 # Copy setup into ArtifactStaging folder
 - task: CopyFiles@2
