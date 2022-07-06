@@ -70,10 +70,11 @@ steps:
     serverUrl: 'ftp://213.238.168.71'
     username: 'engin'
     password: 'I3engkir!'
-    rootDirectory: '/dl.getsnapit.com'
+    rootDirectory: '$(Build.ArtifactStagingDirectory)'
     filePatterns: '**'
-    remoteDirectory: '/'
+    remoteDirectory: '/dl.getsnapit.com'
     clean: false
     cleanContents: false
     preservePaths: false
     trustSSL: false
+
