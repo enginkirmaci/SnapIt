@@ -52,7 +52,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ThirdParty\wpfui\src\Wpf.Ui\Wpf.Ui.csproj" />
+    <Reference Include="Wpf.Ui">
+      <HintPath>..\thirdparty\Wpf.Ui.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
