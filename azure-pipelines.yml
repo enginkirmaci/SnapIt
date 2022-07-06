@@ -65,5 +65,19 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
+    ArtifactName: 'SnapIt Pro'
     publishLocation: 'Container'
+
+- task: FtpUpload@2
+  inputs:
+    credentialsOption: 'inputs'
+    serverUrl: '213.238.168.71'
+    username: 'engin'
+    password: 'I3engkir!'
+    rootDirectory: '/dl.getsnapit.com'
+    filePatterns: '**'
+    remoteDirectory: '/upload/$(Build.BuildId)/'
+    clean: false
+    cleanContents: false
+    preservePaths: false
+    trustSSL: false
