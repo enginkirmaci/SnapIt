@@ -33,7 +33,8 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    platform: 'x86'
+    platform: 'Neutral'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
     msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+
