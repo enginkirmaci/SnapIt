@@ -42,7 +42,7 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'SnapIt/*.csproj'
-    arguments: '-c Standalone -a x86 -o ./build --self-contained false'
+    arguments: '-c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false'
     zipAfterPublish: false
     modifyOutputPath: false
 
