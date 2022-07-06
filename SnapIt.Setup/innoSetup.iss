@@ -10,7 +10,6 @@
 #define MyAppURL "https://getsnapit.com"
 #define MyAppExeName "SnapIt.exe"
 
-
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
@@ -26,7 +25,7 @@ DefaultDirName={commonpf32}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 ;PrivilegesRequired=lowest
-OutputDir=E:\repos\SnapIt\SnapIt.Setup\setup
+OutputDir=setup
 OutputBaseFilename=setup_SnapItPro_{#SetupSetting("AppVersion")}
 Compression=lzma
 SolidCompression=yes
@@ -40,8 +39,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 
 [Files]
-Source: "E:\repos\SnapIt\SnapIt.Setup\build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\repos\SnapIt\SnapIt.Setup\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "netcorecheck.exe"; Flags: dontcopy noencryption
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
