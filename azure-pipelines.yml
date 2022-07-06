@@ -6,6 +6,7 @@ variables:
   buildPlatform: 'x86|x64|ARM'
   buildConfiguration: 'Release'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+  version: 4.2.0.1
 
 steps:
 - task: NuGetToolInstaller@1
