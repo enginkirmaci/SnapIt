@@ -1,9 +1,8 @@
-﻿using Prism.Commands;
+﻿using System;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using SnapIt.Library.Entities;
-using System;
-using System.Diagnostics;
 
 namespace SnapIt.ViewModels
 {
@@ -30,16 +29,6 @@ namespace SnapIt.ViewModels
                 {
                     System.Windows.Forms.MessageBox.Show("Rate and review only works for Windows 10 or later versions");
                 }
-            });
-
-            HandleLinkClick = new DelegateCommand<string>((url) =>
-            {
-                string uriToLaunch = $"http://{url}";
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = uriToLaunch,
-                    UseShellExecute = true
-                });
             });
 
             WhatsNewClick = new DelegateCommand(() =>

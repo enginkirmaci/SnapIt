@@ -1,0 +1,95 @@
+﻿<wpfui:UiPage
+    x:Class="SnapIt.Views.TutorialsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="TutorialsView"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Scrollable="True"
+    mc:Ignorable="d">
+
+    <Grid Margin="18,69,18,18">
+        <ScrollViewer>
+            <StackPanel>
+                <!--<wpfui:CardControl
+                    Margin="0,0,0,12"
+                    Header="Getting Started"
+                    Icon="Lightbulb24" />-->
+
+                <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                    <wpfui:SymbolIcon
+                        Margin="0,0,6,0"
+                        FontSize="16"
+                        Symbol="Lightbulb24" />
+                    <TextBlock FontSize="16" Text="Getting Started" />
+                </StackPanel>
+
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <wpfui:Anchor
+                        Grid.Column="0"
+                        Margin="0,0,12,0"
+                        HorizontalAlignment="Stretch"
+                        Icon="Empty">
+                        <StackPanel Margin="24">
+                            <wpfui:SymbolIcon FontSize="36" Symbol="VideoClip24" />
+                            <TextBlock Text="Introduction" />
+                        </StackPanel>
+                    </wpfui:Anchor>
+
+                    <wpfui:Anchor
+                        Grid.Column="1"
+                        Margin="6,0"
+                        HorizontalAlignment="Stretch"
+                        Icon="Empty">
+                        <StackPanel Margin="24">
+                            <wpfui:SymbolIcon FontSize="36" Symbol="VideoClip24" />
+                            <TextBlock Text="How to get started?" />
+                        </StackPanel>
+                    </wpfui:Anchor>
+
+                    <wpfui:Anchor
+                        Grid.Column="2"
+                        Margin="12,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        Icon="Empty">
+                        <StackPanel Margin="24">
+                            <wpfui:SymbolIcon FontSize="36" Symbol="VideoClip24" />
+                            <TextBlock Text="Quick Tips" />
+                        </StackPanel>
+                    </wpfui:Anchor>
+                </Grid>
+
+                <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                    <wpfui:SymbolIcon
+                        Margin="0,0,6,0"
+                        FontSize="16"
+                        Symbol="Bookmark24" />
+                    <TextBlock FontSize="16" Text="Other Topics" />
+                </StackPanel>
+                <!--<wpfui:CardControl
+                    Margin="0,0,0,12"
+                    Header="All Topics"
+                    Icon="Bookmark24" />-->
+
+                <wpfui:Hyperlink
+                    Margin="0,0,0,4"
+                    Content="Select, Create and Edit Layouts"
+                    Icon="VideoClip24" />
+
+                <wpfui:Hyperlink
+                    Margin="0,0,0,4"
+                    Content="How to use and configure Apps"
+                    Icon="VideoClip24" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</wpfui:UiPage>

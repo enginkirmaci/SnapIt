@@ -1,4 +1,4 @@
-﻿<Page
+﻿<wpfui:UiPage
     x:Class="SnapIt.Views.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:prism="http://prismlibrary.com/"
@@ -13,7 +13,6 @@
                                      IsDesignTimeCreatable=True}"
     d:DesignWidth="500"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Style="{StaticResource UiPageScrollable}"
     mc:Ignorable="d">
 
     <i:Interaction.Triggers>
@@ -22,47 +21,59 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
-        <StackPanel>
-            <wpfui:CardControl
-                Margin="0,0,0,8"
-                Header="Start SnapIt when I start Windows"
-                Icon="Empty">
-                <wpfui:ToggleSwitch IsChecked="{Binding IsStartupTaskActive}" />
-            </wpfui:CardControl>
+    <Grid Margin="18,69,18,18">
+        <wpfui:Hyperlink
+            Margin="0,-49,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Content="Watch tutorial"
+            Icon="VideoClip24"
+            NavigateUri="nuget.org/packages/WPF-UI/"
+            Visibility="Collapsed" />
 
-            <wpfui:CardControl
-                Margin="0,0,0,8"
-                Header="Start SnapIt minimized to tray"
-                Icon="Empty">
-                <wpfui:ToggleSwitch IsChecked="{Binding IsMinimizeTray}" />
-            </wpfui:CardControl>
+        <ScrollViewer>
+            <StackPanel>
 
-            <wpfui:CardControl
-                Margin="0,0,0,8"
-                Header="Run as administrator (needs to be restarted)"
-                Icon="Empty"
-                Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
-                <wpfui:ToggleSwitch IsChecked="{Binding IsRunAsAdmin}" />
-            </wpfui:CardControl>
+                <wpfui:CardControl
+                    Margin="0,0,0,8"
+                    Header="Start SnapIt when I start Windows"
+                    Icon="Empty">
+                    <wpfui:ToggleSwitch IsChecked="{Binding IsStartupTaskActive}" />
+                </wpfui:CardControl>
 
-            <wpfui:CardControl
-                Margin="0,0,0,8"
-                Header="Check for new version"
-                Icon="Empty"
-                Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
-                <wpfui:ToggleSwitch IsChecked="{Binding CheckForNewVersion}" />
-            </wpfui:CardControl>
+                <wpfui:CardControl
+                    Margin="0,0,0,8"
+                    Header="Start SnapIt minimized to tray"
+                    Icon="Empty">
+                    <wpfui:ToggleSwitch IsChecked="{Binding IsMinimizeTray}" />
+                </wpfui:CardControl>
 
-            <wpfui:CardControl
-                Margin="0,0,0,8"
-                Header="App Theme"
-                Icon="Empty">
-                <ComboBox
-                    Width="96"
-                    ItemsSource="{Binding ThemeList}"
-                    SelectedItem="{Binding SelectedTheme, Mode=TwoWay}" />
-            </wpfui:CardControl>
-        </StackPanel>
+                <wpfui:CardControl
+                    Margin="0,0,0,8"
+                    Header="Run as administrator (needs to be restarted)"
+                    Icon="Empty"
+                    Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
+                    <wpfui:ToggleSwitch IsChecked="{Binding IsRunAsAdmin}" />
+                </wpfui:CardControl>
+
+                <wpfui:CardControl
+                    Margin="0,0,0,8"
+                    Header="Check for new version"
+                    Icon="Empty"
+                    Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
+                    <wpfui:ToggleSwitch IsChecked="{Binding CheckForNewVersion}" />
+                </wpfui:CardControl>
+
+                <wpfui:CardControl
+                    Margin="0,0,0,8"
+                    Header="App Theme"
+                    Icon="Empty">
+                    <ComboBox
+                        Width="96"
+                        ItemsSource="{Binding ThemeList}"
+                        SelectedItem="{Binding SelectedTheme, Mode=TwoWay}" />
+                </wpfui:CardControl>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
-</Page>
+</wpfui:UiPage>

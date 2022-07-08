@@ -1,11 +1,11 @@
-﻿using System.Windows.Controls;
+﻿using Wpf.Ui.Controls;
 
 namespace SnapIt.Views
 {
     /// <summary>
     /// Interaction logic for MouseSettingsView.xaml
     /// </summary>
-    public partial class MouseSettingsView : Page
+    public partial class MouseSettingsView : UiPage
     {
         public MouseSettingsView()
         {

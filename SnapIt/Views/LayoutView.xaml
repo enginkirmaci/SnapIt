@@ -16,14 +16,78 @@
     d:DesignHeight="1000"
     d:DesignWidth="650"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Style="{StaticResource UiPage}"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=LayoutViewPage}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid>
+    <Grid Margin="18,69,18,18">
+        <Grid
+            x:Name="ContentGrid"
+            Width="141.67"
+            Margin="0,-49,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top">
+            <Grid.Triggers>
+                <EventTrigger RoutedEvent="Grid.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                BeginTime="0:0:3"
+                                Storyboard.TargetName="ContentGrid"
+                                Storyboard.TargetProperty="Width"
+                                From="{Binding ElementName=TutorialHyperLink, Path=ActualWidth}"
+                                To="44"
+                                Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Grid.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="ContentGrid"
+                                Storyboard.TargetProperty="Width"
+                                To="{Binding ElementName=TutorialHyperLink, Path=Width}"
+                                Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Grid.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="ContentGrid"
+                                Storyboard.TargetProperty="Width"
+                                To="44"
+                                Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Grid.Triggers>
+
+            <wpfui:Hyperlink
+                x:Name="TutorialHyperLink"
+                Padding="11,5,4,6"
+                Content="Watch tutorial  "
+                Icon="VideoClip24"
+                NavigateUri="http://nuget.org/packages/WPF-UI/"
+                Style="{StaticResource TutorialHyperlinkStyle}" />
+        </Grid>
+
         <wpfui:Dialog
             Panel.ZIndex="9"
             ButtonLeftName="Save"
