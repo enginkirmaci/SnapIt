@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
+using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 
@@ -26,6 +28,7 @@ namespace SnapIt.ViewModels
         private Window popupWindow;
         private bool isRunning;
         private string status;
+        private bool isSelectedScreenChanged;
 
         public ObservableCollectionWithItemNotify<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
 
@@ -35,6 +38,7 @@ namespace SnapIt.ViewModels
             set
             {
                 SetProperty(ref selectedSnapScreen, value);
+                isSelectedScreenChanged = true;
                 SelectedLayout = selectedSnapScreen?.Layout;
             }
         }
@@ -48,12 +52,14 @@ namespace SnapIt.ViewModels
             {
                 SetProperty(ref selectedLayout, value);
 
-                if (value != null)
+                if (!isSelectedScreenChanged && value != null)
                 {
                     SelectedSnapScreen.Layout = selectedLayout;
                     settingService.LinkScreenLayout(SelectedSnapScreen, SelectedLayout);
                     ApplyChanges();
                 }
+
+                isSelectedScreenChanged = false;
             }
         }
 
@@ -76,6 +82,31 @@ namespace SnapIt.ViewModels
         public DelegateCommand StartStopCommand { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
 
+        private async Task TestLoadingWindow()
+        {
+            DevMode.Log("started");
+            var loadingWindow = new SnapLoadingWindow(winApiService, SelectedSnapScreen);
+            loadingWindow.Show();
+
+            DevMode.Log("test 1");
+            loadingWindow.SetLoadingMessage("Test 1");
+            await Task.Delay(1000);
+
+            DevMode.Log("test 2");
+            loadingWindow.LoadingMessage = "Test 22";
+            await Task.Delay(1000);
+
+            DevMode.Log("test 3");
+            loadingWindow.LoadingMessage = "Test 333";
+            await Task.Delay(1000);
+
+            DevMode.Log("test 4");
+            loadingWindow.LoadingMessage = "Test 4444";
+            await Task.Delay(1000);
+
+            loadingWindow.Hide();
+        }
+
         public PopupWindowViewModel(
             ISnapService snapService,
             ISettingService settingService,
@@ -93,6 +124,8 @@ namespace SnapIt.ViewModels
 
             LoadedCommand = new DelegateCommand<Window>((window) =>
             {
+                TestLoadingWindow();
+
                 popupWindow = window;
 
                 popupWindow.Deactivated += PopupWindow_Deactivated;
@@ -157,11 +190,7 @@ namespace SnapIt.ViewModels
                 }
 
                 ((MainWindowViewModel)mainWindow.DataContext).NavigateView(navigatePath);
-
-                //NavigateView(navigatePath);
             });
-
-            //TODO here
         }
 
         private void PopupWindow_Deactivated(object? sender, System.EventArgs e)
