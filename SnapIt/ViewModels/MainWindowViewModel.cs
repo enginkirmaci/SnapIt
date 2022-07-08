@@ -61,8 +61,10 @@ namespace SnapIt.ViewModels
         public DelegateCommand<CancelEventArgs> ClosingWindowCommand { get; private set; }
         public DelegateCommand NotifyIconClickViewCommand { get; private set; }
         public DelegateCommand<string> NotifyIconDoubleClickViewCommand { get; private set; }
-        public DelegateCommand<object> NotifyIconOpenedCommand { get; private set; }
+
+        //public DelegateCommand<object> NotifyIconOpenedCommand { get; private set; }
         public DelegateCommand<string> HandleLinkClick { get; private set; }
+
         public DelegateCommand RateReviewStoreClick { get; private set; }
         public DelegateCommand ExitApplicationCommand { get; private set; }
         public DelegateCommand StartStopCommand { get; private set; }
@@ -277,65 +279,65 @@ namespace SnapIt.ViewModels
                 NavigateView(navigatePath);
             });
 
-            NotifyIconOpenedCommand = new DelegateCommand<object>((obj) =>
-            {
-                var rootTitleBar = mainWindow.FindChild<TitleBar>("RootTitleBar");
+            //NotifyIconOpenedCommand = new DelegateCommand<object>((obj) =>
+            //{
+            //    var rootTitleBar = mainWindow.FindChild<TitleBar>("RootTitleBar");
 
-                var layoutsMenu = rootTitleBar.Tray.Menu.FindChild<MenuItem>("LayoutMenuItem");
+            //    var layoutsMenu = rootTitleBar.Tray.Menu.FindChild<MenuItem>("LayoutMenuItem");
 
-                if (layoutsMenu == null)
-                {
-                    return;
-                }
+            //    if (layoutsMenu == null)
+            //    {
+            //        return;
+            //    }
 
-                layoutsMenu.Items.Clear();
+            //    layoutsMenu.Items.Clear();
 
-                var snapScreens = settingService.SnapScreens;
-                var layouts = settingService.Layouts;
+            //    var snapScreens = settingService.SnapScreens;
+            //    var layouts = settingService.Layouts;
 
-                foreach (var screen in snapScreens)
-                {
-                    var screenMenu = new MenuItem()
-                    {
-                        Header = $"Display {screen.DeviceNumber} ({screen.Resolution}) - {screen.Primary}"
-                    };
+            //    foreach (var screen in snapScreens)
+            //    {
+            //        var screenMenu = new MenuItem()
+            //        {
+            //            Header = $"Display {screen.DeviceNumber} ({screen.Resolution}) - {screen.Primary}"
+            //        };
 
-                    if (snapScreens.Count > 1)
-                    {
-                        layoutsMenu.Items.Add(screenMenu);
-                    }
+            //        if (snapScreens.Count > 1)
+            //        {
+            //            layoutsMenu.Items.Add(screenMenu);
+            //        }
 
-                    foreach (var layout in layouts)
-                    {
-                        var layoutMenuItem = new MenuItem()
-                        {
-                            Header = layout.Name,
-                            Tag = screen.DeviceName,
-                            Uid = layout.Guid.ToString(),
-                            SymbolIcon = Wpf.Ui.Common.SymbolRegular.Empty
-                        };
-                        layoutMenuItem.Click += LayoutItem_Click;
+            //        foreach (var layout in layouts)
+            //        {
+            //            var layoutMenuItem = new MenuItem()
+            //            {
+            //                Header = layout.Name,
+            //                Tag = screen.DeviceName,
+            //                Uid = layout.Guid.ToString(),
+            //                SymbolIcon = Wpf.Ui.Common.SymbolRegular.Empty
+            //            };
+            //            layoutMenuItem.Click += LayoutItem_Click;
 
-                        if (screen.Layout == layout)
-                        {
-                            layoutMenuItem.SymbolIcon = Wpf.Ui.Common.SymbolRegular.Checkmark24;
-                        }
-                        else
-                        {
-                            layoutMenuItem.Header = "     " + layout.Name;
-                        }
+            //            if (screen.Layout == layout)
+            //            {
+            //                layoutMenuItem.SymbolIcon = Wpf.Ui.Common.SymbolRegular.Checkmark24;
+            //            }
+            //            else
+            //            {
+            //                layoutMenuItem.Header = "     " + layout.Name;
+            //            }
 
-                        if (snapScreens.Count > 1)
-                        {
-                            screenMenu.Items.Add(layoutMenuItem);
-                        }
-                        else
-                        {
-                            layoutsMenu.Items.Add(layoutMenuItem);
-                        }
-                    }
-                }
-            });
+            //            if (snapScreens.Count > 1)
+            //            {
+            //                screenMenu.Items.Add(layoutMenuItem);
+            //            }
+            //            else
+            //            {
+            //                layoutsMenu.Items.Add(layoutMenuItem);
+            //            }
+            //        }
+            //    }
+            //});
 
             RateReviewStoreClick = new DelegateCommand(async () =>
             {
@@ -388,9 +390,9 @@ namespace SnapIt.ViewModels
             {
                 foreach (var item in rootNavigation.Items)
                 {
-                    if (((NavigationItem)item).PageTag != null && ((NavigationItem)item).PageTag.Equals(navigatePath))
+                    if (item is NavigationItem navigationItem && navigationItem.PageTag != null && navigationItem.PageTag.Equals(navigatePath))
                     {
-                        rootNavigation.Navigate(((NavigationItem)item).PageTag);
+                        rootNavigation.Navigate(navigationItem.PageTag);
 
                         break;
                     }

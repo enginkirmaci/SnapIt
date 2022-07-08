@@ -14,10 +14,18 @@
                                      IsDesignTimeCreatable=True}"
     d:DesignWidth="500"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Style="{StaticResource UiPage}"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Margin="18,69,18,18">
+        <wpfui:Hyperlink
+            Margin="0,-49,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Content="Watch tutorial"
+            Icon="VideoClip24"
+            NavigateUri="nuget.org/packages/WPF-UI/"
+            Visibility="Collapsed" />
+
         <wpfui:Dialog
             Panel.ZIndex="9"
             ButtonLeftName="Save"

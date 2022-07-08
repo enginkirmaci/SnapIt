@@ -59,15 +59,7 @@ namespace SnapIt.ViewModels
                 }
                 else
                 {
-                    //if (FilteredlistApplicationItem == null)
-                    //{
                     FilteredlistApplicationItem = new ObservableCollection<ApplicationItem>(ListApplicationItem.Where(i => i.Title.Contains(titleFilter, System.StringComparison.OrdinalIgnoreCase)));
-                    //}
-                    //else
-                    //{
-                    //    FilteredlistApplicationItem.Clear();
-                    //    FilteredlistApplicationItem.AddRange(ListApplicationItem.Where(i => i.Title.Contains(titleFilter)));
-                    //}
                 }
             }
         }
