@@ -42,8 +42,8 @@ namespace SnapIt.Library.Controls
 
                 if (snapScreens.Count() > 0 && ActualWidth != 0)
                 {
-                    var maxScreenSizeX = snapScreens.Max(screen => screen.Bounds.BottomRight.X);
-                    var maxScreenSizeY = snapScreens.Max(screen => screen.Bounds.BottomRight.Y);
+                    var maxScreenSizeX = snapScreens.Max(screen => screen.WorkingArea.BottomRight.X);
+                    var maxScreenSizeY = snapScreens.Max(screen => screen.WorkingArea.BottomRight.Y);
 
                     double factorX, factorY = 0.0;
                     factorX = ActualWidth / maxScreenSizeX;
@@ -71,13 +71,13 @@ namespace SnapIt.Library.Controls
 
                         var newPoint = new Point
                         {
-                            X = snapScreen.Bounds.X * factorX,
-                            Y = snapScreen.Bounds.Y * factorY
+                            X = snapScreen.WorkingArea.X * factorX,
+                            Y = snapScreen.WorkingArea.Y * factorY
                         };
                         var newSize = new Size
                         {
-                            Width = snapScreen.Bounds.Width * factorX,
-                            Height = snapScreen.Bounds.Height * factorY
+                            Width = snapScreen.WorkingArea.Width * factorX,
+                            Height = snapScreen.WorkingArea.Height * factorY
                         };
 
                         SetPos(border, newPoint, newSize);
