@@ -31,7 +31,7 @@
                                         <MenuItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <wpfui:SymbolIcon Margin="0,0,6,0" Symbol="SplitHorizontal28" />
-                                                <ContentPresenter Content="Split Horizantally" />
+                                                <ContentPresenter Content="Split Horizontally" />
                                             </StackPanel>
                                         </MenuItem.Header>
                                     </wpfui:MenuItem>
@@ -55,7 +55,8 @@
                                     Background="#DD444444"
                                     Command="{Binding Path=SplitVerticallyCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                     Icon="Empty"
-                                    IsTabStop="False">
+                                    IsTabStop="False"
+                                    ToolTip="Split Vertically">
                                     <wpfui:SymbolIcon Symbol="SplitVertical28" />
                                 </wpfui:Button>
 
@@ -68,7 +69,8 @@
                                     Background="#DD444444"
                                     Command="{Binding Path=SplitHorizantallyCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                     Icon="Empty"
-                                    IsTabStop="False">
+                                    IsTabStop="False"
+                                    ToolTip="Split Horizontally">
                                     <wpfui:SymbolIcon Symbol="SplitHorizontal28" />
                                 </wpfui:Button>
                             </StackPanel>

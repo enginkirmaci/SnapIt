@@ -16,7 +16,6 @@
                                      IsDesignTimeCreatable=True}"
     d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Style="{StaticResource UiPage}"
     mc:Ignorable="d">
 
     <i:Interaction.Triggers>
@@ -25,7 +24,16 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
+    <Grid Margin="18,69,18,18">
+        <wpfui:Hyperlink
+            Margin="0,-49,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Content="Watch tutorial"
+            Icon="VideoClip24"
+            NavigateUri="nuget.org/packages/WPF-UI/"
+            Visibility="Collapsed" />
+
         <wpfui:Snackbar
             Grid.Row="0"
             Grid.RowSpan="2"
@@ -59,7 +67,6 @@
 
         <ScrollViewer Style="{StaticResource UiScrollViewer}">
             <StackPanel Margin="0,0,0,100">
-
                 <StackPanel>
                     <wpfui:CardControl
                         Margin="0,0,0,8"
@@ -87,76 +94,80 @@
                     </Border>
                 </StackPanel>
 
-                <TextBlock
-                    Margin="0,16,0,6"
-                    FontWeight="Medium"
-                    Text="Snap Area" />
-
-                <wpfui:CardControl
+                <wpfui:CardExpander
                     Margin="0,0,0,8"
-                    Header="Overlay color"
-                    Icon="Empty">
-                    <color:ColorPicker
-                        Width="256"
-                        ColorMode="ColorCanvas"
-                        SelectedColor="{Binding Theme.OverlayColor}"
-                        ShowAvailableColors="False"
-                        ShowDropDownButton="False"
-                        ShowRecentColors="False" />
-                </wpfui:CardControl>
+                    Header="Area Theme"
+                    Icon="Color24"
+                    IsExpanded="True">
 
-                <wpfui:CardControl
-                    Margin="0,0,0,8"
-                    Header="Highlight color"
-                    Icon="Empty">
-                    <color:ColorPicker
-                        Width="256"
-                        ColorMode="ColorCanvas"
-                        SelectedColor="{Binding Theme.HighlightColor}"
-                        ShowAvailableColors="False"
-                        ShowDropDownButton="False"
-                        ShowRecentColors="False" />
-                </wpfui:CardControl>
+                    <StackPanel>
+                        <wpfui:CardControl
+                            Margin="0,0,0,8"
+                            Header="Overlay color"
+                            Icon="Empty">
+                            <color:ColorPicker
+                                Width="256"
+                                ColorMode="ColorCanvas"
+                                SelectedColor="{Binding Theme.OverlayColor}"
+                                ShowAvailableColors="False"
+                                ShowDropDownButton="False"
+                                ShowRecentColors="False" />
+                        </wpfui:CardControl>
 
-                <wpfui:CardControl
-                    Margin="0,0,0,8"
-                    Header="Overall Opacity"
-                    Icon="Empty">
-                    <Slider
-                        Width="256"
-                        AutoToolTipPlacement="TopLeft"
-                        LargeChange="5"
-                        Maximum="100"
-                        Minimum="0"
-                        SmallChange="1"
-                        Value="{Binding Theme.Opacity, Converter={StaticResource DoubleMultiplierConverter}}" />
-                </wpfui:CardControl>
+                        <wpfui:CardControl
+                            Margin="0,0,0,8"
+                            Header="Highlight color"
+                            Icon="Empty">
+                            <color:ColorPicker
+                                Width="256"
+                                ColorMode="ColorCanvas"
+                                SelectedColor="{Binding Theme.HighlightColor}"
+                                ShowAvailableColors="False"
+                                ShowDropDownButton="False"
+                                ShowRecentColors="False" />
+                        </wpfui:CardControl>
 
-                <wpfui:CardControl
-                    Margin="0,0,0,8"
-                    Header="Border color"
-                    Icon="Empty">
-                    <color:ColorPicker
-                        Width="256"
-                        ColorMode="ColorCanvas"
-                        SelectedColor="{Binding Theme.BorderColor}"
-                        ShowAvailableColors="False"
-                        ShowDropDownButton="False"
-                        ShowRecentColors="False" />
-                </wpfui:CardControl>
+                        <wpfui:CardControl
+                            Margin="0,0,0,8"
+                            Header="Overall Opacity"
+                            Icon="Empty">
+                            <Slider
+                                Width="256"
+                                AutoToolTipPlacement="TopLeft"
+                                LargeChange="5"
+                                Maximum="100"
+                                Minimum="0"
+                                SmallChange="1"
+                                Value="{Binding Theme.Opacity, Converter={StaticResource DoubleMultiplierConverter}}" />
+                        </wpfui:CardControl>
 
-                <wpfui:CardControl
-                    Margin="0,0,0,8"
-                    Header="Border thickness"
-                    Icon="Empty">
-                    <Slider
-                        Width="256"
-                        AutoToolTipPlacement="TopLeft"
-                        Maximum="25"
-                        Minimum="0"
-                        SmallChange="1"
-                        Value="{Binding Theme.BorderThickness}" />
-                </wpfui:CardControl>
+                        <wpfui:CardControl
+                            Margin="0,0,0,8"
+                            Header="Border color"
+                            Icon="Empty">
+                            <color:ColorPicker
+                                Width="256"
+                                ColorMode="ColorCanvas"
+                                SelectedColor="{Binding Theme.BorderColor}"
+                                ShowAvailableColors="False"
+                                ShowDropDownButton="False"
+                                ShowRecentColors="False" />
+                        </wpfui:CardControl>
+
+                        <wpfui:CardControl
+                            Margin="0,0,0,8"
+                            Header="Border thickness"
+                            Icon="Empty">
+                            <Slider
+                                Width="256"
+                                AutoToolTipPlacement="TopLeft"
+                                Maximum="25"
+                                Minimum="0"
+                                SmallChange="1"
+                                Value="{Binding Theme.BorderThickness}" />
+                        </wpfui:CardControl>
+                    </StackPanel>
+                </wpfui:CardExpander>
             </StackPanel>
         </ScrollViewer>
     </Grid>

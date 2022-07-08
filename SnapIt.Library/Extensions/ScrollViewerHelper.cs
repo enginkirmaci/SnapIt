@@ -26,11 +26,26 @@ namespace SnapIt.Library.Extensions
             scrollViewer.PreviewMouseWheel += (s2, e2) =>
             {
                 var parent = scrollViewer.Parent as UIElement;
-                bool hitTopOrBottom = HitTopOrBottom(e2.Delta, scrollViewer);
-                if (parent is null || !hitTopOrBottom) return;
 
-                var argsCopy = Copy(e2);
-                parent.RaiseEvent(argsCopy);
+                if (scrollViewer.ComputedHorizontalScrollBarVisibility != Visibility.Visible)
+                {
+                    bool hitTopOrBottom = HitTopOrBottom(e2.Delta, scrollViewer);
+                    if (parent is null || !hitTopOrBottom) return;
+
+                    var argsCopy = Copy(e2);
+                    parent.RaiseEvent(argsCopy);
+                }
+                else
+                {
+                    if (e2.Delta < 0)
+                    {
+                        scrollViewer.LineRight();
+                    }
+                    else
+                    {
+                        scrollViewer.LineLeft();
+                    }
+                }
             };
         }
 
