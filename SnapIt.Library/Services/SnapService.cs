@@ -114,8 +114,6 @@ namespace SnapIt.Library.Services
                         }
 
                         screenApplicationGroupHotKeyMap[applicationGroupHotkey][snapScreen].Add(applicationGroup);
-
-                        //map.Add(Combination.FromString(applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin")), () => StartApplications(snapScreen, applicationGroup));
                     }
                 }
             }
@@ -182,9 +180,7 @@ namespace SnapIt.Library.Services
 
         public void StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
         {
-            activeWindow = winApiService.GetActiveWindow();
-
-            if (activeWindow != ActiveWindow.Empty && settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
+            if (DisableIfFullScreen())
             {
                 return;
             }
@@ -193,23 +189,30 @@ namespace SnapIt.Library.Services
 
             var areaRectangles = windowService.GetSnapAreaRectangles(snapScreen);
 
-            //var tasks = new List<Task>();
             foreach (var area in applicationGroup.ApplicationAreas)
             {
                 if (area.Applications != null)
                 {
                     foreach (var application in area.Applications)
                     {
-                        //_ = StartApplication(application, areaRectangles[application.AreaNumber]);
                         Task.Run(() => StartApplication(application, areaRectangles[application.AreaNumber])).Wait();
-                        //tasks.Add(appTask);
                     }
                 }
             }
 
-            //Task.WaitAll(tasks.ToArray());
-
             applicationService.Clear();
+        }
+
+        private bool DisableIfFullScreen()
+        {
+            activeWindow = winApiService.GetActiveWindow();
+
+            if (activeWindow != ActiveWindow.Empty && (!string.IsNullOrWhiteSpace(activeWindow.Title) && !activeWindow.Title.Equals("Program Manager")) && settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private async Task StartApplication(ApplicationItem application, Rectangle rectangle)
@@ -218,20 +221,17 @@ namespace SnapIt.Library.Services
 
             if (openedWindow != null)
             {
-                if (PInvoke.User32.GetWindowRect(openedWindow.Handle, out PInvoke.RECT rct))
-                {
-                    openedWindow.Boundry = new Rectangle(rct.left, rct.top, rct.right, rct.bottom);
-                }
-
-                if (openedWindow.Handle == IntPtr.Zero || openedWindow.Boundry.Equals(Rectangle.Empty))
-                    openedWindow = ActiveWindow.Empty;
-
                 MoveWindow(openedWindow, rectangle, false);
             }
         }
 
         private void StartStop()
         {
+            if (DisableIfFullScreen())
+            {
+                return;
+            }
+
             if (IsRunning)
             {
                 Release();
@@ -290,6 +290,11 @@ namespace SnapIt.Library.Services
 
         private void CycleLayouts()
         {
+            if (DisableIfFullScreen())
+            {
+                return;
+            }
+
             var snapScreen = settingService.LatestActiveScreen;
             var layoutIndex = settingService.Layouts.IndexOf(snapScreen.Layout);
             var nextLayout = settingService.Layouts.ElementAt((layoutIndex + 1) % settingService.Layouts.Count);

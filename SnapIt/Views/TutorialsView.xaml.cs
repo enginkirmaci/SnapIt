@@ -3,11 +3,11 @@
 namespace SnapIt.Views
 {
     /// <summary>
-    /// Interaction logic for WhatsNewView.xaml
+    /// Interaction logic for TutorialsView.xaml
     /// </summary>
-    public partial class WhatsNewView : UiPage
+    public partial class TutorialsView : UiPage
     {
-        public WhatsNewView()
+        public TutorialsView()
         {
             InitializeComponent();
         }

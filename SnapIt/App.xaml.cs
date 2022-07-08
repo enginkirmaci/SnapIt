@@ -70,35 +70,11 @@ namespace SnapIt
                 }
             }
 
-            //AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
-            //{
-            //    LogUnhandledException((Exception)ex.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
-            //};
-
-            //DispatcherUnhandledException += (s, ex) =>
-            //{
-            //    LogUnhandledException(ex.Exception,
-            //    "Application.Current.DispatcherUnhandledException");
-            //    ex.Handled = true;
-            //};
-
-            //TaskScheduler.UnobservedTaskException += (s, ex) =>
-            //{
-            //    LogUnhandledException(ex.Exception,
-            //    "TaskScheduler.UnobservedTaskException");
-            //    ex.SetObserved();
-            //};
-
             Telemetry.TrackEvent("OnStartup");
             Log.Logger.Information("SnapIt Started");
 
             base.OnStartup(e);
         }
-
-        //private void LogUnhandledException(Exception e, string @event)
-        //{
-        //    Telemetry.TrackException(e);
-        //}
 
         private void RegisterGlobalExceptionHandling(ILogger log)
         {

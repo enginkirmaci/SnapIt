@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 using Prism.Commands;
 using Prism.Mvvm;
+using SnapIt.Library;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 
@@ -18,6 +20,8 @@ namespace SnapIt.ViewModels
         private SnapAreaTheme theme = new SnapAreaTheme();
         private ObservableCollectionWithItemNotify<SnapScreen> snapScreens;
         private SnapScreen selectedSnapScreen;
+        private ObservableCollection<Layout> layouts;
+        private Layout selectedLayout;
         private ApplicationGroup selectedApplicationGroup;
         private Window popupWindow;
         private bool isRunning;
@@ -25,7 +29,33 @@ namespace SnapIt.ViewModels
 
         public ObservableCollectionWithItemNotify<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
 
-        public SnapScreen SelectedSnapScreen { get => selectedSnapScreen; set => SetProperty(ref selectedSnapScreen, value); }
+        public SnapScreen SelectedSnapScreen
+        {
+            get => selectedSnapScreen;
+            set
+            {
+                SetProperty(ref selectedSnapScreen, value);
+                SelectedLayout = selectedSnapScreen?.Layout;
+            }
+        }
+
+        public ObservableCollection<Layout> Layouts { get => layouts; set => SetProperty(ref layouts, value); }
+
+        public Layout SelectedLayout
+        {
+            get => selectedLayout;
+            set
+            {
+                SetProperty(ref selectedLayout, value);
+
+                if (value != null)
+                {
+                    SelectedSnapScreen.Layout = selectedLayout;
+                    settingService.LinkScreenLayout(SelectedSnapScreen, SelectedLayout);
+                    ApplyChanges();
+                }
+            }
+        }
 
         public ApplicationGroup SelectedApplicationGroup
         {
@@ -57,6 +87,7 @@ namespace SnapIt.ViewModels
 
             snapService.StatusChanged += SnapService_StatusChanged;
 
+            Layouts = new ObservableCollection<Layout>(settingService.Layouts);
             SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
             SelectedSnapScreen = SnapScreens?.FirstOrDefault();
 
@@ -142,20 +173,14 @@ namespace SnapIt.ViewModels
             catch { }
         }
 
-        //private void SnapService_ScreenChanged(System.Collections.Generic.IList<SnapScreen> snapScreens)
-        //{
-        //    try
-        //    {
-        //        if (selectedSnapScreen != null)
-        //        {
-        //            var deviceNumber = selectedSnapScreen.DeviceNumber;
-
-        //            SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
-        //            SelectedSnapScreen = SnapScreens.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
-        //        }
-        //    }
-        //    catch { }
-        //}
+        private void ApplyChanges()
+        {
+            if (!DevMode.IsActive)
+            {
+                snapService.Release();
+                snapService.Initialize();
+            }
+        }
 
         private void SnapService_StatusChanged(bool isRunning)
         {

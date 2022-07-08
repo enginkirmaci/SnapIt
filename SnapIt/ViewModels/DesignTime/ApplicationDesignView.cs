@@ -16,7 +16,7 @@ namespace SnapIt.ViewModels.DesignTime
         public ApplicationGroup SelectedApplicationGroup { get; set; }
         public bool IsApplicationItemOpen { get; set; } = false;
         public bool IsMoveApplicationItemOpen { get; set; } = false;
-        public bool IsListApplicationItemDialogOpen { get; set; } = true;
+        public bool IsListApplicationItemDialogOpen { get; set; } = false;
         public ApplicationItem SelectedApplicationItem { get; set; }
         public ApplicationItem SelectedListApplicationItem { get; set; }
 

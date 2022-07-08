@@ -11,10 +11,9 @@
     xmlns:design="clr-namespace:SnapIt.ViewModels.DesignTime"
     x:Name="PopupWindowView"
     Title="SnapIt - Quick Launch"
+    Width="440"
     d:DataContext="{d:DesignInstance {x:Type design:PopupWindowDesignView},
                                      IsDesignTimeCreatable=True}"
-    d:Height="500"
-    d:Width="400"
     prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
     Background="Transparent"
@@ -40,6 +39,12 @@
         CornerRadius="12">
 
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
             <wpfui:Button
                 Padding="6"
                 HorizontalAlignment="Right"
@@ -50,173 +55,261 @@
                 <wpfui:SymbolIcon Symbol="Dismiss24" />
             </wpfui:Button>
 
-            <StackPanel>
-                <controls:SnapScreenViewer
-                    x:Name="SnapScreenViewer"
-                    Width="400"
-                    Height="256"
-                    Margin="0,16,0,12"
-                    HorizontalAlignment="Center"
-                    ItemsSource="{Binding SnapScreens}"
-                    SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
-                    <controls:SnapScreenViewer.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListViewItem}">
-                            <Setter Property="Foreground">
-                                <Setter.Value>
-                                    <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Background" Value="Transparent" />
-                            <Setter Property="BorderBrush">
-                                <Setter.Value>
-                                    <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="SnapsToDevicePixels" Value="True" />
-                            <Setter Property="OverridesDefaultStyle" Value="True" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                        <Border
-                                            x:Name="ItemBorder"
-                                            Margin="0"
-                                            Padding="4"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            Background="{TemplateBinding Background}"
-                                            BorderThickness="1"
-                                            CornerRadius="4">
-                                            <Border.BorderBrush>
-                                                <SolidColorBrush Opacity="0.0" Color="{DynamicResource SystemAccentColorSecondary}" />
-                                            </Border.BorderBrush>
-                                            <Grid>
-                                                <controls:SnapControl IsDesignMode="False" Layout="{Binding Layout}" />
-                                            </Grid>
-                                        </Border>
-
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsSelected" Value="True">
-                                                <Trigger.EnterActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <DoubleAnimation
-                                                                Storyboard.TargetName="ItemBorder"
-                                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
-                                                                From="0.0"
-                                                                To="1.0"
-                                                                Duration="0:0:.16" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </Trigger.EnterActions>
-                                                <Trigger.ExitActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <DoubleAnimation
-                                                                Storyboard.TargetName="ItemBorder"
-                                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
-                                                                From="1.0"
-                                                                To="0.0"
-                                                                Duration="0:0:.16" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </Trigger.ExitActions>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </controls:SnapScreenViewer.ItemContainerStyle>
-                </controls:SnapScreenViewer>
-
-                <Border
-                    x:Name="Border"
-                    Padding="6"
-                    Background="{DynamicResource ControlSolidFillColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8">
-                    <StackPanel Orientation="Vertical">
-                        <Label Content="Application Groups" />
-                        <ListView
-                            x:Name="ApplicationGroupList"
-                            Height="100"
-                            ItemsSource="{Binding SelectedSnapScreen.ApplicationGroups}"
-                            SelectedItem="{Binding SelectedApplicationGroup}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate DataType="Brush">
+            <controls:SnapScreenViewer
+                x:Name="SnapScreenViewer"
+                Width="420"
+                Height="256"
+                Margin="0,16,0,0"
+                HorizontalAlignment="Center"
+                ItemsSource="{Binding SnapScreens}"
+                SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
+                <controls:SnapScreenViewer.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Foreground">
+                            <Setter.Value>
+                                <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush">
+                            <Setter.Value>
+                                <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
                                     <Border
-                                        Width="80"
-                                        Height="80"
-                                        Background="{Binding}"
+                                        x:Name="ItemBorder"
+                                        Margin="0"
+                                        Padding="4"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Background="{TemplateBinding Background}"
+                                        BorderThickness="1"
                                         CornerRadius="4">
-                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <wpfui:SymbolIcon FontSize="30" Symbol="AppFolder20" />
-
-                                            <TextBlock
-                                                Grid.Row="1"
-                                                Margin="0,6,0,0"
-                                                HorizontalAlignment="Center"
-                                                Text="{Binding Name}" />
+                                        <Border.BorderBrush>
+                                            <SolidColorBrush Opacity="0.0" Color="{DynamicResource SystemAccentColorSecondary}" />
+                                        </Border.BorderBrush>
+                                        <Grid>
+                                            <controls:SnapControl IsDesignMode="False" Layout="{Binding Layout}" />
                                         </Grid>
                                     </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <wpfui:VirtualizingWrapPanel
-                                        Orientation="Horizontal"
-                                        SpacingMode="Uniform"
-                                        StretchItems="False" />
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                        </ListView>
-                    </StackPanel>
-                </Border>
 
-                <Grid Margin="6,6,6,6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <!--<ColumnDefinition Width="Auto" />-->
-                    </Grid.ColumnDefinitions>
-                    <wpfui:ToggleSwitch
-                        Command="{Binding StartStopCommand}"
-                        Content="{Binding Status}"
-                        IsChecked="{Binding IsRunning}"
-                        ToolTip="{Binding Status}" />
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="ItemBorder"
+                                                            Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
+                                                            From="0.0"
+                                                            To="1.0"
+                                                            Duration="0:0:.16" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="ItemBorder"
+                                                            Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
+                                                            From="1.0"
+                                                            To="0.0"
+                                                            Duration="0:0:.16" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </controls:SnapScreenViewer.ItemContainerStyle>
+            </controls:SnapScreenViewer>
+
+            <Border
+                Grid.Row="1"
+                Margin="8"
+                Background="{DynamicResource ControlSolidFillColorDefaultBrush}"
+                CornerRadius="6">
+                <StackPanel>
+
+                    <Label
+                        Margin="6,6,0,0"
+                        Content="Application Groups"
+                        FontSize="11" />
+                    <ListView
+                        x:Name="ApplicationGroupList"
+                        Width="440"
+                        ItemsSource="{Binding SelectedSnapScreen.ApplicationGroups}"
+                        SelectedItem="{Binding SelectedApplicationGroup}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="Brush">
+                                <wpfui:Button Width="64" Height="64">
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <wpfui:SymbolIcon FontSize="30" Symbol="AppFolder20" />
+
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Margin="0,6,0,0"
+                                            HorizontalAlignment="Center"
+                                            FontSize="11"
+                                            Text="{Binding Name}" />
+                                    </Grid>
+                                </wpfui:Button>
+                                <!--<Border
+                                    Width="64"
+                                    Height="64"
+                                    Background="{Binding}"
+                                    CornerRadius="4">
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <wpfui:SymbolIcon FontSize="30" Symbol="AppFolder20" />
+
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Margin="0,6,0,0"
+                                            HorizontalAlignment="Center"
+                                            Text="{Binding Name}" />
+                                    </Grid>
+                                </Border>-->
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+
+                    <Label
+                        Margin="6,6,0,6"
+                        Content="Layouts"
+                        FontSize="11" />
+                    <controls:ListViewEx
+                        Width="440"
+                        ItemsSource="{Binding Layouts}"
+                        SelectedItem="{Binding SelectedLayout, Mode=TwoWay}"
+                        Style="{DynamicResource UiListView}">
+                        <controls:ListViewEx.ItemTemplate>
+                            <DataTemplate DataType="Brush">
+                                <Border Background="{Binding}" CornerRadius="4">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Border
+                                            Width="74"
+                                            Height="58"
+                                            Margin="4">
+                                            <Border.OpacityMask>
+                                                <VisualBrush>
+                                                    <VisualBrush.Visual>
+                                                        <Border
+                                                            Width="78"
+                                                            Height="58"
+                                                            Background="White"
+                                                            CornerRadius="5" />
+                                                    </VisualBrush.Visual>
+                                                </VisualBrush>
+                                            </Border.OpacityMask>
+
+                                            <controls:SnapControl
+                                                Width="76"
+                                                Height="60"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsDesignMode="False"
+                                                IsPreview="True"
+                                                Layout="{Binding Mode=OneWay}" />
+                                        </Border>
+
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Margin="0,4"
+                                            HorizontalAlignment="Center"
+                                            FontSize="11"
+                                            Text="{Binding Name}"
+                                            TextWrapping="Wrap" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </controls:ListViewEx.ItemTemplate>
+                        <controls:ListViewEx.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </controls:ListViewEx.ItemsPanel>
+                    </controls:ListViewEx>
+                </StackPanel>
+            </Border>
+
+            <Grid Grid.Row="2" Margin="8,0,8,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <wpfui:ToggleSwitch
+                    Command="{Binding StartStopCommand}"
+                    Content="{Binding Status}"
+                    FontSize="11"
+                    IsChecked="{Binding IsRunning}"
+                    ToolTip="{Binding Status}" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <wpfui:Button
+                        Padding="12,6,12,6"
+                        Appearance="Transparent"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="home"
+                        Content="Home"
+                        FontSize="11"
+                        Icon="Home24" />
 
                     <wpfui:Button
-                        Grid.Column="1"
                         Padding="12,6,12,6"
                         Appearance="Transparent"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="layout"
                         Content="Layouts"
+                        FontSize="11"
                         Icon="DataTreemap24" />
 
                     <wpfui:Button
-                        Grid.Column="2"
                         Padding="12,6,12,6"
                         Appearance="Transparent"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="application"
                         Content="Apps"
+                        FontSize="11"
                         Icon="Apps24" />
 
                     <!--<wpfui:Button
-                        Grid.Column="3"
-                        Padding="12,6,12,6"
-                        Appearance="Transparent"
-                        Content="About"
-                        Icon="Info24" />-->
-                </Grid>
-            </StackPanel>
+                            Padding="12,6,12,6"
+                            Appearance="Transparent"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="settings"
+                            Content="Settings"
+                            Icon="Settings24" />-->
+                </StackPanel>
+            </Grid>
         </Grid>
     </Border>
 </Window>
