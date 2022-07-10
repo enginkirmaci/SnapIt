@@ -53,8 +53,6 @@ namespace SnapIt.Library.Services
 
             Layouts = this.fileOperationService.GetLayouts();
 
-            SelectedSnapScreen = SnapScreens.FirstOrDefault(screen => screen.IsPrimary);
-
 #if STANDALONE
             StandaloneLicense = this.fileOperationService.Load<StandaloneLicense>();
 
@@ -71,9 +69,9 @@ namespace SnapIt.Library.Services
         {
             SnapScreens = GetSnapScreens();
 
-            if (LatestActiveScreen == null)
+            if (LatestActiveScreen == null || SelectedSnapScreen == null)
             {
-                LatestActiveScreen = SnapScreens.FirstOrDefault(screen => screen.IsPrimary);
+                LatestActiveScreen = SelectedSnapScreen = SnapScreens.FirstOrDefault(screen => screen.IsPrimary);
             }
         }
 
