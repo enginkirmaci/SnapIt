@@ -150,8 +150,12 @@
                         ItemsSource="{Binding SelectedSnapScreen.ApplicationGroups}"
                         SelectedItem="{Binding SelectedApplicationGroup}">
                         <ListView.ItemTemplate>
-                            <DataTemplate DataType="Brush">
-                                <wpfui:Button Width="64" Height="64">
+                            <DataTemplate>
+                                <wpfui:Button
+                                    Width="64"
+                                    Height="64"
+                                    Command="{Binding DataContext.SelectedApplicationGroupCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}">
                                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
@@ -168,26 +172,6 @@
                                             Text="{Binding Name}" />
                                     </Grid>
                                 </wpfui:Button>
-                                <!--<Border
-                                    Width="64"
-                                    Height="64"
-                                    Background="{Binding}"
-                                    CornerRadius="4">
-                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <wpfui:SymbolIcon FontSize="30" Symbol="AppFolder20" />
-
-                                        <TextBlock
-                                            Grid.Row="1"
-                                            Margin="0,6,0,0"
-                                            HorizontalAlignment="Center"
-                                            Text="{Binding Name}" />
-                                    </Grid>
-                                </Border>-->
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.ItemsPanel>

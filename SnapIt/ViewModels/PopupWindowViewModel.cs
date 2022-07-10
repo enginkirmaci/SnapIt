@@ -1,12 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library;
-using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 
@@ -81,31 +79,7 @@ namespace SnapIt.ViewModels
         public DelegateCommand CloseCommand { get; private set; }
         public DelegateCommand StartStopCommand { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
-
-        private async Task TestLoadingWindow()
-        {
-            DevMode.Log("started");
-            var loadingWindow = new SnapLoadingWindow(winApiService, SelectedSnapScreen);
-            loadingWindow.Show();
-
-            DevMode.Log("test 1");
-            loadingWindow.SetLoadingMessage("Test 1");
-            await Task.Delay(1000);
-
-            DevMode.Log("test 2");
-            loadingWindow.LoadingMessage = "Test 22";
-            await Task.Delay(1000);
-
-            DevMode.Log("test 3");
-            loadingWindow.LoadingMessage = "Test 333";
-            await Task.Delay(1000);
-
-            DevMode.Log("test 4");
-            loadingWindow.LoadingMessage = "Test 4444";
-            await Task.Delay(1000);
-
-            loadingWindow.Hide();
-        }
+        public DelegateCommand<object> SelectedApplicationGroupCommand { get; private set; }
 
         public PopupWindowViewModel(
             ISnapService snapService,
@@ -120,12 +94,10 @@ namespace SnapIt.ViewModels
 
             Layouts = new ObservableCollection<Layout>(settingService.Layouts);
             SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
-            SelectedSnapScreen = SnapScreens?.FirstOrDefault();
+            SelectedSnapScreen = settingService.SelectedSnapScreen;
 
             LoadedCommand = new DelegateCommand<Window>((window) =>
             {
-                TestLoadingWindow();
-
                 popupWindow = window;
 
                 popupWindow.Deactivated += PopupWindow_Deactivated;
@@ -190,6 +162,11 @@ namespace SnapIt.ViewModels
                 }
 
                 ((MainWindowViewModel)mainWindow.DataContext).NavigateView(navigatePath);
+            });
+
+            SelectedApplicationGroupCommand = new DelegateCommand<object>((item) =>
+            {
+                SelectedApplicationGroup = (ApplicationGroup)item;
             });
         }
 

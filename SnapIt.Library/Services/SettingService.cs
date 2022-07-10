@@ -19,6 +19,7 @@ namespace SnapIt.Library.Services
         public IList<Layout> Layouts { get; private set; }
         public IList<SnapScreen> SnapScreens { get; private set; }
         public SnapScreen LatestActiveScreen { get; set; }
+        public SnapScreen SelectedSnapScreen { get; set; }
 
         public SettingService(
             IFileOperationService fileOperationService)
@@ -51,6 +52,8 @@ namespace SnapIt.Library.Services
             ApplicationGroupSettings = this.fileOperationService.Load<ApplicationGroupSettings>();
 
             Layouts = this.fileOperationService.GetLayouts();
+
+            SelectedSnapScreen = SnapScreens.FirstOrDefault(screen => screen.IsPrimary);
 
 #if STANDALONE
             StandaloneLicense = this.fileOperationService.Load<StandaloneLicense>();

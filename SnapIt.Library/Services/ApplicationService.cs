@@ -78,17 +78,12 @@ namespace SnapIt.Library.Services
                     return window;
                 }
 
-                await Task.Delay(1000);
-
                 DevMode.Log($"{application.Path} - {application.Title} - GetOpenedWindow");
                 window = GetWindowFromOpenedWindows(application, process);
                 if (IsWindowOpened(window))
                 {
                     return window;
                 }
-
-                await Task.Delay(1000);
-
                 DevMode.Log($"{application.Path} - tryTitleParts");
                 window = GetWindowFromOpenedWindows(application, process, tryTitleParts: true);
                 if (IsWindowOpened(window))
@@ -96,8 +91,6 @@ namespace SnapIt.Library.Services
                     DevMode.Log($"{application.Path} - {window?.Title} tryTitleParts");
                     return window;
                 }
-
-                await Task.Delay(1000);
 
                 DevMode.Log($"{application.Path} - useFirstOne");
                 window = GetWindowFromOpenedWindows(application, process, useFirstOne: true);
@@ -130,13 +123,14 @@ namespace SnapIt.Library.Services
 
         private async Task<ActiveWindow> GetWindowFromProcess(Process process)
         {
-            var tryCount = 1;
+            var tryCount = 3;
             while (string.IsNullOrEmpty(process.MainWindowTitle) && tryCount > 0)
             {
                 await Task.Delay(400);
                 process.Refresh();
 
                 tryCount--;
+
                 DevMode.Log($"{tryCount} - {process.MainWindowTitle}");
             }
 

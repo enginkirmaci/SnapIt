@@ -176,8 +176,12 @@ namespace SnapIt.ViewModels
                         {
                             if (string.IsNullOrEmpty(item.Title))
                             {
-                                var fileVersion = FileVersionInfo.GetVersionInfo(item.Path);
-                                item.Title = !string.IsNullOrWhiteSpace(fileVersion.ProductName) ? fileVersion.ProductName : fileVersion.FileDescription;
+                                try
+                                {
+                                    var fileVersion = FileVersionInfo.GetVersionInfo(item.Path);
+                                    item.Title = !string.IsNullOrWhiteSpace(fileVersion.ProductName) ? fileVersion.ProductName : fileVersion.FileDescription;
+                                }
+                                catch { }
                             }
 
                             var appPos = area.Applications.IndexOf(item);
