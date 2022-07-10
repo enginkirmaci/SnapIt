@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
+using SnapIt.Library.Controls;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Extensions;
 using SnapIt.Library.Mappers;
@@ -25,7 +26,10 @@ namespace SnapIt.Library.Services
 
         private ActiveWindow activeWindow;
         private SnapAreaInfo snapAreaInfo;
+
+        private SnapLoadingWindow loadingWindow;
         private bool isTrialEnded = false;
+
         private bool isWindowDetected = false;
         private bool isListening = false;
         private bool isHoldingKey = false;
@@ -178,7 +182,7 @@ namespace SnapIt.Library.Services
             ScreenLayoutLoaded?.Invoke(settingService.SnapScreens, settingService.Layouts);
         }
 
-        public void StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
+        public async void StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
         {
             if (DisableIfFullScreen())
             {
@@ -195,10 +199,30 @@ namespace SnapIt.Library.Services
                 {
                     foreach (var application in area.Applications)
                     {
-                        Task.Run(() => StartApplication(application, areaRectangles[application.AreaNumber])).Wait();
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (loadingWindow == null)
+                            {
+                                var primaryScreen = settingService.SnapScreens.FirstOrDefault(i => i.IsPrimary);
+                                if (primaryScreen == null)
+                                {
+                                    primaryScreen = settingService.SnapScreens.First();
+                                }
+
+                                loadingWindow = new SnapLoadingWindow(winApiService, primaryScreen);
+                            }
+
+                            loadingWindow.SetLoadingMessage(
+                                    !string.IsNullOrWhiteSpace(application.Title) ?
+                                    application.Title : application.Path);
+                        });
+
+                        await StartApplication(application, areaRectangles[application.AreaNumber]);
                     }
                 }
             }
+
+            loadingWindow.Hide();
 
             applicationService.Clear();
         }

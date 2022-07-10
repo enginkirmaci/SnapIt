@@ -73,21 +73,25 @@ namespace SnapIt.Library.Controls
 
         public new void Show()
         {
+            if (IsVisible)
+                return;
+
             base.Show();
             MaximizeWindow();
         }
 
-        public void SetLoadingMessage(string message)
+        public new void Hide()
         {
-            LoadingMessage = message;
+            base.Hide();
+
+            LoadingMessage = null;
         }
 
-        //protected override void OnSourceInitialized(EventArgs e)
-        //{
-        //    base.OnSourceInitialized(e);
-
-        //    MaximizeWindow();
-        //}
+        public void SetLoadingMessage(string message)
+        {
+            Show();
+            LoadingMessage = message;
+        }
 
         private void MaximizeWindow()
         {

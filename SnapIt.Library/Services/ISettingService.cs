@@ -12,6 +12,7 @@ namespace SnapIt.Library.Services
         IList<Layout> Layouts { get; }
         IList<SnapScreen> SnapScreens { get; }
         SnapScreen LatestActiveScreen { get; set; }
+        SnapScreen SelectedSnapScreen { get; set; }
 
         void ReInitialize();
 
