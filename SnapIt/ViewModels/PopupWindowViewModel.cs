@@ -36,6 +36,7 @@ namespace SnapIt.ViewModels
             set
             {
                 SetProperty(ref selectedSnapScreen, value);
+                settingService.SelectedSnapScreen = value;
                 isSelectedScreenChanged = true;
                 SelectedLayout = selectedSnapScreen?.Layout;
             }
