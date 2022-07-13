@@ -81,6 +81,12 @@ namespace SnapIt.ViewModels
                 ApplicationGroups = new ObservableCollectionWithItemNotify<ApplicationGroup>(selectedSnapScreen.ApplicationGroups);
 
                 SelectedApplicationGroup = ApplicationGroups?.FirstOrDefault();
+
+                if (SelectedApplicationGroup != null)
+                {
+                    SelectedApplicationGroup.PropertyChanged -= SelectedApplicationGroup_PropertyChanged;
+                    SelectedApplicationGroup.PropertyChanged += SelectedApplicationGroup_PropertyChanged;
+                }
             }
         }
 
@@ -121,8 +127,6 @@ namespace SnapIt.ViewModels
                 var applicationGroupList = page.FindChild<ListView>("ApplicationGroupList");
                 applicationGroupList.SelectionChanged += ApplicationGroupList_SelectionChanged;
                 ApplicationGroupList_SelectionChanged(null, null);
-
-                SelectedApplicationGroup.PropertyChanged += SelectedApplicationGroup_PropertyChanged;
             });
 
             AreaHighlightCommand = new DelegateCommand<object>((number) =>

@@ -86,7 +86,7 @@
                 Padding="11,5,4,6"
                 Content="Watch tutorial  "
                 Icon="VideoClip24"
-                NavigateUri="http://nuget.org/packages/WPF-UI/"
+                NavigateUri="https://youtu.be/5DbA2NLiI9E"
                 Style="{StaticResource TutorialHyperlinkStyle}" />
         </Grid>
 

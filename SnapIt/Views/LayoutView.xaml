@@ -28,7 +28,8 @@
             Width="141.67"
             Margin="0,-49,0,0"
             HorizontalAlignment="Right"
-            VerticalAlignment="Top">
+            VerticalAlignment="Top"
+            Visibility="Collapsed">
             <Grid.Triggers>
                 <EventTrigger RoutedEvent="Grid.Loaded">
                     <BeginStoryboard>

@@ -23,6 +23,7 @@
                     <wpfui:SymbolIcon
                         Margin="0,0,6,0"
                         FontSize="16"
+                        Foreground="{StaticResource PaletteYellowBrush}"
                         Symbol="Lightbulb24" />
                     <TextBlock FontSize="16" Text="Getting Started" />
                 </StackPanel>
@@ -38,7 +39,8 @@
                         Grid.Column="0"
                         Margin="0,0,12,0"
                         HorizontalAlignment="Stretch"
-                        Icon="Empty">
+                        Icon="Empty"
+                        NavigateUri="https://youtu.be/3i1qF8BpcMU">
                         <StackPanel Margin="24">
                             <wpfui:SymbolIcon FontSize="36" Symbol="VideoClip24" />
                             <TextBlock Text="Introduction" />
@@ -49,7 +51,8 @@
                         Grid.Column="1"
                         Margin="6,0"
                         HorizontalAlignment="Stretch"
-                        Icon="Empty">
+                        Icon="Empty"
+                        NavigateUri="https://youtu.be/SAOJxPbm9wk">
                         <StackPanel Margin="24">
                             <wpfui:SymbolIcon FontSize="36" Symbol="VideoClip24" />
                             <TextBlock Text="How to get started?" />
@@ -60,25 +63,39 @@
                         Grid.Column="2"
                         Margin="12,0,0,0"
                         HorizontalAlignment="Stretch"
+                        Icon="Empty"
+                        NavigateUri="https://youtu.be/5DbA2NLiI9E">
+                        <StackPanel Margin="12,24">
+                            <wpfui:SymbolIcon FontSize="36" Symbol="VideoClip24" />
+                            <TextBlock Text="Configure and use Apps" />
+                        </StackPanel>
+                    </wpfui:Anchor>
+
+                    <!--<wpfui:Anchor
+                        Grid.Column="2"
+                        Margin="12,0,0,0"
+                        HorizontalAlignment="Stretch"
                         Icon="Empty">
                         <StackPanel Margin="24">
                             <wpfui:SymbolIcon FontSize="36" Symbol="VideoClip24" />
                             <TextBlock Text="Quick Tips" />
                         </StackPanel>
-                    </wpfui:Anchor>
+                    </wpfui:Anchor>-->
                 </Grid>
 
-                <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                <!--<StackPanel Margin="0,0,0,12" Orientation="Horizontal">
                     <wpfui:SymbolIcon
                         Margin="0,0,6,0"
                         FontSize="16"
                         Symbol="Bookmark24" />
                     <TextBlock FontSize="16" Text="Other Topics" />
                 </StackPanel>
+                -->
                 <!--<wpfui:CardControl
                     Margin="0,0,0,12"
                     Header="All Topics"
                     Icon="Bookmark24" />-->
+                <!--
 
                 <wpfui:Hyperlink
                     Margin="0,0,0,4"
@@ -88,7 +105,7 @@
                 <wpfui:Hyperlink
                     Margin="0,0,0,4"
                     Content="How to use and configure Apps"
-                    Icon="VideoClip24" />
+                    Icon="VideoClip24" />-->
             </StackPanel>
         </ScrollViewer>
     </Grid>
