@@ -11,6 +11,16 @@ namespace SnapIt.ViewModels
         {
             new ChangeLogItem()
             {
+                Header = "v4.3.5.0",
+                Lines = new List<string>() {
+                    "Home and Tutorials added",
+                    "Improvements for quick action panel for Apps",
+                    "Added loading screen while Apps opening",
+                    "Minor improvements and fixes"
+                }
+            },
+            new ChangeLogItem()
+            {
                 Header = "v4.2.0.0",
                 Lines = new List<string>() {
                     "Apps section added",
