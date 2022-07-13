@@ -213,11 +213,14 @@ namespace SnapIt.Library.Services
                             }
 
                             loadingWindow.SetLoadingMessage(
-                                    !string.IsNullOrWhiteSpace(application.Title) ?
-                                    application.Title : application.Path);
+                                    !string.IsNullOrWhiteSpace(application?.Title) ?
+                                    application?.Title : application?.Path);
                         });
 
-                        await StartApplication(application, areaRectangles[application.AreaNumber]);
+                        if (areaRectangles != null && application != null && areaRectangles.ContainsKey(application.AreaNumber))
+                        {
+                            await StartApplication(application, areaRectangles[application.AreaNumber]);
+                        }
                     }
                 }
             }

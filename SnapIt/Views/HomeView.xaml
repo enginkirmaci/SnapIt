@@ -254,19 +254,26 @@
                 Margin="0,0,0,4"
                 Content="Introduction"
                 Icon="VideoClip24"
-                NavigateUri="https://www.youtube.com/watch?v=1UR0PT4Ly1c" />
+                NavigateUri="https://youtu.be/3i1qF8BpcMU" />
 
             <wpfui:Hyperlink
                 Margin="0,0,0,4"
                 Content="How to get started?"
                 Icon="VideoClip24"
-                NavigateUri="https://www.nuget.org/packages/WPF-wpfui/" />
+                NavigateUri="https://youtu.be/SAOJxPbm9wk" />
+
+            <wpfui:Hyperlink
+                Margin="0,0,0,4"
+                Content="Configure and use Apps"
+                Icon="VideoClip24"
+                NavigateUri="https://youtu.be/5DbA2NLiI9E" />
 
             <wpfui:Hyperlink
                 Margin="0,0,0,4"
                 Content="Quick Tips"
                 Icon="VideoClip24"
-                NavigateUri="https://www.nuget.org/packages/WPF-wpfui/" />
+                NavigateUri="https://www.nuget.org/packages/WPF-wpfui/"
+                Visibility="Collapsed" />
         </StackPanel>
     </Grid>
 </wpfui:UiPage>
