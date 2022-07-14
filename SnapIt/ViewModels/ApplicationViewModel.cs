@@ -78,7 +78,10 @@ namespace SnapIt.ViewModels
             {
                 SetProperty(ref selectedSnapScreen, value);
 
-                ApplicationGroups = new ObservableCollectionWithItemNotify<ApplicationGroup>(selectedSnapScreen.ApplicationGroups);
+                if (selectedSnapScreen != null)
+                {
+                    ApplicationGroups = new ObservableCollectionWithItemNotify<ApplicationGroup>(selectedSnapScreen.ApplicationGroups);
+                }
 
                 SelectedApplicationGroup = ApplicationGroups?.FirstOrDefault();
 
