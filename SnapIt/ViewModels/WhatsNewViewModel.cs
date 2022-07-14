@@ -11,6 +11,14 @@ namespace SnapIt.ViewModels
         {
             new ChangeLogItem()
             {
+                Header = "v4.3.7.0",
+                Lines = new List<string>() {
+                    "Run as administrator added to Microsoft Store version",
+                    "Screen viewer fix"
+                }
+            },
+            new ChangeLogItem()
+            {
                 Header = "v4.3.5.0",
                 Lines = new List<string>() {
                     "Home and Tutorials added",

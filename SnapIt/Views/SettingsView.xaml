@@ -51,8 +51,7 @@
                 <wpfui:CardControl
                     Margin="0,0,0,8"
                     Header="Run as administrator (needs to be restarted)"
-                    Icon="Empty"
-                    Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
+                    Icon="Empty">
                     <wpfui:ToggleSwitch IsChecked="{Binding IsRunAsAdmin}" />
                 </wpfui:CardControl>
 

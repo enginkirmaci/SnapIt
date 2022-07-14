@@ -36,7 +36,6 @@ namespace SnapIt
                 Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream)
             };
 
-#if STANDALONE
             if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
             {
                 if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
@@ -58,7 +57,7 @@ namespace SnapIt
                 }
             }
             else
-#endif
+
             {
                 if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
                 {
