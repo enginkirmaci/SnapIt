@@ -143,11 +143,13 @@ namespace SnapIt.Library.Controls
             var iconFactor = 0.2;
             if (ActualWidth > ActualHeight)
             {
-                MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = ActualWidth * iconFactor;
+                var size = MergedIcon.Width = MergedIcon.Height = ActualWidth * iconFactor;
+                MergedIcon.FontSize = size > 0 ? size : 1;
             }
             else
             {
-                MergedIcon.FontSize = MergedIcon.Width = MergedIcon.Height = ActualHeight * iconFactor;
+                var size = MergedIcon.Width = MergedIcon.Height = ActualHeight * iconFactor;
+                MergedIcon.FontSize = size > 0 ? size : 1;
             }
         }
 
