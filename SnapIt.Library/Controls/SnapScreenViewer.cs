@@ -1,9 +1,10 @@
-﻿using SnapIt.Library.Extensions;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using SnapIt.Library.Extensions;
 
 namespace SnapIt.Library.Controls
 {
@@ -36,18 +37,21 @@ namespace SnapIt.Library.Controls
         {
             var borders = this.FindChildren<Border>("ItemBorder");
 
-            if (borders.Count() > 0)
+            if (borders.Any())
             {
                 var snapScreens = (IEnumerable<Entities.SnapScreen>)ItemsSource;
 
-                if (snapScreens.Count() > 0 && ActualWidth != 0)
+                if (snapScreens.Any() && ActualWidth != 0)
                 {
                     var maxScreenSizeX = snapScreens.Max(screen => screen.WorkingArea.BottomRight.X);
                     var maxScreenSizeY = snapScreens.Max(screen => screen.WorkingArea.BottomRight.Y);
 
+                    var minScreenSizeX = Math.Abs(snapScreens.Min(screen => screen.WorkingArea.TopLeft.X));
+                    var minScreenSizeY = Math.Abs(snapScreens.Min(screen => screen.WorkingArea.TopLeft.Y));
+
                     double factorX, factorY = 0.0;
-                    factorX = ActualWidth / maxScreenSizeX;
-                    factorY = ActualHeight / maxScreenSizeY;
+                    factorX = ActualWidth / (maxScreenSizeX + minScreenSizeX);
+                    factorY = ActualHeight / (maxScreenSizeY + minScreenSizeY);
                     if (factorX > factorY)
                     {
                         factorX = factorY;
@@ -57,8 +61,8 @@ namespace SnapIt.Library.Controls
                         factorY = factorX;
                     }
 
-                    Width = maxScreenSizeX * factorX;
-                    Height = maxScreenSizeY * factorY;
+                    Width = (maxScreenSizeX + minScreenSizeX) * factorX;
+                    Height = (maxScreenSizeY + minScreenSizeY) * factorY;
 
                     foreach (var border in borders)
                     {
@@ -71,8 +75,8 @@ namespace SnapIt.Library.Controls
 
                         var newPoint = new Point
                         {
-                            X = snapScreen.WorkingArea.X * factorX,
-                            Y = snapScreen.WorkingArea.Y * factorY
+                            X = (snapScreen.WorkingArea.X + minScreenSizeX) * factorX,
+                            Y = (snapScreen.WorkingArea.Y + minScreenSizeY) * factorY
                         };
                         var newSize = new Size
                         {
