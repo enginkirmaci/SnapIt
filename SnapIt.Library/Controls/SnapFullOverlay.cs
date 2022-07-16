@@ -29,14 +29,6 @@ namespace SnapIt.Library.Controls
         {
             var snapOverlayEditor = (SnapFullOverlay)d;
             snapOverlayEditor.Theme = (SnapAreaTheme)e.NewValue;
-
-            //if (snapOverlayEditor.Theme != null)
-            //{
-            //    snapOverlayEditor.Overlay.Opacity = snapOverlayEditor.Theme.Opacity;
-            //    snapOverlayEditor.Overlay.Background = snapOverlayEditor.Theme.HighlightBrush;
-            //    snapOverlayEditor.OverlayBorder.BorderBrush = snapOverlayEditor.Theme.BorderBrush;
-            //    snapOverlayEditor.OverlayBorder.BorderThickness = new Thickness(snapOverlayEditor.Theme.BorderThickness);
-            //}
         }
 
         public SnapFullOverlay(SnapAreaTheme theme)

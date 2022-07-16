@@ -20,7 +20,8 @@ namespace SnapIt.Views
         private void DesignWindow_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             Point myPoint = e.GetPosition(this);
-            mousePositionText.Text = $"Mouse Position: {myPoint.X:0.00} x {myPoint.Y:0.00}";
+            mousePositionText.Text = $"Mouse Position  {myPoint.X:0.00} x {myPoint.Y:0.00}";
+
             horizontalRuler.RaiseHorizontalRulerMoveEvent(e);
             verticalRuler.RaiseVerticalRulerMoveEvent(e);
         }
@@ -33,6 +34,8 @@ namespace SnapIt.Views
                 model.Window = this;
                 model.SnapScreen = snapScreen;
                 model.Layout = layout;
+
+                designerSizeText.Text = $"Designer Size     {snapScreen.Bounds.Width:0.00} x {snapScreen.Bounds.Height:0.00}";
             }
 
             if (DevMode.IsTopmostDisabled)
