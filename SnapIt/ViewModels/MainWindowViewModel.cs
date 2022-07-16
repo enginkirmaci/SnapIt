@@ -156,6 +156,20 @@ namespace SnapIt.ViewModels
                     }
                     else
                     {
+                        //if (SnapIt.Properties.Settings.Default.RunAsAdmin)
+                        //{
+                        //    Wpf.Ui.Controls.MessageBox messageBox = new Wpf.Ui.Controls.MessageBox();
+                        //    messageBox.ButtonRightName = LicenseMessageCloseButtonText;
+                        //    messageBox.ButtonRightClick += MessageBox_ButtonRightClick;
+                        //    messageBox.ButtonLeftClick += MessageBox_ButtonLeftClick;
+
+                        //    messageBox.Show(
+                        //        "Run as admin limitation!",
+                        //        @"Due to limitations of Microsoft Store, \n
+                        //            store purchases couldn't make while application is running as administrator.\n\n
+                        //            Do you want start SnapIt without admin priviligies?");
+                        //}
+
                         PurchaseFullLicense();
                     }
 
@@ -226,7 +240,14 @@ namespace SnapIt.ViewModels
                 }
                 else
                 {
-                    Application.Current.Shutdown();
+                    if (IsTrialEnded)
+                    {
+                        Application.Current.Shutdown();
+                    }
+                    else
+                    {
+                        IsTryStoreMessageOpen = false;
+                    }
                 }
 
                 NewVersionMessageOpen = false;
@@ -381,6 +402,23 @@ namespace SnapIt.ViewModels
             });
         }
 
+        //private void MessageBox_ButtonRightClick(object sender, RoutedEventArgs e)
+        //{
+        //    if (IsTrialEnded)
+        //    {
+        //        Application.Current.Shutdown();
+        //    }
+        //    else
+        //    {
+        //        ((Wpf.Ui.Controls.MessageBox)sender).Hide();
+        //    }
+        //}
+
+        //private void MessageBox_ButtonLeftClick(object sender, RoutedEventArgs e)
+        //{
+        //    RunAsAdministrator.RunNormal();
+        //}
+
         public void NavigateView(string navigatePath)
         {
             var rootNavigation = mainWindow.FindChild<NavigationStore>("RootNavigation");
@@ -528,6 +566,11 @@ namespace SnapIt.ViewModels
             LicenseStatus licenseStatus = isStandalone ?
                 standaloneLicenseService.CheckStatus() :
                 await storeLicenseService.CheckStatusAsync();
+
+            if (DevMode.TestInTrial)
+            {
+                licenseStatus = LicenseStatus.InTrial;
+            }
 
             switch (licenseStatus)
             {

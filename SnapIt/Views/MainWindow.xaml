@@ -371,7 +371,7 @@
             Grid.RowSpan="2"
             Panel.ZIndex="9"
             ButtonLeftName="Open Store"
-            ButtonRightName="Exit"
+            ButtonRightName="{Binding LicenseMessageCloseButtonText}"
             DialogHeight="216"
             IsShown="{Binding IsTryStoreMessageOpen, Mode=TwoWay}"
             Visibility="{Binding IsTryStoreMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
