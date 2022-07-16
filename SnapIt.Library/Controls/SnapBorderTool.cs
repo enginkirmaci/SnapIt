@@ -41,7 +41,7 @@ namespace SnapIt.Library.Controls
 
         public static readonly DependencyProperty ApplyCommandProperty =
         DependencyProperty.Register("ApplyCommand",
-            typeof(Wpf.Ui.Common.RelayCommand), typeof(SnapAreaEditor), new PropertyMetadata(null));
+            typeof(Wpf.Ui.Common.RelayCommand), typeof(SnapBorderTool), new PropertyMetadata(null));
 
         public Wpf.Ui.Common.RelayCommand ApplyCommand => (Wpf.Ui.Common.RelayCommand)GetValue(ApplyCommandProperty);
 

@@ -137,7 +137,11 @@
                         <TextBlock
                             x:Name="mousePositionText"
                             Margin="0,0,0,6"
-                            Text="Mouse Position: 0 x 0" />
+                            Text="Mouse Position  0 x 0" />
+                        <TextBlock
+                            x:Name="designerSizeText"
+                            Margin="0,0,0,6"
+                            Text="Designer Size     0 x 0" />
                     </StackPanel>
                 </wpfui:CardExpander>
             </Grid>

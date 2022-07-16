@@ -76,6 +76,42 @@ namespace SnapIt.Library.Controls
             }
         }
 
+        public string PositionX
+        {
+            get => (string)GetValue(PositionXProperty);
+            set => SetValue(PositionXProperty, value);
+        }
+
+        public static readonly DependencyProperty PositionXProperty = DependencyProperty.Register(nameof(PositionX),
+            typeof(string), typeof(SnapOverlayEditor), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public string PositionY
+        {
+            get => (string)GetValue(PositionYProperty);
+            set => SetValue(PositionYProperty, value);
+        }
+
+        public static readonly DependencyProperty PositionYProperty = DependencyProperty.Register(nameof(PositionY),
+            typeof(string), typeof(SnapOverlayEditor), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public string PositionWidth
+        {
+            get => (string)GetValue(PositionWidthProperty);
+            set => SetValue(PositionWidthProperty, value);
+        }
+
+        public static readonly DependencyProperty PositionWidthProperty = DependencyProperty.Register(nameof(PositionWidth),
+            typeof(string), typeof(SnapOverlayEditor), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public string PositionHeight
+        {
+            get => (string)GetValue(PositionHeightProperty);
+            set => SetValue(PositionHeightProperty, value);
+        }
+
+        public static readonly DependencyProperty PositionHeightProperty = DependencyProperty.Register(nameof(PositionHeight),
+            typeof(string), typeof(SnapOverlayEditor), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
         public SnapOverlayEditor(SnapControl snapControl, SnapAreaTheme theme)
         {
             InitializeComponent();
@@ -92,6 +128,7 @@ namespace SnapIt.Library.Controls
 
             DesignPanel.Visibility = Visibility.Hidden;
             OutlineBorder.Visibility = Visibility.Hidden;
+            PositionGrid.Visibility = Visibility.Hidden;
         }
 
         private void MiniOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -121,7 +158,7 @@ namespace SnapIt.Library.Controls
             };
         }
 
-        public void ResetDesignPanel()
+        public void ResetDesignPanelButtons()
         {
             if (ShowMiniOverlay)
             {
@@ -204,7 +241,12 @@ namespace SnapIt.Library.Controls
         {
             base.OnMouseEnter(e);
 
-            ResetDesignPanel();
+            ResetDesignPanelButtons();
+
+            PositionX = Margin.Left.ToString("0.00");
+            PositionY = Margin.Top.ToString("0.00");
+            PositionWidth = Width.ToString("0.00");
+            PositionHeight = Height.ToString("0.00");
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
@@ -213,6 +255,7 @@ namespace SnapIt.Library.Controls
 
             DesignPanel.Visibility = Visibility.Hidden;
             OutlineBorder.Visibility = Visibility.Hidden;
+            PositionGrid.Visibility = Visibility.Hidden;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -236,6 +279,7 @@ namespace SnapIt.Library.Controls
                     }
                     else
                     {
+                        PositionGrid.Visibility = Visibility.Visible;
                         selectedElement = this;
                     }
                 }
@@ -243,7 +287,7 @@ namespace SnapIt.Library.Controls
                 _mouseHitType = SetHitType(selectedElement, Mouse.GetPosition(selectedElement));
                 SetMouseCursor();
 
-                ResetDesignPanel();
+                ResetDesignPanelButtons();
             }
             else
             {
@@ -319,10 +363,20 @@ namespace SnapIt.Library.Controls
                     }
                     else
                     {
+                        if (offset_x == 0 && offset_y == 0)
+                        {
+                            return;
+                        }
+
                         SetPos(point, size);
+
+                        PositionX = Margin.Left.ToString("0.00");
+                        PositionY = Margin.Top.ToString("0.00");
+                        PositionWidth = Width.ToString("0.00");
+                        PositionHeight = Height.ToString("0.00");
                     }
 
-                    ResetDesignPanel();
+                    ResetDesignPanelButtons();
 
                     _lastPointInContiner = Mouse.GetPosition(SnapControl);
                 }
@@ -421,6 +475,18 @@ namespace SnapIt.Library.Controls
                 RemoveButton.Visibility = Visibility.Collapsed;
                 FullOverlay.Visibility = Visibility.Hidden;
                 MiniOverlay.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void SetPosButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (double.TryParse(PositionX, out var positionX)
+                && double.TryParse(PositionY, out var positionY)
+                && double.TryParse(PositionWidth, out var positionWidth)
+                && double.TryParse(PositionHeight, out var positionHeight))
+            {
+                SetPos(new Point(positionX, positionY), new Size(positionWidth, positionHeight));
+                SnapControl.GenerateSnapOverlays();
             }
         }
     }
