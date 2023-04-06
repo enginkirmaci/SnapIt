@@ -1,0 +1,69 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="clr-namespace:SnapIt.Library.Controls"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
+
+    <Style TargetType="{x:Type control:SnapLoadingWindow}">
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type control:SnapLoadingWindow}">
+                    <AdornerDecorator>
+                        <Grid>
+                            <ContentPresenter x:Name="ContentPresenter" Margin="{TemplateBinding Padding}" />
+
+                            <Border
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                BorderThickness="1"
+                                CornerRadius="20">
+                                <Border.BorderBrush>
+                                    <SolidColorBrush Opacity="0.8" Color="{DynamicResource ControlStrongFillColorDark}" />
+                                </Border.BorderBrush>
+
+                                <Border.Background>
+                                    <SolidColorBrush Opacity="0.5" Color="{DynamicResource ControlStrongFillColorDark}" />
+                                </Border.Background>
+
+                                <Grid Width="236" Height="280">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="180" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="72" />
+                                    </Grid.RowDefinitions>
+                                    <wpfui:ProgressRing
+                                        Width="100"
+                                        Height="100"
+                                        HorizontalAlignment="Center"
+                                        IsIndeterminate="True" />
+                                    <Label
+                                        Grid.Row="1"
+                                        HorizontalAlignment="Center"
+                                        Content="Please wait while applications opening"
+                                        Foreground="{DynamicResource TextFillColorLightTertiaryBrush}" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Margin="12,10"
+                                        HorizontalAlignment="Center"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource TextFillColorLightPrimaryBrush}"
+                                        Text="{Binding Path=LoadingMessage, RelativeSource={RelativeSource TemplatedParent}}"
+                                        TextTrimming="WordEllipsis"
+                                        TextWrapping="Wrap" />
+                                    <!--<Label Margin="32" Content="{Binding Path=LoadingMessage, RelativeSource={RelativeSource TemplatedParent}}" />-->
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </AdornerDecorator>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

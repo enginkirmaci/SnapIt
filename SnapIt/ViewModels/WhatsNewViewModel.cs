@@ -11,6 +11,32 @@ namespace SnapIt.ViewModels
         {
             new ChangeLogItem()
             {
+                Header = "v4.3.7.0",
+                Lines = new List<string>() {
+                    "Run as administrator added to Microsoft Store version",
+                    "Screen viewer fix"
+                }
+            },
+            new ChangeLogItem()
+            {
+                Header = "v4.3.5.0",
+                Lines = new List<string>() {
+                    "Home and Tutorials added",
+                    "Improvements for quick action panel for Apps",
+                    "Added loading screen while Apps opening",
+                    "Minor improvements and fixes"
+                }
+            },
+            new ChangeLogItem()
+            {
+                Header = "v4.2.0.0",
+                Lines = new List<string>() {
+                    "Apps section added",
+                    "Improvements for UI",
+                }
+            },
+            new ChangeLogItem()
+            {
                 Header = "v4.0.9.0",
                 Lines = new List<string>() {
                     "Changed overlay activator and overlay designing, you can now freely move activator",

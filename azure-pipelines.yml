@@ -1,0 +1,85 @@
+parameters:
+  - name: version
+    displayName: Version
+    type: string
+    default: '4.2.0.1'
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'x86|x64|ARM'
+  buildConfiguration: 'Release'
+  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: UseDotNet@2
+  displayName: "Install .NET Core SDK"
+  inputs:
+    version: 6.0.x
+    performMultiLevelLookup: true
+    includePreviewVersions: false # Required for preview versions
+
+# Install Inno Setup with chocolatey
+- task: PowerShell@2
+  displayName: 'Inno setup download'
+  inputs:
+    targetType: 'inline'
+    script: 'choco install innosetup'
+
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: '6.2.x'
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'SnapIt/*.csproj'
+    arguments: '-c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false'
+    zipAfterPublish: false
+    modifyOutputPath: false
+
+# Execute install script
+- task: PowerShell@2
+  displayName: 'Execute Inno Setup script'
+  inputs:
+    targetType: 'inline'
+    script: 'iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=${{ parameters.version }}'
+
+# Copy setup into ArtifactStaging folder
+- task: CopyFiles@2
+  displayName: 'Copy setup to artifact'
+  inputs:
+    SourceFolder: 'SnapIt.Setup\\setup'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# Publish artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'SnapIt Pro'
+    publishLocation: 'Container'
+
+- task: FtpUpload@2
+  inputs:
+    credentialsOption: 'inputs'
+    serverUrl: 'ftp://213.238.168.71'
+    username: 'engin'
+    password: 'I3engkir!'
+    rootDirectory: '$(Build.ArtifactStagingDirectory)'
+    filePatterns: '**'
+    remoteDirectory: '/dl.getsnapit.com'
+    clean: false
+    cleanContents: false
+    preservePaths: false
+    trustSSL: false
+

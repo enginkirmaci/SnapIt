@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace SnapIt.Library.Entities
 {
@@ -10,10 +11,11 @@ namespace SnapIt.Library.Entities
         private bool isPrimary = false;
         private string deviceNumber;
         private string resolution;
+        private List<ApplicationGroup> applicationGroups;
 
         public string DeviceName { get; set; }
         public Rect WorkingArea { get; set; }
-        public Rect PixelBounds { get; set; }
+        public double ScaleFactor { get; set; }
         public Rect Bounds { get; set; }
 
         public bool IsActive
@@ -34,6 +36,9 @@ namespace SnapIt.Library.Entities
         public Layout Layout
         { get => layout; set { SetProperty(ref layout, value); } }
 
+        public List<ApplicationGroup> ApplicationGroups
+        { get => applicationGroups; set { SetProperty(ref applicationGroups, value); } }
+
         public SnapScreen()
         { }
 
@@ -42,16 +47,12 @@ namespace SnapIt.Library.Entities
             IsPrimary = screen.Primary;
             Primary = IsPrimary ? "Primary" : "";
             DeviceNumber = screen.DeviceName.Replace(@"\\.\DISPLAY", string.Empty);
-            Resolution = $"{screen.PixelBounds.Width} X {screen.PixelBounds.Height}";
+            Resolution = $"{screen.Bounds.Width} X {screen.Bounds.Height}";
 
-            WorkingArea = new Rect(
-                    screen.WorkingArea.X * screen.ScaleFactor,
-                    screen.WorkingArea.Y * screen.ScaleFactor,
-                    screen.WorkingArea.Width * screen.ScaleFactor,
-                    screen.WorkingArea.Height * screen.ScaleFactor);
+            WorkingArea = screen.WorkingArea;
+            ScaleFactor = screen.ScaleFactor;
 
-            PixelBounds = screen.PixelBounds;
-            Bounds = screen.Bounds;
+            Bounds = screen.WpfBounds;
             if (!string.IsNullOrEmpty(devicePath))
             {
                 DeviceName = devicePath;

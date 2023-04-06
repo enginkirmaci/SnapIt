@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Media;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SnapIt.Library.Entities
 {
@@ -44,7 +44,9 @@ namespace SnapIt.Library.Entities
         };
 
         public Dictionary<string, string> ScreensLayouts { get; set; }
+
         public List<string> DeactivedScreens { get; set; }
+
         public string MoveUpShortcut { get; set; } = "Control + Alt + Up";
         public string MoveDownShortcut { get; set; } = "Control + Alt + Down";
         public string MoveLeftShortcut { get; set; } = "Control + Alt + Left";

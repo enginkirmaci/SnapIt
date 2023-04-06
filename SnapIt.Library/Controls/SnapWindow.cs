@@ -17,14 +17,15 @@ namespace SnapIt.Library.Controls
         private SnapArea currentArea;
         private SnapOverlay currentOverlay;
 
-        public Entities.SnapScreen Screen { get; set; }
+        public SnapScreen Screen { get; set; }
         public List<Rectangle> SnapAreaBoundries { get; set; }
+        public Dictionary<int, Rectangle> SnapAreaRectangles { get; set; }
         public Dpi Dpi { get; set; }
 
         public SnapWindow(
             ISettingService settingService,
             IWinApiService winApiService,
-            Entities.SnapScreen screen)
+            SnapScreen screen)
         {
             this.settingService = settingService;
             this.winApiService = winApiService;
@@ -47,7 +48,11 @@ namespace SnapIt.Library.Controls
             WindowState = WindowState.Normal;
             WindowStyle = WindowStyle.None;
 
-            CalculateDpi();
+            Dpi = new Dpi()
+            {
+                X = 100 / (screen.ScaleFactor * 100),
+                Y = 100 / (screen.ScaleFactor * 100)
+            };
         }
 
         //TODO test here
@@ -80,11 +85,6 @@ namespace SnapIt.Library.Controls
                 (int)Screen.WorkingArea.Height);
         }
 
-        private void CalculateDpi()
-        {
-            Dpi = Screen.GetDpi();
-        }
-
         public void ApplyLayout()
         {
             var snapControl = new SnapControl
@@ -100,13 +100,27 @@ namespace SnapIt.Library.Controls
         {
             if (SnapAreaBoundries == null)
             {
+                SnapAreaBoundries = new List<Rectangle>();
+                SnapAreaRectangles = new Dictionary<int, Rectangle>();
+
                 var snapControl = Content as SnapControl;
                 var snapAreas = snapControl.FindChildren<SnapArea>();
                 var snapOverlays = snapControl.FindChildren<SnapOverlay>();
 
-                var generated = snapAreas.Select(snapArea => snapArea.ScreenSnapArea(Dpi)).ToList();
+                foreach (var snapOverlay in snapOverlays)
+                {
+                    SnapAreaRectangles.Add(snapOverlay.AreaNumber, snapOverlay.ScreenSnapArea(Dpi));
+                }
 
-                SnapAreaBoundries = generated.OrderBy(i => i.X).ThenBy(i => i.Y).ToList();
+                foreach (var snapArea in snapAreas)
+                {
+                    var rectangle = snapArea.ScreenSnapArea(Dpi);
+
+                    SnapAreaRectangles.Add(snapArea.AreaNumber, rectangle);
+                    SnapAreaBoundries.Add(rectangle);
+                }
+
+                SnapAreaBoundries = SnapAreaBoundries.OrderBy(i => i.X).ThenBy(i => i.Y).ToList();
             }
         }
 
@@ -187,6 +201,11 @@ namespace SnapIt.Library.Controls
 
                         return snapOverlay.ScreenSnapArea(Dpi);
                     }
+                }
+                else
+                {
+                    currentArea = null;
+                    currentOverlay = null;
                 }
             }
 

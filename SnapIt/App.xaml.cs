@@ -1,4 +1,10 @@
-﻿using DryIoc;
+﻿using System;
+using System.Drawing;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Threading;
+using DryIoc;
 using Prism.Ioc;
 using Serilog;
 using SnapIt.Library;
@@ -6,12 +12,6 @@ using SnapIt.Library.Applications;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
 using SnapIt.Views;
-using System;
-using System.Drawing;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Threading;
 
 namespace SnapIt
 {
@@ -36,8 +36,7 @@ namespace SnapIt
                 Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream)
             };
 
-#if STANDALONE
-            if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.IsActive)
+            if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.SkipRunAsAdmin)
             {
                 if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
                 {
@@ -58,7 +57,7 @@ namespace SnapIt
                 }
             }
             else
-#endif
+
             {
                 if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
                 {
@@ -70,35 +69,11 @@ namespace SnapIt
                 }
             }
 
-            //AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
-            //{
-            //    LogUnhandledException((Exception)ex.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
-            //};
-
-            //DispatcherUnhandledException += (s, ex) =>
-            //{
-            //    LogUnhandledException(ex.Exception,
-            //    "Application.Current.DispatcherUnhandledException");
-            //    ex.Handled = true;
-            //};
-
-            //TaskScheduler.UnobservedTaskException += (s, ex) =>
-            //{
-            //    LogUnhandledException(ex.Exception,
-            //    "TaskScheduler.UnobservedTaskException");
-            //    ex.SetObserved();
-            //};
-
             Telemetry.TrackEvent("OnStartup");
             Log.Logger.Information("SnapIt Started");
 
             base.OnStartup(e);
         }
-
-        //private void LogUnhandledException(Exception e, string @event)
-        //{
-        //    Telemetry.TrackException(e);
-        //}
 
         private void RegisterGlobalExceptionHandling(ILogger log)
         {
@@ -155,6 +130,7 @@ namespace SnapIt
         {
             containerRegistry.RegisterForNavigation<HomeView>();
             containerRegistry.RegisterForNavigation<LayoutView>();
+            containerRegistry.RegisterForNavigation<ApplicationView>();
             containerRegistry.RegisterForNavigation<MouseSettingsView>();
             containerRegistry.RegisterForNavigation<KeyboardSettingsView>();
             containerRegistry.RegisterForNavigation<WindowsView>();
@@ -162,10 +138,12 @@ namespace SnapIt
             containerRegistry.RegisterForNavigation<SettingsView>();
             containerRegistry.RegisterForNavigation<WhatsNewView>();
             containerRegistry.RegisterForNavigation<AboutView>();
+            containerRegistry.RegisterForNavigation<PopupWindow>();
 
             containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
             containerRegistry.RegisterSingleton<ISettingService, SettingService>();
             containerRegistry.RegisterSingleton<ISnapService, SnapService>();
+            containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
             containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
             containerRegistry.Register<IWindowService, WindowService>();
             containerRegistry.RegisterSingleton<IStandaloneLicenseService, StandaloneLicenseService>();

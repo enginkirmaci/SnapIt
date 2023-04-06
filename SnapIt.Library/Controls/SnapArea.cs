@@ -12,6 +12,46 @@ namespace SnapIt.Library.Controls
     {
         public SnapControl SnapControl { get; set; }
 
+        public bool AreaNumberVisible
+        {
+            get => (bool)GetValue(AreaNumberVisibleProperty);
+            set => SetValue(AreaNumberVisibleProperty, value);
+        }
+
+        public static readonly DependencyProperty AreaNumberVisibleProperty
+         = DependencyProperty.Register("AreaNumberVisibleProperty", typeof(bool), typeof(SnapArea),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(AreaNumberVisiblePropertyChanged)
+           });
+
+        private static void AreaNumberVisiblePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapArea = (SnapArea)d;
+            snapArea.AreaNumberVisible = (bool)e.NewValue;
+        }
+
+        public int AreaNumber
+        {
+            get => (int)GetValue(AreaNumberProperty) + 1;
+            set => SetValue(AreaNumberProperty, value);
+        }
+
+        public static readonly DependencyProperty AreaNumberProperty
+         = DependencyProperty.Register("AreaNumberProperty", typeof(int), typeof(SnapArea),
+           new FrameworkPropertyMetadata()
+           {
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(AreaNumberPropertyChanged)
+           });
+
+        private static void AreaNumberPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapArea = (SnapArea)d;
+            snapArea.AreaNumber = (int)e.NewValue;
+        }
+
         public Thickness AreaPadding
         {
             get => (Thickness)GetValue(AreaPaddingProperty);
@@ -72,6 +112,9 @@ namespace SnapIt.Library.Controls
             var area = this.FindChild<Grid>("Area");
             if (area != null)
             {
+                //if (((SolidColorBrush)area.Background).Color == Theme.OverlayColor)
+                //    return;
+
                 area.Background = brush;
                 brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
             }

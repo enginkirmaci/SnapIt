@@ -4,12 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:SnapIt.Library.Converters;assembly=SnapIt.Library"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    StartupUri="Window1.xaml">
+    StartupUri="Window2.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/WPFUI;component/Styles/Theme/Dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/WPFUI;component/Styles/WPFUI.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Wpf.Ui;component/Styles/Theme/Dark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Wpf.Ui;component/Styles/Wpf.Ui.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/CustomStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/SnapIt.Library;component/Controls/Styles/SnapIt.Library.UI.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -22,6 +22,7 @@
             <converter:EqualVisibilityConverter x:Key="EqualVisibilityConverter" />
             <converter:InputDeviceConverter x:Key="InputDeviceConverter" />
             <converter:DoubleMultiplierConverter x:Key="DoubleMultiplierConverter" />
+            <converter:NullVisibilityConverter x:Key="NullVisibilityConverter" />
 
             <sys:Boolean x:Key="FalseValue">False</sys:Boolean>
             <sys:Boolean x:Key="TrueValue">True</sys:Boolean>
@@ -31,6 +32,8 @@
                 Remember to do this assignment AFTER the WPFUI styles are loaded, otherwise the library will try to load the system font.
             -->
             <!--<FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Themes/#Segoe Fluent Icons</FontFamily>-->
+
+            <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Themes/#Segoe Fluent Icons</FontFamily>
 
             <!--
                 Here is an example of manually changing only one color

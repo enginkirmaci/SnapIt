@@ -1,15 +1,17 @@
-﻿using Gma.System.MouseKeyHook;
-using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
-using SnapIt.Library.Mappers;
-using SnapIt.Library.Tools;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using Gma.System.MouseKeyHook;
+using SnapIt.Library.Controls;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
+using SnapIt.Library.Mappers;
+using SnapIt.Library.Tools;
 
 namespace SnapIt.Library.Services
 {
@@ -18,13 +20,16 @@ namespace SnapIt.Library.Services
         private readonly IWindowService windowService;
         private readonly ISettingService settingService;
         private readonly IWinApiService winApiService;
-
+        private readonly IApplicationService applicationService;
         private static List<Keys> keysDown = new List<Keys>();
         private static IKeyboardMouseEvents globalHook;
 
         private ActiveWindow activeWindow;
         private SnapAreaInfo snapAreaInfo;
+
+        private SnapLoadingWindow loadingWindow;
         private bool isTrialEnded = false;
+
         private bool isWindowDetected = false;
         private bool isListening = false;
         private bool isHoldingKey = false;
@@ -49,11 +54,13 @@ namespace SnapIt.Library.Services
         public SnapService(
             IWindowService windowService,
             ISettingService settingService,
-            IWinApiService winApiService)
+            IWinApiService winApiService,
+            IApplicationService applicationService)
         {
             this.windowService = windowService;
             this.settingService = settingService;
             this.winApiService = winApiService;
+            this.applicationService = applicationService;
         }
 
         public void SetIsTrialEnded(bool isEnded)
@@ -89,6 +96,48 @@ namespace SnapIt.Library.Services
                 { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> CycleLayouts() },
                 { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), ()=> StartStop() }
             };
+
+            Dictionary<string, Dictionary<SnapScreen, List<ApplicationGroup>>> screenApplicationGroupHotKeyMap = new Dictionary<string, Dictionary<SnapScreen, List<ApplicationGroup>>>();
+
+            foreach (var snapScreen in settingService.SnapScreens)
+            {
+                foreach (var applicationGroup in snapScreen.ApplicationGroups)
+                {
+                    if (!string.IsNullOrWhiteSpace(applicationGroup.ActivateHotkey))
+                    {
+                        var applicationGroupHotkey = applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin");
+
+                        if (!screenApplicationGroupHotKeyMap.ContainsKey(applicationGroupHotkey))
+                        {
+                            screenApplicationGroupHotKeyMap.Add(applicationGroupHotkey, new Dictionary<SnapScreen, List<ApplicationGroup>>());
+                        }
+
+                        if (!screenApplicationGroupHotKeyMap[applicationGroupHotkey].ContainsKey(snapScreen))
+                        {
+                            screenApplicationGroupHotKeyMap[applicationGroupHotkey].Add(snapScreen, new List<ApplicationGroup>());
+                        }
+
+                        screenApplicationGroupHotKeyMap[applicationGroupHotkey][snapScreen].Add(applicationGroup);
+                    }
+                }
+            }
+
+            if (screenApplicationGroupHotKeyMap.Count > 0)
+            {
+                foreach (var screenApplicationGroupHotkey in screenApplicationGroupHotKeyMap)
+                {
+                    map.Add(Combination.FromString(screenApplicationGroupHotkey.Key), () =>
+                    {
+                        foreach (var screenApplicationGroup in screenApplicationGroupHotkey.Value)
+                        {
+                            foreach (var applicationGroup in screenApplicationGroup.Value)
+                            {
+                                StartApplications(screenApplicationGroup.Key, applicationGroup);
+                            }
+                        }
+                    });
+                }
+            }
 
             if (settingService.Settings.EnableKeyboard)
             {
@@ -133,8 +182,83 @@ namespace SnapIt.Library.Services
             ScreenLayoutLoaded?.Invoke(settingService.SnapScreens, settingService.Layouts);
         }
 
+        public async void StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
+        {
+            if (DisableIfFullScreen())
+            {
+                return;
+            }
+
+            applicationService.Initialize();
+
+            var areaRectangles = windowService.GetSnapAreaRectangles(snapScreen);
+
+            foreach (var area in applicationGroup.ApplicationAreas)
+            {
+                if (area.Applications != null)
+                {
+                    foreach (var application in area.Applications)
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (loadingWindow == null)
+                            {
+                                var primaryScreen = settingService.SnapScreens.FirstOrDefault(i => i.IsPrimary);
+                                if (primaryScreen == null)
+                                {
+                                    primaryScreen = settingService.SnapScreens.First();
+                                }
+
+                                loadingWindow = new SnapLoadingWindow(winApiService, primaryScreen);
+                            }
+
+                            loadingWindow.SetLoadingMessage(
+                                    !string.IsNullOrWhiteSpace(application?.Title) ?
+                                    application?.Title : application?.Path);
+                        });
+
+                        if (areaRectangles != null && application != null && areaRectangles.ContainsKey(application.AreaNumber))
+                        {
+                            await StartApplication(application, areaRectangles[application.AreaNumber]);
+                        }
+                    }
+                }
+            }
+
+            loadingWindow.Hide();
+
+            applicationService.Clear();
+        }
+
+        private bool DisableIfFullScreen()
+        {
+            activeWindow = winApiService.GetActiveWindow();
+
+            if (activeWindow != ActiveWindow.Empty && (!string.IsNullOrWhiteSpace(activeWindow.Title) && !activeWindow.Title.Equals("Program Manager")) && settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private async Task StartApplication(ApplicationItem application, Rectangle rectangle)
+        {
+            var openedWindow = await applicationService.StartApplication(application, rectangle);
+
+            if (openedWindow != null)
+            {
+                MoveWindow(openedWindow, rectangle, false);
+            }
+        }
+
         private void StartStop()
         {
+            if (DisableIfFullScreen())
+            {
+                return;
+            }
+
             if (IsRunning)
             {
                 Release();
@@ -193,6 +317,11 @@ namespace SnapIt.Library.Services
 
         private void CycleLayouts()
         {
+            if (DisableIfFullScreen())
+            {
+                return;
+            }
+
             var snapScreen = settingService.LatestActiveScreen;
             var layoutIndex = settingService.Layouts.IndexOf(snapScreen.Layout);
             var nextLayout = settingService.Layouts.ElementAt((layoutIndex + 1) % settingService.Layouts.Count);
@@ -580,21 +709,26 @@ namespace SnapIt.Library.Services
 
         private void MoveActiveWindow(Rectangle rectangle, bool isLeftClick)
         {
-            if (activeWindow != ActiveWindow.Empty)
+            MoveWindow(activeWindow, rectangle, isLeftClick);
+        }
+
+        private void MoveWindow(ActiveWindow currentWindow, Rectangle rectangle, bool isLeftClick)
+        {
+            if (currentWindow != ActiveWindow.Empty)
             {
                 if (!rectangle.Equals(Rectangle.Empty))
                 {
-                    winApiService.GetWindowMargin(activeWindow, out Rectangle withMargin);
+                    winApiService.GetWindowMargin(currentWindow, out Rectangle withMargin);
 
                     if (!withMargin.Equals(default(Rectangle)))
                     {
-                        var marginHorizontal = (activeWindow.Boundry.Width - withMargin.Width) / 2;
+                        var marginHorizontal = (currentWindow.Boundry.Width - withMargin.Width) / 2;
                         var systemMargin = new Rectangle
                         {
                             Left = marginHorizontal,
                             Right = marginHorizontal,
                             Top = 0,
-                            Bottom = activeWindow.Boundry.Height - withMargin.Height
+                            Bottom = currentWindow.Boundry.Height - withMargin.Height
                         };
 
                         rectangle.Left -= systemMargin.Left;
@@ -609,21 +743,21 @@ namespace SnapIt.Library.Services
                         {
                             Thread.Sleep(100);
 
-                            winApiService.MoveWindow(activeWindow, rectangle);
+                            winApiService.MoveWindow(currentWindow, rectangle);
 
-                            if (!rectangle.Dpi.Equals(activeWindow.Dpi))
+                            if (!rectangle.Dpi.Equals(currentWindow.Dpi))
                             {
-                                winApiService.MoveWindow(activeWindow, rectangle);
+                                winApiService.MoveWindow(currentWindow, rectangle);
                             }
                         }).Start();
                     }
                     else
                     {
-                        winApiService.MoveWindow(activeWindow, rectangle);
+                        winApiService.MoveWindow(currentWindow, rectangle);
 
-                        if (!rectangle.Dpi.Equals(activeWindow.Dpi))
+                        if (!rectangle.Dpi.Equals(currentWindow.Dpi))
                         {
-                            winApiService.MoveWindow(activeWindow, rectangle);
+                            winApiService.MoveWindow(currentWindow, rectangle);
                         }
                     }
 
