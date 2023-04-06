@@ -1,11 +1,11 @@
-﻿using System.Windows.Controls;
+﻿using Wpf.Ui.Controls;
 
 namespace SnapIt.Views
 {
     /// <summary>
     /// Interaction logic for AboutView.xaml
     /// </summary>
-    public partial class AboutView : Page
+    public partial class AboutView : UiPage
     {
         public AboutView()
         {

@@ -1,67 +1,70 @@
-﻿<Page
+﻿<wpfui:UiPage
     x:Class="SnapIt.Views.WhatsNewView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:SnapIt.ViewModels"
-    xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
     Title="What's New"
     d:DataContext="{d:DesignInstance vm:WhatsNewViewModel,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="450"
     d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Style="{StaticResource UiPageScrollable}"
     mc:Ignorable="d">
 
-    <StackPanel>
-        <TextBlock
-            Margin="0,0,0,8"
-            FontSize="18"
-            FontWeight="Medium"
-            Text="Current Version" />
-        <StackPanel DataContext="{Binding FirstChangeLog}">
-            <TextBlock
-                Margin="0,0,0,6"
-                FontWeight="Medium"
-                Text="{Binding Header}" />
-            <ItemsControl ItemsSource="{Binding Lines}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
-                            <TextBlock FontSize="10" Text="&#x25CF; " />
-                            <TextBlock Text="{Binding}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
+    <Grid Margin="18,69,18,18">
+        <ScrollViewer>
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="18"
+                    FontWeight="Medium"
+                    Text="Current Version" />
+                <StackPanel DataContext="{Binding FirstChangeLog}">
+                    <TextBlock
+                        Margin="0,0,0,6"
+                        FontWeight="Medium"
+                        Text="{Binding Header}" />
+                    <ItemsControl ItemsSource="{Binding Lines}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
+                                    <TextBlock FontSize="10" Text="&#x25CF; " />
+                                    <TextBlock Text="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
 
-        <wpfui:CardExpander Margin="0,8,0,0" Header="Older Changes">
-            <ItemsControl ItemsSource="{Binding ChangeLogs}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock
-                                Margin="0,6,0,6"
-                                FontWeight="Medium"
-                                Text="{Binding Header}" />
-                            <ItemsControl ItemsSource="{Binding Lines}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
-                                            <TextBlock FontSize="10" Text="&#x25CF; " />
-                                            <TextBlock Text="{Binding}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </wpfui:CardExpander>
-    </StackPanel>
-</Page>
+                <wpfui:CardExpander Margin="0,8,0,0" Header="Older Changes">
+                    <ItemsControl ItemsSource="{Binding ChangeLogs}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="0,6,0,6"
+                                        FontWeight="Medium"
+                                        Text="{Binding Header}" />
+                                    <ItemsControl ItemsSource="{Binding Lines}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
+                                                    <TextBlock FontSize="10" Text="&#x25CF; " />
+                                                    <TextBlock Text="{Binding}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </wpfui:CardExpander>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</wpfui:UiPage>

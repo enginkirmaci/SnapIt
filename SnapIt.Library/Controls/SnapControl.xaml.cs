@@ -22,6 +22,58 @@ namespace SnapIt.Library.Controls
         private List<LayoutLine> currentLayoutLines;
         private List<LayoutOverlay> currentLayoutOverlays;
 
+        public int AreaCount { get; set; }
+
+        public bool IsNumberVisible
+        {
+            get => (bool)GetValue(IsNumberVisibleProperty);
+            set => SetValue(IsNumberVisibleProperty, value);
+        }
+
+        public static readonly DependencyProperty IsNumberVisibleProperty
+         = DependencyProperty.Register("IsNumberVisible", typeof(bool), typeof(SnapControl),
+           new FrameworkPropertyMetadata()
+           {
+               DefaultValue = false,
+               BindsTwoWayByDefault = true,
+               PropertyChangedCallback = new PropertyChangedCallback(IsNumberVisiblePropertyChanged)
+           });
+
+        public void HighlightArea(int number)
+        {
+            var snapAreas = this.FindChildren<SnapArea>();
+            foreach (var snapArea in snapAreas)
+            {
+                if (snapArea.AreaNumber == number)
+                {
+                    snapArea.OnHoverStyle();
+                }
+                else
+                {
+                    snapArea.NormalStyle();
+                }
+            }
+
+            var overlays = this.FindChildren<SnapOverlay>();
+            foreach (var overlay in overlays)
+            {
+                if (overlay.AreaNumber == number)
+                {
+                    overlay.OnHoverStyle();
+                }
+                else
+                {
+                    overlay.NormalStyle();
+                }
+            }
+        }
+
+        private static void IsNumberVisiblePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var snapControl = (SnapControl)d;
+            snapControl.IsNumberVisible = (bool)e.NewValue;
+        }
+
         public int AreaPadding
         {
             get => (int)GetValue(AreaPaddingProperty);
@@ -205,13 +257,13 @@ namespace SnapIt.Library.Controls
             rightBorder = new SnapBorder(this, Theme) { IsDraggable = false };
 
             SizeChanged += SnapControl_SizeChanged;
-            this.LayoutUpdated += SnapControl_LayoutUpdated;
+            //LayoutUpdated += SnapControl_LayoutUpdated;
         }
 
-        private void SnapControl_LayoutUpdated(object sender, System.EventArgs e)
-        {
-            ResetBorderTool();
-        }
+        //private void SnapControl_LayoutUpdated(object sender, System.EventArgs e)
+        //{
+        //    ResetBorderTool();
+        //}
 
         private void SnapControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -329,8 +381,6 @@ namespace SnapIt.Library.Controls
                 currentLayoutOverlays = new List<LayoutOverlay>(layout.LayoutOverlays);
             };
 
-            AreaPadding = layout.AreaPadding;
-
             MainGrid.Children.Clear();
             MainFullOverlay.Children.Clear();
             MainOverlay.Children.Clear();
@@ -340,50 +390,55 @@ namespace SnapIt.Library.Controls
             MainGrid.Children.Add(leftBorder);
             MainGrid.Children.Add(rightBorder);
 
-            foreach (var layoutLine in layout.LayoutLines)
+            if (layout != null)
             {
-                var snapBorder = new SnapBorder(this, Theme)
-                {
-                    LayoutLine = layoutLine
-                };
+                AreaPadding = layout.AreaPadding;
 
-                AddBorder(snapBorder);
-            }
-
-            if (IsDesignMode)
-            {
-                if (layout.LayoutOverlays != null)
+                foreach (var layoutLine in layout.LayoutLines)
                 {
-                    foreach (var layoutOverlay in layout.LayoutOverlays)
+                    var snapBorder = new SnapBorder(this, Theme)
                     {
-                        var overlayEditor = new SnapOverlayEditor(this, Theme)
-                        {
-                            LayoutOverlay = layoutOverlay,
-                            ShowMiniOverlay = true
-                        };
+                        LayoutLine = layoutLine
+                    };
 
-                        MainOverlay.Children.Add(overlayEditor);
+                    AddBorder(snapBorder);
+                }
+
+                if (IsDesignMode)
+                {
+                    if (layout.LayoutOverlays != null)
+                    {
+                        foreach (var layoutOverlay in layout.LayoutOverlays)
+                        {
+                            var overlayEditor = new SnapOverlayEditor(this, Theme)
+                            {
+                                LayoutOverlay = layoutOverlay,
+                                ShowMiniOverlay = true
+                            };
+
+                            MainOverlay.Children.Add(overlayEditor);
+                        }
                     }
                 }
-            }
-            else
-            {
-                if (layout.LayoutOverlays != null)
+                else
                 {
-                    foreach (var layoutOverlay in layout.LayoutOverlays)
+                    if (layout.LayoutOverlays != null)
                     {
-                        var fullOverlay = new SnapFullOverlay(Theme)
+                        foreach (var layoutOverlay in layout.LayoutOverlays)
                         {
-                            LayoutOverlay = layoutOverlay
-                        };
+                            var fullOverlay = new SnapFullOverlay(Theme)
+                            {
+                                LayoutOverlay = layoutOverlay
+                            };
 
-                        var overlay = new SnapOverlay(Theme, fullOverlay)
-                        {
-                            LayoutOverlay = layoutOverlay
-                        };
+                            var overlay = new SnapOverlay(Theme, fullOverlay)
+                            {
+                                LayoutOverlay = layoutOverlay,
+                            };
 
-                        MainFullOverlay.Children.Add(fullOverlay);
-                        MainOverlay.Children.Add(overlay);
+                            MainFullOverlay.Children.Add(fullOverlay);
+                            MainOverlay.Children.Add(overlay);
+                        }
                     }
                 }
             }
@@ -393,6 +448,8 @@ namespace SnapIt.Library.Controls
 
         private void AdoptToScreen()
         {
+            AreaCount = 0;
+
             topBorder.SetPos(new Point(0, -SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
             bottomBorder.SetPos(new Point(0, MainGrid.ActualHeight - SnapBorder.THICKNESSHALF), new Size(MainGrid.ActualWidth, 0), SplitDirection.Horizontal);
             leftBorder.SetPos(new Point(-SnapBorder.THICKNESSHALF, 0), new Size(0, MainGrid.ActualHeight), SplitDirection.Vertical);
@@ -499,6 +556,9 @@ namespace SnapIt.Library.Controls
                     var overlays = this.FindChildren<SnapOverlay>();
                     foreach (var overlay in overlays)
                     {
+                        overlay.AreaNumber = AreaCount++;
+                        overlay.AreaNumberVisible = IsNumberVisible;
+
                         if (overlay.LayoutOverlay != null)
                         {
                             if (overlay.LayoutOverlay.MiniOverlay != null)
@@ -613,6 +673,8 @@ namespace SnapIt.Library.Controls
                         Height = rectangle.Height,
                         SnapControl = this,
                         Theme = Theme,
+                        AreaNumber = AreaCount++,
+                        AreaNumberVisible = IsNumberVisible,
                         AreaPadding = new Thickness(AreaPadding)
                     };
 

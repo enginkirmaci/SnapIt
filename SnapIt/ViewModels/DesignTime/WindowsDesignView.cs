@@ -1,7 +1,7 @@
-﻿using Prism.Commands;
-using SnapIt.Library.Entities;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Prism.Commands;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.ViewModels.DesignTime
 {

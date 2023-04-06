@@ -92,6 +92,18 @@ namespace SnapIt.Library.Services
             return boundries;
         }
 
+        public Dictionary<int, Rectangle> GetSnapAreaRectangles(SnapScreen snapScreen)
+        {
+            var window = snapWindows.FirstOrDefault(window => window.Screen.DeviceName == snapScreen.DeviceName);
+
+            if (window != null)
+            {
+                return window.SnapAreaRectangles;
+            }
+
+            return null;
+        }
+
         public SnapAreaInfo SelectElementWithPoint(int x, int y)
         {
             var result = new SnapAreaInfo();

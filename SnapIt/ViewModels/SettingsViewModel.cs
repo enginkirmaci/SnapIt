@@ -1,9 +1,8 @@
-﻿using Prism.Commands;
+﻿using System.Collections.ObjectModel;
+using Prism.Commands;
 using Prism.Mvvm;
 using SnapIt.Library.Entities;
 using SnapIt.Library.Services;
-using System.Collections.ObjectModel;
-using WPFUI.Theme;
 
 namespace SnapIt.ViewModels
 {
@@ -89,15 +88,29 @@ namespace SnapIt.ViewModels
             switch (settingService.Settings.AppTheme)
             {
                 case UITheme.Dark:
-                    Manager.Switch(Style.Dark, true, false);
+                    Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Dark, Wpf.Ui.Appearance.BackgroundType.Mica, false, true);
                     break;
 
                 case UITheme.Light:
-                    Manager.Switch(Style.Light, true, false);
+                    Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Light, Wpf.Ui.Appearance.BackgroundType.Mica, false, true);
                     break;
 
                 case UITheme.System:
-                    Manager.SetSystemTheme(true, false);
+                    var system = Wpf.Ui.Appearance.Theme.GetSystemTheme();
+                    switch (system)
+                    {
+                        case Wpf.Ui.Appearance.SystemThemeType.Light:
+                        case Wpf.Ui.Appearance.SystemThemeType.Sunrise:
+                        case Wpf.Ui.Appearance.SystemThemeType.Flow:
+                            Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Light, Wpf.Ui.Appearance.BackgroundType.Mica, true, true);
+                            break;
+
+                        case Wpf.Ui.Appearance.SystemThemeType.Dark:
+                        case Wpf.Ui.Appearance.SystemThemeType.Glow:
+                        case Wpf.Ui.Appearance.SystemThemeType.CapturedMotion:
+                            Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Dark, Wpf.Ui.Appearance.BackgroundType.Mica, true, true);
+                            break;
+                    }
 
                     break;
             }

@@ -1,27 +1,24 @@
-﻿using Newtonsoft.Json;
-using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Regions;
-using SnapIt.Library;
-using SnapIt.Library.Entities;
-using SnapIt.Library.Extensions;
-using SnapIt.Library.Services;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using WPFUI.Controls;
-using WPFUI.Theme;
+using Newtonsoft.Json;
+using Prism.Commands;
+using Prism.Mvvm;
+using SnapIt.Library;
+using SnapIt.Library.Entities;
+using SnapIt.Library.Extensions;
+using SnapIt.Library.Services;
+using SnapIt.Views;
+using Wpf.Ui.Controls;
 
 namespace SnapIt.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private readonly IRegionManager regionManager;
         private readonly ISettingService settingService;
         private readonly ISnapService snapService;
         private readonly IStandaloneLicenseService standaloneLicenseService;
@@ -62,10 +59,12 @@ namespace SnapIt.ViewModels
 
         public DelegateCommand<Window> LoadedCommand { get; private set; }
         public DelegateCommand<CancelEventArgs> ClosingWindowCommand { get; private set; }
-        public DelegateCommand<string> NavigateCommand { get; private set; }
-        public DelegateCommand<string> NotifyIconViewCommand { get; private set; }
-        public DelegateCommand<object> NotifyIconOpenedCommand { get; private set; }
+        public DelegateCommand NotifyIconClickViewCommand { get; private set; }
+        public DelegateCommand<string> NotifyIconDoubleClickViewCommand { get; private set; }
+
+        //public DelegateCommand<object> NotifyIconOpenedCommand { get; private set; }
         public DelegateCommand<string> HandleLinkClick { get; private set; }
+
         public DelegateCommand RateReviewStoreClick { get; private set; }
         public DelegateCommand ExitApplicationCommand { get; private set; }
         public DelegateCommand StartStopCommand { get; private set; }
@@ -76,7 +75,6 @@ namespace SnapIt.ViewModels
         public DelegateCommand<object> TryStoreMessageClosingCommand { get; private set; }
 
         public MainWindowViewModel(
-                IRegionManager regionManager,
                 ISettingService settingService,
                 ISnapService snapService,
                 IWindowService windowService,
@@ -84,7 +82,6 @@ namespace SnapIt.ViewModels
                 IStoreLicenseService storeLicenseService,
                 IScreenChangeService screenChangeService)
         {
-            this.regionManager = regionManager;
             this.settingService = settingService;
             this.snapService = snapService;
             this.standaloneLicenseService = standaloneLicenseService;
@@ -119,24 +116,11 @@ namespace SnapIt.ViewModels
 
                 ChangeTheme();
 
-                var contentControl = window.FindChild<ContentControl>("MainFrame");
-
-                RegionManager.SetRegionName(contentControl, Constants.MainRegion);
-                RegionManager.SetRegionManager(contentControl, regionManager);
-
-                var mainregion = regionManager.Regions[Constants.MainRegion];
-                mainregion.NavigationService.Navigating += NavigationService_Navigating;
-                //Journal.GoForward();
-
                 screenChangeService.Init(mainWindow);
 
                 if (!settingService.Settings.ShowMainWindow && !DevMode.IsActive)
                 {
                     mainWindow.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    NavigateView("LayoutView");
                 }
 
                 if (isStandalone)
@@ -172,6 +156,20 @@ namespace SnapIt.ViewModels
                     }
                     else
                     {
+                        //if (SnapIt.Properties.Settings.Default.RunAsAdmin)
+                        //{
+                        //    Wpf.Ui.Controls.MessageBox messageBox = new Wpf.Ui.Controls.MessageBox();
+                        //    messageBox.ButtonRightName = LicenseMessageCloseButtonText;
+                        //    messageBox.ButtonRightClick += MessageBox_ButtonRightClick;
+                        //    messageBox.ButtonLeftClick += MessageBox_ButtonLeftClick;
+
+                        //    messageBox.Show(
+                        //        "Run as admin limitation!",
+                        //        @"Due to limitations of Microsoft Store, \n
+                        //            store purchases couldn't make while application is running as administrator.\n\n
+                        //            Do you want start SnapIt without admin priviligies?");
+                        //}
+
                         PurchaseFullLicense();
                     }
 
@@ -242,7 +240,14 @@ namespace SnapIt.ViewModels
                 }
                 else
                 {
-                    Application.Current.Shutdown();
+                    if (IsTrialEnded)
+                    {
+                        Application.Current.Shutdown();
+                    }
+                    else
+                    {
+                        IsTryStoreMessageOpen = false;
+                    }
                 }
 
                 NewVersionMessageOpen = false;
@@ -265,15 +270,16 @@ namespace SnapIt.ViewModels
                 }
             });
 
-            NavigateCommand = new DelegateCommand<string>((navigatePath) =>
+            NotifyIconClickViewCommand = new DelegateCommand(() =>
             {
-                if (navigatePath != null)
-                {
-                    this.regionManager.RequestNavigate(Constants.MainRegion, navigatePath, NavigationCompleted);
-                }
+                var popupWindow = new PopupWindow();
+
+                popupWindow.Show();
+                popupWindow.Activate();
+                popupWindow.Focus();
             });
 
-            NotifyIconViewCommand = new DelegateCommand<string>((navigatePath) =>
+            NotifyIconDoubleClickViewCommand = new DelegateCommand<string>((navigatePath) =>
             {
                 if (mainWindow != null && mainWindow.IsVisible)
                 {
@@ -294,61 +300,65 @@ namespace SnapIt.ViewModels
                 NavigateView(navigatePath);
             });
 
-            NotifyIconOpenedCommand = new DelegateCommand<object>((obj) =>
-            {
-                var rootTitleBar = mainWindow.FindChild<TitleBar>("RootTitleBar");
+            //NotifyIconOpenedCommand = new DelegateCommand<object>((obj) =>
+            //{
+            //    var rootTitleBar = mainWindow.FindChild<TitleBar>("RootTitleBar");
 
-                var layoutsMenu = rootTitleBar.NotifyIconMenu.FindChild<MenuItem>("LayoutMenuItem");
+            //    var layoutsMenu = rootTitleBar.Tray.Menu.FindChild<MenuItem>("LayoutMenuItem");
 
-                if (layoutsMenu == null)
-                {
-                    return;
-                }
+            //    if (layoutsMenu == null)
+            //    {
+            //        return;
+            //    }
 
-                layoutsMenu.Items.Clear();
+            //    layoutsMenu.Items.Clear();
 
-                var snapScreens = settingService.SnapScreens;
-                var layouts = settingService.Layouts;
+            //    var snapScreens = settingService.SnapScreens;
+            //    var layouts = settingService.Layouts;
 
-                foreach (var screen in snapScreens)
-                {
-                    var screenMenu = new MenuItem()
-                    {
-                        Header = $"Display {screen.DeviceNumber} ({screen.Resolution}) - {screen.Primary}"
-                    };
+            //    foreach (var screen in snapScreens)
+            //    {
+            //        var screenMenu = new MenuItem()
+            //        {
+            //            Header = $"Display {screen.DeviceNumber} ({screen.Resolution}) - {screen.Primary}"
+            //        };
 
-                    if (snapScreens.Count > 1)
-                    {
-                        layoutsMenu.Items.Add(screenMenu);
-                    }
+            //        if (snapScreens.Count > 1)
+            //        {
+            //            layoutsMenu.Items.Add(screenMenu);
+            //        }
 
-                    foreach (var layout in layouts)
-                    {
-                        var layoutMenuItem = new MenuItem()
-                        {
-                            Header = layout.Name,
-                            Tag = screen.DeviceName,
-                            Uid = layout.Guid.ToString(),
-                            Icon = null
-                        };
-                        layoutMenuItem.Click += LayoutItem_Click;
+            //        foreach (var layout in layouts)
+            //        {
+            //            var layoutMenuItem = new MenuItem()
+            //            {
+            //                Header = layout.Name,
+            //                Tag = screen.DeviceName,
+            //                Uid = layout.Guid.ToString(),
+            //                SymbolIcon = Wpf.Ui.Common.SymbolRegular.Empty
+            //            };
+            //            layoutMenuItem.Click += LayoutItem_Click;
 
-                        if (screen.Layout == layout)
-                        {
-                            layoutMenuItem.Icon = WPFUI.Common.Icon.Checkmark24;
-                        }
+            //            if (screen.Layout == layout)
+            //            {
+            //                layoutMenuItem.SymbolIcon = Wpf.Ui.Common.SymbolRegular.Checkmark24;
+            //            }
+            //            else
+            //            {
+            //                layoutMenuItem.Header = "     " + layout.Name;
+            //            }
 
-                        if (snapScreens.Count > 1)
-                        {
-                            screenMenu.Items.Add(layoutMenuItem);
-                        }
-                        else
-                        {
-                            layoutsMenu.Items.Add(layoutMenuItem);
-                        }
-                    }
-                }
-            });
+            //            if (snapScreens.Count > 1)
+            //            {
+            //                screenMenu.Items.Add(layoutMenuItem);
+            //            }
+            //            else
+            //            {
+            //                layoutsMenu.Items.Add(layoutMenuItem);
+            //            }
+            //        }
+            //    }
+            //});
 
             RateReviewStoreClick = new DelegateCommand(async () =>
             {
@@ -392,19 +402,24 @@ namespace SnapIt.ViewModels
             });
         }
 
-        private void NavigationService_Navigating(object? sender, RegionNavigationEventArgs e)
-        {
-        }
+        //private void MessageBox_ButtonRightClick(object sender, RoutedEventArgs e)
+        //{
+        //    if (IsTrialEnded)
+        //    {
+        //        Application.Current.Shutdown();
+        //    }
+        //    else
+        //    {
+        //        ((Wpf.Ui.Controls.MessageBox)sender).Hide();
+        //    }
+        //}
 
-        private void NavigationCompleted(NavigationResult navigationResult)
-        {
-            if (navigationResult.Error != null)
-            {
-                //throw navigationResult.Error;
-            }
-        }
+        //private void MessageBox_ButtonLeftClick(object sender, RoutedEventArgs e)
+        //{
+        //    RunAsAdministrator.RunNormal();
+        //}
 
-        private void NavigateView(string navigatePath)
+        public void NavigateView(string navigatePath)
         {
             var rootNavigation = mainWindow.FindChild<NavigationStore>("RootNavigation");
 
@@ -413,10 +428,9 @@ namespace SnapIt.ViewModels
             {
                 foreach (var item in rootNavigation.Items)
                 {
-                    if (item.CommandParameter != null && item.CommandParameter.Equals(navigatePath))
+                    if (item is NavigationItem navigationItem && navigationItem.PageTag != null && navigationItem.PageTag.Equals(navigatePath))
                     {
-                        rootNavigation.Navigate(item.Tag.ToString());
-                        regionManager.RequestNavigate(Constants.MainRegion, navigatePath, NavigationCompleted);
+                        rootNavigation.Navigate(navigationItem.PageTag);
 
                         break;
                     }
@@ -431,15 +445,29 @@ namespace SnapIt.ViewModels
             switch (settingService.Settings.AppTheme)
             {
                 case UITheme.Dark:
-                    Manager.Switch(WPFUI.Theme.Style.Dark, true, false);
+                    Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Dark, Wpf.Ui.Appearance.BackgroundType.Mica, false, true);
                     break;
 
                 case UITheme.Light:
-                    Manager.Switch(WPFUI.Theme.Style.Light, true, false);
+                    Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Light, Wpf.Ui.Appearance.BackgroundType.Mica, false, true);
                     break;
 
                 case UITheme.System:
-                    Manager.SetSystemTheme(true, false);
+                    var system = Wpf.Ui.Appearance.Theme.GetSystemTheme();
+                    switch (system)
+                    {
+                        case Wpf.Ui.Appearance.SystemThemeType.Light:
+                        case Wpf.Ui.Appearance.SystemThemeType.Sunrise:
+                        case Wpf.Ui.Appearance.SystemThemeType.Flow:
+                            Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Light, Wpf.Ui.Appearance.BackgroundType.Mica, true, true);
+                            break;
+
+                        case Wpf.Ui.Appearance.SystemThemeType.Dark:
+                        case Wpf.Ui.Appearance.SystemThemeType.Glow:
+                        case Wpf.Ui.Appearance.SystemThemeType.CapturedMotion:
+                            Wpf.Ui.Appearance.Theme.Apply(Wpf.Ui.Appearance.ThemeType.Dark, Wpf.Ui.Appearance.BackgroundType.Mica, true, true);
+                            break;
+                    }
 
                     break;
             }
@@ -486,7 +514,7 @@ namespace SnapIt.ViewModels
             snapService.Initialize();
         }
 
-        private void SnapService_LayoutChanged(Library.Entities.SnapScreen snapScreen, Layout layout)
+        private void SnapService_LayoutChanged(SnapScreen snapScreen, Layout layout)
         {
             ShowNotification("Layout changed", $"{layout.Name} layout is set to Display {snapScreen.DeviceNumber} ({snapScreen.Resolution})");
         }
@@ -538,6 +566,11 @@ namespace SnapIt.ViewModels
             LicenseStatus licenseStatus = isStandalone ?
                 standaloneLicenseService.CheckStatus() :
                 await storeLicenseService.CheckStatusAsync();
+
+            if (DevMode.TestInTrial)
+            {
+                licenseStatus = LicenseStatus.InTrial;
+            }
 
             switch (licenseStatus)
             {

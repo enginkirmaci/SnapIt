@@ -1,9 +1,9 @@
-﻿using Prism.Commands;
-using SnapIt.Library.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
+using Prism.Commands;
+using SnapIt.Library.Entities;
 
 namespace SnapIt.ViewModels.DesignTime
 {
@@ -35,6 +35,7 @@ namespace SnapIt.ViewModels.DesignTime
                 {
                     Name = "Layout 1",
                     Size = new System.Windows.Size(500, 200),
+                    AreaPadding = 0,
                     LayoutLines = new List<LayoutLine>
                     {
                         new LayoutLine
