@@ -47,7 +47,7 @@ jobs:
     #  env:
     #    Configuration: ${{ matrix.configuration }}
 
-    - run: dotnet publish ./SnapIt/*.csproj -c $env:Configuration -a x86 -o ./SnapIt.Setup/build --self-contained false
+    - run: dotnet publish ./SnapIt/*.csproj -c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false
 
     # Create the app package by building and packaging the Windows Application Packaging project
     #- name: Build the app package
