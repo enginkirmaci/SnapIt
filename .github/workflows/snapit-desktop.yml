@@ -1,0 +1,67 @@
+name: SnapIt Desktop
+ 
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Standalone]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    env:
+      Solution_Name: SnapIt.sln                        # Replace with your solution name, i.e. MyWpfApp.sln.
+      Project_Directory: SnapIt    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
+      Project_Path: SnapIt\SnapIt.csproj                # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
+      Version: 4.2.0.2
+      
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore the application
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+
+    # Create the app package by building and packaging the Windows Application Packaging project
+    - name: Build the app package
+      run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:ProcessorArchitecture=x86 --self-contained false 
+      #-c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false
+       
+    - name: @callebstrom/inno-setup-cli
+      # You may pin to the exact commit or the version.
+      # uses: callebstrom/inno-setup-cli-action@b8dd53c181361a1441073ed2d15a9172ed5c71b2
+      uses: callebstrom/inno-setup-cli-action@6.2.1
+      with:
+        # Input ISS file
+        file: SnapIt.Setup\innoSetup.iss /DMyAppVersion=${{ env.Version }}
+    
+    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: MSIX Package
+        path: SnapIt.Setup\\setup
