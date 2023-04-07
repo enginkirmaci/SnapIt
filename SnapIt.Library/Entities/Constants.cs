@@ -1,18 +1,10 @@
-﻿using System.Windows.Forms;
-
-namespace SnapIt.Library.Entities
+﻿namespace SnapIt.Library.Entities
 {
     public class Constants
     {
         public const string AppStoreId = "9PHGBMZ7RBZX";
         public const string AppLogo = "/SnapIt.UI;component/Themes/snapit.png";
-#if !STANDALONE
         public static string AppName => global::System.Windows.Forms.Application.ProductName;
-#endif
-
-#if STANDALONE
-        public static string AppName => $"{Application.ProductName} Pro";
-#endif
         public static string AppTitle => $"{AppName} - Window Manager";
         public static string AppVersion => $"version {(global::System.Windows.Forms.Application.ProductVersion)}";
         public const string AppUrl = "getsnapit.com";

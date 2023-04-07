@@ -1,5 +1,5 @@
-﻿using SnapIt.Library.Entities;
-using System;
+﻿using System;
+using SnapIt.Library.Entities;
 using ThinkSharp.Licensing;
 
 namespace SnapIt.Library.Services
