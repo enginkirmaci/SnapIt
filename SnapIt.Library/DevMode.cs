@@ -24,6 +24,7 @@ namespace SnapIt.Library
         public const bool IsTopmostDisabled = false;
         public const bool SkipLicense = false;
         public const bool TestTrialEnded = false;
+        public const bool TestInTrial = false;
         public const bool SkipRunAsAdmin = false;
 #endif
 

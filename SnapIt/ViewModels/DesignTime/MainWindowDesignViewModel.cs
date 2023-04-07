@@ -8,7 +8,7 @@
         public bool IsTrial { get; set; }
         public string LicenseText { get; set; }
         public bool IsTrialMessageOpen { get; set; } = false;
-        public bool IsLicenseMessageOpen { get; set; } = false;
+        public bool IsLicenseMessageOpen { get; set; } = true;
         public string LicenseMessageErrorText { get; set; } = "Error";
         public bool IsLicenseSuccess { get; set; } = false;
         public bool NewVersionMessageOpen { get; set; } = false;
