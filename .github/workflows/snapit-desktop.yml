@@ -34,10 +34,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-
+     
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
+    #- name: Setup MSBuild.exe
+    #  uses: microsoft/setup-msbuild@v1.0.2
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
@@ -45,10 +45,12 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
+
+    - run: dotnet publish ./SnapIt/SnapIt.csproj -c $env:Configuration -a x86 -o ./SnapIt.Setup/build --self-contained false
+
     # Create the app package by building and packaging the Windows Application Packaging project
-    - name: Build the app package
-      run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:ProcessorArchitecture=x86 --self-contained false 
-      #-c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false
+    #- name: Build the app package
+    #  run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:ProcessorArchitecture=x86 --self-contained false 
       
     - name: callebstrom/inno-setup-cli
       uses: callebstrom/inno-setup-cli-action@6.2.1
