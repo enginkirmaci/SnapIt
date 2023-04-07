@@ -49,10 +49,8 @@ jobs:
     - name: Build the app package
       run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:ProcessorArchitecture=x86 --self-contained false 
       #-c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false
-       
-    - name: @callebstrom/inno-setup-cli
-      # You may pin to the exact commit or the version.
-      # uses: callebstrom/inno-setup-cli-action@b8dd53c181361a1441073ed2d15a9172ed5c71b2
+      
+    - name: callebstrom/inno-setup-cli
       uses: callebstrom/inno-setup-cli-action@6.2.1
       with:
         # Input ISS file
