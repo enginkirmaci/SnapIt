@@ -53,15 +53,16 @@ jobs:
     #- name: Build the app package
     #  run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:ProcessorArchitecture=x86 --self-contained false 
       
-    - name: callebstrom/inno-setup-cli
-      uses: callebstrom/inno-setup-cli-action@6.2.1
+    - name: nadeemjazmawe/inno-setup-action-CLI
+      # You may pin to the exact commit or the version.
+      # uses: nadeemjazmawe/inno-setup-action-cli@31fe986b893b62ba38889603be4a74452a8f6362
+      uses: nadeemjazmawe/inno-setup-action-cli@v6.0.5
       with:
-        # Input ISS file
-        file: SnapIt.Setup\innoSetup.iss /DMyAppVersion=${{ env.Version }}
+        filepath: SnapIt.Setup\innoSetup.iss /DMyAppVersion=${{ env.Version }}
     
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: MSIX Package
-        path: SnapIt.Setup\\setup
+        path: SnapIt.Setup\setup
