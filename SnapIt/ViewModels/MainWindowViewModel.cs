@@ -21,8 +21,10 @@ namespace SnapIt.ViewModels
     {
         private readonly ISettingService settingService;
         private readonly ISnapService snapService;
-        private readonly IStandaloneLicenseService standaloneLicenseService;
+
+        //private readonly IStandaloneLicenseService standaloneLicenseService;
         private readonly IStoreLicenseService storeLicenseService;
+
         private readonly IScreenChangeService screenChangeService;
         private bool isStandalone;
         private bool isTrial;
@@ -78,13 +80,13 @@ namespace SnapIt.ViewModels
                 ISettingService settingService,
                 ISnapService snapService,
                 IWindowService windowService,
-                IStandaloneLicenseService standaloneLicenseService,
+                //IStandaloneLicenseService standaloneLicenseService,
                 IStoreLicenseService storeLicenseService,
                 IScreenChangeService screenChangeService)
         {
             this.settingService = settingService;
             this.snapService = snapService;
-            this.standaloneLicenseService = standaloneLicenseService;
+            //this.standaloneLicenseService = standaloneLicenseService;
             this.storeLicenseService = storeLicenseService;
             this.screenChangeService = screenChangeService;
 
@@ -150,11 +152,11 @@ namespace SnapIt.ViewModels
             {
                 if ((bool)isConfirm)
                 {
-                    if (isStandalone)
-                    {
-                        PurchaseFullLicenseStandalone();
-                    }
-                    else
+                    //if (isStandalone)
+                    //{
+                    //    PurchaseFullLicenseStandalone();
+                    //}
+                    //else
                     {
                         //if (SnapIt.Properties.Settings.Default.RunAsAdmin)
                         //{
@@ -188,34 +190,34 @@ namespace SnapIt.ViewModels
                 }
             });
 
-            LicenseMessageClosingCommand = new DelegateCommand<object>(async (isConfirm) =>
-            {
-                if ((bool)isConfirm)
-                {
-                    var isVerified = standaloneLicenseService.VerifyLicenseKey(LicenseMessageLicenseText?.Trim());
+            //LicenseMessageClosingCommand = new DelegateCommand<object>(async (isConfirm) =>
+            //{
+            //    if ((bool)isConfirm)
+            //    {
+            //        var isVerified = standaloneLicenseService.VerifyLicenseKey(LicenseMessageLicenseText?.Trim());
 
-                    if (isVerified)
-                    {
-                        await CheckIfTrialAsync();
+            //        if (isVerified)
+            //        {
+            //            await CheckIfTrialAsync();
 
-                        IsLicenseSuccess = true;
+            //            IsLicenseSuccess = true;
 
-                        IsLicenseMessageOpen = false;
-                    }
-                    else
-                    {
-                        LicenseMessageErrorText = $"The entered license key is not valid. Check your license key.";
-                    }
-                }
-                else if (IsTrialEnded)
-                {
-                    Application.Current.Shutdown();
-                }
-                else
-                {
-                    IsLicenseMessageOpen = false;
-                }
-            });
+            //            IsLicenseMessageOpen = false;
+            //        }
+            //        else
+            //        {
+            //            LicenseMessageErrorText = $"The entered license key is not valid. Check your license key.";
+            //        }
+            //    }
+            //    else if (IsTrialEnded)
+            //    {
+            //        Application.Current.Shutdown();
+            //    }
+            //    else
+            //    {
+            //        IsLicenseMessageOpen = false;
+            //    }
+            //});
 
             NewVersionMessageClosingCommand = new DelegateCommand<object>((isConfirm) =>
             {
@@ -563,9 +565,9 @@ namespace SnapIt.ViewModels
 
         private async Task CheckIfTrialAsync()
         {
-            LicenseStatus licenseStatus = isStandalone ?
-                standaloneLicenseService.CheckStatus() :
-                await storeLicenseService.CheckStatusAsync();
+            LicenseStatus licenseStatus = !isStandalone ?
+                await storeLicenseService.CheckStatusAsync()
+                : LicenseStatus.Licensed;
 
             if (DevMode.TestInTrial)
             {
@@ -597,10 +599,10 @@ namespace SnapIt.ViewModels
                     IsTrial = false;
                     IsTrialEnded = false;
                     snapService.SetIsTrialEnded(false);
-                    if (isStandalone)
-                    {
-                        LicenseText = $"licensed to {standaloneLicenseService.License.Name}";
-                    }
+                    //if (isStandalone)
+                    //{
+                    //    LicenseText = $"licensed to {standaloneLicenseService.License.Name}";
+                    //}
                     break;
             }
 
