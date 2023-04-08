@@ -18,4 +18,4 @@ Snap It! is designed to be quick and simple.
 
 ## Build Status
 
-[![SnapIt Desktop](https://github.com/enginkirmaci/SnapIt/actions/workflows/snapit-desktop.yml/badge.svg)](https://github.com/enginkirmaci/SnapIt/actions/workflows/snapit-desktop.yml)
+[![SnapIt CI](https://github.com/enginkirmaci/SnapIt/actions/workflows/SnapIt-CI.yml/badge.svg)](https://github.com/enginkirmaci/SnapIt/actions/workflows/SnapIt-CI.yml)
