@@ -66,5 +66,13 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: MSIX Package
+        name: SnapIt-setup-${{ env.Version }}
         path: SnapIt.Setup\setup
+
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.2
+#      with:
+        # Artifact name
+ #       name: # optional
+        # Destination path
+  #      path: # optional
