@@ -35,7 +35,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
      
-     
+    - run: choco install innosetup 
      
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     #- name: Setup MSBuild.exe
@@ -53,12 +53,14 @@ jobs:
     #- name: Build the app package
     #  run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:ProcessorArchitecture=x86 --self-contained false 
       
-    - name: nadeemjazmawe/inno-setup-action-CLI
+   # - name: nadeemjazmawe/inno-setup-action-CLI
       # You may pin to the exact commit or the version.
       # uses: nadeemjazmawe/inno-setup-action-cli@31fe986b893b62ba38889603be4a74452a8f6362
-      uses: nadeemjazmawe/inno-setup-action-cli@v6.0.5
-      with:
-        filepath: SnapIt.Setup\innoSetup.iss /DMyAppVersion=${{ env.Version }}
+    #  uses: nadeemjazmawe/inno-setup-action-cli@v6.0.5
+    #  with:
+    #    filepath: SnapIt.Setup\innoSetup.iss /DMyAppVersion=${{ env.Version }}
+    
+    -run: iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=${{ env.Version }}
     
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
