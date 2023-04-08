@@ -1,0 +1,48 @@
+name: SnapIt Standalone
+
+on:
+  push:
+    branches: [ "release" ]
+  pull_request:
+    branches: [ "release" ]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Standalone]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    env:
+      Solution_Name: SnapIt.sln                        # Replace with your solution name, i.e. MyWpfApp.sln.
+      Project_Directory: SnapIt    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
+      Project_Path: SnapIt\SnapIt.csproj                # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
+      Version: 4.2.0.2
+      
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+     
+    - run: choco install innosetup 
+    
+    - run: dotnet publish ./SnapIt/SnapIt.csproj -c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false
+
+    - run: iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=${{ env.Version }}
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: setup-${{ env.Version }}
+        path: SnapIt.Setup\setup 
