@@ -2,9 +2,9 @@
 Snap It! is a window manager for Windows 10/11 that organizes your windows to improve productivity when working with wide and multiple screens. It's designed to be quick and simple.
 
 ## Screenshots
-![Usage](SnapIt/documents/00.png)
-![Layouts](SnapIt/documents/1.png)
-![Designer](SnapIt/documents/0.png)
+<img src="/documents/00.png" alt="Usage" width="500">
+<img src="/documents/1.png" alt="Layouts" width="500">
+<img src="/documents/0.png" alt="Designer" width="500">
 
 ## Features
 - Divide screens into snapping areas
