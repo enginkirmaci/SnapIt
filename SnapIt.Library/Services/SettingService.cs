@@ -2,6 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SnapIt.Library.Entities;
+
+#if !STANDALONE
+
+using System;
+using Windows.ApplicationModel;
+
+#endif
+
 using WpfScreenHelper;
 
 namespace SnapIt.Library.Services
