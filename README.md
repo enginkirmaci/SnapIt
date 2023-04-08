@@ -45,4 +45,4 @@ Please make sure to follow the code style and conventions used in the project. I
 Thank you for considering contributing to SnapIt!
 
 ## License
-SnapIt is licensed under the [MIT License](LICENSE).
+SnapIt is licensed under the [GNU GPLv3](LICENSE).
