@@ -1,4 +1,4 @@
-name: SnapIt Standalone
+name: SnapIt Release
 
 on:
   push:
