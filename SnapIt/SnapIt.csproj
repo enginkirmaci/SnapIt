@@ -1,9 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework> 
-	<Nullable>enable</Nullable>
+    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <ApplicationIcon>Themes\app.ico</ApplicationIcon>
@@ -12,13 +11,14 @@
     <Version>4.3.10.0</Version>
     <Copyright>Copyright ©  2019</Copyright>
     <Company>Engin KIRMACI</Company>
-    <FileVersion></FileVersion>
-    <AssemblyVersion></AssemblyVersion>
+    <FileVersion>
+    </FileVersion>
+    <AssemblyVersion>
+    </AssemblyVersion>
     <Configurations>Debug;Release;Standalone</Configurations>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Themes\app.ico" />
     <None Remove="Themes\notifyicon.ico" />
@@ -26,11 +26,9 @@
     <None Remove="Themes\snapit.png" />
     <None Remove="Themes\Win-GIF.gif" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Themes\app.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Dirkster.ColorPickerLib" Version="1.6.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
@@ -39,17 +37,14 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="XamlAnimatedGif" Version="2.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\SnapIt.Library\SnapIt.Library.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="Wpf.Ui">
       <HintPath>..\thirdparty\Wpf.Ui.dll</HintPath>
     </Reference>
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Themes\app.ico" />
     <Resource Include="Themes\notifyicon.ico" />
@@ -57,7 +52,6 @@
     <Resource Include="Themes\snapit.png" />
     <Resource Include="Themes\Win-GIF.gif" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -65,18 +59,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-
   <ItemGroup>
     <Page Update="Views\DesignWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-
 </Project>
