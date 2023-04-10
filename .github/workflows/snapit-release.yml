@@ -62,7 +62,7 @@ jobs:
         ref: ${{ github.head_ref }}
 
     - name: Modify version file
-      run: ./version.ps1 -version ${{ github.event.inputs.version }}
+      run: ./versioning.ps1 -version ${{ github.event.inputs.version }}
 
     - name: Git Auto Commit
       uses: stefanzweifel/git-auto-commit-action@v4.16.0
