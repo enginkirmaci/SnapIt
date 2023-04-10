@@ -44,4 +44,4 @@ jobs:
         path: SnapIt.Setup\setup 
 
     - name: Modify version file
-      run: ./version.sh 2.0.0.0 
+      run: ./version.sh ${{ github.event.inputs.version }}
