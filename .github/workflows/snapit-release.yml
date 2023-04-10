@@ -57,17 +57,30 @@ jobs:
 
     - run: iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=${{ github.event.inputs.version }}
     
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
       with:
-        name: setup-${{ github.event.inputs.version }}
-        path: SnapIt.Setup\setup 
-
-    - name: Update Version
-      uses: jaywcjlove/github-action-modify-file-content@main
+        draft: true
+        prerelease: false
+        release_name: ${{ github.event.inputs.version }}
+        tag_name: ${{ github.event.inputs.version }}
+        body_path: CHANGELOG.md
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        
+    - name: upload windows artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        branch: main
-        path: latest-version.json
-        body: "{\"Version\":\"${{ github.event.inputs.version }}\"}"
-        overwrite: 'true'
-        message: 'Update version'
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./SnapIt.Setup/setup/setup_SnapIt_${{ github.event.inputs.version }}.exe
+        asset_name: setup_SnapIt_${{ github.event.inputs.version }}.exe
+        asset_content_type: application/x-msdownload
+    
+    #- name: Upload build artifacts
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: setup-${{ github.event.inputs.version }}
+    #    path: SnapIt.Setup\setup 
