@@ -10,7 +10,7 @@
         public const string AppUrl = "getsnapit.com";
         public const string AppFeedbackUrl = "getsnapit.com/support";
         public const string AppPurchaseUrl = "getsnapit.com/checkout";
-        public const string AppVersionCheckUrl = "github.com/enginkirmaci/SnapIt/blob/main/latest-version.json";
+        public const string AppVersionCheckUrl = "raw.githubusercontent.com/enginkirmaci/SnapIt/main/latest-version.json";
         public const string AppNewVersionUrl = "github.com/enginkirmaci/SnapIt/releases/download/{0}/setup_SnapIt_{0}.exe";
         public const string AppPrivacyUrl = "getsnapit.com/features/privacy-policy";
         public const string AppRegistryKey = "SnapIt";
