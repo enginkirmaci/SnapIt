@@ -30,43 +30,29 @@ jobs:
       with:
         fetch-depth: 0
 
-    # # Install the .NET Core workload
-    # - name: Install .NET Core
-    #   uses: actions/setup-dotnet@v3
-    #   with:
-    #     dotnet-version: 6.0.x
-     
-    # - run: choco install innosetup 
-    
-    # - run: dotnet publish ./SnapIt/SnapIt.csproj -c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false
-
-    # - run: iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=${{ github.event.inputs.version }}
-    
-    # - name: Upload build artifacts
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: setup-${{ github.event.inputs.version }}
-    #     path: SnapIt.Setup\setup 
-
-    - uses: actions/checkout@v3
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
       with:
-        ref: ${{ github.head_ref }}
+        dotnet-version: 6.0.x
+     
+    - run: choco install innosetup 
+    
+    - run: dotnet publish ./SnapIt/SnapIt.csproj -c Standalone -a x86 -o ./SnapIt.Setup/build --self-contained false
 
-    # - name: Modify version file
-    #   run: ./version.sh ${{ github.event.inputs.version }}
+    - run: iscc.exe SnapIt.Setup\\innoSetup.iss /DMyAppVersion=${{ github.event.inputs.version }}
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: setup-${{ github.event.inputs.version }}
+        path: SnapIt.Setup\setup 
 
-    # - name: Git Auto Commit
-    #   uses: stefanzweifel/git-auto-commit-action@v4.16.0
-    #   with:
-    #     # Optional. Commit message for the created commit.
-    #     # Defaults to "Apply automatic changes"
-    #     commit_message: Update version
-    #     tagging_message: '${{ github.event.inputs.version }}'
-
-    - name: Modify test test/overwrite.file.md
+    - name: Update Version
       uses: jaywcjlove/github-action-modify-file-content@main
       with:
         branch: main
         path: latest-version.json
         body: "{Version:\"${{ github.event.inputs.version }}\"}"
         overwrite: 'true'
+        message: 'Update version'
