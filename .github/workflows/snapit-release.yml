@@ -45,3 +45,13 @@ jobs:
 
     - name: Modify version file
       run: ./version.sh ${{ github.event.inputs.version }}
+
+    - name: commit changes
+      run: |
+        # Commit and push the changes
+        git config --global user.name 'Engin KIRMACI'
+        git config --global user.email 'enginkirmaci@outlook.com'
+        git add latest-version.json
+        git commit -m 'Update version'
+        git status
+        git push 
