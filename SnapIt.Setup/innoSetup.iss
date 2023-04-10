@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #include "CodeDependencies.iss"
 
-#define MyAppName "SnapIt Pro"
+#define MyAppName "SnapIt"
 #ifndef MyAppVersion
   #define MyAppVersion "0.0.0.0"
 #endif
@@ -26,7 +26,7 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 ;PrivilegesRequired=lowest
 OutputDir=setup
-OutputBaseFilename=setup_SnapItPro_{#SetupSetting("AppVersion")}
+OutputBaseFilename=setup_SnapIt_{#SetupSetting("AppVersion")}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -52,7 +52,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Registry]
-Root: HKCU; Subkey: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"; ValueType: string; ValueName: "SnapItPro"; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"; ValueType: string; ValueName: "SnapIt"; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsdeletevalue
 
 [Code]
 function InitializeSetup: Boolean;

@@ -10,10 +10,10 @@
         public const string AppUrl = "getsnapit.com";
         public const string AppFeedbackUrl = "getsnapit.com/support";
         public const string AppPurchaseUrl = "getsnapit.com/checkout";
-        public const string AppVersionCheckUrl = "dl.getsnapit.com/latest.json";
-        public const string AppNewVersionUrl = "dl.getsnapit.com/setup_SnapItPro_{0}.exe";
+        public const string AppVersionCheckUrl = "github.com/enginkirmaci/SnapIt/blob/main/latest-version.json";
+        public const string AppNewVersionUrl = "github.com/enginkirmaci/SnapIt/releases/download/{0}/setup_SnapIt_{0}.exe";
         public const string AppPrivacyUrl = "getsnapit.com/features/privacy-policy";
-        public const string AppRegistryKey = "SnapItPro";
+        public const string AppRegistryKey = "SnapIt";
         public static string CompanyName => global::System.Windows.Forms.Application.CompanyName;
         public const string CompanyUrl = "enginkirmaci.com";
         public const string TwitterUrl = "twitter.com/enginkirmaci";
