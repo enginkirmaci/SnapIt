@@ -52,13 +52,21 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
 
-    - name: Modify version file
-      run: ./version.sh ${{ github.event.inputs.version }}
+    # - name: Modify version file
+    #   run: ./version.sh ${{ github.event.inputs.version }}
 
-    - name: Git Auto Commit
-      uses: stefanzweifel/git-auto-commit-action@v4.16.0
+    # - name: Git Auto Commit
+    #   uses: stefanzweifel/git-auto-commit-action@v4.16.0
+    #   with:
+    #     # Optional. Commit message for the created commit.
+    #     # Defaults to "Apply automatic changes"
+    #     commit_message: Update version
+    #     tagging_message: '${{ github.event.inputs.version }}'
+
+    - name: Modify test test/overwrite.file.md
+      uses: jaywcjlove/github-action-modify-file-content@main
       with:
-        # Optional. Commit message for the created commit.
-        # Defaults to "Apply automatic changes"
-        commit_message: Update version
-        tagging_message: '${{ github.event.inputs.version }}'
+        branch: main
+        path: latest-version.json
+        body: "{Version:\"${{ github.event.inputs.version }}\"}"
+        overwrite: 'true'
