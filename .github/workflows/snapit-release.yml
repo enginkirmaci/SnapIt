@@ -43,6 +43,10 @@ jobs:
     #     name: setup-${{ github.event.inputs.version }}
     #     path: SnapIt.Setup\setup 
 
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}
+
     - name: Modify version file
       run: ./version.sh ${{ github.event.inputs.version }}
 
