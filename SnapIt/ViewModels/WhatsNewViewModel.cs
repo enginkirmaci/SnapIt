@@ -11,6 +11,14 @@ namespace SnapIt.ViewModels
         {
             new ChangeLogItem()
             {
+                Header = "v4.3.11.0",
+                Lines = new List<string>()
+                {
+                    "SnapIt is now open source and open to contribution"
+                }
+            },
+            new ChangeLogItem()
+            {
                 Header = "v4.3.7.0",
                 Lines = new List<string>() {
                     "Run as administrator added to Microsoft Store version",

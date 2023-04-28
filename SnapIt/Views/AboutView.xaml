@@ -7,7 +7,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="clr-namespace:SnapIt.Library.Entities;assembly=SnapIt.Library"
-    d:DesignHeight="450"
+    d:DesignHeight="800"
     d:DesignWidth="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Scrollable="True"
@@ -100,34 +100,29 @@
                             </StackPanel>
                         </wpfui:CardAction>
 
-                        <wpfui:CardControl
-                            Margin="0,8,0,0"
-                            Header="Follow Me"
-                            Icon="Person48">
-                            <StackPanel Orientation="Horizontal">
-                                <wpfui:Anchor
-                                    Margin="0,0,12,0"
-                                    Appearance="Secondary"
-                                    Content="Linkedin"
-                                    Icon="Link24"
-                                    NavigateUri="{Binding Source={x:Static c:Constants.LinkedinUrl}, Converter={StaticResource UriConverter}}" />
+                        <wpfui:CardControl Margin="0,8,0,0" Icon="Person48">
+                            <wpfui:CardControl.Header>
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="0,0,0,4"
+                                        FontWeight="Medium"
+                                        Text="Open Source" />
+                                    <TextBlock
+                                        FontSize="11"
+                                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                        Text="“Help improve the SnapIt by contributing to open-source project on GitHub!”" />
+                                </StackPanel>
+                            </wpfui:CardControl.Header>
 
-                                <wpfui:Anchor
-                                    Appearance="Secondary"
-                                    Content="Github"
-                                    Icon="Link24"
-                                    NavigateUri="{Binding Source={x:Static c:Constants.GithubUrl}, Converter={StaticResource UriConverter}}" />
-                            </StackPanel>
+                            <wpfui:Anchor
+                                Appearance="Secondary"
+                                Content="Github"
+                                Icon="Link24"
+                                NavigateUri="{Binding Source={x:Static c:Constants.GithubUrl}, Converter={StaticResource UriConverter}}" />
                         </wpfui:CardControl>
                     </StackPanel>
 
                     <Grid Grid.Row="2" Margin="0,24,0,0">
-                        <wpfui:Hyperlink
-                            HorizontalAlignment="Left"
-                            Content="{x:Static c:Constants.CompanyName}"
-                            Icon="Empty"
-                            NavigateUri="{Binding Source={x:Static c:Constants.CompanyUrl}, Converter={StaticResource UriConverter}}" />
-
                         <wpfui:Hyperlink
                             HorizontalAlignment="Right"
                             Content="Privacy policy"
