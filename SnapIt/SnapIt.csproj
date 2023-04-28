@@ -18,6 +18,7 @@
     <Configurations>Debug;Release;Standalone</Configurations>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>AnyCPU</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Themes\app.ico" />
