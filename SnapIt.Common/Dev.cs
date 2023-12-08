@@ -12,12 +12,13 @@ public static class Dev
     public static bool IsInDesignMode { get => DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()); }
 
 #if DEBUG
-    public const bool IsActive = true;
-    public const bool ShowSnapWindowOnStartup = true;
-    public const bool IsTopmostDisabled = true;
-    public const bool SkipLicense = true;
+    public const bool IsActive = false;
+    public const bool ShowSnapWindowOnStartup = false;
+    public const bool IsTopmostDisabled = false;
+    public const bool SkipLicense = false;
+    public const bool TestTrialEnded = false;
     public const bool TestInTrial = false;
-    public const bool SkipRunAsAdmin = true;
+    public const bool SkipRunAsAdmin = false;
 #else
     public const bool IsActive = false;
     public const bool ShowSnapWindowOnStartup = false;

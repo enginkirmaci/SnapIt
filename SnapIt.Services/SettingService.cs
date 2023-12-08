@@ -38,6 +38,8 @@ public class SettingService : ISettingService
     {
         if (IsInitialized) return;
 
+        await fileOperationService.InitializeAsync();
+
         Settings = await fileOperationService.Load<Settings>();
 
         if (Settings == null)

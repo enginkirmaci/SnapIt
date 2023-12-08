@@ -6,7 +6,7 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "SnapIt.Packaging", "SnapIt.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt", "SnapIt\SnapIt.csproj", "{122758CB-8D38-4A56-B9F1-AC72C33EF286}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Library", "SnapIt.Library\SnapIt.Library.csproj", "{FE2149D7-3DDC-49B6-ABD7-4D98237A3023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Layouts", "SnapIt.Library\SnapIt.Layouts.csproj", "{FE2149D7-3DDC-49B6-ABD7-4D98237A3023}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Test", "SnapIt.Test\SnapIt.Test.csproj", "{B44433D1-1AB9-4BCE-ADC3-2DADE403EF4D}"
 EndProject

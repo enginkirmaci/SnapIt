@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Graphics;
 using SnapIt.Common.InteropServices;
@@ -111,11 +112,16 @@ public class WinApiService : IWinApiService
 
     public void GetWindowMargin(ActiveWindow activeWindow, out Rectangle withMargin)
     {
+        var t = new System.Drawing.Rectangle();
         DwmApi.DwmGetWindowAttribute(
                         activeWindow.Handle,
                         DWMWINDOWATTRIBUTE.ExtendedFrameBounds,
-                        out withMargin,
-                        Marshal.SizeOf(typeof(Rectangle)));
+                        out t,
+                        Marshal.SizeOf(typeof(System.Drawing.Rectangle)));
+
+        Dev.Log(t.ToString());
+
+        withMargin = new Rectangle(t.Left, t.Top, t.Right, t.Bottom);
     }
 
     public ActiveWindow GetActiveWindow()

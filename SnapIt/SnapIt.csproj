@@ -54,7 +54,7 @@
 		<ProjectReference Include="..\SnapIt.App\SnapIt.Application.csproj" />
 		<ProjectReference Include="..\SnapIt.Common\SnapIt.Common.csproj" />
 		<ProjectReference Include="..\SnapIt.Controls\SnapIt.Controls.csproj" />
-		<ProjectReference Include="..\SnapIt.Library\SnapIt.Library.csproj" />
+		<ProjectReference Include="..\SnapIt.Library\SnapIt.Layouts.csproj" />
 		<ProjectReference Include="..\SnapIt.Services\SnapIt.Services.csproj" />
 	</ItemGroup>
 	<ItemGroup>

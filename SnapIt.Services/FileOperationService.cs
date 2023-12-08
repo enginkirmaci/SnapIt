@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Helpers;
+using SnapIt.Layouts;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.Services;
@@ -52,7 +52,7 @@ public class FileOperationService : IFileOperationService
 
             foreach (var layout in layouts)
             {
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"SnapIt.Library.Layouts.{layout}.json"))
+                using (var stream = Assembly.GetAssembly(typeof(PredefinedLayout)).GetManifestResourceStream($"SnapIt.Layouts.{layout}.json"))
                 {
                     using (TextReader tr = new StreamReader(stream))
                     {

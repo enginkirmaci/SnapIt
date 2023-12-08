@@ -16,6 +16,7 @@
 	
 	<ItemGroup>
 	  <ProjectReference Include="..\SnapIt.Common\SnapIt.Common.csproj" />
+	  <ProjectReference Include="..\SnapIt.Library\SnapIt.Layouts.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\SnapIt.Library\SnapIt.Library.csproj" />
+		<ProjectReference Include="..\SnapIt.Library\SnapIt.Layouts.csproj" />
 	</ItemGroup>
 
 
