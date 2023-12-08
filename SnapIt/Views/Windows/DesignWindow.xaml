@@ -1,0 +1,174 @@
+﻿<Window
+    x:Class="SnapIt.Views.Windows.DesignWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SnapIt.Controls;assembly=SnapIt.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    x:Name="DesignWindowView"
+    Title="SnapIt - Layout Designer"
+    d:DataContext="{d:DesignInstance local:DesignWindow,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="1000"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    TextElement.FontSize="14"
+    Topmost="True"
+    WindowState="Normal"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewModel.LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid x:Name="grid" DataContext="{Binding ViewModel}">
+        <controls:SnapRuler
+            Name="horizontalRuler"
+            Width="{Binding ActualWidth, ElementName=DesignWindowView, Mode=OneWay, ValidatesOnNotifyDataErrors=True}"
+            Height="20"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Panel.ZIndex="9"
+            LittleMarkLength="4"
+            MajorInterval="100"
+            MarkLength="12"
+            MiddleMarkLength="8"
+            Opacity="0.8"
+            Orientation="Horizontal" />
+        <controls:SnapRuler
+            Name="verticalRuler"
+            Width="30"
+            Height="{Binding ActualHeight, ElementName=DesignWindowView, Mode=OneWay, ValidatesOnNotifyDataErrors=True}"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Panel.ZIndex="9"
+            LittleMarkLength="4"
+            MajorInterval="100"
+            MarkLength="12"
+            MiddleMarkLength="8"
+            Opacity="0.8"
+            Orientation="Vertical" />
+        <controls:SnapControl
+            x:Name="SnapControl"
+            IsDesignMode="True"
+            Layout="{Binding Layout}"
+            Theme="{Binding Theme, Mode=TwoWay}" />
+
+        <StackPanel
+            Margin="0,20,20,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top">
+            <Grid Margin="0,0,0,8">
+                <ui:CardExpander
+                    Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+                    ContentPadding="0"
+                    Header="Layout Properties"
+                    Icon="{ui:SymbolIcon DataTreemap24}"
+                    IsExpanded="True">
+                    <Border Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}" CornerRadius="0,0,4,4">
+                        <StackPanel Margin="13,15,14,16">
+                            <TextBlock Margin="0,0,0,6" Text="Layout Name" />
+                            <ui:TextBox Margin="0,0,0,16" Text="{Binding Layout.Name}" />
+
+                            <Separator Margin="0,8" />
+                            <TextBlock Margin="0,0,0,6" Text="Space between areas" />
+                            <Slider
+                                Width="256"
+                                AutoToolTipPlacement="TopLeft"
+                                LargeChange="5"
+                                Maximum="100"
+                                Minimum="0"
+                                SmallChange="1"
+                                Value="{Binding AreaPadding, ElementName=SnapControl}" />
+                            <Separator Margin="0,8" />
+
+                            <ui:Button
+                                Margin="0,0,0,6"
+                                HorizontalAlignment="Left"
+                                Appearance="Secondary"
+                                Command="{Binding AddOverlayLayoutCommand}"
+                                Content="Add Overlay"
+                                Icon="{ui:SymbolIcon Layer24}" />
+                            <ui:Button
+                                Margin="0,0,0,6"
+                                HorizontalAlignment="Left"
+                                Appearance="Secondary"
+                                Command="{Binding ClearLayoutCommand}"
+                                Content="Clear Layout"
+                                Icon="{ui:SymbolIcon ArrowClockwise24}" />
+                        </StackPanel>
+                    </Border>
+                </ui:CardExpander>
+            </Grid>
+            <Grid Margin="0,0,0,8">
+                <ui:CardExpander
+                    Margin="0"
+                    Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+                    ContentPadding="0"
+                    Header="Designer"
+                    Icon="{ui:SymbolIcon EditSettings24}"
+                    IsExpanded="True">
+                    <Border Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}" CornerRadius="0,0,4,4">
+                        <StackPanel Margin="13,15,14,16">
+                            <TextBlock Margin="0,0,0,6" Text="Designer Opacity" />
+                            <Slider
+                                Width="250"
+                                Margin="0,0,0,6"
+                                HorizontalAlignment="Left"
+                                Maximum="1"
+                                Minimum="0"
+                                TickFrequency="0.1"
+                                Value="{Binding Theme.Opacity}" />
+                            <ui:ToggleSwitch
+                                Margin="0,0,0,6"
+                                Content="Show Overlays"
+                                IsChecked="{Binding IsOverlayVisible, ElementName=SnapControl}" />
+                            <Separator Margin="0,8" />
+                            <TextBlock
+                                x:Name="mousePositionText"
+                                Margin="0,0,0,6"
+                                Text="Mouse Position  0 x 0" />
+                            <TextBlock
+                                x:Name="designerSizeText"
+                                Margin="0,0,0,6"
+                                Text="Designer Size     0 x 0" />
+                        </StackPanel>
+                    </Border>
+                </ui:CardExpander>
+            </Grid>
+            <Grid Margin="0,0,0,8">
+                <Border
+                    Padding="12"
+                    Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <ui:Button
+                            Margin="0,0,6,0"
+                            Command="{Binding SaveLayoutCommand}"
+                            Content="Save"
+                            Icon="{ui:SymbolIcon Save24}" />
+
+                        <ui:Button
+                            Margin="6,0,0,0"
+                            Appearance="Secondary"
+                            Command="{Binding CloseLayoutCommand}"
+                            Content="Close"
+                            Icon="{ui:SymbolIcon Dismiss24}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

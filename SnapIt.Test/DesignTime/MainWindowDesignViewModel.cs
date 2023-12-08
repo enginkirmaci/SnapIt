@@ -2,76 +2,75 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace SnapIt.Test.DesignTime
+namespace SnapIt.Test.DesignTime;
+
+public enum Themes
 {
-    public enum Themes
+    Light,
+    Dark,
+    System
+}
+
+public class MainWindowDesignViewModel
+{
+    public string ThemeTitle { get; set; }
+    public bool IsDarkTheme { get; set; }
+    public bool IsRunning { get; set; }
+    public string Status { get; set; }
+    public bool IsVersion3000MessageShown { get; set; }
+    public ObservableCollection<Themes> ThemeList { get; set; }
+    public Themes SelectedTheme { get; set; }
+    public ICommand ThemeItemCommand { get; }
+
+    public MainWindowDesignViewModel()
     {
-        Light,
-        Dark,
-        System
+        IsRunning = true;
+        Status = "Stop";
+        ThemeTitle = "Light";
+        IsDarkTheme = false;
+        IsVersion3000MessageShown = false;
+
+        ThemeList = new ObservableCollection<Themes> {
+            Themes.Light,
+            Themes.Dark,
+            Themes.System
+        };
+
+        SelectedTheme = Themes.System;
+
+        this.ThemeItemCommand = new SimpleCommand(
+           o => true,
+           x => { SelectedTheme = (Themes)x; }
+       );
+    }
+}
+
+public class SimpleCommand : ICommand
+{
+    public SimpleCommand(Func<object, bool> canExecute = null, Action<object> execute = null)
+    {
+        this.CanExecuteDelegate = canExecute;
+        this.ExecuteDelegate = execute;
     }
 
-    public class MainWindowDesignViewModel
+    public Func<object, bool> CanExecuteDelegate { get; set; }
+
+    public Action<object> ExecuteDelegate { get; set; }
+
+    public bool CanExecute(object parameter)
     {
-        public string ThemeTitle { get; set; }
-        public bool IsDarkTheme { get; set; }
-        public bool IsRunning { get; set; }
-        public string Status { get; set; }
-        public bool IsVersion3000MessageShown { get; set; }
-        public ObservableCollection<Themes> ThemeList { get; set; }
-        public Themes SelectedTheme { get; set; }
-        public ICommand ThemeItemCommand { get; }
-
-        public MainWindowDesignViewModel()
-        {
-            IsRunning = true;
-            Status = "Stop";
-            ThemeTitle = "Light";
-            IsDarkTheme = false;
-            IsVersion3000MessageShown = false;
-
-            ThemeList = new ObservableCollection<Themes> {
-                Themes.Light,
-                Themes.Dark,
-                Themes.System
-            };
-
-            SelectedTheme = Themes.System;
-
-            this.ThemeItemCommand = new SimpleCommand(
-               o => true,
-               x => { SelectedTheme = (Themes)x; }
-           );
-        }
+        var canExecute = this.CanExecuteDelegate;
+        return canExecute == null || canExecute(parameter);
     }
 
-    public class SimpleCommand : ICommand
+    public event EventHandler CanExecuteChanged
     {
-        public SimpleCommand(Func<object, bool> canExecute = null, Action<object> execute = null)
-        {
-            this.CanExecuteDelegate = canExecute;
-            this.ExecuteDelegate = execute;
-        }
+        add => CommandManager.RequerySuggested += value;
+        remove => CommandManager.RequerySuggested -= value;
+    }
 
-        public Func<object, bool> CanExecuteDelegate { get; set; }
-
-        public Action<object> ExecuteDelegate { get; set; }
-
-        public bool CanExecute(object parameter)
-        {
-            var canExecute = this.CanExecuteDelegate;
-            return canExecute == null || canExecute(parameter);
-        }
-
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
-
-        public void Execute(object parameter)
-        {
-            this.ExecuteDelegate?.Invoke(parameter);
-        }
+    public void Execute(object parameter)
+    {
+        this.ExecuteDelegate?.Invoke(parameter);
     }
 }

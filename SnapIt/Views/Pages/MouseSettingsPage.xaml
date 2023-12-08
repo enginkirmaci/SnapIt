@@ -1,0 +1,129 @@
+﻿<Page
+    x:Class="SnapIt.Views.Pages.MouseSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Mouse"
+    d:DataContext="{d:DesignInstance local:MouseSettingsPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="908"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewModel.LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid DataContext="{Binding ViewModel}">
+        <ui:HyperlinkButton
+            Margin="0,-49,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Content="Watch tutorial"
+            Icon="{ui:SymbolIcon VideoClip24}"
+            NavigateUri="nuget.org/packages/WPF-UI/"
+            Visibility="Collapsed" />
+
+        <StackPanel>
+
+            <ui:CardControl Margin="0,0,0,8" Header="Use mouse to snap window">
+                <ui:ToggleSwitch IsChecked="{Binding EnableMouse}" />
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,8">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock
+                            FontSize="13"
+                            FontWeight="Medium"
+                            Text="Delay movement to activate snapping (in pixel)" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="{Binding EnableHoldKey, Converter={StaticResource BooleanToStringConverter}, ConverterParameter='Delay movement is disabled when hold key in use'}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <!--<Slider
+                Width="200"
+                AutoToolTipPlacement="TopLeft"
+                Maximum="250"
+                Minimum="0"
+                SmallChange="10"
+                Value="{Binding MouseDragDelay}" />-->
+                <ui:NumberBox
+                    Width="128"
+                    IsEnabled="{Binding EnableHoldKey, Converter={StaticResource InverseBoolConverter}}"
+                    LargeChange="10"
+                    Maximum="250"
+                    Minimum="0"
+                    SmallChange="10"
+                    Value="{Binding MouseDragDelay, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,8" Icon="Empty">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock
+                            FontSize="13"
+                            FontWeight="Medium"
+                            Text="Only use window title to snap window" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="It is recommend to enable it if you choose Left mouse button for snapping."
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding DragByTitle}" />
+            </ui:CardControl>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="Mouse button for snapping window"
+                Icon="Empty">
+                <ComboBox
+                    Width="128"
+                    ItemsSource="{Binding MouseButtons}"
+                    SelectedItem="{Binding MouseButton, Mode=TwoWay}" />
+            </ui:CardControl>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="Use Hold key"
+                Icon="Empty">
+                <ui:ToggleSwitch IsChecked="{Binding EnableHoldKey}" />
+            </ui:CardControl>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="Hold Key"
+                Icon="Empty"
+                Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ComboBox
+                    Width="128"
+                    ItemsSource="{Binding HoldKeys}"
+                    SelectedItem="{Binding HoldKey, Mode=TwoWay}" />
+            </ui:CardControl>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="Hold Key Behaviour"
+                Icon="Empty"
+                Visibility="{Binding EnableHoldKey, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ComboBox
+                    Width="240"
+                    ItemsSource="{Binding HoldKeyBehaviours}"
+                    SelectedItem="{Binding HoldKeyBehaviour, Mode=TwoWay}" />
+            </ui:CardControl>
+        </StackPanel>
+    </Grid>
+</Page>

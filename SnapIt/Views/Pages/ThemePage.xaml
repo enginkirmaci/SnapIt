@@ -1,0 +1,189 @@
+﻿<Page
+    x:Class="SnapIt.Views.Pages.ThemePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:color="clr-namespace:ColorPickerLib.Controls;assembly=ColorPickerLib"
+    xmlns:controls="clr-namespace:SnapIt.Controls;assembly=SnapIt.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    x:Name="ThemeViewPage"
+    Title="Theme"
+    Margin="0,24,0,0"
+    d:DataContext="{d:DesignInstance local:SettingsPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewModel.LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid DataContext="{Binding ViewModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:HyperlinkButton
+            Margin="0,-49,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Content="Watch tutorial"
+            Icon="VideoClip24"
+            NavigateUri="nuget.org/packages/WPF-UI/"
+            Visibility="Collapsed" />
+
+        <!--  IsOpen="{Binding OpenApplyChangesBar, Mode=TwoWay}"  -->
+
+        <Border
+            x:Name="ContentBorder"
+            Grid.Row="1"
+            Padding="16,14,16,10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Panel.ZIndex="9"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource InfoBarBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="4"
+            Visibility="{Binding OpenApplyChangesBar, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontWeight="Medium"
+                    Text="Do you want to apply changes?" />
+                <ui:Button
+                    Grid.Column="1"
+                    Height="32"
+                    Margin="12,0,0,0"
+                    Appearance="Secondary"
+                    Command="{Binding ApplyChangesCommand}"
+                    Content="Apply Changes" />
+                <ui:Button
+                    Grid.Column="2"
+                    Height="32"
+                    Margin="12,0,0,0"
+                    Appearance="Transparent"
+                    Command="{Binding DiscardChangesCommand}"
+                    Icon="{ui:SymbolIcon Dismiss24}" />
+            </Grid>
+        </Border>
+
+        <StackPanel Margin="0,0,0,12">
+            <StackPanel>
+                <ui:CardControl
+                    Margin="0,0,0,8"
+                    Header="Preview"
+                    Icon="{ui:SymbolIcon DataTreemap24}" />
+
+                <Border
+                    Margin="0,0,0,8"
+                    Padding="20"
+                    Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill" />
+                        </Grid.Background>
+
+                        <controls:SnapControl
+                            Width="560"
+                            Height="280"
+                            Layout="{Binding Layout}"
+                            Theme="{Binding Theme, Mode=TwoWay}" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <ui:CardExpander
+                Margin="0,0,0,8"
+                Header="Area Theme"
+                Icon="{ui:SymbolIcon Color24}"
+                IsExpanded="True">
+
+                <StackPanel>
+                    <ui:CardControl
+                        Margin="0,0,0,8"
+                        Header="Overlay color"
+                        Icon="Empty">
+                        <color:ColorPicker
+                            Width="256"
+                            ColorMode="ColorCanvas"
+                            SelectedColor="{Binding Theme.OverlayColor}"
+                            ShowAvailableColors="False"
+                            ShowDropDownButton="False"
+                            ShowRecentColors="False" />
+                    </ui:CardControl>
+
+                    <ui:CardControl
+                        Margin="0,0,0,8"
+                        Header="Highlight color"
+                        Icon="Empty">
+                        <color:ColorPicker
+                            Width="256"
+                            ColorMode="ColorCanvas"
+                            SelectedColor="{Binding Theme.HighlightColor}"
+                            ShowAvailableColors="False"
+                            ShowDropDownButton="False"
+                            ShowRecentColors="False" />
+                    </ui:CardControl>
+
+                    <ui:CardControl
+                        Margin="0,0,0,8"
+                        Header="Overall Opacity"
+                        Icon="Empty">
+                        <Slider
+                            Width="256"
+                            AutoToolTipPlacement="TopLeft"
+                            LargeChange="5"
+                            Maximum="100"
+                            Minimum="0"
+                            SmallChange="1"
+                            Value="{Binding Theme.Opacity, Converter={StaticResource DoubleMultiplierConverter}}" />
+                    </ui:CardControl>
+
+                    <ui:CardControl
+                        Margin="0,0,0,8"
+                        Header="Border color"
+                        Icon="Empty">
+                        <color:ColorPicker
+                            Width="256"
+                            ColorMode="ColorCanvas"
+                            SelectedColor="{Binding Theme.BorderColor}"
+                            ShowAvailableColors="False"
+                            ShowDropDownButton="False"
+                            ShowRecentColors="False" />
+                    </ui:CardControl>
+
+                    <ui:CardControl
+                        Margin="0,0,0,8"
+                        Header="Border thickness"
+                        Icon="Empty">
+                        <Slider
+                            Width="256"
+                            AutoToolTipPlacement="TopLeft"
+                            Maximum="25"
+                            Minimum="0"
+                            SmallChange="1"
+                            Value="{Binding Theme.BorderThickness}" />
+                    </ui:CardControl>
+                </StackPanel>
+            </ui:CardExpander>
+        </StackPanel>
+    </Grid>
+</Page>

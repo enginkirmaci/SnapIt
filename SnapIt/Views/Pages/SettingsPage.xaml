@@ -1,0 +1,78 @@
+﻿<Page
+    x:Class="SnapIt.Views.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Settings"
+    Margin="0,24,0,0"
+    d:DataContext="{d:DesignInstance local:SettingsPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewModel.LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid DataContext="{Binding ViewModel}">
+        <ui:HyperlinkButton
+            Margin="0,-49,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Content="Watch tutorial"
+            Icon="VideoClip24"
+            NavigateUri="nuget.org/packages/WPF-UI/"
+            Visibility="Collapsed" />
+
+        <StackPanel>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="Start SnapIt when I start Windows"
+                Icon="Empty">
+                <ui:ToggleSwitch IsChecked="{Binding IsStartupTaskActive}" />
+            </ui:CardControl>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="Start SnapIt minimized to tray"
+                Icon="Empty">
+                <ui:ToggleSwitch IsChecked="{Binding IsMinimizeTray}" />
+            </ui:CardControl>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="Run as administrator (needs to be restarted)"
+                Icon="Empty">
+                <ui:ToggleSwitch IsChecked="{Binding IsRunAsAdmin}" />
+            </ui:CardControl>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="Check for new version"
+                Icon="Empty"
+                Visibility="{Binding IsStandalone, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
+                <ui:ToggleSwitch IsChecked="{Binding CheckForNewVersion}" />
+            </ui:CardControl>
+
+            <ui:CardControl
+                Margin="0,0,0,8"
+                Header="App Theme"
+                Icon="Empty">
+                <ComboBox
+                    Width="106"
+                    ItemsSource="{Binding ThemeList}"
+                    SelectedItem="{Binding SelectedTheme, Mode=TwoWay}" />
+            </ui:CardControl>
+        </StackPanel>
+    </Grid>
+</Page>

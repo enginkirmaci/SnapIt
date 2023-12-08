@@ -1,0 +1,76 @@
+﻿<Page
+    x:Class="SnapIt.Views.Pages.WhatsNewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="What's New"
+    Margin="0,24,0,0"
+    d:DataContext="{d:DesignInstance local:WhatsNewPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewModel.LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid DataContext="{Binding ViewModel}">
+        <StackPanel>
+            <TextBlock
+                Margin="0,0,0,8"
+                FontSize="18"
+                FontWeight="Medium"
+                Text="Current Version" />
+            <StackPanel DataContext="{Binding FirstChangeLog}">
+                <TextBlock
+                    Margin="0,0,0,6"
+                    FontWeight="Medium"
+                    Text="{Binding Header}" />
+                <ItemsControl ItemsSource="{Binding Lines}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
+                                <TextBlock FontSize="10" Text="&#x25CF; " />
+                                <TextBlock Text="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <ui:CardExpander Margin="0,8,0,0" Header="Older Changes">
+                <ItemsControl ItemsSource="{Binding ChangeLogs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="0,6,0,6"
+                                    FontWeight="Medium"
+                                    Text="{Binding Header}" />
+                                <ItemsControl ItemsSource="{Binding Lines}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="16,0,0,6" Orientation="Horizontal">
+                                                <TextBlock FontSize="10" Text="&#x25CF; " />
+                                                <TextBlock Text="{Binding}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ui:CardExpander>
+        </StackPanel>
+    </Grid>
+</Page>

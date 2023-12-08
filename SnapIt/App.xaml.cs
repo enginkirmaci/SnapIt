@@ -1,65 +1,91 @@
-﻿using System;
-using System.Drawing;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using DryIoc;
+using Prism.DryIoc;
 using Prism.Ioc;
 using Serilog;
-using SnapIt.Library;
-using SnapIt.Library.Applications;
-using SnapIt.Library.Entities;
-using SnapIt.Library.Services;
-using SnapIt.Views;
+using SnapIt.Application;
+using SnapIt.Application.Contracts;
+using SnapIt.Common;
+using SnapIt.Common.Applications;
+using SnapIt.Common.Contracts;
+using SnapIt.Common.Entities;
+using SnapIt.Common.Extensions;
+using SnapIt.Services;
+using SnapIt.Services.Contracts;
+using SnapIt.Views.Windows;
+using Wpf.Ui;
 
-namespace SnapIt
+namespace SnapIt;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App
+    public static IContainer AppContainer { get; set; }
+    public static NotifyIcon NotifyIcon { get; set; }
+    public static Assembly Assembly => Assembly.GetExecutingAssembly();
+
+    protected override Window CreateShell()
     {
-        public static NotifyIcon NotifyIcon { get; set; }
-
-        protected override void OnStartup(StartupEventArgs e)
+        if (!Dev.IsActive)
         {
-            Log.Logger = new LoggerConfiguration()
-                       .MinimumLevel.Debug()
-                       .WriteTo.File("logs\\log.txt", rollingInterval: RollingInterval.Day)
-                       .CreateLogger();
-            RegisterGlobalExceptionHandling(Log.Logger);
+            var snapManager = Container.Resolve<ISnapManager>();
+            _ = snapManager.InitializeAsync();
+        }
 
-            //todo change this
-            NotifyIcon = new NotifyIcon
+        var applicationWindow = Container.Resolve<MainWindow>();
+
+        return applicationWindow;
+    }
+
+    protected override void RegisterTypes(IContainerRegistry containerRegistry)
+    {
+        containerRegistry.RegisterSingleton<IWindow, MainWindow>();
+
+        containerRegistry.AddTransientFromNamespace("SnapIt.Views", Assembly);
+        containerRegistry.AddTransientFromNamespace("SnapIt.ViewModels", Assembly);
+
+        containerRegistry.RegisterSingleton<ISnapManager, SnapManager>();
+        containerRegistry.RegisterSingleton<IWindowManager, WindowManager>();
+        containerRegistry.RegisterSingleton<IScreenManager, ScreenManager>();
+
+        containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
+        containerRegistry.RegisterSingleton<ISettingService, SettingService>();
+        containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
+        containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
+        //containerRegistry.RegisterSingleton<IStandaloneLicenseService, StandaloneLicenseService>();
+        containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
+
+        containerRegistry.RegisterSingleton<IThemeService, ThemeService>();
+        containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
+        containerRegistry.RegisterSingleton<ISnackbarService, SnackbarService>();
+        containerRegistry.RegisterSingleton<IContentDialogService, ContentDialogService>();
+
+        AppContainer = containerRegistry.GetContainer();
+    }
+
+    private void OnStartup(object sender, StartupEventArgs e)
+    {
+        Log.Logger = new LoggerConfiguration()
+                   .MinimumLevel.Debug()
+                   .WriteTo.File("logs\\log.txt", rollingInterval: RollingInterval.Day)
+                   .CreateLogger();
+        RegisterGlobalExceptionHandling(Log.Logger);
+
+        //todo change this
+        NotifyIcon = new NotifyIcon
+        {
+            Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Assets/notifyicon.ico")).Stream)
+        };
+
+        if (SnapIt.Properties.Settings.Default.RunAsAdmin && !Dev.SkipRunAsAdmin)
+        {
+            if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
             {
-                Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Themes/notifyicon.ico")).Stream)
-            };
-
-            if (SnapIt.Properties.Settings.Default.RunAsAdmin && !DevMode.SkipRunAsAdmin)
-            {
-                if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
-                {
-                    if (!ApplicationInstance.RegisterSingleInstance())
-                    {
-                        NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
-                        NotifyIcon.Visible = true;
-
-                        Shutdown();
-                        return;
-                    }
-                }
-                else if (!DevMode.IsActive)
-                {
-                    RunAsAdministrator.Run();
-                    Shutdown();
-                    return;
-                }
-            }
-            else
-
-            {
-                if (!ApplicationInstance.RegisterSingleInstance() && !DevMode.IsActive)
+                if (!ApplicationInstance.RegisterSingleInstance())
                 {
                     NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
                     NotifyIcon.Visible = true;
@@ -68,104 +94,86 @@ namespace SnapIt
                     return;
                 }
             }
-
-            Telemetry.TrackEvent("OnStartup");
-            Log.Logger.Information("SnapIt Started");
-
-            base.OnStartup(e);
-        }
-
-        private void RegisterGlobalExceptionHandling(ILogger log)
-        {
-            // this is the line you really want
-            AppDomain.CurrentDomain.UnhandledException +=
-                (sender, args) => CurrentDomainOnUnhandledException(args, log);
-
-            // optional: hooking up some more handlers
-            // remember that you need to hook up additional handlers when
-            // logging from other dispatchers, shedulers, or applications
-            DispatcherUnhandledException += (sender, args) => CurrentOnDispatcherUnhandledException(args, log);
-
-            Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args, log);
-
-            TaskScheduler.UnobservedTaskException +=
-                (sender, args) => TaskSchedulerOnUnobservedTaskException(args, log);
-        }
-
-        private static void CurrentDomainOnUnhandledException(UnhandledExceptionEventArgs args, ILogger log)
-        {
-            var exception = args.ExceptionObject as Exception;
-            var terminatingMessage = args.IsTerminating ? " The application is terminating." : string.Empty;
-            var exceptionMessage = exception?.Message ?? "An unmanaged exception occured.";
-            var message = string.Concat(exceptionMessage, terminatingMessage);
-            log.Error(exception, message);
-        }
-
-        private static void CurrentOnDispatcherUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)
-        {
-            log.Error(args.Exception, args.Exception.Message);
-            args.Handled = true;
-        }
-
-        private static void DispatcherOnUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)
-        {
-            log.Error(args.Exception, args.Exception.Message);
-            args.Handled = true;
-        }
-
-        private static void TaskSchedulerOnUnobservedTaskException(UnobservedTaskExceptionEventArgs args, ILogger log)
-        {
-            log.Error(args.Exception, args.Exception.Message);
-            args.SetObserved();
-        }
-
-        protected override Window CreateShell()
-        {
-            var applicationWindow = Container.Resolve<MainWindow>();
-
-            return applicationWindow;
-        }
-
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterForNavigation<HomeView>();
-            containerRegistry.RegisterForNavigation<LayoutView>();
-            containerRegistry.RegisterForNavigation<ApplicationView>();
-            containerRegistry.RegisterForNavigation<MouseSettingsView>();
-            containerRegistry.RegisterForNavigation<KeyboardSettingsView>();
-            containerRegistry.RegisterForNavigation<WindowsView>();
-            containerRegistry.RegisterForNavigation<ThemeView>();
-            containerRegistry.RegisterForNavigation<SettingsView>();
-            containerRegistry.RegisterForNavigation<WhatsNewView>();
-            containerRegistry.RegisterForNavigation<AboutView>();
-            containerRegistry.RegisterForNavigation<PopupWindow>();
-
-            containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
-            containerRegistry.RegisterSingleton<ISettingService, SettingService>();
-            containerRegistry.RegisterSingleton<ISnapService, SnapService>();
-            containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
-            containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
-            containerRegistry.Register<IWindowService, WindowService>();
-            //containerRegistry.RegisterSingleton<IStandaloneLicenseService, StandaloneLicenseService>();
-            containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
-            containerRegistry.RegisterSingleton<IScreenChangeService, ScreenChangeService>();
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            base.OnExit(e);
-
-            if (Container != null)
+            else if (!Dev.IsActive)
             {
-                var snapServiceContainer = Container.Resolve<ISnapService>();
-                if (snapServiceContainer != null)
-                {
-                    snapServiceContainer.Release();
-                    NotifyIcon.Dispose();
-                }
+                RunAsAdministrator.Run();
+                Shutdown();
+                return;
             }
-
-            Log.Logger.Information("SnapIt Exited");
         }
+        else
+
+        {
+            if (!ApplicationInstance.RegisterSingleInstance() && !Dev.IsActive)
+            {
+                NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
+                NotifyIcon.Visible = true;
+
+                Shutdown();
+                return;
+            }
+        }
+
+        Telemetry.TrackEvent("OnStartup");
+        Log.Logger.Information("SnapIt Started");
+    }
+
+    private void OnExit(object sender, ExitEventArgs e)
+    {
+        if (Container != null)
+        {
+            var snapServiceContainer = Container.Resolve<ISnapManager>();
+            if (snapServiceContainer != null)
+            {
+                snapServiceContainer.Release();
+                NotifyIcon.Dispose();
+            }
+        }
+
+        Log.Logger.Information("SnapIt Exited");
+    }
+
+    private void RegisterGlobalExceptionHandling(ILogger log)
+    {
+        // this is the line you really want
+        AppDomain.CurrentDomain.UnhandledException +=
+            (sender, args) => CurrentDomainOnUnhandledException(args, log);
+
+        // optional: hooking up some more handlers
+        // remember that you need to hook up additional handlers when
+        // logging from other dispatchers, shedulers, or applications
+        DispatcherUnhandledException += (sender, args) => CurrentOnDispatcherUnhandledException(args, log);
+
+        Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args, log);
+
+        TaskScheduler.UnobservedTaskException +=
+            (sender, args) => TaskSchedulerOnUnobservedTaskException(args, log);
+    }
+
+    private static void CurrentDomainOnUnhandledException(UnhandledExceptionEventArgs args, ILogger log)
+    {
+        var exception = args.ExceptionObject as Exception;
+        var terminatingMessage = args.IsTerminating ? " The application is terminating." : string.Empty;
+        var exceptionMessage = exception?.Message ?? "An unmanaged exception occured.";
+        var message = string.Concat(exceptionMessage, terminatingMessage);
+        log.Error(exception, message);
+    }
+
+    private static void CurrentOnDispatcherUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)
+    {
+        log.Error(args.Exception, args.Exception.Message);
+        args.Handled = true;
+    }
+
+    private static void DispatcherOnUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)
+    {
+        log.Error(args.Exception, args.Exception.Message);
+        args.Handled = true;
+    }
+
+    private static void TaskSchedulerOnUnobservedTaskException(UnobservedTaskExceptionEventArgs args, ILogger log)
+    {
+        log.Error(args.Exception, args.Exception.Message);
+        args.SetObserved();
     }
 }

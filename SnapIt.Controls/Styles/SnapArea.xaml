@@ -1,0 +1,43 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="clr-namespace:SnapIt.Controls">
+
+    <Style TargetType="{x:Type control:SnapArea}">
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type control:SnapArea}">
+                    <Grid Margin="{Binding Path=AreaPadding, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=0}">
+                        <Grid
+                            x:Name="Area"
+                            Background="{Binding Path=Theme.OverlayBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}"
+                            Opacity="{Binding Path=Theme.Opacity, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=0.85}">
+                            <TextBlock
+                                Margin="12"
+                                FontSize="36"
+                                Foreground="{Binding Path=Theme.BorderBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=White}"
+                                Text="{Binding Path=AreaNumber, RelativeSource={RelativeSource TemplatedParent}}"
+                                Visibility="{Binding Path=AreaNumberVisible, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
+                        <Border
+                            x:Name="Border"
+                            BorderBrush="{Binding Path=Theme.BorderBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=#FFC8C8C8}"
+                            BorderThickness="{Binding Path=Theme.BorderThickness, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=1}" />
+                    </Grid>
+
+                    <!--<ControlTemplate.Triggers>
+                        <Trigger Property="IsAreaMouseOver" Value="True">
+                            <Setter TargetName="Area" Property="Background" Value="{Binding Path=Theme.HighlightBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}" />
+                        </Trigger>
+                        <Trigger Property="IsAreaMouseOver" Value="False">
+                            <Setter TargetName="Area" Property="Background" Value="{Binding Path=Theme.OverlayBrush, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

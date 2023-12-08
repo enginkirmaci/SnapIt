@@ -1,0 +1,488 @@
+﻿<ui:FluentWindow
+    x:Class="SnapIt.Views.Windows.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:SnapIt.Common.Entities;assembly=SnapIt.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    x:Name="MainWindowView"
+    Title="{x:Static c:Constants.AppName}"
+    Width="980"
+    Height="780"
+    MinWidth="640"
+    MinHeight="440"
+    d:DataContext="{d:DesignInstance local:MainWindow,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="650"
+    d:DesignWidth="1000"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    ExtendsContentIntoTitleBar="True"
+    SizeChanged="MainWindow_OnSizeChanged"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Default"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewModel.LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ViewModel.ClosingWindowCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid DataContext="{Binding ViewModel}">
+        <ui:NavigationView
+            x:Name="NavigationView"
+            Padding="42,0,42,42"
+            BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
+            EnableDebugMessages="True"
+            FrameMargin="0"
+            IsBackButtonVisible="Visible"
+            IsPaneToggleVisible="True"
+            MenuItems="{Binding MenuItems}"
+            OpenPaneLength="310"
+            PaneClosed="NavigationView_OnPaneClosed"
+            PaneDisplayMode="Left"
+            PaneOpened="NavigationView_OnPaneOpened"
+            SelectionChanged="OnNavigationSelectionChanged"
+            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
+            <ui:NavigationView.Header>
+                <StackPanel Margin="42,32,42,20">
+                    <ui:BreadcrumbBar x:Name="BreadcrumbBar" />
+                </StackPanel>
+            </ui:NavigationView.Header>
+            <ui:NavigationView.AutoSuggestBox>
+                <ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search">
+                    <ui:AutoSuggestBox.Icon>
+                        <ui:IconSourceElement>
+                            <ui:SymbolIconSource Symbol="Search24" />
+                        </ui:IconSourceElement>
+                    </ui:AutoSuggestBox.Icon>
+                </ui:AutoSuggestBox>
+            </ui:NavigationView.AutoSuggestBox>
+            <ui:NavigationView.ContentOverlay>
+                <Grid>
+                    <ui:SnackbarPresenter x:Name="SnackbarPresenter" />
+                </Grid>
+            </ui:NavigationView.ContentOverlay>
+            <!--<ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem
+                    Content="Home"
+                    Icon="{ui:SymbolIcon Home24}"
+                    TargetPageType="{x:Type pages:DashboardPage}" />
+                <ui:NavigationViewItem
+                    Content="Mouse"
+                    Icon="{ui:FontIcon '&#xe962;',
+                                       'Segoe Fluent Icons'}"
+                    TargetPageType="{x:Type pages:AboutPage}" />
+                <ui:NavigationViewItem
+                    Content="About"
+                    Icon="{ui:SymbolIcon Info24}"
+                    TargetPageType="{x:Type pages:AboutPage}" />
+            </ui:NavigationView.MenuItems>-->
+        </ui:NavigationView>
+
+        <ContentPresenter x:Name="RootContentDialog" Grid.Row="0" />
+
+        <ui:TitleBar
+            x:Name="TitleBar"
+            Title="{x:Static c:Constants.AppName}"
+            Grid.Row="0"
+            CloseWindowByDoubleClickOnIcon="True">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/snapit.png" />
+            </ui:TitleBar.Icon>
+            <ui:TitleBar.Header>
+                <Grid>
+                    <TextBlock
+                        Margin="48,0,0,6"
+                        VerticalAlignment="Bottom"
+                        FontSize="10"
+                        Text="{Binding LicenseText}" />
+                    <ui:Button
+                        Margin="0,-18,12,0"
+                        Padding="8,4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Appearance="Secondary"
+                        Command="{Binding TrialVersionCommand}"
+                        Content="Trial Version"
+                        FontSize="12"
+                        FontWeight="Light"
+                        ToolTip="Trial Version"
+                        Visibility="{Binding IsTrial, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                </Grid>
+            </ui:TitleBar.Header>
+        </ui:TitleBar>
+
+        <tray:NotifyIcon
+            Grid.Row="0"
+            FocusOnLeftClick="True"
+            Icon="pack://application:,,,/Assets/notifyicon.ico"
+            MenuOnRightClick="True"
+            TooltipText="{x:Static c:Constants.AppName}">
+            <tray:NotifyIcon.Menu>
+                <ContextMenu ItemsSource="{Binding ViewModel.TrayMenuItems, Mode=OneWay}" />
+            </tray:NotifyIcon.Menu>
+        </tray:NotifyIcon>
+    </Grid>
+
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <wpfui:TitleBar
+            x:Name="RootTitleBar"
+            Title="{x:Static c:Constants.AppName}"
+            Icon="/Themes/snapit.png"
+            MinimizeToTray="True"
+            UseSnapLayout="True">
+            <wpfui:TitleBar.Tray>
+                <wpfui:NotifyIcon
+                    DataContext="{Binding}"
+                    FocusOnLeftClick="False"
+                    Icon="pack://application:,,,/Themes/notifyicon.ico"
+                    MenuOnRightClick="True"
+                    TooltipText="{x:Static c:Constants.AppName}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="LeftClick">
+                            <i:InvokeCommandAction Command="{Binding NotifyIconClickViewCommand}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="ContextMenuOpening">
+                            <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
+                        </i:EventTrigger>
+    -->
+    <!--<i:EventTrigger EventName="NotifyIconDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding NotifyIconDoubleClickViewCommand}" CommandParameter="home" />
+                        </i:EventTrigger>-->
+    <!--
+                    </i:Interaction.Triggers>
+
+                    <wpfui:NotifyIcon.Menu>
+                        <ContextMenu>
+    -->
+    <!--<i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Opened">
+                                    <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>-->
+    <!--
+                            <Label Content="{Binding NotifyStatus}" IsEnabled="False" />
+                            <Separator />
+                            <wpfui:MenuItem
+                                Command="{Binding StartStopCommand}"
+                                Header="{Binding Status}"
+                                SymbolIcon="Play24"
+                                Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
+                            <wpfui:MenuItem
+                                Command="{Binding StartStopCommand}"
+                                Header="{Binding Status}"
+                                SymbolIcon="Stop24"
+                                Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                            <Separator />
+                            <wpfui:MenuItem
+                                x:Name="HomeMenuItem"
+                                Command="{Binding NotifyIconDoubleClickViewCommand}"
+                                CommandParameter="home">
+                                <wpfui:MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <wpfui:SymbolIcon Margin="0,0,6,0" Symbol="Home24" />
+                                        <ContentPresenter Content="Home" />
+                                    </StackPanel>
+                                </wpfui:MenuItem.Header>
+                            </wpfui:MenuItem>
+                            <Separator />
+                            <wpfui:MenuItem
+                                x:Name="LayoutMenuItem"
+                                Command="{Binding NotifyIconDoubleClickViewCommand}"
+                                CommandParameter="layout">
+                                <wpfui:MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <wpfui:SymbolIcon Margin="0,0,6,0" Symbol="DataTreemap24" />
+                                        <ContentPresenter Content="Layouts" />
+                                    </StackPanel>
+                                </wpfui:MenuItem.Header>
+                            </wpfui:MenuItem>
+                            <wpfui:MenuItem
+                                Command="{Binding NotifyIconDoubleClickViewCommand}"
+                                CommandParameter="application"
+                                Header="Apps"
+                                SymbolIcon="Apps24" />
+                            <wpfui:MenuItem
+                                Command="{Binding NotifyIconDoubleClickViewCommand}"
+                                CommandParameter="settings"
+                                Header="Settings"
+                                SymbolIcon="Settings24" />
+                            <Separator />
+                            <wpfui:MenuItem>
+                                <wpfui:MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <wpfui:SymbolIcon Margin="0,0,6,0" Symbol="Heart24" />
+                                        <ContentPresenter Content="Feedback" />
+                                    </StackPanel>
+                                </wpfui:MenuItem.Header>
+                                <wpfui:MenuItem
+                                    Command="{Binding HandleLinkClick}"
+                                    CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
+                                    Header="New ideas or report a bug" />
+                                <wpfui:MenuItem Command="{Binding RateReviewStoreClick}" Header="Rate and review on Microsoft Store" />
+                            </wpfui:MenuItem>
+                            <wpfui:MenuItem
+                                Command="{Binding NotifyIconDoubleClickViewCommand}"
+                                CommandParameter="about"
+                                Header="About"
+                                SymbolIcon="Info24" />
+                            <Separator />
+                            <wpfui:MenuItem
+                                Command="{Binding ExitApplicationCommand}"
+                                Header="Exit"
+                                SymbolIcon="Power24" />
+                        </ContextMenu>
+                    </wpfui:NotifyIcon.Menu>
+                </wpfui:NotifyIcon>
+            </wpfui:TitleBar.Tray>
+        </wpfui:TitleBar>
+
+        <Grid Grid.Row="1" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <wpfui:NavigationStore
+                x:Name="RootNavigation"
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="6,0,6,0"
+                Frame="{Binding ElementName=MainFrame}"
+                SelectedPageIndex="0"
+                TransitionType="FadeInWithSlide">
+                <wpfui:NavigationStore.Items>
+                    <wpfui:NavigationItem
+                        Content="Home"
+                        Icon="Home24"
+                        PageTag="home"
+                        PageType="{x:Type views:HomeView}" />
+                    <wpfui:NavigationSeparator />
+                    <wpfui:NavigationItem
+                        Content="Layout"
+                        Icon="DataTreemap24"
+                        PageTag="layout"
+                        PageType="{x:Type views:LayoutView}" />
+                    <wpfui:NavigationItem
+                        Content="Apps"
+                        Icon="Apps24"
+                        PageTag="application"
+                        PageType="{x:Type views:ApplicationView}" />
+                    <wpfui:NavigationItem
+                        Content="Mouse"
+                        PageTag="mouse"
+                        PageType="{x:Type views:MouseSettingsView}"
+                        Style="{DynamicResource NavigationStoreItemMouse}" />
+                    <wpfui:NavigationItem
+                        Content="Keyboard"
+                        Icon="Keyboard24"
+                        PageTag="keyboard"
+                        PageType="{x:Type views:KeyboardSettingsView}" />
+                    <wpfui:NavigationItem
+                        Content="Window"
+                        Icon="CalendarMultiple24"
+                        PageTag="window"
+                        PageType="{x:Type views:WindowsView}" />
+                    <wpfui:NavigationItem
+                        Content="Theme"
+                        Icon="Color24"
+                        PageTag="theme"
+                        PageType="{x:Type views:ThemeView}" />
+                    <wpfui:NavigationItem
+                        Content="Settings"
+                        Icon="Settings24"
+                        PageTag="settings"
+                        PageType="{x:Type views:SettingsView}" />
+                    <wpfui:NavigationItem
+                        Content="Tutorials"
+                        PageTag="tutorials"
+                        PageType="{x:Type views:TutorialsView}"
+                        Style="{DynamicResource NavigationStoreItemTutorials}" />
+                    <wpfui:NavigationItem
+                        Content="About"
+                        Icon="Info24"
+                        PageTag="about"
+                        PageType="{x:Type views:AboutView}" />
+                </wpfui:NavigationStore.Items>
+            </wpfui:NavigationStore>
+
+            <StackPanel Grid.Row="2" Margin="6,0,6,0">
+                <Separator Margin="0,0,0,8" />
+
+                <wpfui:ToggleSwitch
+                    Margin="0,0,0,12"
+                    HorizontalAlignment="Center"
+                    Command="{Binding StartStopCommand}"
+                    IsChecked="{Binding IsRunning}"
+                    ToolTip="{Binding Status}" />
+            </StackPanel>
+
+    -->
+    <!--  Pages are presented here  -->
+    <!--
+            <Border
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="1"
+                CornerRadius="8,0,0,0">
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.6" Color="{DynamicResource ControlFillColorDefault}" />
+                </Border.Background>
+                <Grid>
+                    <Frame
+                        x:Name="MainFrame"
+                        prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}"
+                        Navigating="MainFrame_Navigating" />
+                    <wpfui:Breadcrumb
+                        Margin="18"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        FontSize="24"
+                        Navigation="{Binding ElementName=RootNavigation}" />
+                </Grid>
+            </Border>
+        </Grid>
+
+        <wpfui:Dialog
+            Grid.RowSpan="2"
+            Panel.ZIndex="9"
+            ButtonLeftName="Buy Full Version!"
+            ButtonRightName="{Binding LicenseMessageCloseButtonText}"
+            DialogHeight="170"
+            IsShown="{Binding IsTrialMessageOpen, Mode=TwoWay}"
+            Visibility="{Binding IsTrialMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ButtonLeftClick">
+                    <i:InvokeCommandAction Command="{Binding TrialMessageClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="ButtonRightClick">
+                    <i:InvokeCommandAction Command="{Binding TrialMessageClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <StackPanel>
+                <TextBlock FontWeight="Medium">
+                    <Run Text="{x:Static c:Constants.AppName}" />
+                    <Run Text="Trial" />
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="You are using trial version of" />
+                    <Run Text="{x:Static c:Constants.AppName}" />
+                </TextBlock>
+            </StackPanel>
+        </wpfui:Dialog>
+
+        <wpfui:Dialog
+            Grid.RowSpan="2"
+            Panel.ZIndex="9"
+            ButtonLeftName="OK"
+            ButtonRightName="{Binding LicenseMessageCloseButtonText}"
+            DialogHeight="215"
+            IsShown="{Binding IsLicenseMessageOpen, Mode=TwoWay}"
+            Visibility="{Binding IsLicenseMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ButtonRightClick">
+                    <i:InvokeCommandAction Command="{Binding LicenseMessageClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="ButtonLeftClick">
+                    <i:InvokeCommandAction Command="{Binding LicenseMessageClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <StackPanel>
+                <TextBlock FontWeight="Medium" Text="Enter License Key" />
+
+                <TextBox
+                    Margin="0,6,0,0"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding LicenseMessageLicenseText}" />
+
+                <TextBlock
+                    Margin="0,2,0,0"
+                    Foreground="{StaticResource PaletteRedBrush}"
+                    Text="{Binding LicenseMessageErrorText}" />
+            </StackPanel>
+        </wpfui:Dialog>
+
+        <wpfui:Dialog
+            Grid.RowSpan="2"
+            Panel.ZIndex="9"
+            ButtonLeftName="Update Now"
+            ButtonRightName="Later"
+            DialogHeight="230"
+            IsShown="{Binding NewVersionMessageOpen, Mode=TwoWay}"
+            Visibility="{Binding NewVersionMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ButtonLeftClick">
+                    <i:InvokeCommandAction Command="{Binding NewVersionMessageClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="ButtonRightClick">
+                    <i:InvokeCommandAction Command="{Binding NewVersionMessageClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <StackPanel>
+                <TextBlock FontWeight="Medium" Text="Update Available" />
+                <TextBlock TextWrapping="Wrap">
+                    <Run Text="A newer version of" />
+                    <Run Text="{x:Static c:Constants.AppName}" />
+                    <Run Text="is available as a download from website." />
+                    <LineBreak />
+                    <LineBreak />
+                    <Run Text="Would you like to update now?" />
+                </TextBlock>
+            </StackPanel>
+        </wpfui:Dialog>
+
+        <wpfui:Dialog
+            Grid.RowSpan="2"
+            Panel.ZIndex="9"
+            ButtonLeftName="Open Store"
+            ButtonRightName="{Binding LicenseMessageCloseButtonText}"
+            DialogHeight="216"
+            IsShown="{Binding IsTryStoreMessageOpen, Mode=TwoWay}"
+            Visibility="{Binding IsTryStoreMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ButtonLeftClick">
+                    <i:InvokeCommandAction Command="{Binding TryStoreMessageClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="ButtonRightClick">
+                    <i:InvokeCommandAction Command="{Binding TryStoreMessageClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <StackPanel>
+                <TextBlock FontWeight="Medium" Text="Purchase failed!" />
+                <TextBlock TextWrapping="Wrap">
+                    <Run Text="{x:Static c:Constants.AppName}" />
+                    <Run Text="was not purchased. Please try to purchase from Microsoft Store." />
+                </TextBlock>
+            </StackPanel>
+        </wpfui:Dialog>
+
+        <wpfui:Snackbar
+            Title="Activation Successful"
+            Grid.RowSpan="2"
+            Icon="Empty"
+            IsShown="{Binding IsLicenseSuccess, Mode=TwoWay}"
+            Message="Thank you for Purchasing."
+            Timeout="4000" />
+    </Grid>-->
+</ui:FluentWindow>
