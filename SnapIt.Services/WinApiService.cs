@@ -86,6 +86,8 @@ public class WinApiService : IWinApiService
 
     public bool MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height)
     {
+        Dev.Log($"{X},{Y}  {width}x{height}");
+
         PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL); //if window maximized, restores to normal so position can be set
 
         var res = PInvoke.User32.SetWindowPos(
@@ -100,7 +102,7 @@ public class WinApiService : IWinApiService
         var msg = Marshal.GetLastWin32Error();
         if (msg != 0)
         {
-            //DevMode.Log(msg);
+            Dev.Log(msg);
         }
         return res;
     }
@@ -112,16 +114,16 @@ public class WinApiService : IWinApiService
 
     public void GetWindowMargin(ActiveWindow activeWindow, out Rectangle withMargin)
     {
-        var t = new System.Drawing.Rectangle();
+        var t = new PInvoke.RECT();
         DwmApi.DwmGetWindowAttribute(
                         activeWindow.Handle,
                         DWMWINDOWATTRIBUTE.ExtendedFrameBounds,
                         out t,
-                        Marshal.SizeOf(typeof(System.Drawing.Rectangle)));
+                        Marshal.SizeOf(typeof(PInvoke.RECT)));
 
         Dev.Log(t.ToString());
 
-        withMargin = new Rectangle(t.Left, t.Top, t.Right, t.Bottom);
+        withMargin = new Rectangle(t.left, t.top, t.right, t.bottom);
     }
 
     public ActiveWindow GetActiveWindow()

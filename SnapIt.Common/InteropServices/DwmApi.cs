@@ -6,5 +6,5 @@ namespace SnapIt.Common.InteropServices;
 public class DwmApi
 {
     [DllImport("dwmapi.dll")]
-    public static extern int DwmGetWindowAttribute(nint hwnd, DWMWINDOWATTRIBUTE dwAttribute, out System.Drawing.Rectangle pvAttribute, int cbAttribute);
+    public static extern int DwmGetWindowAttribute(nint hwnd, DWMWINDOWATTRIBUTE dwAttribute, out PInvoke.RECT pvAttribute, int cbAttribute);
 }

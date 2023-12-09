@@ -1,6 +1,7 @@
 ﻿using System.Windows.Interop;
 using DryIoc;
 using SnapIt.Application.Contracts;
+using SnapIt.Common;
 
 namespace SnapIt.Application;
 
@@ -32,18 +33,19 @@ public class ScreenManager : IScreenManager
         switch ((uint)msg)
         {
             case WM_DISPLAYCHANGE:
+                Dev.Log("WM_DISPLAYCHANGE");
                 screenChanged = true;
                 ScreenChangedTask();
 
                 break;
 
-                //case WM_SETTINGCHANGE:
-                //    screenChanged = true;
-                //    ScreenChangedTask(snapService);
+            case WM_SETTINGCHANGE:
+                //screenChanged = true;
+                //ScreenChangedTask(snapService);
 
-                //    DevMode.Log($"WM_SETTINGCHANGE change");
+                Dev.Log("WM_SETTINGCHANGE");
 
-                //    break;
+                break;
         }
 
         return nint.Zero;

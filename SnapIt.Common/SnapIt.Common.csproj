@@ -8,13 +8,13 @@
 		<!--<UseWindowsForms>true</UseWindowsForms>-->
 	</PropertyGroup>
 	
-	<ItemGroup>
+	<ItemGroup>  
 		<PackageReference Include="System.Management" Version="8.0.0" />
 		<PackageReference Include="WpfScreenHelper" Version="2.1.0" /> 
 		<PackageReference Include="Prism.DryIoc" Version="8.1.97" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-		<PackageReference Include="PInvoke.SHCore" Version="0.7.104" />
-		<PackageReference Include="PInvoke.User32" Version="0.7.104" />
+		<PackageReference Include="PInvoke.SHCore" Version="0.7.124" />
+		<PackageReference Include="PInvoke.User32" Version="0.7.124" />
 	</ItemGroup>
 
 </Project>
