@@ -19,7 +19,12 @@ public class WinApiService : IWinApiService
 
     public async Task InitializeAsync()
     {
-        if (IsInitialized) return;
+        if (IsInitialized)
+        {
+            return;
+        }
+
+        IsInitialized = true;
     }
 
     public IDictionary<nint, string> GetOpenWindows()

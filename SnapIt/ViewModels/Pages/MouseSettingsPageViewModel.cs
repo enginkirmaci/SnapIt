@@ -1,5 +1,4 @@
-﻿using Prism.Mvvm;
-using SnapIt.Application.Contracts;
+﻿using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
@@ -9,7 +8,7 @@ namespace SnapIt.ViewModels.Pages;
 
 public class MouseSettingsPageViewModel : ViewModelBase
 {
-    private readonly ISnapManager snapService;
+    private readonly ISnapManager snapManager;
     private readonly ISettingService settingService;
 
     private ObservableCollection<MouseButton> mouseButtons;
@@ -54,10 +53,10 @@ public class MouseSettingsPageViewModel : ViewModelBase
     public ObservableCollection<Resource<HoldKeyBehaviour>> HoldKeyBehaviours { get => holdKeyBehaviours; set => SetProperty(ref holdKeyBehaviours, value); }
 
     public MouseSettingsPageViewModel(
-        ISnapManager snapService,
+        ISnapManager snapManager,
         ISettingService settingService)
     {
-        this.snapService = snapService;
+        this.snapManager = snapManager;
         this.settingService = settingService;
 
         MouseButtons =
@@ -89,8 +88,8 @@ public class MouseSettingsPageViewModel : ViewModelBase
     {
         if (!Dev.IsActive)
         {
-            snapService.Release();
-            snapService.InitializeAsync();
+            snapManager.Release();
+            snapManager.InitializeAsync();
         }
     }
 }

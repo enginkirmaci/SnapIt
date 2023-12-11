@@ -65,7 +65,10 @@ public class SnapManager : ISnapManager
 
     public async Task InitializeAsync()
     {
-        if (IsInitialized) return;
+        if (IsInitialized)
+        {
+            return;
+        }
 
         if (isTrialEnded)
             return;
@@ -177,6 +180,8 @@ public class SnapManager : ISnapManager
         IsRunning = true;
         StatusChanged?.Invoke(true);
         ScreenLayoutLoaded?.Invoke(settingService.SnapScreens, settingService.Layouts);
+
+        IsInitialized = true;
     }
 
     public void SetIsTrialEnded(bool isEnded)
@@ -323,6 +328,7 @@ public class SnapManager : ISnapManager
 
         IsRunning = false;
         StatusChanged?.Invoke(false);
+        IsInitialized = false;
     }
 
     private void CycleLayouts()

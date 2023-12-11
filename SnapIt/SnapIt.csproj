@@ -31,13 +31,21 @@
 	  <Compile Remove="ViewModels\PopupWindowViewModel.cs" />
 	  <Compile Remove="Views\ApplicationView.xaml.cs" />
 	  <Compile Remove="Views\PopupWindow.xaml.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Assets\notifyicon.ico" />
+	  <None Remove="Assets\snapit.ico" />
+	  <None Remove="Assets\snapit.png" />
+	  <None Remove="Assets\snapit.svg" />
 	</ItemGroup> 
 	<ItemGroup>
 	  <Page Remove="Views\ApplicationView.xaml" />
 	  <Page Remove="Views\PopupWindow.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="Assets\app.ico" />
+		<Content Include="Assets\app.ico">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Dirkster.ColorPickerLib" Version="1.6.2" />
@@ -57,10 +65,7 @@
 		<ProjectReference Include="..\SnapIt.Services\SnapIt.Services.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Resource Include="Assets\app.ico" />
-		<Resource Include="Assets\notifyicon.ico" />
 		<Resource Include="Assets\Segoe Fluent Icons.ttf" />
-		<Resource Include="Assets\snapit.png" />
 		<Resource Include="Assets\Win-GIF.gif" />
 	</ItemGroup>
 	<ItemGroup>

@@ -20,12 +20,16 @@ public class FileOperationService : IFileOperationService
 
     public async Task InitializeAsync()
     {
-        if (!IsInitialized)
+        if (IsInitialized)
         {
-            Directory.CreateDirectory(rootFolder);
-
-            InitializeLayouts();
+            return;
         }
+
+        Directory.CreateDirectory(rootFolder);
+
+        InitializeLayouts();
+
+        IsInitialized = true;
     }
 
     private void InitializeLayouts()

@@ -19,8 +19,7 @@
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="650"
     d:DesignWidth="1000"
-    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
-    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    ui:Design.Background="{DynamicResource PopupBackgroundBrush}"
     ExtendsContentIntoTitleBar="True"
     SizeChanged="MainWindow_OnSizeChanged"
     WindowBackdropType="Mica"
@@ -72,21 +71,19 @@
                     <ui:SnackbarPresenter x:Name="SnackbarPresenter" />
                 </Grid>
             </ui:NavigationView.ContentOverlay>
-            <!--<ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem
-                    Content="Home"
-                    Icon="{ui:SymbolIcon Home24}"
-                    TargetPageType="{x:Type pages:DashboardPage}" />
-                <ui:NavigationViewItem
-                    Content="Mouse"
-                    Icon="{ui:FontIcon '&#xe962;',
-                                       'Segoe Fluent Icons'}"
-                    TargetPageType="{x:Type pages:AboutPage}" />
-                <ui:NavigationViewItem
-                    Content="About"
-                    Icon="{ui:SymbolIcon Info24}"
-                    TargetPageType="{x:Type pages:AboutPage}" />
-            </ui:NavigationView.MenuItems>-->
+            <ui:NavigationView.FooterMenuItems>
+                <ToggleButton
+                    Height="36"
+                    Command="{Binding StartStopCommand}"
+                    IsChecked="{Binding IsRunning}"
+                    ToolTip="{Binding Status}">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Play24" Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
+                        <ui:SymbolIcon Symbol="Pause24" Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                        <TextBlock Margin="6,0,0,0" Text="{Binding Status}" />
+                    </StackPanel>
+                </ToggleButton>
+            </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
 
         <ContentPresenter x:Name="RootContentDialog" Grid.Row="0" />
@@ -97,7 +94,7 @@
             Grid.Row="0"
             CloseWindowByDoubleClickOnIcon="True">
             <ui:TitleBar.Icon>
-                <ui:ImageIcon Source="pack://application:,,,/Assets/snapit.png" />
+                <ui:ImageIcon Source="pack://application:,,,/Assets/app.ico" />
             </ui:TitleBar.Icon>
             <ui:TitleBar.Header>
                 <Grid>
@@ -124,23 +121,114 @@
 
         <tray:NotifyIcon
             Grid.Row="0"
+            DataContext="{Binding}"
             FocusOnLeftClick="True"
-            Icon="pack://application:,,,/Assets/notifyicon.ico"
+            Icon="pack://application:,,,/Assets/app.ico"
             MenuOnRightClick="True"
             TooltipText="{x:Static c:Constants.AppName}">
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="LeftClick">
+                    <i:InvokeCommandAction Command="{Binding NotifyIconClickViewCommand}" />
+                </i:EventTrigger>
+                <!--<i:EventTrigger EventName="ContextMenuOpening">
+                    <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
+                </i:EventTrigger>-->
+                <i:EventTrigger EventName="RightClick">
+                    <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
             <tray:NotifyIcon.Menu>
                 <ContextMenu ItemsSource="{Binding ViewModel.TrayMenuItems, Mode=OneWay}" />
             </tray:NotifyIcon.Menu>
+
+            <!--<tray:NotifyIcon.Menu>
+                <ContextMenu>
+            -->
+            <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Opened">
+                                <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
+            <!--
+
+                    <Label Content="{Binding NotifyStatus}" IsEnabled="False" />
+                    <Separator />
+                    <ui:MenuItem
+                        Command="{Binding StartStopCommand}"
+                        Header="{Binding Status}"
+                        Icon="Play24"
+                        Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
+                    <ui:MenuItem
+                        Command="{Binding StartStopCommand}"
+                        Header="{Binding Status}"
+                        Icon="Stop24"
+                        Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
+                    <Separator />
+                    <ui:MenuItem
+                        x:Name="HomeMenuItem"
+                        Command="{Binding NotifyIconDoubleClickViewCommand}"
+                        CommandParameter="home">
+                        <ui:MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Margin="0,0,6,0" Symbol="Home24" />
+                                <ContentPresenter Content="Home" />
+                            </StackPanel>
+                        </ui:MenuItem.Header>
+                    </ui:MenuItem>
+                    <Separator />
+                    <ui:MenuItem
+                        x:Name="LayoutMenuItem"
+                        Command="{Binding NotifyIconDoubleClickViewCommand}"
+                        CommandParameter="layout">
+                        <ui:MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Margin="0,0,6,0" Symbol="DataTreemap24" />
+                                <ContentPresenter Content="Layouts" />
+                            </StackPanel>
+                        </ui:MenuItem.Header>
+                    </ui:MenuItem>
+                    <ui:MenuItem
+                        Command="{Binding NotifyIconDoubleClickViewCommand}"
+                        CommandParameter="application"
+                        Header="Apps"
+                        Icon="Apps24" />
+                    <ui:MenuItem
+                        Command="{Binding NotifyIconDoubleClickViewCommand}"
+                        CommandParameter="settings"
+                        Header="Settings"
+                        Icon="Settings24" />
+                    <Separator />
+                    <ui:MenuItem>
+                        <ui:MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Margin="0,0,6,0" Symbol="Heart24" />
+                                <ContentPresenter Content="Feedback" />
+                            </StackPanel>
+                        </ui:MenuItem.Header>
+                        <ui:MenuItem
+                            Command="{Binding HandleLinkClick}"
+                            CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
+                            Header="New ideas or report a bug" />
+                        <ui:MenuItem Command="{Binding RateReviewStoreClick}" Header="Rate and review on Microsoft Store" />
+                    </ui:MenuItem>
+                    <ui:MenuItem
+                        Command="{Binding NotifyIconDoubleClickViewCommand}"
+                        CommandParameter="about"
+                        Header="About"
+                        Icon="Info24" />
+                    <Separator />
+                    <ui:MenuItem
+                        Command="{Binding ExitApplicationCommand}"
+                        Header="Exit"
+                        Icon="Power24" />
+                </ContextMenu>
+            </tray:NotifyIcon.Menu>-->
         </tray:NotifyIcon>
     </Grid>
 
-    <!--<Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <wpfui:TitleBar
+    <!--<wpfui:TitleBar
             x:Name="RootTitleBar"
             Title="{x:Static c:Constants.AppName}"
             Icon="/Themes/snapit.png"
@@ -161,11 +249,9 @@
                         <i:EventTrigger EventName="ContextMenuOpening">
                             <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
                         </i:EventTrigger>
-    -->
-    <!--<i:EventTrigger EventName="NotifyIconDoubleClick">
+                    <i:EventTrigger EventName="NotifyIconDoubleClick">
                             <i:InvokeCommandAction Command="{Binding NotifyIconDoubleClickViewCommand}" CommandParameter="home" />
-                        </i:EventTrigger>-->
-    <!--
+                        </i:EventTrigger>
                     </i:Interaction.Triggers>
 
                     <wpfui:NotifyIcon.Menu>
@@ -252,117 +338,8 @@
                 </wpfui:NotifyIcon>
             </wpfui:TitleBar.Tray>
         </wpfui:TitleBar>
-
-        <Grid Grid.Row="1" Margin="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <wpfui:NavigationStore
-                x:Name="RootNavigation"
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="6,0,6,0"
-                Frame="{Binding ElementName=MainFrame}"
-                SelectedPageIndex="0"
-                TransitionType="FadeInWithSlide">
-                <wpfui:NavigationStore.Items>
-                    <wpfui:NavigationItem
-                        Content="Home"
-                        Icon="Home24"
-                        PageTag="home"
-                        PageType="{x:Type views:HomeView}" />
-                    <wpfui:NavigationSeparator />
-                    <wpfui:NavigationItem
-                        Content="Layout"
-                        Icon="DataTreemap24"
-                        PageTag="layout"
-                        PageType="{x:Type views:LayoutView}" />
-                    <wpfui:NavigationItem
-                        Content="Apps"
-                        Icon="Apps24"
-                        PageTag="application"
-                        PageType="{x:Type views:ApplicationView}" />
-                    <wpfui:NavigationItem
-                        Content="Mouse"
-                        PageTag="mouse"
-                        PageType="{x:Type views:MouseSettingsView}"
-                        Style="{DynamicResource NavigationStoreItemMouse}" />
-                    <wpfui:NavigationItem
-                        Content="Keyboard"
-                        Icon="Keyboard24"
-                        PageTag="keyboard"
-                        PageType="{x:Type views:KeyboardSettingsView}" />
-                    <wpfui:NavigationItem
-                        Content="Window"
-                        Icon="CalendarMultiple24"
-                        PageTag="window"
-                        PageType="{x:Type views:WindowsView}" />
-                    <wpfui:NavigationItem
-                        Content="Theme"
-                        Icon="Color24"
-                        PageTag="theme"
-                        PageType="{x:Type views:ThemeView}" />
-                    <wpfui:NavigationItem
-                        Content="Settings"
-                        Icon="Settings24"
-                        PageTag="settings"
-                        PageType="{x:Type views:SettingsView}" />
-                    <wpfui:NavigationItem
-                        Content="Tutorials"
-                        PageTag="tutorials"
-                        PageType="{x:Type views:TutorialsView}"
-                        Style="{DynamicResource NavigationStoreItemTutorials}" />
-                    <wpfui:NavigationItem
-                        Content="About"
-                        Icon="Info24"
-                        PageTag="about"
-                        PageType="{x:Type views:AboutView}" />
-                </wpfui:NavigationStore.Items>
-            </wpfui:NavigationStore>
-
-            <StackPanel Grid.Row="2" Margin="6,0,6,0">
-                <Separator Margin="0,0,0,8" />
-
-                <wpfui:ToggleSwitch
-                    Margin="0,0,0,12"
-                    HorizontalAlignment="Center"
-                    Command="{Binding StartStopCommand}"
-                    IsChecked="{Binding IsRunning}"
-                    ToolTip="{Binding Status}" />
-            </StackPanel>
-
     -->
-    <!--  Pages are presented here  -->
     <!--
-            <Border
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                Grid.Column="1"
-                CornerRadius="8,0,0,0">
-                <Border.Background>
-                    <SolidColorBrush Opacity="0.6" Color="{DynamicResource ControlFillColorDefault}" />
-                </Border.Background>
-                <Grid>
-                    <Frame
-                        x:Name="MainFrame"
-                        prism:RegionManager.RegionName="{x:Static c:Constants.MainRegion}"
-                        Navigating="MainFrame_Navigating" />
-                    <wpfui:Breadcrumb
-                        Margin="18"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        FontSize="24"
-                        Navigation="{Binding ElementName=RootNavigation}" />
-                </Grid>
-            </Border>
-        </Grid>
 
         <wpfui:Dialog
             Grid.RowSpan="2"

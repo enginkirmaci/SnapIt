@@ -11,7 +11,7 @@ namespace SnapIt.ViewModels.Windows
     public class DesignWindowViewModel : ViewModelBase
     {
         private readonly IWinApiService winApiService;
-        private readonly ISnapManager snapService;
+        private readonly ISnapManager snapManager;
 
         //private bool isOverlayVisible ;
         private Layout layout;
@@ -40,10 +40,10 @@ namespace SnapIt.ViewModels.Windows
 
         public DesignWindowViewModel(
             IWinApiService winApiService,
-            ISnapManager snapService)
+            ISnapManager snapManager)
         {
             this.winApiService = winApiService;
-            this.snapService = snapService;
+            this.snapManager = snapManager;
 
             Theme = new SnapAreaTheme();
             Theme.ThemeChanged += Theme_ThemeChanged;
@@ -68,7 +68,7 @@ namespace SnapIt.ViewModels.Windows
                                  (int)SnapScreen.WorkingArea.Width,
                                  (int)SnapScreen.WorkingArea.Height);
 
-            snapService.Release();
+            snapManager.Release();
 
             Window.SnapControl.ResetBorderTool();
         }
@@ -87,7 +87,7 @@ namespace SnapIt.ViewModels.Windows
         {
             Window.SnapControl.Prepare(LayoutStatus.Saved);
 
-            _ = snapService.InitializeAsync();
+            _ = snapManager.InitializeAsync();
 
             Window.Close();
         }
@@ -96,7 +96,7 @@ namespace SnapIt.ViewModels.Windows
         {
             Window.SnapControl.Prepare(LayoutStatus.Ignored);
 
-            _ = snapService.InitializeAsync();
+            _ = snapManager.InitializeAsync();
 
             Window.Close();
         }

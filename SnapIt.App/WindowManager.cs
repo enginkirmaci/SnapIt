@@ -30,7 +30,10 @@ public class WindowManager : IWindowManager
 
     public async Task InitializeAsync()
     {
-        //if (IsInitialized) return;
+        if (IsInitialized)
+        {
+            return;
+        }
 
         await settingService.InitializeAsync();
         await winApiService.InitializeAsync();
@@ -60,6 +63,8 @@ public class WindowManager : IWindowManager
             window.Hide();
             window.Opacity = 100;
         });
+
+        IsInitialized = true;
     }
 
     public void Release()
@@ -76,6 +81,8 @@ public class WindowManager : IWindowManager
             });
             snapWindows.Clear();
         }
+
+        IsInitialized = false;
     }
 
     public void Show()

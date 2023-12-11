@@ -1,13 +1,13 @@
 ﻿<Page
     x:Class="SnapIt.Views.Pages.AboutPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:c="clr-namespace:SnapIt.Common.Entities;assembly=SnapIt.Common"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:local="clr-namespace:SnapIt.Views.Pages"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="clr-namespace:SnapIt.Common.Entities;assembly=SnapIt.Common"
+    xmlns:local="clr-namespace:SnapIt.Views.Pages"
     Title="About"
     Margin="0,24,0,0"
     d:DataContext="{d:DesignInstance local:AboutPage,
@@ -41,7 +41,7 @@
                     <Image
                         Width="70"
                         RenderOptions.BitmapScalingMode="HighQuality"
-                        Source="/SnapIt;component/Assets/snapit.png" />
+                        Source="/SnapIt;component/Assets/app.ico" />
                     <StackPanel
                         Grid.Column="1"
                         Margin="12,0,0,0"

@@ -63,7 +63,7 @@ public class SettingsPageViewModel : ViewModelBase
     public bool IsStandalone { get => isStandalone; set => SetProperty(ref isStandalone, value); }
 
     public SettingsPageViewModel(
-        ISnapManager snapService,
+        ISnapManager snapManager,
         ISettingService settingService,
         IThemeService themeService)
     {

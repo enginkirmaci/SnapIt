@@ -11,7 +11,7 @@ namespace SnapIt.ViewModels.Pages;
 
 public class WindowsPageViewModel : ViewModelBase
 {
-    private readonly ISnapManager snapService;
+    private readonly ISnapManager snapManager;
     private readonly ISettingService settingService;
     private readonly IContentDialogService contentDialogService;
     private bool disableForModal;
@@ -40,12 +40,12 @@ public class WindowsPageViewModel : ViewModelBase
     public DelegateCommand<ExcludedApplication> RemoveExcludedApplicationCommand { get; private set; }
 
     public WindowsPageViewModel(
-        ISnapManager snapService,
+        ISnapManager snapManager,
         ISettingService settingService,
         IWinApiService winApiService,
         IContentDialogService contentDialogService)
     {
-        this.snapService = snapService;
+        this.snapManager = snapManager;
         this.settingService = settingService;
         this.contentDialogService = contentDialogService;
 
@@ -161,8 +161,8 @@ public class WindowsPageViewModel : ViewModelBase
     {
         if (!Dev.IsActive)
         {
-            snapService.Release();
-            snapService.InitializeAsync();
+            snapManager.Release();
+            snapManager.InitializeAsync();
         }
     }
 }

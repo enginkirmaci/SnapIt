@@ -1,6 +1,7 @@
 ﻿using SnapIt.Common.Extensions;
 using SnapIt.Common.Entities;
 using SnapIt.Services.Contracts;
+using SnapIt.Common;
 
 #if !STANDALONE
 
@@ -36,9 +37,10 @@ public class SettingService : ISettingService
 
     public async Task InitializeAsync()
     {
-        if (IsInitialized) return;
-
-        await fileOperationService.InitializeAsync();
+        if (IsInitialized)
+        {
+            return;
+        }
 
         Settings = await fileOperationService.Load<Settings>();
 
@@ -81,6 +83,8 @@ public class SettingService : ISettingService
         //#endif
 
         ReInitialize();
+
+        IsInitialized = true;
     }
 
     public void ReInitialize()

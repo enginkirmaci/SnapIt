@@ -8,7 +8,7 @@ namespace SnapIt.ViewModels.Pages;
 
 public class KeyboardSettingsPageViewModel : ViewModelBase
 {
-    private readonly ISnapManager snapService;
+    private readonly ISnapManager snapManager;
     private readonly ISettingService settingService;
 
     private bool canApplyChanges = true;
@@ -41,10 +41,10 @@ public class KeyboardSettingsPageViewModel : ViewModelBase
     public DelegateCommand OverrideDefaultSnapCommand { get; set; }
 
     public KeyboardSettingsPageViewModel(
-        ISnapManager snapService,
+        ISnapManager snapManager,
         ISettingService settingService)
     {
-        this.snapService = snapService;
+        this.snapManager = snapManager;
         this.settingService = settingService;
 
         OverrideDefaultSnapCommand = new DelegateCommand(() =>
@@ -65,8 +65,8 @@ public class KeyboardSettingsPageViewModel : ViewModelBase
     {
         if (canApplyChanges && !Dev.IsActive)
         {
-            snapService.Release();
-            snapService.InitializeAsync();
+            snapManager.Release();
+            snapManager.InitializeAsync();
         }
     }
 

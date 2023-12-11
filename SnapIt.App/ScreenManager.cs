@@ -12,7 +12,7 @@ public class ScreenManager : IScreenManager
     private readonly IContainer container;
     private static bool screenChanged = false;
 
-    private ISnapManager snapService;
+    private ISnapManager snapManager;
 
     public bool IsInitialized { get; private set; }
 
@@ -23,9 +23,17 @@ public class ScreenManager : IScreenManager
 
     public async Task InitializeAsync()
     {
-        snapService = container.GetService<ISnapManager>();
+        if (IsInitialized)
+        {
+            return;
+        }
+
+        snapManager = container.GetService<ISnapManager>();
+
         HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(System.Windows.Application.Current.MainWindow).Handle);
         source.AddHook(new HwndSourceHook(WndProc));
+
+        IsInitialized = true;
     }
 
     private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
@@ -40,8 +48,8 @@ public class ScreenManager : IScreenManager
                 break;
 
             case WM_SETTINGCHANGE:
-                //screenChanged = true;
-                //ScreenChangedTask(snapService);
+                screenChanged = true;
+                ScreenChangedTask();
 
                 Dev.Log("WM_SETTINGCHANGE");
 
@@ -55,13 +63,13 @@ public class ScreenManager : IScreenManager
     {
         //await Task.Delay(5000);
 
-        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        //System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        //{
+        if (screenChanged)
         {
-            if (screenChanged)
-            {
-                screenChanged = false;
-                snapService.ScreenChangedEvent();
-            }
-        });
+            screenChanged = false;
+            snapManager.ScreenChangedEvent();
+        }
+        //});
     }
 }

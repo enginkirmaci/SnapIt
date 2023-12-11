@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Prism.Commands;
@@ -15,7 +14,7 @@ namespace SnapIt.ViewModels.Pages
 {
     public class LayoutPageViewModel : ViewModelBase
     {
-        private readonly ISnapManager snapService;
+        private readonly ISnapManager snapManager;
         private readonly ISettingService settingService;
         private readonly DesignWindowViewModel designWindowViewModel;
         private ObservableCollectionWithItemNotify<SnapScreen> snapScreens;
@@ -70,15 +69,15 @@ namespace SnapIt.ViewModels.Pages
         public DelegateCommand<Layout> ExportLayoutCommand { get; private set; }
 
         public LayoutPageViewModel(
-            ISnapManager snapService,
+            ISnapManager snapManager,
             ISettingService settingService,
             DesignWindowViewModel designWindowViewModel)
         {
-            this.snapService = snapService;
+            this.snapManager = snapManager;
             this.settingService = settingService;
             this.designWindowViewModel = designWindowViewModel;
 
-            snapService.ScreenChanged += SnapService_ScreenChanged;
+            snapManager.ScreenChanged += SnapService_ScreenChanged;
 
             Theme = new SnapAreaTheme
             {
@@ -264,8 +263,8 @@ namespace SnapIt.ViewModels.Pages
         {
             if (!Dev.IsActive)
             {
-                snapService.Release();
-                _ = snapService.InitializeAsync();
+                snapManager.Release();
+                _ = snapManager.InitializeAsync();
             }
         }
     }

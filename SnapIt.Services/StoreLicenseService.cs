@@ -18,7 +18,12 @@ public class StoreLicenseService : IStoreLicenseService
 
     public async Task InitializeAsync()
     {
-        if (IsInitialized) return;
+        if (IsInitialized)
+        {
+            return;
+        }
+
+        IsInitialized = true;
     }
 
     public void Init(Window window)

@@ -13,6 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
+
                 <ResourceDictionary Source="pack://application:,,,/Themes/CustomStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapIt.Controls.UI.xaml" />
             </ResourceDictionary.MergedDictionaries>

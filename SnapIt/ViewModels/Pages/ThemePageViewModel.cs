@@ -15,7 +15,7 @@ namespace SnapIt.ViewModels.Pages;
 
 public class ThemePageViewModel : ViewModelBase
 {
-    private readonly ISnapManager snapService;
+    private readonly ISnapManager snapManager;
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
     private SnapAreaTheme theme;
@@ -36,11 +36,11 @@ public class ThemePageViewModel : ViewModelBase
     public DelegateCommand DiscardChangesCommand { get; }
 
     public ThemePageViewModel(
-        ISnapManager snapService,
+        ISnapManager snapManager,
         ISettingService settingService,
         IWinApiService winApiService)
     {
-        this.snapService = snapService;
+        this.snapManager = snapManager;
         this.settingService = settingService;
         this.winApiService = winApiService;
 
@@ -163,8 +163,8 @@ public class ThemePageViewModel : ViewModelBase
     {
         if (!Dev.IsActive)
         {
-            snapService.Release();
-            snapService.InitializeAsync();
+            snapManager.Release();
+            snapManager.InitializeAsync();
         }
     }
 }

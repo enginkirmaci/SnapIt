@@ -23,10 +23,16 @@ public class ApplicationService : IApplicationService
 
     public async Task InitializeAsync()
     {
-        if (!IsInitialized)
+        if (IsInitialized)
         {
-            cachedWindowHandles = winApiService.GetOpenWindows();
+            return;
         }
+
+        await winApiService.InitializeAsync();
+
+        cachedWindowHandles = winApiService.GetOpenWindows();
+
+        IsInitialized = true;
     }
 
     public void Clear()
