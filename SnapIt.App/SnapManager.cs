@@ -749,7 +749,7 @@ public class SnapManager : ISnapManager
     {
         if (currentWindow != ActiveWindow.Empty)
         {
-            if (!rectangle.Equals(Rectangle.Empty))
+            if (rectangle != null && !rectangle.Equals(Rectangle.Empty))
             {
                 winApiService.GetWindowMargin(currentWindow, out Rectangle withMargin);
 

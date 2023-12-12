@@ -46,6 +46,7 @@ public class MainWindowViewModel : ViewModelBase
     private string notifyStatus = "Opening";
     private string licenseText;
     private Window mainWindow;
+    //private Wpf.Ui.Tray.Controls.NotifyIcon? notifyIcon;
 
     public ObservableCollection<object> MenuItems { get => menuItems; set => SetProperty(ref menuItems, value); }
     public ObservableCollection<object> TrayMenuItems { get => trayMenuItems; set => SetProperty(ref trayMenuItems, value); }
@@ -151,6 +152,7 @@ public class MainWindowViewModel : ViewModelBase
             navigationService.Navigate(typeof(DashboardPage));
 
             mainWindow = (Window)args.Source;
+            //notifyIcon = mainWindow.FindChildren<Wpf.Ui.Tray.Controls.NotifyIcon>().FirstOrDefault();
 
             ChangeTheme();
 

@@ -1,11 +1,8 @@
 ﻿using SnapIt.Common.Extensions;
 using SnapIt.Common.Entities;
 using SnapIt.Services.Contracts;
-using SnapIt.Common;
 
 #if !STANDALONE
-
-using Windows.ApplicationModel;
 
 #endif
 
@@ -243,68 +240,68 @@ public class SettingService : ISettingService
 
     public async Task<bool> GetStartupTaskStatusAsync()
     {
-#if !STANDALONE
-        try
-        {
-            var startupTask = await StartupTask.GetAsync("SnapItStartupTask"); // Pass the task ID you specified in the appxmanifest file
-            switch (startupTask.State)
-            {
-                case StartupTaskState.Disabled:
-                case StartupTaskState.DisabledByUser:
-                case StartupTaskState.DisabledByPolicy:
-                    return false;
+        //#if !STANDALONE
+        //        try
+        //        {
+        //            var startupTask = await StartupTask.GetAsync("SnapItStartupTask"); // Pass the task ID you specified in the appxmanifest file
+        //            switch (startupTask.State)
+        //            {
+        //                case StartupTaskState.Disabled:
+        //                case StartupTaskState.DisabledByUser:
+        //                case StartupTaskState.DisabledByPolicy:
+        //                    return false;
 
-                case StartupTaskState.Enabled:
-                case StartupTaskState.EnabledByPolicy:
-                default:
-                    return true;
-            }
-        }
-        catch (Exception ex)
+        //                case StartupTaskState.Enabled:
+        //                case StartupTaskState.EnabledByPolicy:
+        //                default:
+        //                    return true;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return false;
+        //        }
+        //#endif
+        //#if STANDALONE
+        using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
         {
-            return false;
+            return key.GetValue(Constants.AppRegistryKey) != null;
         }
-#endif
-#if STANDALONE
-            using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
-            {
-                return key.GetValue(Constants.AppRegistryKey) != null;
-            }
-#endif
+        //#endif
     }
 
     public async Task SetStartupTaskStatusAsync(bool isActive)
     {
-#if !STANDALONE
-        try
+        //#if !STANDALONE
+        //        try
+        //        {
+        //            var startupTask = await StartupTask.GetAsync("SnapItStartupTask");
+        //            if (isActive)
+        //            {
+        //                await startupTask.RequestEnableAsync();
+        //            }
+        //            else
+        //            {
+        //                startupTask.Disable();
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //        }
+        //#endif
+        //#if STANDALONE
+        using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
         {
-            var startupTask = await StartupTask.GetAsync("SnapItStartupTask");
             if (isActive)
             {
-                await startupTask.RequestEnableAsync();
+                key.SetValue(Constants.AppRegistryKey, "\"" + System.Windows.Forms.Application.ExecutablePath + "\"");
             }
             else
             {
-                startupTask.Disable();
+                key.DeleteValue(Constants.AppRegistryKey, false);
             }
         }
-        catch (Exception ex)
-        {
-        }
-#endif
-#if STANDALONE
-            using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
-            {
-                if (isActive)
-                {
-                    key.SetValue(Constants.AppRegistryKey, "\"" + System.Windows.Forms.Application.ExecutablePath + "\"");
-                }
-                else
-                {
-                    key.DeleteValue(Constants.AppRegistryKey, false);
-                }
-            }
-#endif
+        //#endif
     }
 
     private void SaveApplicationGroupSettings()
