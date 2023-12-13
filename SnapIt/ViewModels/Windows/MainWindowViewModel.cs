@@ -438,17 +438,7 @@ public class MainWindowViewModel : ViewModelBase
             System.Windows.Application.Current.Shutdown();
         });
 
-        StartStopCommand = new DelegateCommand(() =>
-        {
-            if (snapManager.IsRunning)
-            {
-                snapManager.Release();
-            }
-            else
-            {
-                snapManager.InitializeAsync();
-            }
-        });
+        StartStopCommand = new DelegateCommand(snapManager.StartStop);
     }
 
     public override async Task InitializeAsync()

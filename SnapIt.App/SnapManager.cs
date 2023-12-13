@@ -1,13 +1,12 @@
-﻿using System.Text.RegularExpressions;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Extensions;
 using SnapIt.Common.Graphics;
-using SnapIt.Common.Math;
 using SnapIt.Controls;
+using SnapIt.Services;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.Application;
@@ -19,7 +18,8 @@ public class SnapManager : ISnapManager
     private readonly IWinApiService winApiService;
     private readonly IScreenManager screenManager;
     private readonly IApplicationService applicationService;
-    private static List<Keys> keysDown = [];
+    private readonly IKeyboardService keyboardService;
+    private readonly IWindowsService windowsService;
     private static IKeyboardMouseEvents globalHook;
 
     private ActiveWindow activeWindow;
@@ -34,9 +34,6 @@ public class SnapManager : ISnapManager
     private bool holdKeyUsed = false;
 
     private System.Drawing.Point startLocation;
-
-    private List<ExcludedApplication> matchRulesForMouse;
-    private List<ExcludedApplication> matchRulesForKeyboard;
 
     public bool IsInitialized { get; private set; }
     public bool IsRunning { get; set; }
@@ -54,13 +51,17 @@ public class SnapManager : ISnapManager
         ISettingService settingService,
         IWinApiService winApiService,
         IScreenManager screenManager,
-        IApplicationService applicationService)
+        IApplicationService applicationService,
+        IKeyboardService keyboardService,
+        IWindowsService windowsService)
     {
         this.windowManager = windowManager;
         this.settingService = settingService;
         this.winApiService = winApiService;
         this.screenManager = screenManager;
         this.applicationService = applicationService;
+        this.keyboardService = keyboardService;
+        this.windowsService = windowsService;
     }
 
     public async Task InitializeAsync()
@@ -78,87 +79,50 @@ public class SnapManager : ISnapManager
         isWindowDetected = false;
         isListening = false;
 
+        globalHook = Hook.GlobalEvents();
+
         await windowManager.InitializeAsync();
         await screenManager.InitializeAsync();
         await winApiService.InitializeAsync();
         await settingService.InitializeAsync();
         await applicationService.InitializeAsync();
+        await keyboardService.InitializeAsync();
+        await windowsService.InitializeAsync();
 
         if (Dev.IsActive && Dev.ShowSnapWindowOnStartup)
         {
             windowManager.Show();
         }
 
-        globalHook = Hook.GlobalEvents();
+        keyboardService.SnappingCancelled += KeyboardService_SnappingCancelled;
+        keyboardService.SnapStartStop += KeyboardService_SnapStartStop;
+        keyboardService.MoveWindow += KeyboardService_MoveWindow;
+        keyboardService.ChangeLayout += KeyboardService_ChangeLayout;
 
-        globalHook.KeyDown += Esc_KeyDown;
+        //Dictionary<string, Dictionary<SnapScreen, List<ApplicationGroup>>> screenApplicationGroupHotKeyMap = [];
 
-        var map = new Dictionary<Combination, Action>
-        {
-            { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), CycleLayouts },
-            { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStop }
-        };
+        //foreach (var snapScreen in settingService.SnapScreens)
+        //{
+        //    foreach (var applicationGroup in snapScreen.ApplicationGroups)
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(applicationGroup.ActivateHotkey))
+        //        {
+        //            var applicationGroupHotkey = applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin");
 
-        Dictionary<string, Dictionary<SnapScreen, List<ApplicationGroup>>> screenApplicationGroupHotKeyMap = [];
+        //            if (!screenApplicationGroupHotKeyMap.ContainsKey(applicationGroupHotkey))
+        //            {
+        //                screenApplicationGroupHotKeyMap.Add(applicationGroupHotkey, []);
+        //            }
 
-        foreach (var snapScreen in settingService.SnapScreens)
-        {
-            foreach (var applicationGroup in snapScreen.ApplicationGroups)
-            {
-                if (!string.IsNullOrWhiteSpace(applicationGroup.ActivateHotkey))
-                {
-                    var applicationGroupHotkey = applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin");
+        //            if (!screenApplicationGroupHotKeyMap[applicationGroupHotkey].ContainsKey(snapScreen))
+        //            {
+        //                screenApplicationGroupHotKeyMap[applicationGroupHotkey].Add(snapScreen, []);
+        //            }
 
-                    if (!screenApplicationGroupHotKeyMap.ContainsKey(applicationGroupHotkey))
-                    {
-                        screenApplicationGroupHotKeyMap.Add(applicationGroupHotkey, []);
-                    }
-
-                    if (!screenApplicationGroupHotKeyMap[applicationGroupHotkey].ContainsKey(snapScreen))
-                    {
-                        screenApplicationGroupHotKeyMap[applicationGroupHotkey].Add(snapScreen, []);
-                    }
-
-                    screenApplicationGroupHotKeyMap[applicationGroupHotkey][snapScreen].Add(applicationGroup);
-                }
-            }
-        }
-
-        if (screenApplicationGroupHotKeyMap.Count > 0)
-        {
-            foreach (var screenApplicationGroupHotkey in screenApplicationGroupHotKeyMap)
-            {
-                map.Add(Combination.FromString(screenApplicationGroupHotkey.Key), () =>
-                {
-                    foreach (var screenApplicationGroup in screenApplicationGroupHotkey.Value)
-                    {
-                        foreach (var applicationGroup in screenApplicationGroup.Value)
-                        {
-                            StartApplications(screenApplicationGroup.Key, applicationGroup);
-                        }
-                    }
-                });
-            }
-        }
-
-        if (settingService.Settings.EnableKeyboard)
-        {
-            map.Add(Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Left));
-            map.Add(Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Right));
-            map.Add(Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Up));
-            map.Add(Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Down));
-
-            if ((settingService.Settings.MoveLeftShortcut +
-                settingService.Settings.MoveRightShortcut +
-                settingService.Settings.MoveUpShortcut +
-                settingService.Settings.MoveDownShortcut).Contains("Win"))
-            {
-                globalHook.KeyDown += HookManager_KeyDown;
-                globalHook.KeyUp += HookManager_KeyUp;
-            }
-        }
-
-        globalHook.OnCombination(map);
+        //            screenApplicationGroupHotKeyMap[applicationGroupHotkey][snapScreen].Add(applicationGroup);
+        //        }
+        //    }
+        //}
 
         if (settingService.Settings.EnableMouse)
         {
@@ -173,17 +137,46 @@ public class SnapManager : ISnapManager
             }
         }
 
-        if (settingService.ExcludedApplicationSettings?.Applications != null)
-        {
-            matchRulesForMouse = settingService.ExcludedApplicationSettings.Applications.Where(i => i.Mouse).ToList();
-            matchRulesForKeyboard = settingService.ExcludedApplicationSettings.Applications.Where(i => i.Keyboard).ToList();
-        }
-
         IsRunning = true;
         StatusChanged?.Invoke(true);
         ScreenLayoutLoaded?.Invoke(settingService.SnapScreens, settingService.Layouts);
 
         IsInitialized = true;
+    }
+
+    public void StartStop()
+    {
+        if (IsRunning)
+        {
+            Release();
+        }
+        else
+        {
+            _ = InitializeAsync();
+        }
+    }
+
+    private void KeyboardService_ChangeLayout(SnapScreen snapScreen, Layout layout)
+    {
+        Release();
+        _ = InitializeAsync();
+
+        LayoutChanged?.Invoke(snapScreen, layout);
+    }
+
+    private void KeyboardService_MoveWindow(SnapAreaInfo snapAreaInfo, bool isLeftClick)
+    {
+        MoveWindow(snapAreaInfo.ActiveWindow, snapAreaInfo.Rectangle, isLeftClick);
+    }
+
+    private void KeyboardService_SnapStartStop()
+    {
+        StartStop();
+    }
+
+    private void KeyboardService_SnappingCancelled()
+    {
+        StopSnapping();
     }
 
     public void SetIsTrialEnded(bool isEnded)
@@ -201,7 +194,7 @@ public class SnapManager : ISnapManager
 
     public async Task StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
     {
-        if (DisableIfFullScreen())
+        if (windowsService.DisableIfFullScreen())
         {
             return;
         }
@@ -247,18 +240,6 @@ public class SnapManager : ISnapManager
         applicationService.Clear();
     }
 
-    private bool DisableIfFullScreen()
-    {
-        activeWindow = winApiService.GetActiveWindow();
-
-        if (activeWindow != ActiveWindow.Empty && !string.IsNullOrWhiteSpace(activeWindow.Title) && !activeWindow.Title.Equals("Program Manager") && settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     private async Task StartApplication(ApplicationItem application, Rectangle rectangle)
     {
         var openedWindow = await applicationService.StartApplication(application, rectangle);
@@ -269,30 +250,19 @@ public class SnapManager : ISnapManager
         }
     }
 
-    private void StartStop()
-    {
-        if (DisableIfFullScreen())
-        {
-            return;
-        }
-
-        if (IsRunning)
-        {
-            Release();
-        }
-        else
-        {
-            _ = InitializeAsync();
-        }
-    }
-
     public void Release()
     {
         windowManager.Release();
 
+        keyboardService.SnappingCancelled -= KeyboardService_SnappingCancelled;
+        keyboardService.SnapStartStop -= KeyboardService_SnapStartStop;
+        keyboardService.MoveWindow -= KeyboardService_MoveWindow;
+        keyboardService.ChangeLayout -= KeyboardService_ChangeLayout;
+        keyboardService.Dispose();
+
         if (globalHook != null)
         {
-            globalHook.KeyDown -= Esc_KeyDown;
+            //globalHook.KeyDown -= Esc_KeyDown;
 
             globalHook.MouseMove -= MouseMoveEvent;
             globalHook.MouseDown -= MouseDownEvent;
@@ -304,51 +274,20 @@ public class SnapManager : ISnapManager
                 globalHook.KeyUp -= GlobalHook_KeyUp;
             }
 
-            if (settingService.Settings.EnableKeyboard)
-            {
-                if ((settingService.Settings.MoveLeftShortcut +
-                    settingService.Settings.MoveRightShortcut +
-                    settingService.Settings.MoveUpShortcut +
-                    settingService.Settings.MoveDownShortcut).Contains("Win"))
-                {
-                    globalHook.KeyDown -= HookManager_KeyDown;
-                    globalHook.KeyUp -= HookManager_KeyUp;
-                }
-            }
-
+            globalHook.Dispose();
+        }
+        if (globalHook != null)
+        {
             globalHook.Dispose();
         }
 
         globalHook = Hook.GlobalEvents();
 
-        var map = new Dictionary<Combination, Action>
-        {
-            { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStop }
-        };
-
-        globalHook.OnCombination(map);
+        keyboardService.SetSnappingStopped();
 
         IsRunning = false;
         StatusChanged?.Invoke(false);
         IsInitialized = false;
-    }
-
-    private void CycleLayouts()
-    {
-        if (DisableIfFullScreen())
-        {
-            return;
-        }
-
-        var snapScreen = settingService.LatestActiveScreen;
-        var layoutIndex = settingService.Layouts.IndexOf(snapScreen.Layout);
-        var nextLayout = settingService.Layouts.ElementAt((layoutIndex + 1) % settingService.Layouts.Count);
-
-        settingService.LinkScreenLayout(snapScreen, nextLayout);
-        Release();
-        _ = InitializeAsync();
-
-        LayoutChanged?.Invoke(snapScreen, nextLayout);
     }
 
     public void ScreenChangedEvent()
@@ -362,54 +301,6 @@ public class SnapManager : ISnapManager
         }
 
         ScreenChanged?.Invoke(settingService.SnapScreens);
-    }
-
-    private static void HookManager_KeyDown(object sender, KeyEventArgs e)
-    {
-        //Used for overriding the Windows default hotkeys
-        if (keysDown.Contains(e.KeyCode) == false)
-        {
-            keysDown.Add(e.KeyCode);
-        }
-
-        if (e.KeyCode == Keys.Right && WIN())
-        {
-            e.Handled = true;
-        }
-        else if (e.KeyCode == Keys.Left && WIN())
-        {
-            e.Handled = true;
-        }
-        else if (e.KeyCode == Keys.Up && WIN())
-        {
-            e.Handled = true;
-        }
-        else if (e.KeyCode == Keys.Down && WIN())
-        {
-            e.Handled = true;
-        }
-    }
-
-    private static void HookManager_KeyUp(object sender, KeyEventArgs e)
-    {
-        //Used for overriding the Windows default hotkeys
-        while (keysDown.Contains(e.KeyCode))
-        {
-            keysDown.Remove(e.KeyCode);
-        }
-    }
-
-    private static bool WIN()
-    {
-        if (keysDown.Contains(Keys.LWin) ||
-            keysDown.Contains(Keys.RWin))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     private bool HoldingKeyResult()
@@ -538,93 +429,10 @@ public class SnapManager : ISnapManager
         }
     }
 
-    private void MoveActiveWindowByKeyboard(MoveDirection direction)
-    {
-        activeWindow = winApiService.GetActiveWindow();
-
-        if (activeWindow != ActiveWindow.Empty)
-        {
-            if (settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow) ||
-               settingService.Settings.DisableForModal && !winApiService.IsAllowedWindowStyle(activeWindow) ||
-                IsExcludedApplication(activeWindow.Title, true))
-            {
-                return;
-            }
-
-            var boundries = windowManager.SnapAreaBoundries();
-            if (boundries != null)
-            {
-                winApiService.GetWindowMargin(activeWindow, out Rectangle rectmargin);
-                var activeBoundry = boundries.FirstOrDefault(i => i.Contains(rectmargin));
-                activeWindow.Dpi = DpiHelper.GetDpiFromPoint(activeBoundry.Left, activeBoundry.Right);
-
-                var newSnapArea = FindClosest.GetClosestRectangle(boundries, activeBoundry, direction);
-
-                MoveActiveWindow(newSnapArea ?? activeBoundry, false);
-
-                Telemetry.TrackEvent("MoveActiveWindow - Keyboard");
-            }
-        }
-    }
-
     private void StopSnapping()
     {
         windowManager.Hide();
         isListening = false;
-    }
-
-    public static bool WildcardMatch(string pattern, string input, bool caseSensitive = false)
-    {
-        pattern = pattern.Replace(".", @"\.");
-        pattern = pattern.Replace("?", ".");
-        pattern = pattern.Replace("*", ".*?");
-        pattern = pattern.Replace(@"\", @"\\");
-        pattern = pattern.Replace(" ", @"\s");
-        return new Regex(pattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase).IsMatch(input);
-    }
-
-    private bool IsExcludedApplication(string Title, bool isKeyboard)
-    {
-        if (settingService.ExcludedApplicationSettings?.Applications != null)
-        {
-            var matchRules = isKeyboard ? matchRulesForKeyboard : matchRulesForMouse;
-
-            if (matchRules != null)
-            {
-                var isMatched = false;
-                foreach (var rule in matchRules)
-                {
-                    if (string.IsNullOrWhiteSpace(rule.Keyword))
-                    {
-                        continue;
-                    }
-
-                    switch (rule.MatchRule)
-                    {
-                        case MatchRule.Contains:
-                            isMatched = Title.Contains(rule.Keyword, StringComparison.OrdinalIgnoreCase);
-                            break;
-
-                        case MatchRule.Exact:
-                            isMatched = Title == rule.Keyword;
-                            break;
-
-                        case MatchRule.Wildcard:
-                            isMatched = WildcardMatch(rule.Keyword, Title, false);
-                            break;
-                    }
-
-                    if (isMatched)
-                    {
-                        break;
-                    }
-                }
-
-                return isMatched;
-            }
-        }
-
-        return false;
     }
 
     private bool IsDelayDone(System.Windows.Point endLocation)
@@ -649,7 +457,7 @@ public class SnapManager : ISnapManager
                 activeWindow = winApiService.GetActiveWindow();
                 activeWindow.Dpi = DpiHelper.GetDpiFromPoint((int)p.X, (int)p.Y);
 
-                if (activeWindow?.Title != null && IsExcludedApplication(activeWindow.Title, false))
+                if (activeWindow?.Title != null && windowsService.IsExcludedApplication(activeWindow.Title, false))
                 {
                     isListening = false;
                 }
@@ -755,7 +563,7 @@ public class SnapManager : ISnapManager
             {
                 winApiService.GetWindowMargin(currentWindow, out Rectangle withMargin);
 
-                if (!withMargin.Equals(default(Rectangle)))
+                if (!withMargin.Equals(Rectangle.Empty))
                 {
                     var marginHorizontal = (currentWindow.Boundry.Width - withMargin.Width) / 2;
                     var systemMargin = new Rectangle
@@ -780,7 +588,7 @@ public class SnapManager : ISnapManager
 
                         winApiService.MoveWindow(currentWindow, rectangle);
 
-                        if (!rectangle.Dpi.Equals(currentWindow.Dpi))
+                        if (!rectangle.Dpi.Equals(currentWindow?.Dpi))
                         {
                             winApiService.MoveWindow(currentWindow, rectangle);
                         }
@@ -790,7 +598,7 @@ public class SnapManager : ISnapManager
                 {
                     winApiService.MoveWindow(currentWindow, rectangle);
 
-                    if (!rectangle.Dpi.Equals(currentWindow.Dpi))
+                    if (!rectangle.Dpi.Equals(currentWindow?.Dpi))
                     {
                         winApiService.MoveWindow(currentWindow, rectangle);
                     }

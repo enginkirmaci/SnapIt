@@ -3,8 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<UseWPF>true</UseWPF>
-		<!--<UseWindowsForms>True</UseWindowsForms>-->
+		<UseWPF>true</UseWPF> 
 		<ApplicationIcon>Assets\app.ico</ApplicationIcon>
 		<Product>SnapIt</Product>
 		<Description>SnapIt is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens.</Description>

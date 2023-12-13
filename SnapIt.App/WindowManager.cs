@@ -10,17 +10,19 @@ public class WindowManager : IWindowManager
 {
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
-
+    private readonly IKeyboardService keyboardService;
     private List<SnapWindow> snapWindows;
     public bool IsInitialized { get; private set; }
 
     public WindowManager(
         ISettingService settingService,
-        IWinApiService winApiService
+        IWinApiService winApiService,
+        IKeyboardService keyboardService
         )
     {
         this.settingService = settingService;
         this.winApiService = winApiService;
+        this.keyboardService = keyboardService;
     }
 
     public bool IsVisible
@@ -37,6 +39,9 @@ public class WindowManager : IWindowManager
 
         await settingService.InitializeAsync();
         await winApiService.InitializeAsync();
+        await keyboardService.InitializeAsync();
+
+        keyboardService.GetSnapAreaBoundries += KeyboardService_GetSnapAreaBoundries;
 
         snapWindows = [];
 
@@ -65,6 +70,15 @@ public class WindowManager : IWindowManager
         });
 
         IsInitialized = true;
+    }
+
+    private IList<Rectangle> KeyboardService_GetSnapAreaBoundries()
+    {
+        var boundries = new List<Rectangle>();
+
+        snapWindows.ForEach(window => boundries.AddRange(window.SnapAreaBoundries));
+
+        return boundries;
     }
 
     public void Release()
@@ -101,15 +115,6 @@ public class WindowManager : IWindowManager
         {
             window.Hide();
         });
-    }
-
-    public IList<Rectangle> SnapAreaBoundries()
-    {
-        var boundries = new List<Rectangle>();
-
-        snapWindows.ForEach(window => boundries.AddRange(window.SnapAreaBoundries));
-
-        return boundries;
     }
 
     public Dictionary<int, Rectangle> GetSnapAreaRectangles(SnapScreen snapScreen)

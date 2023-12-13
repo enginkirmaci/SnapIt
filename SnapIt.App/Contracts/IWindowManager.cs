@@ -14,8 +14,6 @@ public interface IWindowManager : IInitialize
 
     void Hide();
 
-    IList<Rectangle> SnapAreaBoundries();
-
     Dictionary<int, Rectangle> GetSnapAreaRectangles(SnapScreen snapScreen);
 
     SnapAreaInfo SelectElementWithPoint(int x, int y);

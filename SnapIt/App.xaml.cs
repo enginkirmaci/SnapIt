@@ -50,12 +50,13 @@ public partial class App
         containerRegistry.RegisterSingleton<IWindowManager, WindowManager>();
         containerRegistry.RegisterSingleton<IScreenManager, ScreenManager>();
 
+        containerRegistry.RegisterSingleton<IKeyboardService, KeyboardService>();
         containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
         containerRegistry.RegisterSingleton<ISettingService, SettingService>();
         containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
         containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
-        //containerRegistry.RegisterSingleton<IStandaloneLicenseService, StandaloneLicenseService>();
         containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
+        containerRegistry.RegisterSingleton<IWindowsService, WindowsService>();
 
         containerRegistry.RegisterSingleton<IThemeService, ThemeService>();
         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
