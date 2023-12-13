@@ -71,14 +71,15 @@ public class WindowManager : IWindowManager
     {
         if (snapWindows != null && snapWindows.Count != 0)
         {
-            snapWindows.ForEach(window =>
+            for (int i = 0; i < snapWindows.Count; i++)
             {
                 try
                 {
-                    window.Close();
+                    snapWindows[i].Close();
                 }
                 catch { }
-            });
+            }
+
             snapWindows.Clear();
         }
 

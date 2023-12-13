@@ -117,6 +117,25 @@ public class Rectangle
         return result;
     }
 
+    public override bool Equals(Object obj)
+    {
+        // Check for null and compare run-time types.
+        if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+        {
+            return false;
+        }
+        else
+        {
+            Rectangle r = (Rectangle)obj;
+            return (Left == r.Left) && (Top == r.Top) && (Right == r.Right) && (Bottom == r.Bottom) && (Dpi.Equals(r.Dpi));
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return (Left.GetHashCode() << 2) ^ Top.GetHashCode() ^ (Right.GetHashCode() << 2) ^ Bottom.GetHashCode() ^ Dpi.GetHashCode();
+    }
+
     public override string ToString()
     {
         return $"X:{X}, Y:{Y}, Width:{Width}, Height:{Height}";

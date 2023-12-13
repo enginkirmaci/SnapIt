@@ -7,14 +7,14 @@ public class ObservableCollectionWithItemNotify<T> : ObservableCollection<T> whe
 {
     public ObservableCollectionWithItemNotify()
     {
-        //this.CollectionChanged += items_CollectionChanged;
+        this.CollectionChanged += items_CollectionChanged;
     }
 
     public ObservableCollectionWithItemNotify(IEnumerable<T> collection) : base(collection)
     {
-        //this.CollectionChanged += items_CollectionChanged;
-        //foreach (INotifyPropertyChanged item in collection)
-        //    item.PropertyChanged += item_PropertyChanged;
+        this.CollectionChanged += items_CollectionChanged;
+        foreach (INotifyPropertyChanged item in collection)
+            item.PropertyChanged += item_PropertyChanged;
     }
 
     private void items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

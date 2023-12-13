@@ -91,7 +91,7 @@ public class WinApiService : IWinApiService
 
     public bool MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height)
     {
-        Dev.Log($"{X},{Y}  {width}x{height}");
+        Dev.Log($"{activeWindow.Handle}, {X},{Y}  {width}x{height}");
 
         PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL); //if window maximized, restores to normal so position can be set
 
@@ -102,7 +102,7 @@ public class WinApiService : IWinApiService
             Y,
             width,
             height,
-            PInvoke.User32.SetWindowPosFlags.SWP_SHOWWINDOW);
+            PInvoke.User32.SetWindowPosFlags.SWP_SHOWWINDOW | PInvoke.User32.SetWindowPosFlags.SWP_ASYNCWINDOWPOS);
 
         var msg = Marshal.GetLastWin32Error();
         if (msg != 0)

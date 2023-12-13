@@ -4,6 +4,7 @@
 		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<Configurations>Debug;Release;Standalone</Configurations>
 		<!--<UseWPF>true</UseWPF>--> 
 		<!--<UseWindowsForms>true</UseWindowsForms>-->
 	</PropertyGroup>
@@ -14,7 +15,6 @@
 		<PackageReference Include="Prism.DryIoc" Version="8.1.97" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
 		<PackageReference Include="PInvoke.SHCore" Version="0.7.124" />
-		<PackageReference Include="PInvoke.User32" Version="0.7.124" />
 	</ItemGroup>
 
 </Project>

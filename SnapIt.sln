@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Controls", "SnapIt.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Services", "SnapIt.Services\SnapIt.Services.csproj", "{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapIt.Application", "SnapIt.App\SnapIt.Application.csproj", "{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Application", "SnapIt.App\SnapIt.Application.csproj", "{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -192,8 +192,8 @@ Global
 		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Release|x64.Build.0 = Release|Any CPU
 		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Release|x86.ActiveCfg = Release|Any CPU
 		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Release|x86.Build.0 = Release|Any CPU
-		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Standalone|Any CPU.ActiveCfg = Debug|Any CPU
-		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Standalone|Any CPU.Build.0 = Debug|Any CPU
+		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Standalone|Any CPU.ActiveCfg = Standalone|Any CPU
+		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Standalone|Any CPU.Build.0 = Standalone|Any CPU
 		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Standalone|ARM.ActiveCfg = Debug|Any CPU
 		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Standalone|ARM.Build.0 = Debug|Any CPU
 		{23E5B856-E83D-43D8-B49C-22C1647357A5}.Standalone|ARM64.ActiveCfg = Debug|Any CPU
@@ -222,8 +222,8 @@ Global
 		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Release|x64.Build.0 = Release|Any CPU
 		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Release|x86.ActiveCfg = Release|Any CPU
 		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Release|x86.Build.0 = Release|Any CPU
-		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Standalone|Any CPU.ActiveCfg = Debug|Any CPU
-		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Standalone|Any CPU.Build.0 = Debug|Any CPU
+		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Standalone|Any CPU.ActiveCfg = Standalone|Any CPU
+		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Standalone|Any CPU.Build.0 = Standalone|Any CPU
 		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Standalone|ARM.ActiveCfg = Debug|Any CPU
 		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Standalone|ARM.Build.0 = Debug|Any CPU
 		{90B45668-CED6-47EC-8CE8-265C2717CBB3}.Standalone|ARM64.ActiveCfg = Debug|Any CPU
@@ -252,8 +252,8 @@ Global
 		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Release|x64.Build.0 = Release|Any CPU
 		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Release|x86.ActiveCfg = Release|Any CPU
 		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Release|x86.Build.0 = Release|Any CPU
-		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Standalone|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Standalone|Any CPU.Build.0 = Debug|Any CPU
+		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Standalone|Any CPU.ActiveCfg = Standalone|Any CPU
+		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Standalone|Any CPU.Build.0 = Standalone|Any CPU
 		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Standalone|ARM.ActiveCfg = Debug|Any CPU
 		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Standalone|ARM.Build.0 = Debug|Any CPU
 		{DAC2B3A1-5FA6-42FE-AFCD-115DD65ABF5F}.Standalone|ARM64.ActiveCfg = Debug|Any CPU
@@ -282,8 +282,8 @@ Global
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Release|x64.Build.0 = Release|Any CPU
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Release|x86.ActiveCfg = Release|Any CPU
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Release|x86.Build.0 = Release|Any CPU
-		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|Any CPU.Build.0 = Debug|Any CPU
+		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|Any CPU.ActiveCfg = Standalone|Any CPU
+		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|Any CPU.Build.0 = Standalone|Any CPU
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|ARM.ActiveCfg = Debug|Any CPU
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|ARM.Build.0 = Debug|Any CPU
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|ARM64.ActiveCfg = Debug|Any CPU

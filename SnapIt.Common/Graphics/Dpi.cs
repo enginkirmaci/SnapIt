@@ -12,4 +12,23 @@ public class Dpi
     {
         return $"X:{X}, Y:{Y}";
     }
+
+    public override bool Equals(Object obj)
+    {
+        // Check for null and compare run-time types.
+        if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+        {
+            return false;
+        }
+        else
+        {
+            Dpi d = (Dpi)obj;
+            return (X == d.X) && (Y == d.Y);
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return (X.GetHashCode() << 2) ^ Y.GetHashCode();
+    }
 }

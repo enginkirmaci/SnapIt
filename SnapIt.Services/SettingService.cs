@@ -1,11 +1,6 @@
-﻿using SnapIt.Common.Extensions;
-using SnapIt.Common.Entities;
+﻿using SnapIt.Common.Entities;
+using SnapIt.Common.Extensions;
 using SnapIt.Services.Contracts;
-
-#if !STANDALONE
-
-#endif
-
 using WpfScreenHelper;
 
 namespace SnapIt.Services;
@@ -18,10 +13,8 @@ public class SettingService : ISettingService
     public Settings Settings { get; private set; }
     public ExcludedApplicationSettings ExcludedApplicationSettings { get; private set; }
     public ApplicationGroupSettings ApplicationGroupSettings { get; private set; }
-
     public StandaloneLicense StandaloneLicense { get; private set; }
     public IList<Layout> Layouts { get; private set; }
-
     public IList<SnapScreen> SnapScreens { get; private set; }
     public SnapScreen LatestActiveScreen { get; set; }
     public SnapScreen SelectedSnapScreen { get; set; }
@@ -69,15 +62,6 @@ public class SettingService : ISettingService
         ApplicationGroupSettings = await fileOperationService.Load<ApplicationGroupSettings>();
 
         Layouts = fileOperationService.GetLayouts();
-
-        //#if STANDALONE
-        //            StandaloneLicense = await fileOperationService.Load<StandaloneLicense>();
-
-        //            if (StandaloneLicense == null)
-        //            {
-        //                StandaloneLicense = new StandaloneLicense();
-        //            }
-        //#endif
 
         ReInitialize();
 
@@ -229,11 +213,6 @@ public class SettingService : ISettingService
 
             snapScreens.Add(snapScreen);
         }
-
-        //if (snapScreens.Any(s => !s.IsActive))
-        //{
-        //    snapScreens.ForEach(s => s.IsActive = true);
-        //}
 
         return snapScreens;
     }

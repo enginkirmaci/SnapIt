@@ -142,7 +142,7 @@
                     CornerRadius="4">
                     <controls:SnapScreenViewer
                         Height="400"
-                        ItemsSource="{Binding SnapScreens}"
+                        ItemsSource="{Binding SnapScreens, Mode=TwoWay}"
                         SelectedItem="{Binding SelectedSnapScreen, Mode=TwoWay}">
                         <controls:SnapScreenViewer.ItemContainerStyle>
                             <Style TargetType="{x:Type ListViewItem}">
@@ -188,7 +188,7 @@
                                                         HorizontalAlignment="Right"
                                                         VerticalAlignment="Top"
                                                         Panel.ZIndex="9"
-                                                        IsChecked="{Binding IsActive, Converter={StaticResource InverseBoolConverter}}">
+                                                        IsChecked="{Binding IsActive, Mode=TwoWay, Converter={StaticResource InverseBoolConverter}}">
                                                         <ui:SymbolIcon Symbol="CircleOff16" />
                                                     </ToggleButton>
 

@@ -6,6 +6,7 @@ using Serilog;
 using SnapIt.Application;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
+using SnapIt.Common.Applications;
 using SnapIt.Common.Contracts;
 using SnapIt.Common.Extensions;
 using SnapIt.Services;
@@ -75,29 +76,29 @@ public partial class App
         //todo change this
         //NotifyIcon = new NotifyIcon
         //{
-        //    Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Assets/app.ico")).Stream)
+        //    Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/Assets/app.ico")).Stream)
         //};
 
-        //if (SnapIt.Properties.Settings.Default.RunAsAdmin && !Dev.SkipRunAsAdmin)
-        //{
-        //    if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
-        //    {
-        //        if (!ApplicationInstance.RegisterSingleInstance())
-        //        {
-        //            NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
-        //            NotifyIcon.Visible = true;
+        if (SnapIt.Properties.Settings.Default.RunAsAdmin && !Dev.SkipRunAsAdmin)
+        {
+            if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
+            {
+                if (!ApplicationInstance.RegisterSingleInstance())
+                {
+                    //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
+                    //NotifyIcon.Visible = true;
 
-        //            Shutdown();
-        //            return;
-        //        }
-        //    }
-        //    else if (!Dev.IsActive)
-        //    {
-        //        RunAsAdministrator.Run();
-        //        Shutdown();
-        //        return;
-        //    }
-        //}
+                    Shutdown();
+                    return;
+                }
+            }
+            else if (!Dev.IsActive)
+            {
+                RunAsAdministrator.Run();
+                Shutdown();
+                return;
+            }
+        }
         //else
 
         //{

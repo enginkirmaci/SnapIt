@@ -61,15 +61,10 @@ public class ScreenManager : IScreenManager
 
     private async void ScreenChangedTask()
     {
-        //await Task.Delay(5000);
-
-        //System.Windows.Application.Current.Dispatcher.Invoke(() =>
-        //{
         if (screenChanged)
         {
             screenChanged = false;
             snapManager.ScreenChangedEvent();
         }
-        //});
     }
 }

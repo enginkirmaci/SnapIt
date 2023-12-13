@@ -100,26 +100,26 @@ namespace SnapIt.ViewModels.Pages
             SnapScreens.CollectionChanged += SnapScreens_CollectionChanged;
 
             ImportLayoutCommand = new DelegateCommand(() =>
-        {
-            try
             {
-                var fileDialog = new OpenFileDialog
+                try
                 {
-                    DefaultExt = ".json",
-                    Filter = "Json (.json)|*.json"
-                };
+                    var fileDialog = new OpenFileDialog
+                    {
+                        DefaultExt = ".json",
+                        Filter = "Json (.json)|*.json"
+                    };
 
-                if (fileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    var imported = settingService.ImportLayout(fileDialog.FileName);
-                    Layouts.Insert(0, imported);
+                    if (fileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        var imported = settingService.ImportLayout(fileDialog.FileName);
+                        Layouts.Insert(0, imported);
+                    }
                 }
-            }
-            catch
-            {
-                MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
-            }
-        });
+                catch
+                {
+                    MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
+                }
+            });
 
             OpenRenameDialogCommand = new DelegateCommand<Layout>((layout) =>
             {

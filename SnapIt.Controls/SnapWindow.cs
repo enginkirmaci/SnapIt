@@ -59,7 +59,7 @@ public class SnapWindow : Window, IWindow
     public new void Show()
     {
         base.Show();
-        MaximizeWindow();
+        //MaximizeWindow();
     }
 
     protected override void OnSourceInitialized(EventArgs e)
