@@ -90,6 +90,8 @@ public class MouseService : IMouseService
                 globalHook.KeyUp -= GlobalHook_KeyUp;
             }
         }
+
+        IsInitialized = false;
     }
 
     public void Interrupt()

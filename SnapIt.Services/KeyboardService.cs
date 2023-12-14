@@ -110,6 +110,8 @@ public class KeyboardService : IKeyboardService
                 }
             }
         }
+
+        IsInitialized = false;
     }
 
     private void StartStopSnapping()

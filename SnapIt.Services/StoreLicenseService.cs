@@ -59,11 +59,6 @@ public class StoreLicenseService : IStoreLicenseService
         }
     }
 
-    private void StoreOfflineLicensesChanged(StoreContext sender, object args)
-    {
-        OfflineLicensesChanged?.Invoke();
-    }
-
     public async Task<LicenseStatus> CheckStatusAsync()
     {
         var licenseStatus = LicenseStatus.InTrial;
@@ -100,6 +95,16 @@ public class StoreLicenseService : IStoreLicenseService
     public interface IInitializeWithWindow
     {
         void Initialize(nint hwnd);
+    }
+
+    public void Dispose()
+    {
+        IsInitialized = false;
+    }
+
+    private void StoreOfflineLicensesChanged(StoreContext sender, object args)
+    {
+        OfflineLicensesChanged?.Invoke();
     }
 }
 

@@ -1,6 +1,6 @@
 ﻿namespace SnapIt.Common.Contracts;
 
-public interface IInitialize
+public interface IInitialize : IDisposable
 {
     public bool IsInitialized { get; }
 

@@ -46,7 +46,7 @@
             IsBackButtonVisible="Visible"
             IsPaneToggleVisible="True"
             MenuItems="{Binding MenuItems}"
-            OpenPaneLength="310"
+            OpenPaneLength="196"
             PaneClosed="NavigationView_OnPaneClosed"
             PaneDisplayMode="Left"
             PaneOpened="NavigationView_OnPaneOpened"

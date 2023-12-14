@@ -182,4 +182,9 @@ public class WinApiService : IWinApiService
         //User32.SystemParametersInfo(SPI_GETDESKWALLPAPER, currentWallpaper.Length, currentWallpaper, 0);
         return currentWallpaper.Substring(0, currentWallpaper.IndexOf('\0'));
     }
+
+    public void Dispose()
+    {
+        IsInitialized = false;
+    }
 }

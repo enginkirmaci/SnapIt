@@ -19,7 +19,7 @@ public interface ISnapManager : IInitialize
 
     void ScreenChangedEvent();
 
-    Task StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup);
+    //Task StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup);
 
     void Release();
 

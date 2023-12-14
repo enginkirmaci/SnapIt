@@ -2,7 +2,7 @@
 using SnapIt.ViewModels.Dialogs;
 using Wpf.Ui.Controls;
 
-namespace SnapIt.Controls.Dialogs;
+namespace SnapIt.Views.Dialogs;
 
 /// <summary>
 /// Interaction logic for RunningApplicationsDialog.xaml

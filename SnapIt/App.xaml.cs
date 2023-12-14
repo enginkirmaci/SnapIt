@@ -54,7 +54,7 @@ public partial class App
         containerRegistry.RegisterSingleton<IKeyboardService, KeyboardService>();
         containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
         containerRegistry.RegisterSingleton<ISettingService, SettingService>();
-        containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
+        //containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
         containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
         containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
         containerRegistry.RegisterSingleton<IWindowsService, WindowsService>();

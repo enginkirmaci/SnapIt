@@ -32,6 +32,11 @@ public class FileOperationService : IFileOperationService
         IsInitialized = true;
     }
 
+    public void Dispose()
+    {
+        IsInitialized = false;
+    }
+
     private void InitializeLayouts()
     {
         var layoutsFolder = Path.Combine(rootFolder, LayoutFolder);

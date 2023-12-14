@@ -3,7 +3,7 @@ using SnapIt.Common.Events;
 
 namespace SnapIt.Services.Contracts;
 
-public interface IMouseService : IInitialize, IDisposable
+public interface IMouseService : IInitialize
 {
     void Interrupt();
 

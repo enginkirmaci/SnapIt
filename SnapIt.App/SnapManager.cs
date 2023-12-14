@@ -15,7 +15,6 @@ public class SnapManager : ISnapManager
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
     private readonly IScreenManager screenManager;
-    private readonly IApplicationService applicationService;
     private readonly IMouseService mouseService;
     private readonly IKeyboardService keyboardService;
     private readonly IWindowsService windowsService;
@@ -39,7 +38,6 @@ public class SnapManager : ISnapManager
         ISettingService settingService,
         IWinApiService winApiService,
         IScreenManager screenManager,
-        IApplicationService applicationService,
         IMouseService mouseService,
         IKeyboardService keyboardService,
         IWindowsService windowsService)
@@ -48,7 +46,6 @@ public class SnapManager : ISnapManager
         this.settingService = settingService;
         this.winApiService = winApiService;
         this.screenManager = screenManager;
-        this.applicationService = applicationService;
         this.mouseService = mouseService;
         this.keyboardService = keyboardService;
         this.windowsService = windowsService;
@@ -72,7 +69,6 @@ public class SnapManager : ISnapManager
         await screenManager.InitializeAsync();
         await winApiService.InitializeAsync();
         await settingService.InitializeAsync();
-        await applicationService.InitializeAsync();
         await keyboardService.InitializeAsync();
         await mouseService.InitializeAsync();
         await windowsService.InitializeAsync();
@@ -146,63 +142,63 @@ public class SnapManager : ISnapManager
         }
     }
 
-    public async Task StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
-    {
-        if (windowsService.DisableIfFullScreen())
-        {
-            return;
-        }
+    //public async Task StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup)
+    //{
+    //    if (windowsService.DisableIfFullScreen())
+    //    {
+    //        return;
+    //    }
 
-        await applicationService.InitializeAsync();
+    //    await applicationService.InitializeAsync();
 
-        var areaRectangles = windowManager.GetSnapAreaRectangles(snapScreen);
+    //    var areaRectangles = windowManager.GetSnapAreaRectangles(snapScreen);
 
-        foreach (var area in applicationGroup.ApplicationAreas)
-        {
-            if (area.Applications != null)
-            {
-                foreach (var application in area.Applications)
-                {
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (loadingWindow == null)
-                        {
-                            var primaryScreen = settingService.SnapScreens.FirstOrDefault(i => i.IsPrimary);
-                            if (primaryScreen == null)
-                            {
-                                primaryScreen = settingService.SnapScreens.First();
-                            }
+    //    foreach (var area in applicationGroup.ApplicationAreas)
+    //    {
+    //        if (area.Applications != null)
+    //        {
+    //            foreach (var application in area.Applications)
+    //            {
+    //                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+    //                {
+    //                    if (loadingWindow == null)
+    //                    {
+    //                        var primaryScreen = settingService.SnapScreens.FirstOrDefault(i => i.IsPrimary);
+    //                        if (primaryScreen == null)
+    //                        {
+    //                            primaryScreen = settingService.SnapScreens.First();
+    //                        }
 
-                            loadingWindow = new SnapLoadingWindow(winApiService, primaryScreen);
-                        }
+    //                        loadingWindow = new SnapLoadingWindow(winApiService, primaryScreen);
+    //                    }
 
-                        loadingWindow.SetLoadingMessage(
-                                !string.IsNullOrWhiteSpace(application?.Title) ?
-                                application?.Title : application?.Path);
-                    });
+    //                    loadingWindow.SetLoadingMessage(
+    //                            !string.IsNullOrWhiteSpace(application?.Title) ?
+    //                            application?.Title : application?.Path);
+    //                });
 
-                    if (areaRectangles != null && application != null && areaRectangles.ContainsKey(application.AreaNumber))
-                    {
-                        await StartApplication(application, areaRectangles[application.AreaNumber]);
-                    }
-                }
-            }
-        }
+    //                if (areaRectangles != null && application != null && areaRectangles.ContainsKey(application.AreaNumber))
+    //                {
+    //                    await StartApplication(application, areaRectangles[application.AreaNumber]);
+    //                }
+    //            }
+    //        }
+    //    }
 
-        loadingWindow.Hide();
+    //    loadingWindow.Hide();
 
-        applicationService.Clear();
-    }
+    //    applicationService.Clear();
+    //}
 
-    private async Task StartApplication(ApplicationItem application, Rectangle rectangle)
-    {
-        var openedWindow = await applicationService.StartApplication(application, rectangle);
+    //private async Task StartApplication(ApplicationItem application, Rectangle rectangle)
+    //{
+    //    var openedWindow = await applicationService.StartApplication(application, rectangle);
 
-        if (openedWindow != null)
-        {
-            MoveWindow(openedWindow, rectangle, false);
-        }
-    }
+    //    if (openedWindow != null)
+    //    {
+    //        MoveWindow(openedWindow, rectangle, false);
+    //    }
+    //}
 
     public void Release()
     {
@@ -238,6 +234,11 @@ public class SnapManager : ISnapManager
         }
 
         ScreenChanged?.Invoke(settingService.SnapScreens);
+    }
+
+    public void Dispose()
+    {
+        IsInitialized = false;
     }
 
     private void MoveWindow(ActiveWindow currentWindow, Rectangle rectangle, bool isLeftClick)

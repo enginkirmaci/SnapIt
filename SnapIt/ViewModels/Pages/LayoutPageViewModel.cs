@@ -1,6 +1,5 @@
 ﻿using System.Collections.Specialized;
 using System.Windows.Forms;
-using System.Windows.Media;
 using Prism.Commands;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
@@ -8,7 +7,9 @@ using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
 using SnapIt.Services.Contracts;
 using SnapIt.ViewModels.Windows;
+using SnapIt.Views.Dialogs;
 using SnapIt.Views.Windows;
+using Wpf.Ui;
 
 namespace SnapIt.ViewModels.Pages
 {
@@ -16,15 +17,11 @@ namespace SnapIt.ViewModels.Pages
     {
         private readonly ISnapManager snapManager;
         private readonly ISettingService settingService;
-        private readonly DesignWindowViewModel designWindowViewModel;
         private ObservableCollectionWithItemNotify<SnapScreen> snapScreens;
         private SnapScreen selectedSnapScreen;
         private ObservableCollection<Layout> layouts;
         private Layout selectedLayout;
-        private bool isRenameDialogOpen;
         private Layout popupLayout;
-        private string renameDialogLayoutName;
-        private System.Windows.Window mainWindow;
 
         public ObservableCollectionWithItemNotify<SnapScreen> SnapScreens { get => snapScreens; set => SetProperty(ref snapScreens, value); }
 
@@ -56,42 +53,26 @@ namespace SnapIt.ViewModels.Pages
             }
         }
 
-        public bool IsRenameDialogOpen { get => isRenameDialogOpen; set => SetProperty(ref isRenameDialogOpen, value); }
-        public string RenameDialogLayoutName { get => renameDialogLayoutName; set => SetProperty(ref renameDialogLayoutName, value); }
         public Layout PopupLayout { get => popupLayout; set => SetProperty(ref popupLayout, value); }
+
         public SnapAreaTheme Theme { get; set; }
         public DelegateCommand NewLayoutCommand { get; private set; }
         public DelegateCommand ImportLayoutCommand { get; private set; }
         public DelegateCommand<Layout> DesignLayoutCommand { get; private set; }
         public DelegateCommand<Layout> OpenRenameDialogCommand { get; private set; }
-        public DelegateCommand<object> RenameDialogClosingCommand { get; private set; }
         public DelegateCommand<Layout> DeleteLayoutCommand { get; private set; }
         public DelegateCommand<Layout> ExportLayoutCommand { get; private set; }
 
         public LayoutPageViewModel(
             ISnapManager snapManager,
             ISettingService settingService,
-            DesignWindowViewModel designWindowViewModel)
+            DesignWindowViewModel designWindowViewModel,
+            IContentDialogService contentDialogService)
         {
             this.snapManager = snapManager;
             this.settingService = settingService;
-            this.designWindowViewModel = designWindowViewModel;
 
             snapManager.ScreenChanged += SnapService_ScreenChanged;
-
-            Theme = new SnapAreaTheme
-            {
-                HighlightColor = Color.FromArgb(200, 33, 33, 33),
-                OverlayColor = Color.FromArgb(200, 99, 99, 99),
-                BorderColor = Color.FromArgb(150, 200, 200, 200),
-                BorderThickness = 1,
-                Opacity = 1
-            };
-
-            foreach (var layout in settingService.Layouts)
-            {
-                layout.Theme = Theme;
-            }
 
             Layouts = new ObservableCollection<Layout>(settingService.Layouts);
             SnapScreens = new ObservableCollectionWithItemNotify<SnapScreen>(settingService.SnapScreens);
@@ -121,21 +102,22 @@ namespace SnapIt.ViewModels.Pages
                 }
             });
 
-            OpenRenameDialogCommand = new DelegateCommand<Layout>((layout) =>
+            OpenRenameDialogCommand = new DelegateCommand<Layout>(async (layout) =>
             {
-                PopupLayout = layout;
-                RenameDialogLayoutName = PopupLayout.Name;
-                IsRenameDialogOpen = true;
-            });
-
-            RenameDialogClosingCommand = new DelegateCommand<object>((isSave) =>
-            {
-                if ((bool)isSave)
+                var renameDialog = new RenameDialog(contentDialogService.GetContentPresenter())
                 {
-                    PopupLayout.Name = RenameDialogLayoutName;
-                }
+                    IsPrimaryButtonEnabled = true,
+                    PrimaryButtonText = "Save"
+                };
 
-                IsRenameDialogOpen = false;
+                renameDialog.ViewModel.LayoutName = layout.Name;
+
+                var result = await renameDialog.ShowAsync();
+
+                if (result == Wpf.Ui.Controls.ContentDialogResult.Primary)
+                {
+                    layout.Name = renameDialog.ViewModel.LayoutName;
+                }
             });
 
             DeleteLayoutCommand = new DelegateCommand<Layout>((layout) =>

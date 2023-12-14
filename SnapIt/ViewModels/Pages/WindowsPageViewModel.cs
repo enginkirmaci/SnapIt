@@ -3,8 +3,9 @@ using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
-using SnapIt.Controls.Dialogs;
+using SnapIt.Services;
 using SnapIt.Services.Contracts;
+using SnapIt.Views.Dialogs;
 using Wpf.Ui;
 
 namespace SnapIt.ViewModels.Pages;
@@ -13,6 +14,7 @@ public class WindowsPageViewModel : ViewModelBase
 {
     private readonly ISnapManager snapManager;
     private readonly ISettingService settingService;
+    private readonly IWinApiService winApiService;
     private readonly IContentDialogService contentDialogService;
     private bool disableForModal;
     private ExcludedApplication selectedExcludedApplication;
@@ -47,6 +49,7 @@ public class WindowsPageViewModel : ViewModelBase
     {
         this.snapManager = snapManager;
         this.settingService = settingService;
+        this.winApiService = winApiService;
         this.contentDialogService = contentDialogService;
 
         ExcludeWindowsModalCommand = new DelegateCommand(() =>
@@ -115,9 +118,10 @@ public class WindowsPageViewModel : ViewModelBase
 
             if (result == Wpf.Ui.Controls.ContentDialogResult.Primary)
             {
-                if (!ExcludedApplications.Contains(selected))
+                if (excludeApplicationDialog.ViewModel.SelectedExcludedApplication!=null && 
+                    !ExcludedApplications.Contains(excludeApplicationDialog.ViewModel.SelectedExcludedApplication))
                 {
-                    ExcludedApplications.Add(selected);
+                    ExcludedApplications.Add(excludeApplicationDialog.ViewModel.SelectedExcludedApplication);
                 }
                 settingService.SaveExcludedApps(ExcludedApplications.ToList());
                 ApplyChanges();
@@ -154,6 +158,10 @@ public class WindowsPageViewModel : ViewModelBase
 
     public override async Task InitializeAsync()
     {
+        await snapManager.InitializeAsync();
+        await settingService.InitializeAsync();
+        await winApiService.InitializeAsync();
+
         ExcludedApplications = new ObservableCollection<ExcludedApplication>(settingService.ExcludedApplicationSettings.Applications);
     }
 

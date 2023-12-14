@@ -6,6 +6,11 @@
 		<Nullable>enable</Nullable>
 		<Configurations>Debug;Release;Standalone</Configurations> 
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="ApplicationService.cs" />
+	  <Compile Remove="Contracts\IApplicationService.cs" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft-Windows10-APICodePack-Shell" Version="1.1.8" />

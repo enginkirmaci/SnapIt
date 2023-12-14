@@ -75,51 +75,6 @@ public class WindowManager : IWindowManager
         IsInitialized = true;
     }
 
-    private void MouseService_HideWindows()
-    {
-        Hide();
-    }
-
-    private bool MouseService_ShowWindowsIfNecessary()
-    {
-        if (!snapWindows.TrueForAll(window => window.IsVisible))
-        {
-            Show();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private SnapAreaInfo MouseService_SelectElementWithPoint(int x, int y)
-    {
-        var result = new SnapAreaInfo();
-
-        foreach (var window in snapWindows)
-        {
-            var selectedArea = window.SelectElementWithPoint(x, y);
-            if (!selectedArea.Equals(Rectangle.Empty))
-            {
-                result.Rectangle = selectedArea;
-                result.Screen = window.Screen;
-
-                break;
-            }
-        }
-
-        return result;
-    }
-
-    private IList<Rectangle> KeyboardService_GetSnapAreaBoundries()
-    {
-        var boundries = new List<Rectangle>();
-
-        snapWindows.ForEach(window => boundries.AddRange(window.SnapAreaBoundries));
-
-        return boundries;
-    }
-
     public void Release()
     {
         if (snapWindows != null && snapWindows.Count != 0)
@@ -166,5 +121,55 @@ public class WindowManager : IWindowManager
         }
 
         return null;
+    }
+
+    public void Dispose()
+    {
+        IsInitialized = false;
+    }
+
+    private void MouseService_HideWindows()
+    {
+        Hide();
+    }
+
+    private bool MouseService_ShowWindowsIfNecessary()
+    {
+        if (!snapWindows.TrueForAll(window => window.IsVisible))
+        {
+            Show();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private SnapAreaInfo MouseService_SelectElementWithPoint(int x, int y)
+    {
+        var result = new SnapAreaInfo();
+
+        foreach (var window in snapWindows)
+        {
+            var selectedArea = window.SelectElementWithPoint(x, y);
+            if (!selectedArea.Equals(Rectangle.Empty))
+            {
+                result.Rectangle = selectedArea;
+                result.Screen = window.Screen;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private IList<Rectangle> KeyboardService_GetSnapAreaBoundries()
+    {
+        var boundries = new List<Rectangle>();
+
+        snapWindows.ForEach(window => boundries.AddRange(window.SnapAreaBoundries));
+
+        return boundries;
     }
 }

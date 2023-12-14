@@ -1,7 +1,6 @@
 ﻿using SnapIt.Common.Contracts;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Events;
-using SnapIt.Common.Graphics;
 
 namespace SnapIt.Services.Contracts;
 
@@ -9,7 +8,7 @@ public delegate void SnapStartStopEvent();
 
 public delegate void ChangeLayoutEvent(SnapScreen snapScreen, Layout layout);
 
-public interface IKeyboardService : IInitialize, IDisposable
+public interface IKeyboardService : IInitialize
 {
     event SnappingCancelEvent SnappingCancelled;
 

@@ -94,6 +94,11 @@ public class WindowsService : IWindowsService
         return false;
     }
 
+    public void Dispose()
+    {
+        IsInitialized = false;
+    }
+
     private bool WildcardMatch(string pattern, string input, bool caseSensitive = false)
     {
         pattern = pattern.Replace(".", @"\.");

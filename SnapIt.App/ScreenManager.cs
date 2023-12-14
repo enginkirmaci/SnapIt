@@ -36,6 +36,11 @@ public class ScreenManager : IScreenManager
         IsInitialized = true;
     }
 
+    public void Dispose()
+    {
+        IsInitialized = false;
+    }
+
     private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
     {
         switch ((uint)msg)

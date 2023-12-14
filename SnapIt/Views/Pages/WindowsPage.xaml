@@ -100,31 +100,6 @@
             </StackPanel>
         </ui:Dialog>-->
 
-        <!--<ui:Dialog
-            Panel.ZIndex="10"
-            ButtonLeftName="Save"
-            DialogHeight="480"
-            DialogWidth="500"
-            IsShown="{Binding IsRunningApplicationsDialogOpen, Mode=TwoWay}"
-            Visibility="{Binding IsRunningApplicationsDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="ButtonRightClick">
-                    <i:InvokeCommandAction Command="{Binding CloseRunningApplicationsDialogCommand}" CommandParameter="{StaticResource FalseValue}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="ButtonLeftClick">
-                    <i:InvokeCommandAction Command="{Binding CloseRunningApplicationsDialogCommand}" CommandParameter="{StaticResource TrueValue}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <StackPanel>
-                <TextBlock FontWeight="Medium" Text="Applications" />
-
-                <ListBox
-                    Height="334"
-                    ItemsSource="{Binding RunningApplications}"
-                    SelectedItem="{Binding SelectedExcludedApplication.Keyword}" />
-            </StackPanel>
-        </ui:Dialog>-->
-
         <StackPanel>
             <ui:CardControl
                 Margin="0,0,0,8"
@@ -218,12 +193,15 @@
                             Width="*"
                             Binding="{Binding Keyword}"
                             Header="Keyword" />
-                        <DataGridTextColumn Binding="{Binding MatchRule}" Header="Match Rule" />
+                        <DataGridTextColumn
+                            Width="100"
+                            Binding="{Binding MatchRule}"
+                            Header="Match Rule" />
                         <DataGridTextColumn
                             Width="156"
                             Binding="{Binding AppliedFor, Converter={StaticResource InputDeviceConverter}}"
                             Header="Applied For" />
-                        <DataGridTemplateColumn Width="64" Header="">
+                        <DataGridTemplateColumn Width="36" Header="">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ui:Button

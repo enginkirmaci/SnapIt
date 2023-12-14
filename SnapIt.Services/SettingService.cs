@@ -175,47 +175,6 @@ public class SettingService : ISettingService
         SaveApplicationGroupSettings();
     }
 
-    private IList<SnapScreen> GetSnapScreens()
-    {
-        var snapScreens = new List<SnapScreen>();
-
-        var displays = WindowsDisplayAPI.Display.GetDisplays();
-
-        foreach (var screen in Screen.AllScreens)
-        {
-            var display = displays.FirstOrDefault(display => display.DisplayName == screen.DeviceName);
-            var snapScreen = new SnapScreen(screen, display?.DevicePath);
-            var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.DeviceName)
-                ? Settings.ScreensLayouts[snapScreen.DeviceName] : string.Empty;
-
-            if (string.IsNullOrWhiteSpace(layoutGuid)) //fallback for older version
-            {
-                layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.DeviceName)
-                ? Settings.ScreensLayouts[snapScreen.DeviceName] : string.Empty;
-            }
-
-            if (!string.IsNullOrWhiteSpace(layoutGuid))
-            {
-                snapScreen.Layout = Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutGuid);
-            }
-            else
-            {
-                snapScreen.Layout = Layouts.FirstOrDefault();
-            }
-
-            snapScreen.ApplicationGroups = ApplicationGroupSettings.ScreensApplicationGroups != null ?
-                ApplicationGroupSettings.ScreensApplicationGroups.ContainsKey(snapScreen.DeviceName)
-                ? ApplicationGroupSettings.ScreensApplicationGroups[snapScreen.DeviceName] : []
-                : [];
-
-            snapScreen.IsActive = !Settings.DeactivedScreens.Contains(snapScreen.DeviceName);
-
-            snapScreens.Add(snapScreen);
-        }
-
-        return snapScreens;
-    }
-
     public async Task<bool> GetStartupTaskStatusAsync()
     {
         //#if !STANDALONE
@@ -280,6 +239,52 @@ public class SettingService : ISettingService
             }
         }
         //#endif
+    }
+
+    public void Dispose()
+    {
+        IsInitialized = false;
+    }
+
+    private IList<SnapScreen> GetSnapScreens()
+    {
+        var snapScreens = new List<SnapScreen>();
+
+        var displays = WindowsDisplayAPI.Display.GetDisplays();
+
+        foreach (var screen in Screen.AllScreens)
+        {
+            var display = displays.FirstOrDefault(display => display.DisplayName == screen.DeviceName);
+            var snapScreen = new SnapScreen(screen, display?.DevicePath);
+            var layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.DeviceName)
+                ? Settings.ScreensLayouts[snapScreen.DeviceName] : string.Empty;
+
+            if (string.IsNullOrWhiteSpace(layoutGuid)) //fallback for older version
+            {
+                layoutGuid = Settings.ScreensLayouts.ContainsKey(snapScreen.DeviceName)
+                ? Settings.ScreensLayouts[snapScreen.DeviceName] : string.Empty;
+            }
+
+            if (!string.IsNullOrWhiteSpace(layoutGuid))
+            {
+                snapScreen.Layout = Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutGuid);
+            }
+            else
+            {
+                snapScreen.Layout = Layouts.FirstOrDefault();
+            }
+
+            snapScreen.ApplicationGroups = ApplicationGroupSettings.ScreensApplicationGroups != null ?
+                ApplicationGroupSettings.ScreensApplicationGroups.ContainsKey(snapScreen.DeviceName)
+                ? ApplicationGroupSettings.ScreensApplicationGroups[snapScreen.DeviceName] : []
+                : [];
+
+            snapScreen.IsActive = !Settings.DeactivedScreens.Contains(snapScreen.DeviceName);
+
+            snapScreens.Add(snapScreen);
+        }
+
+        return snapScreens;
     }
 
     private void SaveApplicationGroupSettings()
