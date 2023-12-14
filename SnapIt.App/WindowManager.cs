@@ -2,7 +2,6 @@
 using SnapIt.Common.Entities;
 using SnapIt.Common.Graphics;
 using SnapIt.Controls;
-using SnapIt.Services;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.Application;

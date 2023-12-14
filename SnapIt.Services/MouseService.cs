@@ -1,25 +1,11 @@
 ﻿using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
-using SnapIt.Common.Contracts;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Events;
 using SnapIt.Common.Extensions;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.Services;
-
-public interface IMouseService : IInitialize, IDisposable
-{
-    event HideWindowsEvent HideWindows;
-
-    event MoveWindowEvent MoveWindow;
-
-    event SnappingCancelEvent SnappingCancelled;
-
-    event ShowWindowsIfNecessaryEvent ShowWindowsIfNecessary;
-
-    event SelectElementWithPointEvent SelectElementWithPoint;
-}
 
 public class MouseService : IMouseService
 {
@@ -104,6 +90,11 @@ public class MouseService : IMouseService
                 globalHook.KeyUp -= GlobalHook_KeyUp;
             }
         }
+    }
+
+    public void Interrupt()
+    {
+        isListening = false;
     }
 
     private void MouseMoveEvent(object sender, MouseEventArgs e)
@@ -324,7 +315,6 @@ public class MouseService : IMouseService
 
                     case HoldKeyBehaviour.HoldToDisable:
                         SnappingCancelled?.Invoke();
-                        isListening = false;
 
                         return false;
                 }

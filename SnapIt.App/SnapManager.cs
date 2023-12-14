@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using Gma.System.MouseKeyHook;
+﻿using Gma.System.MouseKeyHook;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
@@ -117,7 +116,8 @@ public class SnapManager : ISnapManager
 
     private void SnappingCancelled()
     {
-        CancelSnapping();
+        windowManager.Hide();
+        mouseService.Interrupt();
     }
 
     private void KeyboardService_SnapStartStop()
@@ -210,6 +210,7 @@ public class SnapManager : ISnapManager
 
         mouseService.MoveWindow -= MoveWindow;
         mouseService.SnappingCancelled -= SnappingCancelled;
+        mouseService.Dispose();
 
         keyboardService.MoveWindow -= MoveWindow;
         keyboardService.SnappingCancelled -= SnappingCancelled;
@@ -237,19 +238,6 @@ public class SnapManager : ISnapManager
         }
 
         ScreenChanged?.Invoke(settingService.SnapScreens);
-    }
-
-    private void Esc_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.KeyCode == Keys.Escape)
-        {
-            CancelSnapping();
-        }
-    }
-
-    private void CancelSnapping()
-    {
-        windowManager.Hide();
     }
 
     private void MoveWindow(ActiveWindow currentWindow, Rectangle rectangle, bool isLeftClick)
