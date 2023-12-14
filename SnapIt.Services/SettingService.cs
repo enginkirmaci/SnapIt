@@ -1,5 +1,4 @@
 ﻿using SnapIt.Common.Entities;
-using SnapIt.Common.Extensions;
 using SnapIt.Services.Contracts;
 using WpfScreenHelper;
 
@@ -39,12 +38,12 @@ public class SettingService : ISettingService
             Settings = new Settings();
         }
 
-        Settings.Theme = new SnapAreaTheme(
-            Settings.HighlightColor,
-            Settings.OverlayColor,
-            Settings.BorderColor,
-            Settings.BorderThickness,
-            Settings.Opacity);
+        //Settings.Theme = new SnapAreaTheme(
+        //    Settings.HighlightColor,
+        //    Settings.OverlayColor,
+        //    Settings.BorderColor,
+        //    Settings.BorderThickness,
+        //    Settings.Opacity);
 
         ExcludedApplicationSettings = await fileOperationService.Load<ExcludedApplicationSettings>();
         ExcludedApplicationSettings.Applications = ExcludedApplicationSettings.Applications.Where(i => i != null).ToList();
@@ -92,11 +91,11 @@ public class SettingService : ISettingService
             }
         }
 
-        Settings.HighlightColor = Settings.Theme.HighlightColor.Convert();
-        Settings.OverlayColor = Settings.Theme.OverlayColor.Convert();
-        Settings.BorderColor = Settings.Theme.BorderColor.Convert();
-        Settings.BorderThickness = Settings.Theme.BorderThickness;
-        Settings.Opacity = Settings.Theme.Opacity;
+        //Settings.HighlightColor = Settings.Theme.HighlightColor.Convert();
+        //Settings.OverlayColor = Settings.Theme.OverlayColor.Convert();
+        //Settings.BorderColor = Settings.Theme.BorderColor.Convert();
+        //Settings.BorderThickness = Settings.Theme.BorderThickness;
+        //Settings.Opacity = Settings.Theme.Opacity;
 
         fileOperationService.Save(Settings);
 
