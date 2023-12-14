@@ -3,7 +3,6 @@ using Gma.System.MouseKeyHook;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
-using SnapIt.Common.Extensions;
 using SnapIt.Common.Graphics;
 using SnapIt.Controls;
 using SnapIt.Services;
@@ -18,22 +17,12 @@ public class SnapManager : ISnapManager
     private readonly IWinApiService winApiService;
     private readonly IScreenManager screenManager;
     private readonly IApplicationService applicationService;
+    private readonly IMouseService mouseService;
     private readonly IKeyboardService keyboardService;
     private readonly IWindowsService windowsService;
-    private static IKeyboardMouseEvents globalHook;
-
-    private ActiveWindow activeWindow;
-    private SnapAreaInfo snapAreaInfo;
 
     private SnapLoadingWindow loadingWindow;
     private bool isTrialEnded = false;
-
-    private bool isWindowDetected = false;
-    private bool isListening = false;
-    private bool isHoldingKey = false;
-    private bool holdKeyUsed = false;
-
-    private System.Drawing.Point startLocation;
 
     public bool IsInitialized { get; private set; }
     public bool IsRunning { get; set; }
@@ -52,6 +41,7 @@ public class SnapManager : ISnapManager
         IWinApiService winApiService,
         IScreenManager screenManager,
         IApplicationService applicationService,
+        IMouseService mouseService,
         IKeyboardService keyboardService,
         IWindowsService windowsService)
     {
@@ -60,6 +50,7 @@ public class SnapManager : ISnapManager
         this.winApiService = winApiService;
         this.screenManager = screenManager;
         this.applicationService = applicationService;
+        this.mouseService = mouseService;
         this.keyboardService = keyboardService;
         this.windowsService = windowsService;
     }
@@ -76,10 +67,7 @@ public class SnapManager : ISnapManager
         if (isTrialEnded)
             return;
 
-        isWindowDetected = false;
-        isListening = false;
-
-        globalHook = Hook.GlobalEvents();
+        //globalHook = Hook.GlobalEvents();
 
         await windowManager.InitializeAsync();
         await screenManager.InitializeAsync();
@@ -87,6 +75,7 @@ public class SnapManager : ISnapManager
         await settingService.InitializeAsync();
         await applicationService.InitializeAsync();
         await keyboardService.InitializeAsync();
+        await mouseService.InitializeAsync();
         await windowsService.InitializeAsync();
 
         if (Dev.IsActive && Dev.ShowSnapWindowOnStartup)
@@ -94,48 +83,13 @@ public class SnapManager : ISnapManager
             windowManager.Show();
         }
 
-        keyboardService.SnappingCancelled += KeyboardService_SnappingCancelled;
+        mouseService.MoveWindow += MoveWindow;
+        mouseService.SnappingCancelled += SnappingCancelled;
+
+        keyboardService.MoveWindow += MoveWindow;
+        keyboardService.SnappingCancelled += SnappingCancelled;
         keyboardService.SnapStartStop += KeyboardService_SnapStartStop;
-        keyboardService.MoveWindow += KeyboardService_MoveWindow;
         keyboardService.ChangeLayout += KeyboardService_ChangeLayout;
-
-        //Dictionary<string, Dictionary<SnapScreen, List<ApplicationGroup>>> screenApplicationGroupHotKeyMap = [];
-
-        //foreach (var snapScreen in settingService.SnapScreens)
-        //{
-        //    foreach (var applicationGroup in snapScreen.ApplicationGroups)
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(applicationGroup.ActivateHotkey))
-        //        {
-        //            var applicationGroupHotkey = applicationGroup.ActivateHotkey.Replace(" ", string.Empty).Replace("Win", "LWin");
-
-        //            if (!screenApplicationGroupHotKeyMap.ContainsKey(applicationGroupHotkey))
-        //            {
-        //                screenApplicationGroupHotKeyMap.Add(applicationGroupHotkey, []);
-        //            }
-
-        //            if (!screenApplicationGroupHotKeyMap[applicationGroupHotkey].ContainsKey(snapScreen))
-        //            {
-        //                screenApplicationGroupHotKeyMap[applicationGroupHotkey].Add(snapScreen, []);
-        //            }
-
-        //            screenApplicationGroupHotKeyMap[applicationGroupHotkey][snapScreen].Add(applicationGroup);
-        //        }
-        //    }
-        //}
-
-        if (settingService.Settings.EnableMouse)
-        {
-            globalHook.MouseMove += MouseMoveEvent;
-            globalHook.MouseDown += MouseDownEvent;
-            globalHook.MouseUp += MouseUpEvent;
-
-            if (settingService.Settings.EnableHoldKey)
-            {
-                globalHook.KeyDown += GlobalHook_KeyDown;
-                globalHook.KeyUp += GlobalHook_KeyUp;
-            }
-        }
 
         IsRunning = true;
         StatusChanged?.Invoke(true);
@@ -156,17 +110,14 @@ public class SnapManager : ISnapManager
         }
     }
 
-    private void KeyboardService_ChangeLayout(SnapScreen snapScreen, Layout layout)
-    {
-        Release();
-        _ = InitializeAsync();
-
-        LayoutChanged?.Invoke(snapScreen, layout);
-    }
-
-    private void KeyboardService_MoveWindow(SnapAreaInfo snapAreaInfo, bool isLeftClick)
+    private void MoveWindow(SnapAreaInfo snapAreaInfo, bool isLeftClick)
     {
         MoveWindow(snapAreaInfo.ActiveWindow, snapAreaInfo.Rectangle, isLeftClick);
+    }
+
+    private void SnappingCancelled()
+    {
+        CancelSnapping();
     }
 
     private void KeyboardService_SnapStartStop()
@@ -174,9 +125,12 @@ public class SnapManager : ISnapManager
         StartStop();
     }
 
-    private void KeyboardService_SnappingCancelled()
+    private void KeyboardService_ChangeLayout(SnapScreen snapScreen, Layout layout)
     {
-        StopSnapping();
+        Release();
+        _ = InitializeAsync();
+
+        LayoutChanged?.Invoke(snapScreen, layout);
     }
 
     public void SetIsTrialEnded(bool isEnded)
@@ -254,34 +208,16 @@ public class SnapManager : ISnapManager
     {
         windowManager.Release();
 
-        keyboardService.SnappingCancelled -= KeyboardService_SnappingCancelled;
+        mouseService.MoveWindow -= MoveWindow;
+        mouseService.SnappingCancelled -= SnappingCancelled;
+
+        keyboardService.MoveWindow -= MoveWindow;
+        keyboardService.SnappingCancelled -= SnappingCancelled;
         keyboardService.SnapStartStop -= KeyboardService_SnapStartStop;
-        keyboardService.MoveWindow -= KeyboardService_MoveWindow;
         keyboardService.ChangeLayout -= KeyboardService_ChangeLayout;
         keyboardService.Dispose();
 
-        if (globalHook != null)
-        {
-            //globalHook.KeyDown -= Esc_KeyDown;
-
-            globalHook.MouseMove -= MouseMoveEvent;
-            globalHook.MouseDown -= MouseDownEvent;
-            globalHook.MouseUp -= MouseUpEvent;
-
-            if (settingService.Settings.EnableHoldKey)
-            {
-                globalHook.KeyDown -= GlobalHook_KeyDown;
-                globalHook.KeyUp -= GlobalHook_KeyUp;
-            }
-
-            globalHook.Dispose();
-        }
-        if (globalHook != null)
-        {
-            globalHook.Dispose();
-        }
-
-        globalHook = Hook.GlobalEvents();
+        Hook.GlobalEvents().Dispose();
 
         keyboardService.SetSnappingStopped();
 
@@ -303,256 +239,17 @@ public class SnapManager : ISnapManager
         ScreenChanged?.Invoke(settingService.SnapScreens);
     }
 
-    private bool HoldingKeyResult()
-    {
-        if (settingService.Settings.EnableHoldKey)
-        {
-            if (isHoldingKey)
-            {
-                switch (settingService.Settings.HoldKeyBehaviour)
-                {
-                    case HoldKeyBehaviour.HoldToEnable:
-                        return true;
-
-                    case HoldKeyBehaviour.HoldToDisable:
-                        StopSnapping();
-                        return false;
-                }
-            }
-            else
-            {
-                switch (settingService.Settings.HoldKeyBehaviour)
-                {
-                    case HoldKeyBehaviour.HoldToEnable:
-                        return false;
-
-                    case HoldKeyBehaviour.HoldToDisable:
-                        return true;
-                }
-            }
-        }
-
-        return true;
-    }
-
     private void Esc_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.KeyCode == Keys.Escape)
         {
-            StopSnapping();
+            CancelSnapping();
         }
     }
 
-    private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
-    {
-        switch (settingService.Settings.HoldKey)
-        {
-            case HoldKey.Control:
-                if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
-                {
-                    isHoldingKey = false;
-                }
-
-                break;
-
-            case HoldKey.Alt:
-                if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
-                {
-                    isHoldingKey = false;
-                }
-
-                break;
-
-            case HoldKey.Shift:
-                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
-                {
-                    isHoldingKey = false;
-                }
-
-                break;
-
-            case HoldKey.Win:
-                if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
-                {
-                    isHoldingKey = false;
-
-                    if (holdKeyUsed)
-                    {
-                        e.Handled = true;
-                    }
-                }
-
-                break;
-        }
-
-        if (holdKeyUsed)
-        {
-            holdKeyUsed = false;
-        }
-    }
-
-    private void GlobalHook_KeyDown(object sender, KeyEventArgs e)
-    {
-        switch (settingService.Settings.HoldKey)
-        {
-            case HoldKey.Control:
-                if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
-                {
-                    isHoldingKey = true;
-                }
-
-                break;
-
-            case HoldKey.Alt:
-                if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
-                {
-                    isHoldingKey = true;
-                }
-
-                break;
-
-            case HoldKey.Shift:
-                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
-                {
-                    isHoldingKey = true;
-                }
-
-                break;
-
-            case HoldKey.Win:
-                if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
-                {
-                    isHoldingKey = true;
-                }
-
-                break;
-        }
-    }
-
-    private void StopSnapping()
+    private void CancelSnapping()
     {
         windowManager.Hide();
-        isListening = false;
-    }
-
-    private bool IsDelayDone(System.Windows.Point endLocation)
-    {
-        if (settingService.Settings.EnableHoldKey)
-            return true;
-
-        var move = Math.Abs(endLocation.X - startLocation.X) + Math.Abs(endLocation.Y - startLocation.Y);
-        return move > settingService.Settings.MouseDragDelay;
-    }
-
-    private void MouseMoveEvent(object sender, MouseEventArgs e)
-    {
-        var p = WpfScreenHelper.MouseHelper.MousePosition;
-
-        if (isListening && HoldingKeyResult() && IsDelayDone(p))
-        {
-            if (!isWindowDetected)
-            {
-                holdKeyUsed = true;
-
-                activeWindow = winApiService.GetActiveWindow();
-                activeWindow.Dpi = DpiHelper.GetDpiFromPoint((int)p.X, (int)p.Y);
-
-                if (activeWindow?.Title != null && windowsService.IsExcludedApplication(activeWindow.Title, false))
-                {
-                    isListening = false;
-                }
-                else if (settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
-                {
-                    isListening = false;
-                }
-                else if (settingService.Settings.DisableForModal && !winApiService.IsAllowedWindowStyle(activeWindow))
-                {
-                    isListening = false;
-                }
-                else if (settingService.Settings.DragByTitle)
-                {
-                    var titleBarHeight = SystemInformation.CaptionHeight;
-                    var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
-
-                    if (activeWindow.Boundry.Top + titleBarHeight + 2 + FixedFrameBorderSize * 2 >= p.Y)
-                    {
-                        isWindowDetected = true;
-                    }
-                    else
-                    {
-                        isListening = false;
-                    }
-                }
-                else
-                {
-                    isWindowDetected = true;
-                }
-            }
-            else if (!windowManager.IsVisible)
-            {
-                windowManager.Show();
-            }
-            else
-            {
-                snapAreaInfo = windowManager.SelectElementWithPoint((int)p.X, (int)p.Y);
-
-                if (snapAreaInfo?.Screen != null)
-                {
-                    settingService.LatestActiveScreen = snapAreaInfo.Screen;
-                }
-            }
-        }
-    }
-
-    public MouseButtons MouseButtonsMap(MouseButton mouseButton)
-    {
-        switch (mouseButton)
-        {
-            case MouseButton.Right:
-                return MouseButtons.Right;
-
-            case MouseButton.Middle:
-                return MouseButtons.Middle;
-
-            case MouseButton.XButton1:
-                return MouseButtons.XButton1;
-
-            case MouseButton.XButton2:
-                return MouseButtons.XButton2;
-
-            case MouseButton.Left:
-            default:
-                return MouseButtons.Left;
-        }
-    }
-
-    private void MouseDownEvent(object sender, MouseEventArgs e)
-    {
-        if (e.Button == MouseButtonsMap(settingService.Settings.MouseButton))
-        {
-            activeWindow = ActiveWindow.Empty;
-            snapAreaInfo = SnapAreaInfo.Empty;
-            isWindowDetected = false;
-            isListening = true;
-
-            startLocation = e.Location;
-        }
-    }
-
-    private void MouseUpEvent(object sender, MouseEventArgs e)
-    {
-        if (e.Button == MouseButtonsMap(settingService.Settings.MouseButton) && isListening)
-        {
-            isListening = false;
-            windowManager.Hide();
-
-            MoveActiveWindow(snapAreaInfo.Rectangle, e.Button == MouseButtons.Left);
-        }
-    }
-
-    private void MoveActiveWindow(Rectangle rectangle, bool isLeftClick)
-    {
-        MoveWindow(activeWindow, rectangle, isLeftClick);
     }
 
     private void MoveWindow(ActiveWindow currentWindow, Rectangle rectangle, bool isLeftClick)

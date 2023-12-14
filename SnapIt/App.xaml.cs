@@ -50,6 +50,7 @@ public partial class App
         containerRegistry.RegisterSingleton<IWindowManager, WindowManager>();
         containerRegistry.RegisterSingleton<IScreenManager, ScreenManager>();
 
+        containerRegistry.RegisterSingleton<IMouseService, MouseService>();
         containerRegistry.RegisterSingleton<IKeyboardService, KeyboardService>();
         containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
         containerRegistry.RegisterSingleton<ISettingService, SettingService>();

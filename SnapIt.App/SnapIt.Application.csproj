@@ -8,10 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MouseKeyHook" Version="5.7.1" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\SnapIt.Common\SnapIt.Common.csproj" />
 		<ProjectReference Include="..\SnapIt.Controls\SnapIt.Controls.csproj" />
 		<ProjectReference Include="..\SnapIt.Services\SnapIt.Services.csproj" />

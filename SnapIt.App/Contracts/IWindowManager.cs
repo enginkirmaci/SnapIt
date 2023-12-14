@@ -6,8 +6,6 @@ namespace SnapIt.Application.Contracts;
 
 public interface IWindowManager : IInitialize
 {
-    bool IsVisible { get; }
-
     void Release();
 
     void Show();
@@ -15,6 +13,4 @@ public interface IWindowManager : IInitialize
     void Hide();
 
     Dictionary<int, Rectangle> GetSnapAreaRectangles(SnapScreen snapScreen);
-
-    SnapAreaInfo SelectElementWithPoint(int x, int y);
 }

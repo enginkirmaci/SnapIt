@@ -2,6 +2,7 @@
 using Gma.System.MouseKeyHook;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
+using SnapIt.Common.Events;
 using SnapIt.Common.Extensions;
 using SnapIt.Common.Graphics;
 using SnapIt.Common.Math;
@@ -46,8 +47,8 @@ public class KeyboardService : IKeyboardService
             return;
         }
 
-        await winApiService.InitializeAsync();
         await settingService.InitializeAsync();
+        await winApiService.InitializeAsync();
         await windowsService.InitializeAsync();
 
         globalHook = Hook.GlobalEvents();

@@ -2,6 +2,7 @@
 using SnapIt.Common.Entities;
 using SnapIt.Common.Graphics;
 using SnapIt.Controls;
+using SnapIt.Services;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.Application;
@@ -10,6 +11,7 @@ public class WindowManager : IWindowManager
 {
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
+    private readonly IMouseService mouseService;
     private readonly IKeyboardService keyboardService;
     private List<SnapWindow> snapWindows;
     public bool IsInitialized { get; private set; }
@@ -17,17 +19,14 @@ public class WindowManager : IWindowManager
     public WindowManager(
         ISettingService settingService,
         IWinApiService winApiService,
+        IMouseService mouseService,
         IKeyboardService keyboardService
         )
     {
         this.settingService = settingService;
         this.winApiService = winApiService;
+        this.mouseService = mouseService;
         this.keyboardService = keyboardService;
-    }
-
-    public bool IsVisible
-    {
-        get => snapWindows.TrueForAll(window => window.IsVisible);
     }
 
     public async Task InitializeAsync()
@@ -39,7 +38,12 @@ public class WindowManager : IWindowManager
 
         await settingService.InitializeAsync();
         await winApiService.InitializeAsync();
+        await mouseService.InitializeAsync();
         await keyboardService.InitializeAsync();
+
+        mouseService.HideWindows += MouseService_HideWindows;
+        mouseService.ShowWindowsIfNecessary += MouseService_ShowWindowsIfNecessary;
+        mouseService.SelectElementWithPoint += MouseService_SelectElementWithPoint;
 
         keyboardService.GetSnapAreaBoundries += KeyboardService_GetSnapAreaBoundries;
 
@@ -70,6 +74,42 @@ public class WindowManager : IWindowManager
         });
 
         IsInitialized = true;
+    }
+
+    private void MouseService_HideWindows()
+    {
+        Hide();
+    }
+
+    private bool MouseService_ShowWindowsIfNecessary()
+    {
+        if (!snapWindows.TrueForAll(window => window.IsVisible))
+        {
+            Show();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private SnapAreaInfo MouseService_SelectElementWithPoint(int x, int y)
+    {
+        var result = new SnapAreaInfo();
+
+        foreach (var window in snapWindows)
+        {
+            var selectedArea = window.SelectElementWithPoint(x, y);
+            if (!selectedArea.Equals(Rectangle.Empty))
+            {
+                result.Rectangle = selectedArea;
+                result.Screen = window.Screen;
+
+                break;
+            }
+        }
+
+        return result;
     }
 
     private IList<Rectangle> KeyboardService_GetSnapAreaBoundries()
@@ -127,24 +167,5 @@ public class WindowManager : IWindowManager
         }
 
         return null;
-    }
-
-    public SnapAreaInfo SelectElementWithPoint(int x, int y)
-    {
-        var result = new SnapAreaInfo();
-
-        foreach (var window in snapWindows)
-        {
-            var selectedArea = window.SelectElementWithPoint(x, y);
-            if (!selectedArea.Equals(Rectangle.Empty))
-            {
-                result.Rectangle = selectedArea;
-                result.Screen = window.Screen;
-
-                break;
-            }
-        }
-
-        return result;
     }
 }
