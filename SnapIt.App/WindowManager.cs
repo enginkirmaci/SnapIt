@@ -75,25 +75,6 @@ public class WindowManager : IWindowManager
         IsInitialized = true;
     }
 
-    public void Release()
-    {
-        if (snapWindows != null && snapWindows.Count != 0)
-        {
-            for (int i = 0; i < snapWindows.Count; i++)
-            {
-                try
-                {
-                    snapWindows[i].Close();
-                }
-                catch { }
-            }
-
-            snapWindows.Clear();
-        }
-
-        IsInitialized = false;
-    }
-
     public void Show()
     {
         snapWindows.ForEach(window =>
@@ -125,6 +106,20 @@ public class WindowManager : IWindowManager
 
     public void Dispose()
     {
+        if (snapWindows != null && snapWindows.Count != 0)
+        {
+            for (int i = 0; i < snapWindows.Count; i++)
+            {
+                try
+                {
+                    snapWindows[i].Close();
+                }
+                catch { }
+            }
+
+            snapWindows.Clear();
+        }
+
         IsInitialized = false;
     }
 

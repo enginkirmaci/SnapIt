@@ -1,4 +1,5 @@
-﻿using SnapIt.Application.Contracts;
+﻿using System.Windows;
+using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
@@ -80,15 +81,16 @@ public class MouseSettingsPageViewModel : ViewModelBase
         ];
     }
 
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
+        await settingService.InitializeAsync();
     }
 
     private void ApplyChanges()
     {
         if (!Dev.IsActive)
         {
-            snapManager.Release();
+            snapManager.Dispose();
             snapManager.InitializeAsync();
         }
     }

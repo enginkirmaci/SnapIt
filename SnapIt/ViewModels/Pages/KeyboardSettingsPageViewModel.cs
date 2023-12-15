@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using System.Windows;
+using Prism.Commands;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Mvvm;
@@ -65,12 +66,13 @@ public class KeyboardSettingsPageViewModel : ViewModelBase
     {
         if (canApplyChanges && !Dev.IsActive)
         {
-            snapManager.Release();
+            snapManager.Dispose();
             snapManager.InitializeAsync();
         }
     }
 
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
+        await settingService.InitializeAsync();
     }
 }

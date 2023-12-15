@@ -22,13 +22,12 @@ public class MainWindowViewModel : ViewModelBase
     private readonly INavigationService navigationService;
     private readonly ISettingService settingService;
     private readonly ISnapManager snapManager;
-
-    //private readonly IStandaloneLicenseService standaloneLicenseService;
     private readonly IStoreLicenseService storeLicenseService;
-
     private readonly IThemeService themeService;
+    private readonly INotifyIconService notifyIconService;
+    //private readonly IStandaloneLicenseService standaloneLicenseService;
+
     private ObservableCollection<object> menuItems;
-    private ObservableCollection<object> trayMenuItems;
     private bool isStandalone;
     private bool isTrial;
     private bool isTrialEnded;
@@ -43,38 +42,26 @@ public class MainWindowViewModel : ViewModelBase
     private bool isTryStoreMessageOpen;
     private bool isRunning;
     private string status;
-    private string notifyStatus = "Opening";
     private string licenseText;
     private Window mainWindow;
-    //private Wpf.Ui.Tray.Controls.NotifyIcon? notifyIcon;
 
     public ObservableCollection<object> MenuItems { get => menuItems; set => SetProperty(ref menuItems, value); }
-    public ObservableCollection<object> TrayMenuItems { get => trayMenuItems; set => SetProperty(ref trayMenuItems, value); }
     public bool IsTrial { get => isTrial; set => SetProperty(ref isTrial, value); }
     public bool IsTrialEnded { get => isTrialEnded; set => SetProperty(ref isTrialEnded, value); }
     public bool IsTrialMessageOpen { get => isTrialMessageOpen; set => SetProperty(ref isTrialMessageOpen, value); }
     public bool IsLicenseMessageOpen { get => isLicenseMessageOpen; set => SetProperty(ref isLicenseMessageOpen, value); }
     public string LicenseMessageCloseButtonText { get => licenseMessageCloseButtonText; set => SetProperty(ref licenseMessageCloseButtonText, value); }
-    public string LicenseMessageLicenseText { get => licenseMessageLicenseText; set => SetProperty(ref licenseMessageLicenseText, value); }
-    public string LicenseMessageErrorText { get => licenseMessageErrorText; set => SetProperty(ref licenseMessageErrorText, value); }
-    public bool IsLicenseSuccess { get => isLicenseSuccess; set => SetProperty(ref isLicenseSuccess, value); }
     public bool NewVersionMessageOpen { get => newVersionMessageOpen; set => SetProperty(ref newVersionMessageOpen, value); }
     public bool IsTryStoreMessageOpen { get => isTryStoreMessageOpen; set => SetProperty(ref isTryStoreMessageOpen, value); }
     public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
     public string Status { get => status; set => SetProperty(ref status, value); }
-    public string NotifyStatus { get => notifyStatus; set => SetProperty(ref notifyStatus, value); }
-    public string LicenseText { get => licenseText; set => SetProperty(ref licenseText, value); }
 
-    public DelegateCommand<RoutedEventArgs> LoadedCommand { get; private set; }
+    //public string LicenseText { get => licenseText; set => SetProperty(ref licenseText, value); }
+    //public string LicenseMessageLicenseText { get => licenseMessageLicenseText; set => SetProperty(ref licenseMessageLicenseText, value); }
+    //public string LicenseMessageErrorText { get => licenseMessageErrorText; set => SetProperty(ref licenseMessageErrorText, value); }
+    //public bool IsLicenseSuccess { get => isLicenseSuccess; set => SetProperty(ref isLicenseSuccess, value); }
+
     public DelegateCommand<CancelEventArgs> ClosingWindowCommand { get; private set; }
-    public DelegateCommand NotifyIconClickViewCommand { get; private set; }
-
-    public DelegateCommand<object> NotifyIconOpenedCommand { get; private set; }
-    public DelegateCommand<string> NotifyIconDoubleClickViewCommand { get; private set; }
-    public DelegateCommand<string> HandleLinkClick { get; private set; }
-
-    public DelegateCommand RateReviewStoreClick { get; private set; }
-    public DelegateCommand ExitApplicationCommand { get; private set; }
     public DelegateCommand StartStopCommand { get; private set; }
     public DelegateCommand TrialVersionCommand { get; private set; }
     public DelegateCommand<object> TrialMessageClosingCommand { get; private set; }
@@ -88,7 +75,8 @@ public class MainWindowViewModel : ViewModelBase
         ISnapManager snapManager,
         //IStandaloneLicenseService standaloneLicenseService,
         IStoreLicenseService storeLicenseService,
-        IThemeService themeService)
+        IThemeService themeService,
+        INotifyIconService notifyIconService)
     {
         this.navigationService = navigationService;
         this.settingService = settingService;
@@ -96,7 +84,7 @@ public class MainWindowViewModel : ViewModelBase
         //this.standaloneLicenseService = standaloneLicenseService;
         this.storeLicenseService = storeLicenseService;
         this.themeService = themeService;
-
+        this.notifyIconService = notifyIconService;
         MenuItems =
         [
             new NavigationViewItem("Home", SymbolRegular.Home24, typeof(DashboardPage)),
@@ -130,8 +118,6 @@ public class MainWindowViewModel : ViewModelBase
             }
         ];
 
-        TrayMenuItems = [];
-
 #if !STANDALONE
         isStandalone = false;
 #endif
@@ -143,41 +129,9 @@ public class MainWindowViewModel : ViewModelBase
         snapManager.LayoutChanged += SnapService_LayoutChanged;
         storeLicenseService.OfflineLicensesChanged += StoreLicenseService_OfflineLicensesChanged;
 
-        LoadedCommand = new DelegateCommand<RoutedEventArgs>(async (args) =>
-        {
-            await TaskEx.WaitUntil(() => snapManager.IsInitialized);
-
-            await InitializeAsync();
-
-            navigationService.Navigate(typeof(DashboardPage));
-
-            mainWindow = (Window)args.Source;
-            //notifyIcon = mainWindow.FindChildren<Wpf.Ui.Tray.Controls.NotifyIcon>().FirstOrDefault();
-
-            ChangeTheme();
-
-            if (!settingService.Settings.ShowMainWindow && !Dev.IsActive)
-            {
-                mainWindow.Visibility = Visibility.Hidden;
-            }
-
-            if (isStandalone)
-            {
-                if (!Dev.SkipLicense)
-                {
-                    CheckForNewVersion();
-                }
-            }
-            else
-            {
-                if (!Dev.SkipLicense)
-                {
-                    storeLicenseService.Init(mainWindow);
-                }
-            }
-
-            CheckIfTrialAsync();
-        });
+        //LoadedCommand = new DelegateCommand<RoutedEventArgs>(async (args) =>
+        //{
+        //});
 
         TrialVersionCommand = new DelegateCommand(() =>
         {
@@ -308,142 +262,50 @@ public class MainWindowViewModel : ViewModelBase
             }
         });
 
-        NotifyIconClickViewCommand = new DelegateCommand(() =>
-        {
-            //var popupWindow = new PopupWindow();
-
-            //popupWindow.Show();
-            //popupWindow.Activate();
-            //popupWindow.Focus();
-        });
-
-        NotifyIconDoubleClickViewCommand = new DelegateCommand<string>((navigatePath) =>
-        {
-            if (mainWindow != null && mainWindow.IsVisible)
-            {
-                if (mainWindow.WindowState == WindowState.Minimized)
-                {
-                    mainWindow.WindowState = WindowState.Normal;
-                }
-
-                mainWindow.Activate();
-            }
-            else
-            {
-                mainWindow.Show();
-
-                mainWindow.Activate();
-            }
-
-            //NavigateView(navigatePath);
-        });
-
-        NotifyIconOpenedCommand = new DelegateCommand<object>((obj) =>
-        {
-            TrayMenuItems.Clear();
-
-            TrayMenuItems.Add(new MenuItem { Header = Status, IsEnabled = false });
-
-            TrayMenuItems.Add(new System.Windows.Controls.Separator());
-
-            if (!IsRunning)
-            {
-                TrayMenuItems.Add(new MenuItem { Name = "Play", Header = Status, Icon = new SymbolIcon(SymbolRegular.Play24) });
-            }
-
-            //    var rootTitleBar = mainWindow.FindChild<TitleBar>("RootTitleBar");
-
-            //    var layoutsMenu = rootTitleBar.Tray.Menu.FindChild<MenuItem>("LayoutMenuItem");
-
-            //    if (layoutsMenu == null)
-            //    {
-            //        return;
-            //    }
-
-            //    layoutsMenu.Items.Clear();
-
-            //    var snapScreens = settingService.SnapScreens;
-            //    var layouts = settingService.Layouts;
-
-            //    foreach (var screen in snapScreens)
-            //    {
-            //        var screenMenu = new MenuItem()
-            //        {
-            //            Header = $"Display {screen.DeviceNumber} ({screen.Resolution}) - {screen.Primary}"
-            //        };
-
-            //        if (snapScreens.Count > 1)
-            //        {
-            //            layoutsMenu.Items.Add(screenMenu);
-            //        }
-
-            //        foreach (var layout in layouts)
-            //        {
-            //            var layoutMenuItem = new MenuItem()
-            //            {
-            //                Header = layout.Name,
-            //                Tag = screen.DeviceName,
-            //                Uid = layout.Guid.ToString(),
-            //                SymbolIcon = Wpf.Ui.Common.SymbolRegular.Empty
-            //            };
-            //            layoutMenuItem.Click += LayoutItem_Click;
-
-            //            if (screen.Layout == layout)
-            //            {
-            //                layoutMenuItem.SymbolIcon = Wpf.Ui.Common.SymbolRegular.Checkmark24;
-            //            }
-            //            else
-            //            {
-            //                layoutMenuItem.Header = "     " + layout.Name;
-            //            }
-
-            //            if (snapScreens.Count > 1)
-            //            {
-            //                screenMenu.Items.Add(layoutMenuItem);
-            //            }
-            //            else
-            //            {
-            //                layoutsMenu.Items.Add(layoutMenuItem);
-            //            }
-            //        }
-            //    }
-        });
-
-        RateReviewStoreClick = new DelegateCommand(async () =>
-        {
-            try
-            {
-                await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={Constants.AppStoreId}"));
-            }
-            catch (Exception)
-            {
-                System.Windows.Forms.MessageBox.Show("Rate and review only works for Windows 10 or later versions");
-            }
-        });
-
-        HandleLinkClick = new DelegateCommand<string>((url) =>
-        {
-            string uriToLaunch = $"https://{url}";
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = uriToLaunch,
-                UseShellExecute = true
-            });
-        });
-
-        ExitApplicationCommand = new DelegateCommand(() =>
-        {
-            mainWindow.Close();
-
-            System.Windows.Application.Current.Shutdown();
-        });
-
         StartStopCommand = new DelegateCommand(snapManager.StartStop);
     }
 
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
+        if (!Dev.IsActive)
+        {
+            await TaskEx.WaitUntil(() => snapManager.IsInitialized);
+        }
+
         await settingService.InitializeAsync();
+
+        notifyIconService.InitializeAsync();
+
+        mainWindow = (Window)args.Source;
+        if (!settingService.Settings.ShowMainWindow && !Dev.IsActive)
+        {
+            mainWindow.Visibility = Visibility.Hidden;
+        }
+        else
+        {
+            mainWindow.Visibility = Visibility.Visible;
+        }
+
+        navigationService.Navigate(typeof(DashboardPage));
+
+        ChangeTheme();
+
+        if (isStandalone)
+        {
+            if (!Dev.SkipLicense)
+            {
+                CheckForNewVersion();
+            }
+        }
+        else
+        {
+            if (!Dev.SkipLicense)
+            {
+                storeLicenseService.Init(mainWindow);
+            }
+        }
+
+        CheckIfTrialAsync();
     }
 
     private void ChangeTheme()
@@ -477,38 +339,11 @@ public class MainWindowViewModel : ViewModelBase
         if (isRunning)
         {
             Status = "Stop";
-            NotifyStatus = "Running";
         }
         else
         {
             Status = "Start";
-            NotifyStatus = "Stopped";
         }
-    }
-
-    private void LayoutItem_Click(object sender, EventArgs e)
-    {
-        var layoutMenuItem = sender as MenuItem;
-
-        var selectedSnapScreen = settingService.SnapScreens.FirstOrDefault();
-
-        if (settingService.SnapScreens.Count > 1)
-        {
-            var snapScreen = settingService.SnapScreens.FirstOrDefault(screen => screen.DeviceName == layoutMenuItem.Tag.ToString());
-
-            if (snapScreen != null)
-            {
-                selectedSnapScreen = snapScreen;
-            }
-        }
-
-        var selectedLayout = settingService.Layouts.FirstOrDefault(layout => layout.Guid.ToString() == layoutMenuItem.Uid);
-
-        SnapService_LayoutChanged(selectedSnapScreen, selectedLayout);
-
-        settingService.LinkScreenLayout(selectedSnapScreen, selectedLayout);
-        snapManager.Release();
-        snapManager.InitializeAsync();
     }
 
     private void SnapService_LayoutChanged(SnapScreen snapScreen, Layout layout)

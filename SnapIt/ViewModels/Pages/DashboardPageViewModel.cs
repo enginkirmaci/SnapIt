@@ -1,6 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using System.Windows;
 using Prism.Commands;
-using Prism.Mvvm;
 using SnapIt.Common.Converters;
 using SnapIt.Common.Mvvm;
 using Wpf.Ui;
@@ -31,7 +30,7 @@ public class DashboardPageViewModel : ViewModelBase
         });
     }
 
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
     }
 }

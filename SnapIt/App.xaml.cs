@@ -30,11 +30,11 @@ public partial class App
     {
         if (!Dev.IsActive)
         {
-            var snapManager = Container.Resolve<ISnapManager>();
+            var snapManager = AppContainer.Resolve<ISnapManager>();
             _ = snapManager.InitializeAsync();
         }
 
-        var applicationWindow = Container.Resolve<MainWindow>();
+        var applicationWindow = AppContainer.Resolve<MainWindow>();
 
         return applicationWindow;
     }
@@ -63,6 +63,7 @@ public partial class App
         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
         containerRegistry.RegisterSingleton<ISnackbarService, SnackbarService>();
         containerRegistry.RegisterSingleton<IContentDialogService, ContentDialogService>();
+        containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
 
         AppContainer = containerRegistry.GetContainer();
     }
@@ -101,18 +102,18 @@ public partial class App
                 return;
             }
         }
-        //else
+        else
 
-        //{
-        //    if (!ApplicationInstance.RegisterSingleInstance() && !Dev.IsActive)
-        //    {
-        //        NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
-        //        NotifyIcon.Visible = true;
+        {
+            if (!ApplicationInstance.RegisterSingleInstance() && !Dev.IsActive)
+            {
+                //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
+                //NotifyIcon.Visible = true;
 
-        //        Shutdown();
-        //        return;
-        //    }
-        //}
+                Shutdown();
+                return;
+            }
+        }
 
         Telemetry.TrackEvent("OnStartup");
         Log.Logger.Information("SnapIt Started");
@@ -120,14 +121,11 @@ public partial class App
 
     private void OnExit(object sender, ExitEventArgs e)
     {
-        if (Container != null)
+        if (AppContainer != null)
         {
-            var snapServiceContainer = Container.Resolve<ISnapManager>();
-            if (snapServiceContainer != null)
-            {
-                snapServiceContainer.Release();
-                //NotifyIcon.Dispose();
-            }
+            var snapServiceContainer = AppContainer.Resolve<ISnapManager>();
+
+            snapServiceContainer?.Dispose();
         }
 
         Log.Logger.Information("SnapIt Exited");

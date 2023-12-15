@@ -121,7 +121,7 @@ public class SnapArea : Control
         }
     }
 
-    public void OnHoverStyle()
+    public void OnHoverStyle(bool animate = true)
     {
         ColorAnimation animation = new ColorAnimation
         {
@@ -136,7 +136,15 @@ public class SnapArea : Control
         if (area != null)
         {
             area.Background = brush;
-            brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+
+            if (animate)
+            {
+                brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+            }
+            else
+            {
+                area.Background = Theme.HighlightBrush;
+            }
         }
     }
 

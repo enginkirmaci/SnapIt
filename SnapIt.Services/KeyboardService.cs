@@ -89,7 +89,7 @@ public class KeyboardService : IKeyboardService
             { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStopSnapping }
         };
 
-        globalHook.OnCombination(map);
+        globalHook?.OnCombination(map);
     }
 
     public void Dispose()

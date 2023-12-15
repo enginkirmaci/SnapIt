@@ -1,4 +1,5 @@
-﻿using SnapIt.Common.Entities;
+﻿using System.Windows;
+using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
 
 namespace SnapIt.ViewModels.Pages;
@@ -247,7 +248,7 @@ public class WhatsNewPageViewModel : ViewModelBase
 
     public ChangeLogItem FirstChangeLog => changeLogs.FirstOrDefault();
 
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
     }
 }

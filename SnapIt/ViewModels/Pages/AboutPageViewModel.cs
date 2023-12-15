@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using System.Windows;
+using Prism.Commands;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
 using SnapIt.Views.Pages;
@@ -37,7 +38,7 @@ public class AboutPageViewModel : ViewModelBase
         });
     }
 
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
     }
 }

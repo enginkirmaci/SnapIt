@@ -1,4 +1,4 @@
-﻿using Prism.Commands;
+﻿using System.Windows;
 using SnapIt.Application.Contracts;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
@@ -80,8 +80,10 @@ public class SettingsPageViewModel : ViewModelBase
 #endif
     }
 
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
+        await settingService.InitializeAsync();
+
         IsStartupTaskActive = await settingService.GetStartupTaskStatusAsync();
     }
 

@@ -21,8 +21,6 @@ public interface ISnapManager : IInitialize
 
     //Task StartApplications(SnapScreen snapScreen, ApplicationGroup applicationGroup);
 
-    void Release();
-
     void StartStop();
 }
 

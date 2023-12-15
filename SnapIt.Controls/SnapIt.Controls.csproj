@@ -9,7 +9,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="WPF-UI" Version="3.0.0-preview.12" />
+		<PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
 	</ItemGroup>
 	
 	<ItemGroup>

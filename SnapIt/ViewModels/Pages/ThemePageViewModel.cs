@@ -1,5 +1,5 @@
-﻿//using ControlzEx.Theming;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Prism.Commands;
 using SnapIt.Application.Contracts;
@@ -21,7 +21,7 @@ public class ThemePageViewModel : ViewModelBase
     private SnapAreaTheme theme;
     private BitmapImage backgroundImage;
     private bool openApplyChangesBar;
-    private SnapArea snapArea;
+    private SnapArea? snapArea;
 
     public Layout Layout { get; set; }
 
@@ -31,7 +31,6 @@ public class ThemePageViewModel : ViewModelBase
     public BitmapImage BackgroundImage { get => backgroundImage; set => SetProperty(ref backgroundImage, value); }
     public bool OpenApplyChangesBar { get => openApplyChangesBar; set => SetProperty(ref openApplyChangesBar, value); }
 
-    public DelegateCommand<object> LoadedCommand { get; }
     public DelegateCommand ApplyChangesCommand { get; }
     public DelegateCommand DiscardChangesCommand { get; }
 
@@ -56,18 +55,6 @@ public class ThemePageViewModel : ViewModelBase
         Theme = settingService.Settings.Theme.Copy();
 
         Theme.ThemeChanged += Theme_ThemeChanged;
-
-        LoadedCommand = new DelegateCommand<object>((mainSnapGrid) =>
-        {
-            var grid = mainSnapGrid as DependencyObject;
-
-            snapArea = grid?.FindChildren<SnapArea>().FirstOrDefault();
-
-            if (snapArea != null)
-            {
-                snapArea.OnHoverStyle();
-            }
-        });
 
         ApplyChangesCommand = new DelegateCommand(() =>
         {
@@ -112,39 +99,14 @@ public class ThemePageViewModel : ViewModelBase
         };
     }
 
-    //<!--<ui:Snackbar
-    //    Grid.Row="0"
-    //    Grid.RowSpan= "2"
-    //    Grid.Column= "1"
-    //    Panel.ZIndex= "9"
-    //    Appearance= "Secondary"
-    //    Icon= "Empty"
-    //    IsShown= "{Binding OpenApplyChangesBar, Mode=TwoWay}" >
-    //    < i:Interaction.Triggers>
-    //        <i:EventTrigger EventName = "ButtonCloseCommand" >
-    //            < i:InvokeCommandAction Command = "{Binding DiscardChangesCommand}" CommandParameter= "{StaticResource FalseValue}" />
-    //        </ i:EventTrigger>
-    //    </i:Interaction.Triggers>
-
-    //    <Grid>
-    //        <Grid.ColumnDefinitions>
-    //            <ColumnDefinition Width = "*" />
-    //            < ColumnDefinition Width= "Auto" />
-    //        </ Grid.ColumnDefinitions >
-
-    //        < TextBlock
-    //            VerticalAlignment= "Center"
-    //            FontWeight= "Medium"
-    //            Text= "Do you want to apply changes?" />
-    //        < ui:Button
-    //            Grid.Column= "1"
-    //            Margin= "12,0,0,0"
-    //            Command= "{Binding ApplyChangesCommand}"
-    //            Content= "Apply Changes" />
-    //    </ Grid >
-    //</ ui:Snackbar>-->
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
+        await settingService.InitializeAsync();
+        await winApiService.InitializeAsync();
+
+        snapArea = ((Page)args.Source)?.FindChildren<SnapArea>().FirstOrDefault();
+
+        snapArea?.OnHoverStyle();
     }
 
     private void Theme_ThemeChanged()
@@ -153,17 +115,14 @@ public class ThemePageViewModel : ViewModelBase
         Theme = Theme.Copy();
         Theme.ThemeChanged += Theme_ThemeChanged;
 
-        if (snapArea != null)
-        {
-            snapArea.OnHoverStyle();
-        }
+        snapArea?.OnHoverStyle(false);
     }
 
     private void ApplyChanges()
     {
         if (!Dev.IsActive)
         {
-            snapManager.Release();
+            snapManager.Dispose();
             snapManager.InitializeAsync();
         }
     }

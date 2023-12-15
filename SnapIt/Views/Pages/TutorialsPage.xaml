@@ -9,7 +9,7 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Tutorials"
     Margin="0,24,0,0"
-    d:DataContext="{d:DesignInstance local:WhatsNewPage,
+    d:DataContext="{d:DesignInstance local:TutorialsPage,
                                      IsDesignTimeCreatable=False}"
     d:DesignWidth="800"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"

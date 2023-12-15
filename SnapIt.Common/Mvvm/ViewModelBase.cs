@@ -14,8 +14,8 @@ public abstract class ViewModelBase : Bindable
 
     public virtual void OnLoaded(RoutedEventArgs args)
     {
-        InitializeAsync();
+        InitializeAsync(args);
     }
 
-    public abstract Task InitializeAsync();
+    public abstract Task InitializeAsync(RoutedEventArgs args);
 }

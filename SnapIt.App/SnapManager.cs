@@ -97,7 +97,7 @@ public class SnapManager : ISnapManager
     {
         if (IsRunning)
         {
-            Release();
+            Dispose();
         }
         else
         {
@@ -123,7 +123,7 @@ public class SnapManager : ISnapManager
 
     private void KeyboardService_ChangeLayout(SnapScreen snapScreen, Layout layout)
     {
-        Release();
+        Dispose();
         _ = InitializeAsync();
 
         LayoutChanged?.Invoke(snapScreen, layout);
@@ -134,7 +134,7 @@ public class SnapManager : ISnapManager
         if (isEnded)
         {
             isTrialEnded = true;
-            Release();
+            Dispose();
         }
         else
         {
@@ -200,9 +200,9 @@ public class SnapManager : ISnapManager
     //    }
     //}
 
-    public void Release()
+    public void Dispose()
     {
-        windowManager.Release();
+        windowManager.Dispose();
 
         mouseService.MoveWindow -= MoveWindow;
         mouseService.SnappingCancelled -= SnappingCancelled;
@@ -229,16 +229,11 @@ public class SnapManager : ISnapManager
 
         if (IsRunning)
         {
-            Release();
+            Dispose();
             _ = InitializeAsync();
         }
 
         ScreenChanged?.Invoke(settingService.SnapScreens);
-    }
-
-    public void Dispose()
-    {
-        IsInitialized = false;
     }
 
     private void MoveWindow(ActiveWindow currentWindow, Rectangle rectangle, bool isLeftClick)

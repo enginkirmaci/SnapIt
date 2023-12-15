@@ -1,4 +1,5 @@
-﻿using System.Windows.Interop;
+﻿using System.Windows;
+using System.Windows.Interop;
 using Prism.Commands;
 using SnapIt.Application.Contracts;
 using SnapIt.Common.Entities;
@@ -54,7 +55,7 @@ namespace SnapIt.ViewModels.Windows
             ClearLayoutCommand = new DelegateCommand(ClearLayoutCommandExecute);
         }
 
-        public override async Task InitializeAsync()
+        public override async Task InitializeAsync(RoutedEventArgs args)
         {
             var wih = new WindowInteropHelper(Window);
             var activeWindow = new ActiveWindow
@@ -68,7 +69,7 @@ namespace SnapIt.ViewModels.Windows
                                  (int)SnapScreen.WorkingArea.Width,
                                  (int)SnapScreen.WorkingArea.Height);
 
-            snapManager.Release();
+            snapManager.Dispose();
 
             Window.SnapControl.ResetBorderTool();
         }

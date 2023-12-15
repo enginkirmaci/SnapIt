@@ -1,9 +1,9 @@
-﻿using Prism.Commands;
+﻿using System.Windows;
+using Prism.Commands;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
-using SnapIt.Services;
 using SnapIt.Services.Contracts;
 using SnapIt.Views.Dialogs;
 using Wpf.Ui;
@@ -118,7 +118,7 @@ public class WindowsPageViewModel : ViewModelBase
 
             if (result == Wpf.Ui.Controls.ContentDialogResult.Primary)
             {
-                if (excludeApplicationDialog.ViewModel.SelectedExcludedApplication!=null && 
+                if (excludeApplicationDialog.ViewModel.SelectedExcludedApplication != null &&
                     !ExcludedApplications.Contains(excludeApplicationDialog.ViewModel.SelectedExcludedApplication))
                 {
                     ExcludedApplications.Add(excludeApplicationDialog.ViewModel.SelectedExcludedApplication);
@@ -156,9 +156,9 @@ public class WindowsPageViewModel : ViewModelBase
         });
     }
 
-    public override async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
-        await snapManager.InitializeAsync();
+        //await snapManager.InitializeAsync();
         await settingService.InitializeAsync();
         await winApiService.InitializeAsync();
 
@@ -169,7 +169,7 @@ public class WindowsPageViewModel : ViewModelBase
     {
         if (!Dev.IsActive)
         {
-            snapManager.Release();
+            snapManager.Dispose();
             snapManager.InitializeAsync();
         }
     }

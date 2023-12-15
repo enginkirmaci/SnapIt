@@ -7,7 +7,6 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:SnapIt.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     x:Name="MainWindowView"
     Title="{x:Static c:Constants.AppName}"
@@ -118,112 +117,6 @@
                 </Grid>
             </ui:TitleBar.Header>
         </ui:TitleBar>
-
-        <tray:NotifyIcon
-            Grid.Row="0"
-            FocusOnLeftClick="True"
-            Icon="pack://application:,,,/Assets/app.ico"
-            TooltipText="{x:Static c:Constants.AppName}">
-            <!--  MenuOnRightClick="True"  -->
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="LeftClick">
-                    <i:InvokeCommandAction Command="{Binding NotifyIconClickViewCommand}" />
-                </i:EventTrigger>
-                <!--<i:EventTrigger EventName="ContextMenuOpening">
-                    <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
-                </i:EventTrigger>-->
-                <i:EventTrigger EventName="RightClick">
-                    <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-
-            <!--<tray:NotifyIcon.Menu>
-                <ContextMenu ItemsSource="{Binding ViewModel.TrayMenuItems, Mode=OneWay}" />
-            </tray:NotifyIcon.Menu>-->
-
-            <!--<tray:NotifyIcon.Menu>
-                <ContextMenu>
-            -->
-            <!--<i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Opened">
-                                <i:InvokeCommandAction Command="{Binding NotifyIconOpenedCommand}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>-->
-            <!--
-
-                    <Label Content="{Binding NotifyStatus}" IsEnabled="False" />
-                    <Separator />
-                    <ui:MenuItem
-                        Command="{Binding StartStopCommand}"
-                        Header="{Binding Status}"
-                        Icon="Play24"
-                        Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource FalseValue}}" />
-                    <ui:MenuItem
-                        Command="{Binding StartStopCommand}"
-                        Header="{Binding Status}"
-                        Icon="Stop24"
-                        Visibility="{Binding IsRunning, Converter={StaticResource EqualVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}" />
-                    <Separator />
-                    <ui:MenuItem
-                        x:Name="HomeMenuItem"
-                        Command="{Binding NotifyIconDoubleClickViewCommand}"
-                        CommandParameter="home">
-                        <ui:MenuItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <ui:SymbolIcon Margin="0,0,6,0" Symbol="Home24" />
-                                <ContentPresenter Content="Home" />
-                            </StackPanel>
-                        </ui:MenuItem.Header>
-                    </ui:MenuItem>
-                    <Separator />
-                    <ui:MenuItem
-                        x:Name="LayoutMenuItem"
-                        Command="{Binding NotifyIconDoubleClickViewCommand}"
-                        CommandParameter="layout">
-                        <ui:MenuItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <ui:SymbolIcon Margin="0,0,6,0" Symbol="DataTreemap24" />
-                                <ContentPresenter Content="Layouts" />
-                            </StackPanel>
-                        </ui:MenuItem.Header>
-                    </ui:MenuItem>
-                    <ui:MenuItem
-                        Command="{Binding NotifyIconDoubleClickViewCommand}"
-                        CommandParameter="application"
-                        Header="Apps"
-                        Icon="Apps24" />
-                    <ui:MenuItem
-                        Command="{Binding NotifyIconDoubleClickViewCommand}"
-                        CommandParameter="settings"
-                        Header="Settings"
-                        Icon="Settings24" />
-                    <Separator />
-                    <ui:MenuItem>
-                        <ui:MenuItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <ui:SymbolIcon Margin="0,0,6,0" Symbol="Heart24" />
-                                <ContentPresenter Content="Feedback" />
-                            </StackPanel>
-                        </ui:MenuItem.Header>
-                        <ui:MenuItem
-                            Command="{Binding HandleLinkClick}"
-                            CommandParameter="{x:Static c:Constants.AppFeedbackUrl}"
-                            Header="New ideas or report a bug" />
-                        <ui:MenuItem Command="{Binding RateReviewStoreClick}" Header="Rate and review on Microsoft Store" />
-                    </ui:MenuItem>
-                    <ui:MenuItem
-                        Command="{Binding NotifyIconDoubleClickViewCommand}"
-                        CommandParameter="about"
-                        Header="About"
-                        Icon="Info24" />
-                    <Separator />
-                    <ui:MenuItem
-                        Command="{Binding ExitApplicationCommand}"
-                        Header="Exit"
-                        Icon="Power24" />
-                </ContextMenu>
-            </tray:NotifyIcon.Menu>-->
-        </tray:NotifyIcon>
     </Grid>
 
     <!--

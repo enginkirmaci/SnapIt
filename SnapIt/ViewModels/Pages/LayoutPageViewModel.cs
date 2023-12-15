@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Windows;
 using System.Windows.Forms;
 using Prism.Commands;
 using SnapIt.Application.Contracts;
@@ -66,8 +67,8 @@ namespace SnapIt.ViewModels.Pages
         public LayoutPageViewModel(
             ISnapManager snapManager,
             ISettingService settingService,
-            DesignWindowViewModel designWindowViewModel,
-            IContentDialogService contentDialogService)
+            IContentDialogService contentDialogService,
+            DesignWindowViewModel designWindowViewModel)
         {
             this.snapManager = snapManager;
             this.settingService = settingService;
@@ -98,7 +99,7 @@ namespace SnapIt.ViewModels.Pages
                 }
                 catch
                 {
-                    MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
+                    System.Windows.MessageBox.Show("Layout file seems to be corrupted. Please try again with other layout file.");
                 }
             });
 
@@ -162,8 +163,7 @@ namespace SnapIt.ViewModels.Pages
                     Theme = Theme
                 };
 
-                //Layouts.Insert(0, layout);
-                PopupLayout = layout; // Layouts.FirstOrDefault(i => i.Guid == layout.Guid);
+                PopupLayout = layout;
 
                 var designWindow = new DesignWindow(designWindowViewModel);
                 designWindow.Closed += DesignWindow_Closed;
@@ -182,8 +182,9 @@ namespace SnapIt.ViewModels.Pages
             });
         }
 
-        public override async Task InitializeAsync()
+        public override async Task InitializeAsync(RoutedEventArgs args)
         {
+            await settingService.InitializeAsync();
         }
 
         private void SnapScreens_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -245,7 +246,7 @@ namespace SnapIt.ViewModels.Pages
         {
             if (!Dev.IsActive)
             {
-                snapManager.Release();
+                snapManager.Dispose();
                 _ = snapManager.InitializeAsync();
             }
         }

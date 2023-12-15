@@ -54,7 +54,7 @@
 		<PackageReference Include="Serilog" Version="3.1.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="XamlAnimatedGif" Version="2.2.0" />
-		<PackageReference Include="WPF-UI" Version="3.0.0-preview.12" />
+		<PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
 		<PackageReference Include="WPF-UI.Tray" Version="3.0.0-preview.11" />
 	</ItemGroup>
 	<ItemGroup>

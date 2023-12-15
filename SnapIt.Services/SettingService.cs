@@ -38,13 +38,6 @@ public class SettingService : ISettingService
             Settings = new Settings();
         }
 
-        //Settings.Theme = new SnapAreaTheme(
-        //    Settings.HighlightColor,
-        //    Settings.OverlayColor,
-        //    Settings.BorderColor,
-        //    Settings.BorderThickness,
-        //    Settings.Opacity);
-
         ExcludedApplicationSettings = await fileOperationService.Load<ExcludedApplicationSettings>();
         ExcludedApplicationSettings.Applications = ExcludedApplicationSettings.Applications.Where(i => i != null).ToList();
 
