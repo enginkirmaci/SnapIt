@@ -153,7 +153,7 @@ public partial class App
         var exception = args.ExceptionObject as Exception;
         var terminatingMessage = args.IsTerminating ? " The application is terminating." : string.Empty;
         var exceptionMessage = exception?.Message ?? "An unmanaged exception occured.";
-        var message = string.Concat(exceptionMessage, terminatingMessage);
+        var message = string.Concat(exceptionMessage, terminatingMessage, exception?.StackTrace, exception?.InnerException);
         log.Error(exception, message);
     }
 
