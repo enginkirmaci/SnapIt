@@ -1,7 +1,8 @@
 ﻿using System.Windows;
+using SnapIt.Common.Entities;
 using SnapIt.Common.Extensions;
-using SnapIt.Library.Controls;
-using SnapIt.Library.Entities;
+using SnapIt.Common.Helpers;
+using SnapIt.Controls;
 
 namespace SnapIt.Test;
 
@@ -45,7 +46,7 @@ public partial class Window1 : Window
       }
     ]
   }";
-        var layout = Newtonsoft.Json.JsonConvert.DeserializeObject<Layout>(str);
+        var layout = Json.Deserialize<Layout>(str);
 
         SnapControl.Layout = layout;
 

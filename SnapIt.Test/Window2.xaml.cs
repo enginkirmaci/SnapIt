@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using SnapIt.Common;
-using SnapIt.Library.Entities;
-using SnapIt.Library.Services;
+using SnapIt.Common.Entities;
+using SnapIt.Common.Graphics;
+using SnapIt.Services;
 
 namespace SnapIt.Test;
 
@@ -34,9 +34,7 @@ public partial class Window2 : Window
             Handle = wih.Handle
         };
 
-        double animationDuration = 100;
-        int tickDuration = 5;
-        double frameCount = animationDuration / tickDuration;
+        double frameCount = 100;
 
         var from = new Rectangle(300, 300, 600, 600);
         var to = new Rectangle(450, 450, 1000, 1000);
@@ -54,12 +52,26 @@ public partial class Window2 : Window
                 (int)(from.Right + (double)(i * pRight)),
                 (int)(from.Bottom + (double)(i * pBottom)));
 
-            winApiService.MoveWindow(window, current);
-            DevMode.Log(current);
+            //winApiService.MoveWindow(window, current);
+            //Dev.Log(current);
 
-            await Task.Delay(tickDuration);
+            MoveWindow(current, wih.Handle);
+
+            //await Task.Delay((int)(tickDuration * 2));
         }
 
         winApiService.MoveWindow(window, to);
+    }
+
+    private void MoveWindow(Rectangle rectangle, nint handle)
+    {
+        PInvoke.User32.SetWindowPos(
+            handle,
+            PInvoke.User32.SpecialWindowHandles.HWND_TOP,
+            (int)rectangle.X,
+            (int)rectangle.Y,
+            (int)rectangle.Width,
+            (int)rectangle.Height,
+            PInvoke.User32.SetWindowPosFlags.SWP_ASYNCWINDOWPOS | PInvoke.User32.SetWindowPosFlags.SWP_NOSENDCHANGING);
     }
 }

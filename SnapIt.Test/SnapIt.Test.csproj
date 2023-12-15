@@ -4,8 +4,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<UseWPF>true</UseWPF>
-		<UseWindowsForms>True</UseWindowsForms>
+		<UseWPF>true</UseWPF> 
 		<Product>SnapIt Test</Product>
 		<Copyright>Copyright ©  2019</Copyright>
 		<Company>Engin KIRMACI</Company>
@@ -16,14 +15,29 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="DesignTime\**" />
+	  <EmbeddedResource Remove="DesignTime\**" />
+	  <None Remove="DesignTime\**" />
+	  <Page Remove="DesignTime\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="LicenseUI.xaml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Remove="LicenseUI.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
 		<PackageReference Include="Prism.DryIoc" Version="8.1.97" />
-		<PackageReference Include="WPF-UI" Version="3.0.0-preview.11" />
+		<PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
 		<PackageReference Include="WPF-UI.Tray" Version="3.0.0-preview.11" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\SnapIt.Library\SnapIt.Layouts.csproj" />
+	  <ProjectReference Include="..\SnapIt.Controls\SnapIt.Controls.csproj" />
 	</ItemGroup>
 
 

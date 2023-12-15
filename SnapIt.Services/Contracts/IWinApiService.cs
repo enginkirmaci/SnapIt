@@ -16,7 +16,7 @@ public interface IWinApiService : IInitialize
 
     void MoveWindow(ActiveWindow activeWindow, Rectangle newRect);
 
-    bool MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height);
+    Task MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height);
 
     void SendMessage(ActiveWindow activeWindow);
 

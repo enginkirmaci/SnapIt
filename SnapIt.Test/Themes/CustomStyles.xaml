@@ -1,14 +1,7 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:extension="clr-namespace:SnapIt.Library.Extensions;assembly=SnapIt.Library">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--  Color picker background  -->
     <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{StaticResource ApplicationBackgroundColor}" />
-
-    <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ScrollViewer">
-        <Setter Property="extension:ScrollViewerHelper.FixMouseWheel" Value="True" />
-    </Style>
 
     <!--<Style x:Key="SnapIt.Styles.LayoutListView" TargetType="{x:Type ListViewItem}">
         <Setter Property="Foreground">

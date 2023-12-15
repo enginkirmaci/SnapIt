@@ -89,29 +89,74 @@ public class WinApiService : IWinApiService
         MoveWindow(activeWindow, (int)newRect.X, (int)newRect.Y, (int)newRect.Width, (int)newRect.Height);
     }
 
-    public bool MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height)
+    //public bool MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height)
+    //{
+    //    if (activeWindow == null) return false;
+
+    //    Dev.Log($"{activeWindow.Handle}, {X},{Y}  {width}x{height}");
+
+    //    PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL); //if window maximized, restores to normal so position can be set
+
+    //    var res = PInvoke.User32.SetWindowPos(
+    //        activeWindow.Handle,
+    //        PInvoke.User32.SpecialWindowHandles.HWND_TOP,
+    //        X,
+    //        Y,
+    //        width,
+    //        height,
+    //        PInvoke.User32.SetWindowPosFlags.SWP_SHOWWINDOW | PInvoke.User32.SetWindowPosFlags.SWP_ASYNCWINDOWPOS);
+
+    //    var msg = Marshal.GetLastWin32Error();
+    //    if (msg != 0)
+    //    {
+    //        Dev.Log(msg);
+    //    }
+    //    return res;
+    //}
+    public async Task MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height)
     {
-        if (activeWindow == null) return false;
+        PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL);
 
-        Dev.Log($"{activeWindow.Handle}, {X},{Y}  {width}x{height}");
+        double frameCount = 15;
 
-        PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL); //if window maximized, restores to normal so position can be set
+        var from = activeWindow.Boundry ?? new Rectangle();
+        var to = new Rectangle(X, Y, X + width, Y + height);
 
-        var res = PInvoke.User32.SetWindowPos(
-            activeWindow.Handle,
-            PInvoke.User32.SpecialWindowHandles.HWND_TOP,
-            X,
-            Y,
-            width,
-            height,
-            PInvoke.User32.SetWindowPosFlags.SWP_SHOWWINDOW | PInvoke.User32.SetWindowPosFlags.SWP_ASYNCWINDOWPOS);
+        var pLeft = (to.Left - from.Left) / frameCount;
+        var pTop = (to.Top - from.Top) / frameCount;
+        var pRight = (to.Right - from.Right) / frameCount;
+        var pBottom = (to.Bottom - from.Bottom) / frameCount;
 
-        var msg = Marshal.GetLastWin32Error();
-        if (msg != 0)
+        for (var i = 0; i < frameCount; i++)
         {
-            Dev.Log(msg);
-        }
-        return res;
+            var current = new Rectangle(
+                (int)(from.Left + (double)(i * pLeft)),
+                (int)(from.Top + (double)(i * pTop)),
+                (int)(from.Right + (double)(i * pRight)),
+                (int)(from.Bottom + (double)(i * pBottom)));
+
+            PInvoke.User32.SetWindowPos(
+               activeWindow.Handle,
+               PInvoke.User32.SpecialWindowHandles.HWND_TOP,
+               (int)current.X,
+               (int)current.Y,
+               (int)current.Width,
+               (int)current.Height,
+               PInvoke.User32.SetWindowPosFlags.SWP_ASYNCWINDOWPOS | 
+               PInvoke.User32.SetWindowPosFlags.SWP_NOSENDCHANGING   );
+
+            await Task.Delay( 5 );
+
+         }
+
+        PInvoke.User32.SetWindowPos(
+             activeWindow.Handle,
+             PInvoke.User32.SpecialWindowHandles.HWND_TOP,
+             (int)to.X,
+             (int)to.Y,
+             (int)to.Width,
+             (int)to.Height,
+             PInvoke.User32.SetWindowPosFlags.SWP_ASYNCWINDOWPOS);
     }
 
     public void SendMessage(ActiveWindow activeWindow)
