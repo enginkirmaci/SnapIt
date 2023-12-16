@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:SnapIt.Views.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="Rename Layout"
+    Title="Update Available"
     d:DataContext="{d:DesignInstance local:NewVersionDialog,
                                      IsDesignTimeCreatable=False}"
     d:DesignWidth="750"
@@ -30,16 +30,14 @@
     </i:Interaction.Triggers>
 
     <Grid DataContext="{Binding ViewModel}">
-        <StackPanel>
-            <TextBlock FontWeight="Medium" Text="Update Available" />
-            <TextBlock TextWrapping="Wrap">
-                <Run Text="A newer version of" />
-                <Run Text="{x:Static c:Constants.AppName}" />
-                <Run Text="is available as a download from website." />
-                <LineBreak />
-                <LineBreak />
-                <Run Text="Would you like to update now?" />
-            </TextBlock>
-        </StackPanel>
+
+        <TextBlock TextWrapping="Wrap">
+            <Run Text="A newer version of" />
+            <Run Text="{x:Static c:Constants.AppName}" />
+            <Run Text="is available as a download from website." />
+            <LineBreak />
+            <LineBreak />
+            <Run Text="Would you like to update now?" />
+        </TextBlock>
     </Grid>
 </ui:ContentDialog>

@@ -279,6 +279,11 @@ public class MainWindowViewModel : ViewModelBase
 
                     if (latestVersion != null && System.Windows.Application.ResourceAssembly.GetName().Version.ToString() != latestVersion.Version)
                     {
+                        if (!mainWindow.IsVisible)
+                        {
+                            mainWindow.Show();
+                        }
+
                         var newVersionDialog = new NewVersionDialog(contentDialogService.GetContentPresenter());
 
                         var newVersionResult = await newVersionDialog.ShowAsync();
@@ -290,11 +295,6 @@ public class MainWindowViewModel : ViewModelBase
                                 FileName = uriToLaunch,
                                 UseShellExecute = true
                             });
-                        }
-
-                        if (!mainWindow.IsVisible)
-                        {
-                            mainWindow.Show();
                         }
                     }
                 }
