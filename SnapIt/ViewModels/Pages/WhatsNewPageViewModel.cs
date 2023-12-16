@@ -10,6 +10,18 @@ public class WhatsNewPageViewModel : ViewModelBase
     [
         new ChangeLogItem()
         {
+            Header = "v5.0.0.0",
+            Lines =
+                [
+                    "Entire codebase rewritten for better functionality and efficiency.",
+                    "Made significant improvements to the quality of the code.",
+                    "Resolved DPI and screen display problems.",
+                    "Fixed several performance and user experience bugs.",
+                    "Some functionalities have been removed (Apps and notify icon window)."
+                ]
+        },
+        new ChangeLogItem()
+        {
             Header = "v4.3.11.0",
             Lines =
             [

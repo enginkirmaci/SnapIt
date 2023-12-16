@@ -1,10 +1,12 @@
-﻿using Prism.Mvvm;
+﻿using System.Windows;
+using Prism.Mvvm;
 using SnapIt.Common.Entities;
+using SnapIt.Common.Mvvm;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.ViewModels.Dialogs;
 
-public class ExcludeApplicationDialogViewModel : BindableBase
+public class ExcludeApplicationDialogViewModel : ViewModelBase
 {
     private readonly IWinApiService winApiService;
 
@@ -20,11 +22,9 @@ public class ExcludeApplicationDialogViewModel : BindableBase
         IWinApiService winApiService)
     {
         this.winApiService = winApiService;
-
-        _ = InitializeAsync();
     }
 
-    public async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
         selectedExcludedApplication = new();
 

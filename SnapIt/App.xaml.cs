@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using DryIoc;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -8,6 +9,7 @@ using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Applications;
 using SnapIt.Common.Contracts;
+using SnapIt.Common.Entities;
 using SnapIt.Common.Extensions;
 using SnapIt.Services;
 using SnapIt.Services.Contracts;
@@ -72,7 +74,8 @@ public partial class App
     {
         Log.Logger = new LoggerConfiguration()
                    .MinimumLevel.Debug()
-                   .WriteTo.File("logs\\log.txt", rollingInterval: RollingInterval.Day)
+                   .WriteTo.File(Path.Combine(Constants.RootFolder, "logs", "log.txt"),
+                        rollingInterval: RollingInterval.Day)
                    .CreateLogger();
         RegisterGlobalExceptionHandling(Log.Logger);
 

@@ -101,59 +101,62 @@ public class MouseService : IMouseService
 
     private void MouseMoveEvent(object sender, MouseEventArgs e)
     {
-        var p = WpfScreenHelper.MouseHelper.MousePosition;
-
-        if (isListening && HoldingKeyResult() && IsDelayDone(p))
+        if (isListening)
         {
-            if (!isWindowDetected)
+            var p = WpfScreenHelper.MouseHelper.MousePosition;
+
+            if (HoldingKeyResult() && IsDelayDone(p))
             {
-                holdKeyUsed = true;
+                if (!isWindowDetected)
+                {
+                    holdKeyUsed = true;
 
-                activeWindow = winApiService.GetActiveWindow();
-                activeWindow.Dpi = DpiHelper.GetDpiFromPoint((int)p.X, (int)p.Y);
+                    activeWindow = winApiService.GetActiveWindow();
+                    activeWindow.Dpi = DpiHelper.GetDpiFromPoint((int)p.X, (int)p.Y);
 
-                if (activeWindow?.Title != null && windowsService.IsExcludedApplication(activeWindow.Title, false))
-                {
-                    isListening = false;
-                }
-                else if (settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
-                {
-                    isListening = false;
-                }
-                else if (settingService.Settings.DisableForModal && !winApiService.IsAllowedWindowStyle(activeWindow))
-                {
-                    isListening = false;
-                }
-                else if (settingService.Settings.DragByTitle)
-                {
-                    var titleBarHeight = SystemInformation.CaptionHeight;
-                    var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
-
-                    if (activeWindow.Boundry.Top + titleBarHeight + 2 + FixedFrameBorderSize * 2 >= p.Y)
-                    {
-                        isWindowDetected = true;
-                    }
-                    else
+                    if (activeWindow?.Title != null && windowsService.IsExcludedApplication(activeWindow.Title, false))
                     {
                         isListening = false;
                     }
+                    else if (settingService.Settings.DisableForFullscreen && winApiService.IsFullscreen(activeWindow))
+                    {
+                        isListening = false;
+                    }
+                    else if (settingService.Settings.DisableForModal && !winApiService.IsAllowedWindowStyle(activeWindow))
+                    {
+                        isListening = false;
+                    }
+                    else if (settingService.Settings.DragByTitle)
+                    {
+                        var titleBarHeight = SystemInformation.CaptionHeight;
+                        var FixedFrameBorderSize = SystemInformation.FixedFrameBorderSize.Height;
+
+                        if (activeWindow.Boundry.Top + titleBarHeight + 2 + FixedFrameBorderSize * 2 >= p.Y)
+                        {
+                            isWindowDetected = true;
+                        }
+                        else
+                        {
+                            isListening = false;
+                        }
+                    }
+                    else
+                    {
+                        isWindowDetected = true;
+                    }
+                }
+                else if (ShowWindowsIfNecessary != null && ShowWindowsIfNecessary.Invoke())
+                {
+                    //todo maybe ShowWindowsIfNecessary?.Invoke() can work before SelectElementWithPoint
                 }
                 else
                 {
-                    isWindowDetected = true;
-                }
-            }
-            else if (ShowWindowsIfNecessary != null && ShowWindowsIfNecessary.Invoke())
-            {
-                //todo maybe ShowWindowsIfNecessary?.Invoke() can work before SelectElementWithPoint
-            }
-            else
-            {
-                snapAreaInfo = SelectElementWithPoint?.Invoke((int)p.X, (int)p.Y);
+                    snapAreaInfo = SelectElementWithPoint?.Invoke((int)p.X, (int)p.Y);
 
-                if (snapAreaInfo?.Screen != null)
-                {
-                    settingService.LatestActiveScreen = snapAreaInfo.Screen;
+                    if (snapAreaInfo?.Screen != null)
+                    {
+                        settingService.LatestActiveScreen = snapAreaInfo.Screen;
+                    }
                 }
             }
         }

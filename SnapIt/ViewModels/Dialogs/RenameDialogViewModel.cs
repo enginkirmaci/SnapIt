@@ -1,19 +1,15 @@
-﻿using Prism.Mvvm;
+﻿using System.Windows;
+using SnapIt.Common.Mvvm;
 
 namespace SnapIt.ViewModels.Dialogs;
 
-public class RenameDialogViewModel : BindableBase
+public class RenameDialogViewModel : ViewModelBase
 {
     private string layoutName;
 
     public string LayoutName { get => layoutName; set => SetProperty(ref layoutName, value); }
 
-    public RenameDialogViewModel()
-    {
-        _ = InitializeAsync();
-    }
-
-    public async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
     }
 }

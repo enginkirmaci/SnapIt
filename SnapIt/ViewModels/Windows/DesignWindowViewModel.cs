@@ -7,105 +7,104 @@ using SnapIt.Common.Mvvm;
 using SnapIt.Services.Contracts;
 using SnapIt.Views.Windows;
 
-namespace SnapIt.ViewModels.Windows
+namespace SnapIt.ViewModels.Windows;
+
+public class DesignWindowViewModel : ViewModelBase
 {
-    public class DesignWindowViewModel : ViewModelBase
+    private readonly IWinApiService winApiService;
+    private readonly ISnapManager snapManager;
+
+    //private bool isOverlayVisible ;
+    private Layout layout;
+
+    private SnapAreaTheme theme;
+
+    public bool IsOverlayVisible
+    { get { return Window.SnapControl.IsOverlayVisible; } set { Window.SnapControl.IsOverlayVisible = value; } }
+
+    //public int AreaPadding
+    //{ get { return Window != null ? Window.SnapControl.AreaPadding : 0; } set { Window.SnapControl.AreaPadding = value; } }
+
+    public Layout Layout
+    { get => layout; set { SetProperty(ref layout, value); } }
+
+    public SnapAreaTheme Theme
+    { get => theme; set { SetProperty(ref theme, value); } }
+
+    public DesignWindow Window { get; set; }
+    public SnapScreen SnapScreen { get; set; }
+
+    public DelegateCommand SaveLayoutCommand { get; }
+    public DelegateCommand CloseLayoutCommand { get; }
+    public DelegateCommand AddOverlayLayoutCommand { get; }
+    public DelegateCommand ClearLayoutCommand { get; }
+
+    public DesignWindowViewModel(
+        IWinApiService winApiService,
+        ISnapManager snapManager)
     {
-        private readonly IWinApiService winApiService;
-        private readonly ISnapManager snapManager;
+        this.winApiService = winApiService;
+        this.snapManager = snapManager;
 
-        //private bool isOverlayVisible ;
-        private Layout layout;
+        Theme = new SnapAreaTheme();
+        Theme.ThemeChanged += Theme_ThemeChanged;
 
-        private SnapAreaTheme theme;
+        SaveLayoutCommand = new DelegateCommand(SaveLayoutCommandExecute);
+        CloseLayoutCommand = new DelegateCommand(CloseLayoutCommandExecute);
+        AddOverlayLayoutCommand = new DelegateCommand(AddOverlayLayoutCommandExecute);
+        ClearLayoutCommand = new DelegateCommand(ClearLayoutCommandExecute);
+    }
 
-        public bool IsOverlayVisible
-        { get { return Window.SnapControl.IsOverlayVisible; } set { Window.SnapControl.IsOverlayVisible = value; } }
-
-        //public int AreaPadding
-        //{ get { return Window != null ? Window.SnapControl.AreaPadding : 0; } set { Window.SnapControl.AreaPadding = value; } }
-
-        public Layout Layout
-        { get => layout; set { SetProperty(ref layout, value); } }
-
-        public SnapAreaTheme Theme
-        { get => theme; set { SetProperty(ref theme, value); } }
-
-        public DesignWindow Window { get; set; }
-        public SnapScreen SnapScreen { get; set; }
-
-        public DelegateCommand SaveLayoutCommand { get; }
-        public DelegateCommand CloseLayoutCommand { get; }
-        public DelegateCommand AddOverlayLayoutCommand { get; }
-        public DelegateCommand ClearLayoutCommand { get; }
-
-        public DesignWindowViewModel(
-            IWinApiService winApiService,
-            ISnapManager snapManager)
+    public override async Task InitializeAsync(RoutedEventArgs args)
+    {
+        var wih = new WindowInteropHelper(Window);
+        var activeWindow = new ActiveWindow
         {
-            this.winApiService = winApiService;
-            this.snapManager = snapManager;
+            Handle = wih.Handle
+        };
 
-            Theme = new SnapAreaTheme();
-            Theme.ThemeChanged += Theme_ThemeChanged;
+        winApiService.MoveWindow(activeWindow,
+                             (int)SnapScreen.WorkingArea.Left,
+                             (int)SnapScreen.WorkingArea.Top,
+                             (int)SnapScreen.WorkingArea.Width,
+                             (int)SnapScreen.WorkingArea.Height);
 
-            SaveLayoutCommand = new DelegateCommand(SaveLayoutCommandExecute);
-            CloseLayoutCommand = new DelegateCommand(CloseLayoutCommandExecute);
-            AddOverlayLayoutCommand = new DelegateCommand(AddOverlayLayoutCommandExecute);
-            ClearLayoutCommand = new DelegateCommand(ClearLayoutCommandExecute);
-        }
+        snapManager.Dispose();
 
-        public override async Task InitializeAsync(RoutedEventArgs args)
-        {
-            var wih = new WindowInteropHelper(Window);
-            var activeWindow = new ActiveWindow
-            {
-                Handle = wih.Handle
-            };
+        Window.SnapControl.ResetBorderTool();
+    }
 
-            winApiService.MoveWindow(activeWindow,
-                                 (int)SnapScreen.WorkingArea.Left,
-                                 (int)SnapScreen.WorkingArea.Top,
-                                 (int)SnapScreen.WorkingArea.Width,
-                                 (int)SnapScreen.WorkingArea.Height);
+    private void AddOverlayLayoutCommandExecute()
+    {
+        Window.SnapControl.AddOverlay();
+    }
 
-            snapManager.Dispose();
+    private void ClearLayoutCommandExecute()
+    {
+        Window.SnapControl.ClearLayout();
+    }
 
-            Window.SnapControl.ResetBorderTool();
-        }
+    private void SaveLayoutCommandExecute()
+    {
+        Window.SnapControl.Prepare(LayoutStatus.Saved);
 
-        private void AddOverlayLayoutCommandExecute()
-        {
-            Window.SnapControl.AddOverlay();
-        }
+        _ = snapManager.InitializeAsync();
 
-        private void ClearLayoutCommandExecute()
-        {
-            Window.SnapControl.ClearLayout();
-        }
+        Window.Close();
+    }
 
-        private void SaveLayoutCommandExecute()
-        {
-            Window.SnapControl.Prepare(LayoutStatus.Saved);
+    private void CloseLayoutCommandExecute()
+    {
+        Window.SnapControl.Prepare(LayoutStatus.Ignored);
 
-            _ = snapManager.InitializeAsync();
+        _ = snapManager.InitializeAsync();
 
-            Window.Close();
-        }
+        Window.Close();
+    }
 
-        private void CloseLayoutCommandExecute()
-        {
-            Window.SnapControl.Prepare(LayoutStatus.Ignored);
-
-            _ = snapManager.InitializeAsync();
-
-            Window.Close();
-        }
-
-        private void Theme_ThemeChanged()
-        {
-            Theme = Theme.Copy();
-            Theme.ThemeChanged += Theme_ThemeChanged;
-        }
+    private void Theme_ThemeChanged()
+    {
+        Theme = Theme.Copy();
+        Theme.ThemeChanged += Theme_ThemeChanged;
     }
 }

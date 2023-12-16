@@ -120,35 +120,6 @@
     </Grid>
 
     <!--
-
-        <wpfui:Dialog
-            Grid.RowSpan="2"
-            Panel.ZIndex="9"
-            ButtonLeftName="Buy Full Version!"
-            ButtonRightName="{Binding LicenseMessageCloseButtonText}"
-            DialogHeight="170"
-            IsShown="{Binding IsTrialMessageOpen, Mode=TwoWay}"
-            Visibility="{Binding IsTrialMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="ButtonLeftClick">
-                    <i:InvokeCommandAction Command="{Binding TrialMessageClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="ButtonRightClick">
-                    <i:InvokeCommandAction Command="{Binding TrialMessageClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <StackPanel>
-                <TextBlock FontWeight="Medium">
-                    <Run Text="{x:Static c:Constants.AppName}" />
-                    <Run Text="Trial" />
-                </TextBlock>
-                <TextBlock>
-                    <Run Text="You are using trial version of" />
-                    <Run Text="{x:Static c:Constants.AppName}" />
-                </TextBlock>
-            </StackPanel>
-        </wpfui:Dialog>
-
         <wpfui:Dialog
             Grid.RowSpan="2"
             Panel.ZIndex="9"
@@ -177,60 +148,6 @@
                     Margin="0,2,0,0"
                     Foreground="{StaticResource PaletteRedBrush}"
                     Text="{Binding LicenseMessageErrorText}" />
-            </StackPanel>
-        </wpfui:Dialog>
-
-        <wpfui:Dialog
-            Grid.RowSpan="2"
-            Panel.ZIndex="9"
-            ButtonLeftName="Update Now"
-            ButtonRightName="Later"
-            DialogHeight="230"
-            IsShown="{Binding NewVersionMessageOpen, Mode=TwoWay}"
-            Visibility="{Binding NewVersionMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="ButtonLeftClick">
-                    <i:InvokeCommandAction Command="{Binding NewVersionMessageClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="ButtonRightClick">
-                    <i:InvokeCommandAction Command="{Binding NewVersionMessageClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <StackPanel>
-                <TextBlock FontWeight="Medium" Text="Update Available" />
-                <TextBlock TextWrapping="Wrap">
-                    <Run Text="A newer version of" />
-                    <Run Text="{x:Static c:Constants.AppName}" />
-                    <Run Text="is available as a download from website." />
-                    <LineBreak />
-                    <LineBreak />
-                    <Run Text="Would you like to update now?" />
-                </TextBlock>
-            </StackPanel>
-        </wpfui:Dialog>
-
-        <wpfui:Dialog
-            Grid.RowSpan="2"
-            Panel.ZIndex="9"
-            ButtonLeftName="Open Store"
-            ButtonRightName="{Binding LicenseMessageCloseButtonText}"
-            DialogHeight="216"
-            IsShown="{Binding IsTryStoreMessageOpen, Mode=TwoWay}"
-            Visibility="{Binding IsTryStoreMessageOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="ButtonLeftClick">
-                    <i:InvokeCommandAction Command="{Binding TryStoreMessageClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="ButtonRightClick">
-                    <i:InvokeCommandAction Command="{Binding TryStoreMessageClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <StackPanel>
-                <TextBlock FontWeight="Medium" Text="Purchase failed!" />
-                <TextBlock TextWrapping="Wrap">
-                    <Run Text="{x:Static c:Constants.AppName}" />
-                    <Run Text="was not purchased. Please try to purchase from Microsoft Store." />
-                </TextBlock>
             </StackPanel>
         </wpfui:Dialog>
 

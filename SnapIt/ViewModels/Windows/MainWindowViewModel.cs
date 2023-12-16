@@ -10,6 +10,7 @@ using SnapIt.Common.Helpers;
 using SnapIt.Common.Mvvm;
 using SnapIt.Services;
 using SnapIt.Services.Contracts;
+using SnapIt.Views.Dialogs;
 using SnapIt.Views.Pages;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
@@ -25,37 +26,23 @@ public class MainWindowViewModel : ViewModelBase
     private readonly IStoreLicenseService storeLicenseService;
     private readonly IThemeService themeService;
     private readonly INotifyIconService notifyIconService;
-    //private readonly IStandaloneLicenseService standaloneLicenseService;
+    private readonly IContentDialogService contentDialogService;
 
     private ObservableCollection<object> menuItems;
     private bool isStandalone;
     private bool isTrial;
     private bool isTrialEnded;
-    private bool isTrialMessageOpen;
-    private bool isLicenseMessageOpen;
-    private string licenseMessageCloseButtonText;
-    private string licenseMessageLicenseText;
-    private string licenseMessageErrorText;
-    private bool isLicenseSuccess;
-    private AppVersion? latestVersion;
-    private bool newVersionMessageOpen;
-    private bool isTryStoreMessageOpen;
     private bool isRunning;
     private string status;
-    private string licenseText;
     private Window mainWindow;
 
     public ObservableCollection<object> MenuItems { get => menuItems; set => SetProperty(ref menuItems, value); }
     public bool IsTrial { get => isTrial; set => SetProperty(ref isTrial, value); }
     public bool IsTrialEnded { get => isTrialEnded; set => SetProperty(ref isTrialEnded, value); }
-    public bool IsTrialMessageOpen { get => isTrialMessageOpen; set => SetProperty(ref isTrialMessageOpen, value); }
-    public bool IsLicenseMessageOpen { get => isLicenseMessageOpen; set => SetProperty(ref isLicenseMessageOpen, value); }
-    public string LicenseMessageCloseButtonText { get => licenseMessageCloseButtonText; set => SetProperty(ref licenseMessageCloseButtonText, value); }
-    public bool NewVersionMessageOpen { get => newVersionMessageOpen; set => SetProperty(ref newVersionMessageOpen, value); }
-    public bool IsTryStoreMessageOpen { get => isTryStoreMessageOpen; set => SetProperty(ref isTryStoreMessageOpen, value); }
     public bool IsRunning { get => isRunning; set => SetProperty(ref isRunning, value); }
     public string Status { get => status; set => SetProperty(ref status, value); }
 
+    //public bool IsLicenseMessageOpen { get => isLicenseMessageOpen; set => SetProperty(ref isLicenseMessageOpen, value); }
     //public string LicenseText { get => licenseText; set => SetProperty(ref licenseText, value); }
     //public string LicenseMessageLicenseText { get => licenseMessageLicenseText; set => SetProperty(ref licenseMessageLicenseText, value); }
     //public string LicenseMessageErrorText { get => licenseMessageErrorText; set => SetProperty(ref licenseMessageErrorText, value); }
@@ -64,27 +51,24 @@ public class MainWindowViewModel : ViewModelBase
     public DelegateCommand<CancelEventArgs> ClosingWindowCommand { get; private set; }
     public DelegateCommand StartStopCommand { get; private set; }
     public DelegateCommand TrialVersionCommand { get; private set; }
-    public DelegateCommand<object> TrialMessageClosingCommand { get; private set; }
-    public DelegateCommand<object> LicenseMessageClosingCommand { get; private set; }
-    public DelegateCommand<object> NewVersionMessageClosingCommand { get; private set; }
-    public DelegateCommand<object> TryStoreMessageClosingCommand { get; private set; }
 
     public MainWindowViewModel(
         INavigationService navigationService,
         ISettingService settingService,
         ISnapManager snapManager,
-        //IStandaloneLicenseService standaloneLicenseService,
         IStoreLicenseService storeLicenseService,
         IThemeService themeService,
-        INotifyIconService notifyIconService)
+        INotifyIconService notifyIconService,
+        IContentDialogService contentDialogService)
     {
         this.navigationService = navigationService;
         this.settingService = settingService;
         this.snapManager = snapManager;
-        //this.standaloneLicenseService = standaloneLicenseService;
         this.storeLicenseService = storeLicenseService;
         this.themeService = themeService;
         this.notifyIconService = notifyIconService;
+        this.contentDialogService = contentDialogService;
+
         MenuItems =
         [
             new NavigationViewItem("Home", SymbolRegular.Home24, typeof(DashboardPage)),
@@ -129,57 +113,6 @@ public class MainWindowViewModel : ViewModelBase
         snapManager.LayoutChanged += SnapService_LayoutChanged;
         storeLicenseService.OfflineLicensesChanged += StoreLicenseService_OfflineLicensesChanged;
 
-        //LoadedCommand = new DelegateCommand<RoutedEventArgs>(async (args) =>
-        //{
-        //});
-
-        TrialVersionCommand = new DelegateCommand(() =>
-        {
-            IsTrialMessageOpen = true;
-        });
-
-        TrialMessageClosingCommand = new DelegateCommand<object>((isConfirm) =>
-        {
-            if ((bool)isConfirm)
-            {
-                //if (isStandalone)
-                //{
-                //    PurchaseFullLicenseStandalone();
-                //}
-                //else
-                {
-                    //if (SnapIt.Properties.Settings.Default.RunAsAdmin)
-                    //{
-                    //    Wpf.Ui.Controls.MessageBox messageBox = new Wpf.Ui.Controls.MessageBox();
-                    //    messageBox.ButtonRightName = LicenseMessageCloseButtonText;
-                    //    messageBox.ButtonRightClick += MessageBox_ButtonRightClick;
-                    //    messageBox.ButtonLeftClick += MessageBox_ButtonLeftClick;
-
-                    //    messageBox.Show(
-                    //        "Run as admin limitation!",
-                    //        @"Due to limitations of Microsoft Store, \n
-                    //            store purchases couldn't make while application is running as administrator.\n\n
-                    //            Do you want start SnapIt without admin priviligies?");
-                    //}
-
-                    PurchaseFullLicense();
-                }
-
-                IsTrialMessageOpen = false;
-            }
-            else
-            {
-                if (IsTrialEnded)
-                {
-                    System.Windows.Application.Current.Shutdown();
-                }
-                else
-                {
-                    IsTrialMessageOpen = false;
-                }
-            }
-        });
-
         //LicenseMessageClosingCommand = new DelegateCommand<object>(async (isConfirm) =>
         //{
         //    if ((bool)isConfirm)
@@ -209,41 +142,7 @@ public class MainWindowViewModel : ViewModelBase
         //    }
         //});
 
-        NewVersionMessageClosingCommand = new DelegateCommand<object>((isConfirm) =>
-        {
-            if ((bool)isConfirm && latestVersion != null)
-            {
-                var uriToLaunch = string.Format("https://" + Constants.AppNewVersionUrl, latestVersion.Version);
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = uriToLaunch,
-                    UseShellExecute = true
-                });
-            }
-
-            NewVersionMessageOpen = false;
-        });
-
-        TryStoreMessageClosingCommand = new DelegateCommand<object>(async (isConfirm) =>
-        {
-            if ((bool)isConfirm)
-            {
-                await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://pdp/?ProductId={Constants.AppStoreId}"));
-            }
-            else
-            {
-                if (IsTrialEnded)
-                {
-                    System.Windows.Application.Current.Shutdown();
-                }
-                else
-                {
-                    IsTryStoreMessageOpen = false;
-                }
-            }
-
-            NewVersionMessageOpen = false;
-        });
+        TrialVersionCommand = new DelegateCommand(async () => await OpenTrialMessageDialog());
 
         ClosingWindowCommand = new DelegateCommand<CancelEventArgs>((args) =>
         {
@@ -292,10 +191,7 @@ public class MainWindowViewModel : ViewModelBase
 
         if (isStandalone)
         {
-            if (!Dev.SkipLicense)
-            {
-                CheckForNewVersion();
-            }
+            CheckForNewVersion();
         }
         else
         {
@@ -305,7 +201,7 @@ public class MainWindowViewModel : ViewModelBase
             }
         }
 
-        CheckIfTrialAsync();
+        _ = CheckIfTrialAsync();
     }
 
     private void ChangeTheme()
@@ -374,11 +270,22 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     response = await result.Content.ReadAsStringAsync();
 
-                    latestVersion = Json.Deserialize<AppVersion>(response);
+                    var latestVersion = Json.Deserialize<AppVersion>(response);
 
-                    if (latestVersion != null && System.Windows.Forms.Application.ProductVersion != latestVersion.Version)
+                    if (latestVersion != null && System.Windows.Application.ResourceAssembly.GetName().Version.ToString() != latestVersion.Version)
                     {
-                        NewVersionMessageOpen = true;
+                        var newVersionDialog = new NewVersionDialog(contentDialogService.GetContentPresenter());
+
+                        var newVersionResult = await newVersionDialog.ShowAsync();
+                        if (newVersionResult == ContentDialogResult.Primary)
+                        {
+                            var uriToLaunch = string.Format("https://" + Constants.AppNewVersionUrl, latestVersion.Version);
+                            Process.Start(new ProcessStartInfo
+                            {
+                                FileName = uriToLaunch,
+                                UseShellExecute = true
+                            });
+                        }
 
                         if (!mainWindow.IsVisible)
                         {
@@ -387,9 +294,24 @@ public class MainWindowViewModel : ViewModelBase
                     }
                 }
             }
-            catch (Exception)
-            {
-            }
+            catch { }
+        }
+    }
+
+    public async Task OpenTrialMessageDialog()
+    {
+        var trialMessageDialog = new TrialMessageDialog(contentDialogService.GetContentPresenter());
+        trialMessageDialog.ViewModel.IsTrialEnded = IsTrialEnded;
+
+        var result = await trialMessageDialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            PurchaseFullLicense();
+        }
+        else if (IsTrialEnded)
+        {
+            System.Windows.Application.Current.Shutdown();
         }
     }
 
@@ -402,6 +324,10 @@ public class MainWindowViewModel : ViewModelBase
         if (Dev.TestInTrial)
         {
             licenseStatus = LicenseStatus.InTrial;
+        }
+        else if (Dev.TestTrialEnded)
+        {
+            licenseStatus = LicenseStatus.TrialEnded;
         }
 
         switch (licenseStatus)
@@ -421,7 +347,7 @@ public class MainWindowViewModel : ViewModelBase
                     mainWindow.Show();
                 }
 
-                IsTrialMessageOpen = true;
+                await OpenTrialMessageDialog();
 
                 break;
 
@@ -435,27 +361,11 @@ public class MainWindowViewModel : ViewModelBase
                 //}
                 break;
         }
-
-        LicenseMessageCloseButtonText = IsTrialEnded ? "Exit Application" : "Close";
-    }
-
-    private void PurchaseFullLicenseStandalone()
-    {
-        IsLicenseMessageOpen = true;
-
-        var uriToLaunch = $"http://{Constants.AppPurchaseUrl}";
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = uriToLaunch,
-            UseShellExecute = true
-        });
-
-        LicenseMessageCloseButtonText = IsTrialEnded ? "Exit Application" : "Close";
     }
 
     private void StoreLicenseService_OfflineLicensesChanged()
     {
-        CheckIfTrialAsync();
+        _ = CheckIfTrialAsync();
     }
 
     private async void PurchaseFullLicense()
@@ -473,8 +383,42 @@ public class MainWindowViewModel : ViewModelBase
                 break;
 
             case PurchaseStatus.Error:
-                IsTryStoreMessageOpen = true;
+                await OpenStoreWebsiteDialog();
                 break;
         }
     }
+
+    public async Task OpenStoreWebsiteDialog()
+    {
+        var storeWebsiteDialog = new StoreWebsiteDialog(contentDialogService.GetContentPresenter());
+
+        storeWebsiteDialog.ViewModel.IsTrialEnded = IsTrialEnded;
+        var result = await storeWebsiteDialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://pdp/?ProductId={Constants.AppStoreId}"));
+        }
+        else
+        {
+            if (IsTrialEnded)
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
+        }
+    }
+
+    //private void PurchaseFullLicenseStandalone()
+    //{
+    //    IsLicenseMessageOpen = true;
+
+    //    var uriToLaunch = $"http://{Constants.AppPurchaseUrl}";
+    //    Process.Start(new ProcessStartInfo
+    //    {
+    //        FileName = uriToLaunch,
+    //        UseShellExecute = true
+    //    });
+
+    //    LicenseMessageCloseButtonText = IsTrialEnded ? "Exit Application" : "Close";
+    //}
 }

@@ -1,9 +1,11 @@
-﻿using Prism.Mvvm;
+﻿using System.Windows;
+using Prism.Mvvm;
+using SnapIt.Common.Mvvm;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.ViewModels.Dialogs;
 
-public class RunningApplicationsDialogViewModel : BindableBase
+public class RunningApplicationsDialogViewModel : ViewModelBase
 {
     private readonly IWinApiService winApiService;
     private string selectedApplication;
@@ -15,11 +17,9 @@ public class RunningApplicationsDialogViewModel : BindableBase
     public RunningApplicationsDialogViewModel(IWinApiService winApiService)
     {
         this.winApiService = winApiService;
-
-        _ = InitializeAsync();
     }
 
-    public async Task InitializeAsync()
+    public override async Task InitializeAsync(RoutedEventArgs args)
     {
         RunningApplications = new ObservableCollection<string>(winApiService.GetOpenWindowsNames());
     }

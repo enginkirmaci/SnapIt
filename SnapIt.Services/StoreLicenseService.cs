@@ -66,27 +66,32 @@ public class StoreLicenseService : IStoreLicenseService
         if (Dev.SkipLicense)
             return LicenseStatus.InTrial;
 
-        var license = await storeContext.GetAppLicenseAsync();
-        if (license.IsActive)
+        if (storeContext != null)
         {
-            if (license.IsTrial)
+            var license = await storeContext.GetAppLicenseAsync();
+            if (license.IsActive)
             {
-                licenseStatus = LicenseStatus.InTrial;
-
-                int remainingTrialTime = (license.ExpirationDate - DateTime.Now).Days;
-
-                if (remainingTrialTime <= 0)
+                if (license.IsTrial)
                 {
-                    licenseStatus = LicenseStatus.TrialEnded;
+                    licenseStatus = LicenseStatus.InTrial;
+
+                    int remainingTrialTime = (license.ExpirationDate - DateTime.Now).Days;
+
+                    if (remainingTrialTime <= 0)
+                    {
+                        licenseStatus = LicenseStatus.TrialEnded;
+                    }
+                }
+                else
+                {
+                    licenseStatus = LicenseStatus.Licensed;
                 }
             }
-            else
-            {
-                licenseStatus = LicenseStatus.Licensed;
-            }
+
+            return licenseStatus;
         }
 
-        return licenseStatus;
+        return LicenseStatus.Licensed;
     }
 
     [ComImport]

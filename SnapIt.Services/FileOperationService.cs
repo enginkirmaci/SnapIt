@@ -9,14 +9,9 @@ namespace SnapIt.Services;
 public class FileOperationService : IFileOperationService
 {
     private const string LayoutFolder = "Layoutsv20";
-    private readonly string rootFolder;
+    private readonly string rootFolder = Constants.RootFolder;
 
     public bool IsInitialized { get; private set; }
-
-    public FileOperationService()
-    {
-        rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), System.Windows.Forms.Application.ProductName);
-    }
 
     public async Task InitializeAsync()
     {

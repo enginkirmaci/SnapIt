@@ -53,8 +53,6 @@ public class SnapManager : ISnapManager
 
     public async Task InitializeAsync()
     {
-        Dev.Log();
-
         if (IsInitialized)
         {
             return;
