@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Product>SnapIt</Product>
+    <Description>SnapIt is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens.</Description>
+    <Version>5.0.0.0</Version>
+    <Copyright>Copyright ©  2019</Copyright>
+    <Company>Engin KIRMACI</Company>
+    <FileVersion>
+    </FileVersion>
+    <AssemblyVersion>
+    </AssemblyVersion>
+    <Configurations>Debug;Release;Standalone</Configurations>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>AnyCPU</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="ViewModels\DesignTime\**" />
+    <EmbeddedResource Remove="ViewModels\DesignTime\**" />
+    <None Remove="ViewModels\DesignTime\**" />
+    <Page Remove="ViewModels\DesignTime\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="ViewModels\ApplicationViewModel.cs" />
+    <Compile Remove="ViewModels\PopupWindowViewModel.cs" />
+    <Compile Remove="Views\ApplicationView.xaml.cs" />
+    <Compile Remove="Views\PopupWindow.xaml.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Assets\notifyicon.ico" />
+    <None Remove="Assets\snapit.ico" />
+    <None Remove="Assets\snapit.png" />
+    <None Remove="Assets\snapit.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Views\ApplicationView.xaml" />
+    <Page Remove="Views\PopupWindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\app.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dirkster.ColorPickerLib" Version="1.6.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="XamlAnimatedGif" Version="2.2.0" />
+    <PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
+    <PackageReference Include="WPF-UI.Tray" Version="3.0.0-preview.11" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SnapIt.App\SnapIt.Application.csproj" />
+    <ProjectReference Include="..\SnapIt.Common\SnapIt.Common.csproj" />
+    <ProjectReference Include="..\SnapIt.Controls\SnapIt.Controls.csproj" />
+    <ProjectReference Include="..\SnapIt.Services\SnapIt.Services.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Segoe Fluent Icons.ttf" />
+    <Resource Include="Assets\Win-GIF.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,37 @@
+﻿<prism:PrismApplication
+    x:Class="SnapIt.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:SnapIt.Common.Converters;assembly=SnapIt.Common"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Exit="OnExit"
+    Startup="OnStartup">
+    <prism:PrismApplication.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+
+                <ResourceDictionary Source="pack://application:,,,/Themes/CustomStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapIt.Controls.UI.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converter:BooleanToStringConverter x:Key="BooleanToStringConverter" />
+            <converter:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
+            <converter:UriConverter x:Key="UriConverter" />
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converter:EqualVisibilityConverter x:Key="EqualVisibilityConverter" />
+            <converter:InputDeviceConverter x:Key="InputDeviceConverter" />
+            <converter:DoubleMultiplierConverter x:Key="DoubleMultiplierConverter" />
+            <converter:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+
+            <sys:Boolean x:Key="FalseValue">False</sys:Boolean>
+            <sys:Boolean x:Key="TrueValue">True</sys:Boolean>
+
+            <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Assets/#Segoe Fluent Icons</FontFamily>
+        </ResourceDictionary>
+    </prism:PrismApplication.Resources>
+</prism:PrismApplication>

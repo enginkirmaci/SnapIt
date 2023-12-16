@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<Configurations>Debug;Release;Standalone</Configurations>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\SnapIt.Common\SnapIt.Common.csproj" />
+	  <ProjectReference Include="..\SnapIt.Services\SnapIt.Services.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Styles\SnapArea.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="Styles\SnapAreaEditor.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="Styles\SnapBorderTool.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="Styles\SnapFullOverlay.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="Styles\SnapIt.Controls.UI.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="Styles\SnapLoadingWindow.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="Styles\SnapScreenViewer.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	</ItemGroup>
+
+</Project>

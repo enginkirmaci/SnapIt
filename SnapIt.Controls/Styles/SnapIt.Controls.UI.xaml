@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapScreenViewer.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapArea.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapAreaEditor.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapFullOverlay.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapBorderTool.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapRuler.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/SnapIt.Controls;component/Styles/SnapLoadingWindow.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

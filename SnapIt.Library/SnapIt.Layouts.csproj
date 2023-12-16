@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework> 
+		<Copyright>©  2021</Copyright>
+		<Company>Engin KIRMACI</Company>
+		<Authors>Engin KIRMACI</Authors>
+		<Configurations>Debug;Release;Standalone</Configurations>
+		<Platforms>AnyCPU</Platforms>
+	</PropertyGroup>
+ 
+	<ItemGroup>
+		<EmbeddedResource Include="097d074b-0eed-4878-a035-b2eb76a324ce.json" />
+		<EmbeddedResource Include="1ff17736-c6cf-49be-b63e-a5affefd31d9.json" />
+		<EmbeddedResource Include="338106eb-1ae5-4185-bc00-f46339e1888d.json" />
+		<EmbeddedResource Include="61c00b23-5cdf-4c27-9a6d-a73693f16d47.json" />
+		<EmbeddedResource Include="6a86804e-c948-47ea-a1c3-1387736a8a80.json" />
+		<EmbeddedResource Include="6a91f112-af26-4505-86cb-a1983e4f4e14.json" />
+		<EmbeddedResource Include="97565260-e874-41dd-849e-0351e5dcbc6e.json" />
+		<EmbeddedResource Include="a4e1eb3d-376d-473c-afac-cb253cd8ee8e.json" />
+		<EmbeddedResource Include="b94079de-54a2-49d0-b31c-878a8f63ba75.json" />
+		<EmbeddedResource Include="edcedeaf-acb2-483a-86ae-ccc7c021f9c9.json" />
+		<EmbeddedResource Include="f1cb61d1-d38a-4e80-adab-e4be62d057f3.json" />
+	</ItemGroup>
+ 
+
+</Project>

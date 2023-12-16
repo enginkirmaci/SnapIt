@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Configurations>Debug;Release;Standalone</Configurations> 
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="ApplicationService.cs" />
+	  <Compile Remove="Contracts\IApplicationService.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft-Windows10-APICodePack-Shell" Version="1.1.8" />
+ 		<PackageReference Include="WindowsDisplayAPI" Version="1.3.0.13" />
+		<PackageReference Include="MouseKeyHook" Version="5.7.1" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\SnapIt.Common\SnapIt.Common.csproj" />
+	  <ProjectReference Include="..\SnapIt.Library\SnapIt.Layouts.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,98 @@
+﻿<ui:ContentDialog
+    x:Class="SnapIt.Views.Dialogs.ExcludeApplicationDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Exclude Application"
+    d:DataContext="{d:DesignInstance local:ExcludeApplicationDialog,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="750"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    CloseButtonText="Close"
+    DialogMaxWidth="750"
+    mc:Ignorable="d">
+    <ui:ContentDialog.Resources>
+        <Style BasedOn="{StaticResource {x:Type ui:ContentDialog}}" TargetType="{x:Type local:ExcludeApplicationDialog}" />
+    </ui:ContentDialog.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewModel.LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid DataContext="{Binding ViewModel}">
+        <StackPanel>
+            <TextBlock Text="To exclude application, you can choose from running applications or type a keyword and matching rule. If keyword matches to application title, snapping will be disabled for that window." TextWrapping="Wrap" />
+
+            <ui:CardExpander
+                Margin="0,16"
+                Header="choose from running applications"
+                Icon="{ui:SymbolIcon AppsList24}">
+                <ListView ItemsSource="{Binding RunningApplications}" SelectedItem="{Binding SelectedExcludedApplication.Keyword}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Height="24"
+                                Margin="8,4"
+                                VerticalAlignment="Center"
+                                Text="{Binding}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ui:CardExpander>
+
+            <!--<ui:Button
+                Margin="0,16"
+                HorizontalAlignment="Center"
+                Appearance="Secondary"
+                Command="{Binding OpenRunningApplicationsDialogCommand}"
+                Content="choose from running applications"
+                Icon="AppsList24" />-->
+
+            <TextBlock
+                Margin="0,0,0,12"
+                HorizontalAlignment="Center"
+                Text="or" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="110" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Keyword" />
+                <TextBox
+                    Grid.Row="1"
+                    Margin="0,0,6,0"
+                    Text="{Binding SelectedExcludedApplication.Keyword, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Grid.Column="1" Text="Match Rule" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    ItemsSource="{Binding MatchRules}"
+                    SelectedItem="{Binding SelectedExcludedApplication.MatchRule, Mode=TwoWay}" />
+            </Grid>
+
+            <TextBlock Margin="0,8" Text="Applied for" />
+
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Content="Mouse" IsChecked="{Binding SelectedExcludedApplication.Mouse}" />
+                <CheckBox
+                    Margin="12,0,0,0"
+                    Content="Keyboard"
+                    IsChecked="{Binding SelectedExcludedApplication.Keyboard}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</ui:ContentDialog>

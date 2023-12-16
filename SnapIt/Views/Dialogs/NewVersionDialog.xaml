@@ -1,0 +1,45 @@
+﻿<ui:ContentDialog
+    x:Class="SnapIt.Views.Dialogs.NewVersionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:SnapIt.Common.Entities;assembly=SnapIt.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Rename Layout"
+    d:DataContext="{d:DesignInstance local:NewVersionDialog,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="750"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    CloseButtonText="Later"
+    DialogMaxWidth="750"
+    IsPrimaryButtonEnabled="True"
+    PrimaryButtonText="Update Now"
+    mc:Ignorable="d">
+    <ui:ContentDialog.Resources>
+        <Style BasedOn="{StaticResource {x:Type ui:ContentDialog}}" TargetType="{x:Type local:NewVersionDialog}" />
+    </ui:ContentDialog.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewModel.LoadedCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid DataContext="{Binding ViewModel}">
+        <StackPanel>
+            <TextBlock FontWeight="Medium" Text="Update Available" />
+            <TextBlock TextWrapping="Wrap">
+                <Run Text="A newer version of" />
+                <Run Text="{x:Static c:Constants.AppName}" />
+                <Run Text="is available as a download from website." />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Would you like to update now?" />
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</ui:ContentDialog>

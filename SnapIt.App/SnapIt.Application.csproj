@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Configurations>Debug;Release;Standalone</Configurations>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\SnapIt.Common\SnapIt.Common.csproj" />
+		<ProjectReference Include="..\SnapIt.Controls\SnapIt.Controls.csproj" />
+		<ProjectReference Include="..\SnapIt.Services\SnapIt.Services.csproj" />
+	</ItemGroup>
+
+</Project>
