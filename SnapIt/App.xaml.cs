@@ -30,11 +30,11 @@ public partial class App
 
     protected override Window CreateShell()
     {
-        if (!Dev.IsActive)
-        {
-            var snapManager = AppContainer.Resolve<ISnapManager>();
-            _ = snapManager.InitializeAsync();
-        }
+        //if (!Dev.IsActive)
+        //{
+        //    var snapManager = AppContainer.Resolve<ISnapManager>();
+        //    _ = snapManager.InitializeAsync();
+        //}
 
         var applicationWindow = AppContainer.Resolve<MainWindow>();
 

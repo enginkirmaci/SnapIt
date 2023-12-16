@@ -2,7 +2,9 @@
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Media;
+using DryIoc;
 using Prism.Commands;
+using Prism.Ioc;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
@@ -168,7 +170,10 @@ public class MainWindowViewModel : ViewModelBase
     {
         if (!Dev.IsActive)
         {
-            await TaskEx.WaitUntil(() => snapManager.IsInitialized);
+            var snapManager = App.AppContainer.Resolve<ISnapManager>();
+            await snapManager.InitializeAsync();
+
+            //await TaskEx.WaitUntil(() => snapManager.IsInitialized);
         }
 
         await settingService.InitializeAsync();
