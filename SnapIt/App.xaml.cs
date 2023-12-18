@@ -77,6 +77,7 @@ public partial class App
                    .WriteTo.File(Path.Combine(Constants.RootFolder, "logs", "log.txt"),
                         rollingInterval: RollingInterval.Day)
                    .CreateLogger();
+
         RegisterGlobalExceptionHandling(Log.Logger);
 
         //todo change this
@@ -147,8 +148,7 @@ public partial class App
 
         Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args, log);
 
-        TaskScheduler.UnobservedTaskException +=
-            (sender, args) => TaskSchedulerOnUnobservedTaskException(args, log);
+        TaskScheduler.UnobservedTaskException += (sender, args) => TaskSchedulerOnUnobservedTaskException(args, log);
     }
 
     private static void CurrentDomainOnUnhandledException(UnhandledExceptionEventArgs args, ILogger log)
@@ -158,6 +158,11 @@ public partial class App
         var exceptionMessage = exception?.Message ?? "An unmanaged exception occured.";
         var message = string.Concat(exceptionMessage, terminatingMessage, exception?.StackTrace, exception?.InnerException);
         log.Error(exception, message);
+
+        if (exception?.InnerException != null)
+        {
+            log.Error(exception?.InnerException, message);
+        }
     }
 
     private static void CurrentOnDispatcherUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)

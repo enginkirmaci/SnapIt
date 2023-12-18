@@ -84,12 +84,15 @@ public class KeyboardService : IKeyboardService
 
     public void SetSnappingStopped()
     {
-        var map = new Dictionary<Combination, Action>
+        if (settingService.Settings != null)
         {
-            { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStopSnapping }
-        };
+            var map = new Dictionary<Combination, Action>
+            {
+                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStopSnapping }
+            };
 
-        globalHook?.OnCombination(map);
+            globalHook?.OnCombination(map);
+        }
     }
 
     public void Dispose()
