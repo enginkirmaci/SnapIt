@@ -88,9 +88,9 @@ public partial class App
 
         if (SnapIt.Properties.Settings.Default.RunAsAdmin && !Dev.SkipRunAsAdmin)
         {
-            if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
+            if (e.Args.Length > 0 && AppLauncher.IsAdmin(e.Args))
             {
-                if (!ApplicationInstance.RegisterSingleInstance())
+                if (!AppInstance.RegisterSingleInstance())
                 {
                     //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
                     //NotifyIcon.Visible = true;
@@ -101,7 +101,7 @@ public partial class App
             }
             else if (!Dev.IsActive)
             {
-                RunAsAdministrator.Run();
+                AppLauncher.RunAsAdmin();
                 Shutdown();
                 return;
             }
@@ -109,7 +109,7 @@ public partial class App
         else
 
         {
-            if (!ApplicationInstance.RegisterSingleInstance() && !Dev.IsActive)
+            if (!AppInstance.RegisterSingleInstance() && !Dev.IsActive)
             {
                 //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
                 //NotifyIcon.Visible = true;
@@ -163,6 +163,8 @@ public partial class App
         {
             log.Error(exception?.InnerException, message);
         }
+
+        AppLauncher.Run();
     }
 
     private static void CurrentOnDispatcherUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)

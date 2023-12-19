@@ -76,8 +76,8 @@ public class MouseSettingsPageViewModel : ViewModelBase
 
         HoldKeyBehaviours =
         [
-            new Resource<HoldKeyBehaviour>(SnapIt.Common.Entities.HoldKeyBehaviour.HoldToEnable, "Hold key to enable snapping"),
-            new Resource<HoldKeyBehaviour>(SnapIt.Common.Entities.HoldKeyBehaviour.HoldToDisable, "Hold key to disable snapping")
+            new Resource<HoldKeyBehaviour>(Common.Entities.HoldKeyBehaviour.HoldToEnable, "Hold key to enable snapping"),
+            new Resource<HoldKeyBehaviour>(Common.Entities.HoldKeyBehaviour.HoldToDisable, "Hold key to disable snapping")
         ];
     }
 
