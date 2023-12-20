@@ -77,6 +77,7 @@ public partial class App
                    .WriteTo.File(Path.Combine(Constants.RootFolder, "logs", "log.txt"),
                         rollingInterval: RollingInterval.Day)
                    .CreateLogger();
+
         RegisterGlobalExceptionHandling(Log.Logger);
 
         //todo change this
@@ -85,11 +86,31 @@ public partial class App
         //    Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/Assets/app.ico")).Stream)
         //};
 
-        if (SnapIt.Properties.Settings.Default.RunAsAdmin && !Dev.SkipRunAsAdmin)
+        if (!AppLauncher.BypassSingleInstance(e.Args))
         {
-            if (e.Args.Length > 0 && RunAsAdministrator.IsAdmin(e.Args))
+            if (SnapIt.Properties.Settings.Default.RunAsAdmin && !Dev.SkipRunAsAdmin)
             {
-                if (!ApplicationInstance.RegisterSingleInstance())
+                if (e.Args.Length > 0 && AppLauncher.IsAdmin(e.Args))
+                {
+                    if (!AppInstance.RegisterSingleInstance())
+                    {
+                        //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
+                        //NotifyIcon.Visible = true;
+
+                        Shutdown();
+                        return;
+                    }
+                }
+                else if (!Dev.IsActive)
+                {
+                    AppLauncher.RunAsAdmin();
+                    Shutdown();
+                    return;
+                }
+            }
+            else
+            {
+                if (!AppInstance.RegisterSingleInstance() && !Dev.IsActive)
                 {
                     //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
                     //NotifyIcon.Visible = true;
@@ -97,24 +118,6 @@ public partial class App
                     Shutdown();
                     return;
                 }
-            }
-            else if (!Dev.IsActive)
-            {
-                RunAsAdministrator.Run();
-                Shutdown();
-                return;
-            }
-        }
-        else
-
-        {
-            if (!ApplicationInstance.RegisterSingleInstance() && !Dev.IsActive)
-            {
-                //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
-                //NotifyIcon.Visible = true;
-
-                Shutdown();
-                return;
             }
         }
 
@@ -147,17 +150,23 @@ public partial class App
 
         Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args, log);
 
-        TaskScheduler.UnobservedTaskException +=
-            (sender, args) => TaskSchedulerOnUnobservedTaskException(args, log);
+        TaskScheduler.UnobservedTaskException += (sender, args) => TaskSchedulerOnUnobservedTaskException(args, log);
     }
 
     private static void CurrentDomainOnUnhandledException(UnhandledExceptionEventArgs args, ILogger log)
     {
+        AppLauncher.RunBypassSingleInstance();
+
         var exception = args.ExceptionObject as Exception;
         var terminatingMessage = args.IsTerminating ? " The application is terminating." : string.Empty;
         var exceptionMessage = exception?.Message ?? "An unmanaged exception occured.";
         var message = string.Concat(exceptionMessage, terminatingMessage, exception?.StackTrace, exception?.InnerException);
         log.Error(exception, message);
+
+        if (exception?.InnerException != null)
+        {
+            log.Error(exception?.InnerException, message);
+        }
     }
 
     private static void CurrentOnDispatcherUnhandledException(DispatcherUnhandledExceptionEventArgs args, ILogger log)

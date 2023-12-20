@@ -1,6 +1,6 @@
 ﻿namespace SnapIt.Common.Applications;
 
-public class ApplicationInstance
+public class AppInstance
 {
     private static readonly Mutex mutex = new Mutex(true, "{FF1FFB1E-5D42-4B8F-B42A-52DA1A1964B7}");
 
