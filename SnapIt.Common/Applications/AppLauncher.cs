@@ -4,12 +4,12 @@ public class AppLauncher
 {
     public static void RunAsAdmin()
     {
-        Run(true);
+        Run("runas", true);
     }
 
-    public static void Run()
+    public static void RunBypassSingleInstance()
     {
-        Run(false);
+        Run("nosingle");
     }
 
     public static bool IsAdmin(string[] startupArgs)
@@ -17,18 +17,23 @@ public class AppLauncher
         return startupArgs.Any(arg => arg.Contains("runas"));
     }
 
-    private static void Run(bool asAdmin)
+    public static bool BypassSingleInstance(string[] startupArgs)
+    {
+        return startupArgs.Any(arg => arg.Contains("nosingle"));
+    }
+
+    private static void Run(string argument = null, bool useShellExecute = false)
     {
         var info = new ProcessStartInfo
         {
-            UseShellExecute = true,
-            FileName = Environment.ProcessPath // Application.ExecutablePath; // localAppDataPath + @"\microsoft\windowsapps\SnapIt.exe" // path to the appExecutionAlias
+            UseShellExecute = useShellExecute,
+            FileName = Process.GetCurrentProcess().ProcessName // Application.ExecutablePath; // localAppDataPath + @"\microsoft\windowsapps\SnapIt.exe" // path to the appExecutionAlias
         };
 
-        if (asAdmin)
+        if (!string.IsNullOrEmpty(argument))
         {
-            info.Verb = "runas";
-            info.Arguments = "-runas";
+            info.Verb = argument;
+            info.Arguments = $"-{argument}";
         }
 
         Process.Start(info);

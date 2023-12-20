@@ -12,9 +12,13 @@ using SnapIt.Services;
 
 namespace SnapIt.Test;
 
-/// <summary>
-/// Interaction logic for Window3.xaml
-/// </summary>
+public enum DragElement
+{
+    None,
+    Window,
+    Tab
+}
+
 public partial class Window3 : Window
 {
     private IKeyboardMouseEvents globalHook;
@@ -23,6 +27,8 @@ public partial class Window3 : Window
     private AutomationElementCollection currentfirefoxes;
     private ActiveWindow active;
     private bool isListening = false;
+    private bool isDragging = false;
+    private DragElement element = DragElement.None;
 
     public Window3()
     {
@@ -34,14 +40,48 @@ public partial class Window3 : Window
         globalHook.MouseDown += GlobalHook_MouseDown;
         globalHook.MouseUp += GlobalHook_MouseUp;
 
+        globalHook.MouseDragStarted += GlobalHook_MouseDragStarted;
+        globalHook.MouseDragFinished += GlobalHook_MouseDragFinished;
+
         winApiService = new WinApiService();
+    }
+
+    private void GlobalHook_MouseDragStarted(object? sender, System.Windows.Forms.MouseEventArgs e)
+    {
+        Dev.Log();
+        isDragging = true;
+        element = DragElement.None;
     }
 
     private void GlobalHook_MouseMove(object? sender, System.Windows.Forms.MouseEventArgs e)
     {
-        if (isListening && active == null)
+        if (isDragging)
         {
+            if (element == DragElement.None)
+            {
+                var currentWindow = winApiService.GetActiveWindow();
+
+                if (currentWindow != null)
+                {
+                    if (currentWindow.Boundry.Equals(active.Boundry))
+                    {
+                        element = DragElement.Tab;
+                    }
+                    else
+                    {
+                        element = DragElement.Window;
+                    }
+                }
+            }
+
+            Dev.Log(element);
         }
+    }
+
+    private void GlobalHook_MouseDragFinished(object? sender, System.Windows.Forms.MouseEventArgs e)
+    {
+        Dev.Log();
+        isDragging = false;
     }
 
     private void GlobalHook_MouseDown(object? sender, System.Windows.Forms.MouseEventArgs e)
