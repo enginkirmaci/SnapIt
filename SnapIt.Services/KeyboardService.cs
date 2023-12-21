@@ -15,7 +15,7 @@ public class KeyboardService : IKeyboardService
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
     private readonly IWindowsService windowsService;
-    private IKeyboardMouseEvents globalHook;
+    private static IKeyboardMouseEvents globalHook = null;
     private List<Keys> keysDown = [];
 
     public bool IsInitialized { get; private set; }

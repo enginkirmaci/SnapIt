@@ -12,7 +12,7 @@ public class MouseService : IMouseService
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
     private readonly IWindowsService windowsService;
-    private IKeyboardMouseEvents globalHook;
+    private static IKeyboardMouseEvents globalHook = null;
 
     private bool isWindowDetected = false;
     private bool isListening = false;

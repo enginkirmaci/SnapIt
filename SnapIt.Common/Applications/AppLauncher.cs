@@ -27,7 +27,7 @@ public class AppLauncher
         var info = new ProcessStartInfo
         {
             UseShellExecute = useShellExecute,
-            FileName = Process.GetCurrentProcess().ProcessName // Application.ExecutablePath; // localAppDataPath + @"\microsoft\windowsapps\SnapIt.exe" // path to the appExecutionAlias
+            FileName = Environment.ProcessPath // Application.ExecutablePath; // localAppDataPath + @"\microsoft\windowsapps\SnapIt.exe" // path to the appExecutionAlias
         };
 
         if (!string.IsNullOrEmpty(argument))
