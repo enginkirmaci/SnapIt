@@ -51,21 +51,20 @@ public class KeyboardService : IKeyboardService
         await winApiService.InitializeAsync();
         await windowsService.InitializeAsync();
 
-        globalHook = Hook.GlobalEvents();
-        globalHook.KeyDown += Esc_KeyDown;
-
-        var map = new Dictionary<Combination, Action>
-        {
-            { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), CycleLayouts },
-            { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStopSnapping }
-        };
-
         if (settingService.Settings.EnableKeyboard)
         {
-            map.Add(Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Left));
-            map.Add(Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Right));
-            map.Add(Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Up));
-            map.Add(Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Down));
+            globalHook = Hook.GlobalEvents();
+            globalHook.KeyDown += Esc_KeyDown;
+
+            var map = new Dictionary<Combination, Action>
+            {
+                { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), CycleLayouts },
+                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStopSnapping },
+                { Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Left) },
+                { Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Right) },
+                { Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Up) },
+                { Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Down) }
+            };
 
             if ((settingService.Settings.MoveLeftShortcut +
                 settingService.Settings.MoveRightShortcut +
@@ -75,16 +74,16 @@ public class KeyboardService : IKeyboardService
                 globalHook.KeyDown += HookManager_KeyDown;
                 globalHook.KeyUp += HookManager_KeyUp;
             }
-        }
 
-        globalHook.OnCombination(map);
+            globalHook.OnCombination(map);
+        }
 
         IsInitialized = true;
     }
 
     public void SetSnappingStopped()
     {
-        if (settingService.Settings != null)
+        if (settingService.Settings != null && settingService.Settings.EnableKeyboard)
         {
             var map = new Dictionary<Combination, Action>
             {
