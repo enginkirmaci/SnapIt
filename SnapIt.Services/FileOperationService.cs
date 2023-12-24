@@ -78,7 +78,7 @@ public class FileOperationService : IFileOperationService
         File.WriteAllText(configPath, json);
     }
 
-    public async Task<T> Load<T>() where T : new()
+    public async Task<T> LoadAsync<T>() where T : new()
     {
         var configPath = GetConfigPath<T>();
 
@@ -88,6 +88,22 @@ public class FileOperationService : IFileOperationService
         }
 
         var json = await File.ReadAllTextAsync(configPath);
+
+        return Json.Deserialize<T>(json);
+    }
+
+    public T Load<T>() where T : new()
+    {
+        var configPath = GetConfigPath<T>();
+
+        Directory.CreateDirectory(rootFolder);
+
+        if (!File.Exists(configPath))
+        {
+            File.WriteAllText(configPath, Json.Serialize(new T()));
+        }
+
+        var json = File.ReadAllText(configPath);
 
         return Json.Deserialize<T>(json);
     }

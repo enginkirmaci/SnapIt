@@ -31,6 +31,7 @@ public class Settings
     public string StartStopShortcut { get; set; } = "Ctrl + Alt + S";
     public bool IsVersion3000MessageShown { get; set; }
     public bool CheckForNewVersion { get; set; } = true;
+    public bool RunAsAdmin { get; set; } = true;
 
     //public Color HighlightColor { get; set; } = System.Windows.Media.Color.FromArgb(255, 33, 33, 33).Convert();
     //public Color OverlayColor { get; set; } = System.Windows.Media.Color.FromArgb(255, 99, 99, 99).Convert();

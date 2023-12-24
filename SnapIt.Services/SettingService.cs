@@ -31,14 +31,14 @@ public class SettingService : ISettingService
             return;
         }
 
-        Settings = await fileOperationService.Load<Settings>();
+        await fileOperationService.InitializeAsync();
 
         if (Settings == null)
         {
-            Settings = new Settings();
+            LoadSettings();
         }
 
-        ExcludedApplicationSettings = await fileOperationService.Load<ExcludedApplicationSettings>();
+        ExcludedApplicationSettings = await fileOperationService.LoadAsync<ExcludedApplicationSettings>();
         ExcludedApplicationSettings.Applications = ExcludedApplicationSettings.Applications.Where(i => i != null).ToList();
 
         if (!ExcludedApplicationSettings.Applications.Any(e => e.Keyword == "Program Manager"))
@@ -51,13 +51,20 @@ public class SettingService : ISettingService
                 Keyboard = true
             });
         }
-        ApplicationGroupSettings = await fileOperationService.Load<ApplicationGroupSettings>();
+        ApplicationGroupSettings = await fileOperationService.LoadAsync<ApplicationGroupSettings>();
 
         Layouts = fileOperationService.GetLayouts();
 
         ReInitialize();
 
         IsInitialized = true;
+    }
+
+    public void LoadSettings()
+    {
+        Settings = fileOperationService.Load<Settings>();
+
+        Settings ??= new Settings();
     }
 
     public void ReInitialize()

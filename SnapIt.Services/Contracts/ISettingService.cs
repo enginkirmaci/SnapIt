@@ -13,6 +13,8 @@ public interface ISettingService : IInitialize
     SnapScreen LatestActiveScreen { get; set; }
     SnapScreen SelectedSnapScreen { get; set; }
 
+    void LoadSettings();
+
     void ReInitialize();
 
     void Save();
