@@ -12,9 +12,7 @@ public class MouseService : IMouseService
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
     private readonly IWindowsService windowsService;
-    //private static IKeyboardMouseEvents globalHook = null;
-
-    private SimpleGlobalHook globalHook = null;
+    private readonly IGlobalHookService globalHookService;
     private bool isWindowDetected = false;
     private bool isListening = false;
     private bool isHoldingKey = false;
@@ -38,11 +36,13 @@ public class MouseService : IMouseService
     public MouseService(
         ISettingService settingService,
         IWinApiService winApiService,
-        IWindowsService windowsService)
+        IWindowsService windowsService,
+        IGlobalHookService globalHookService)
     {
         this.settingService = settingService;
         this.winApiService = winApiService;
         this.windowsService = windowsService;
+        this.globalHookService = globalHookService;
     }
 
     public async Task InitializeAsync()
@@ -55,25 +55,21 @@ public class MouseService : IMouseService
         await settingService.InitializeAsync();
         await winApiService.InitializeAsync();
         await windowsService.InitializeAsync();
+        await globalHookService.InitializeAsync();
 
-        globalHook = new SimpleGlobalHook();
-
-        if (settingService.Settings.EnableMouse)
+        if (globalHookService.Hook != null && settingService.Settings.EnableMouse)
         {
-            globalHook.MouseDragged += MouseMoveEvent;
-            globalHook.MousePressed += MouseDownEvent;
-            globalHook.MouseReleased += MouseUpEvent;
-            globalHook.KeyPressed += Esc_KeyDown;
+            globalHookService.Hook.MouseDragged += MouseMoveEvent;
+            globalHookService.Hook.MousePressed += MouseDownEvent;
+            globalHookService.Hook.MouseReleased += MouseUpEvent;
+            globalHookService.Hook.KeyPressed += Esc_KeyDown;
+
             if (settingService.Settings.EnableHoldKey)
             {
-                globalHook.KeyPressed += KeyDown;
-                globalHook.KeyReleased += KeyUp;
+                globalHookService.Hook.KeyPressed += KeyDown;
+                globalHookService.Hook.KeyReleased += KeyUp;
             }
         }
-        _ = System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
-        {
-            globalHook.Run();
-        });
 
         isWindowDetected = false;
         isListening = false;
@@ -83,19 +79,17 @@ public class MouseService : IMouseService
 
     public void Dispose()
     {
-        if (globalHook != null)
+        if (globalHookService.Hook != null)
         {
-            globalHook.MouseMoved -= MouseMoveEvent;
-            globalHook.MousePressed -= MouseDownEvent;
-            globalHook.MouseReleased -= MouseUpEvent;
+            globalHookService.Hook.MouseMoved -= MouseMoveEvent;
+            globalHookService.Hook.MousePressed -= MouseDownEvent;
+            globalHookService.Hook.MouseReleased -= MouseUpEvent;
 
             if (settingService.Settings.EnableHoldKey)
             {
-                globalHook.KeyPressed -= KeyDown;
-                globalHook.KeyReleased -= KeyUp;
+                globalHookService.Hook.KeyPressed -= KeyDown;
+                globalHookService.Hook.KeyReleased -= KeyUp;
             }
-
-            //globalHook.Dispose();
         }
 
         IsInitialized = false;
@@ -106,7 +100,7 @@ public class MouseService : IMouseService
         isListening = false;
     }
 
-    private void MouseMoveEvent(object sender, MouseHookEventArgs e)
+    private void MouseMoveEvent(object? sender, MouseHookEventArgs e)
     {
         if (isListening)
         {
@@ -169,7 +163,7 @@ public class MouseService : IMouseService
         }
     }
 
-    private void MouseDownEvent(object sender, MouseHookEventArgs e)
+    private void MouseDownEvent(object? sender, MouseHookEventArgs e)
     {
         if (e.Data.Button == MouseButtonsMap(settingService.Settings.MouseButton))
         {
@@ -182,7 +176,7 @@ public class MouseService : IMouseService
         }
     }
 
-    private void MouseUpEvent(object sender, MouseHookEventArgs e)
+    private void MouseUpEvent(object? sender, MouseHookEventArgs e)
     {
         if (e.Data.Button == MouseButtonsMap(settingService.Settings.MouseButton) && isListening)
         {
@@ -205,7 +199,7 @@ public class MouseService : IMouseService
         }
     }
 
-    private void KeyUp(object sender, KeyboardHookEventArgs e)
+    private void KeyUp(object? sender, KeyboardHookEventArgs e)
     {
         switch (settingService.Settings.HoldKey)
         {
@@ -253,7 +247,7 @@ public class MouseService : IMouseService
         }
     }
 
-    private void KeyDown(object sender, KeyboardHookEventArgs e)
+    private void KeyDown(object? sender, KeyboardHookEventArgs e)
     {
         switch (settingService.Settings.HoldKey)
         {

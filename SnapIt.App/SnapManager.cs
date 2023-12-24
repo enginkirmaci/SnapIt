@@ -1,10 +1,8 @@
-﻿using Gma.System.MouseKeyHook;
-using SnapIt.Application.Contracts;
+﻿using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Graphics;
 using SnapIt.Controls;
-using SnapIt.Services;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.Application;
@@ -49,6 +47,8 @@ public class SnapManager : ISnapManager
         this.mouseService = mouseService;
         this.keyboardService = keyboardService;
         this.windowsService = windowsService;
+
+        keyboardService.SnapStartStop += KeyboardService_SnapStartStop;
     }
 
     public async Task InitializeAsync()
@@ -81,7 +81,6 @@ public class SnapManager : ISnapManager
 
         keyboardService.MoveWindow += MoveWindow;
         keyboardService.SnappingCancelled += SnappingCancelled;
-        keyboardService.SnapStartStop += KeyboardService_SnapStartStop;
         keyboardService.ChangeLayout += KeyboardService_ChangeLayout;
 
         IsRunning = true;
@@ -208,11 +207,9 @@ public class SnapManager : ISnapManager
 
         keyboardService.MoveWindow -= MoveWindow;
         keyboardService.SnappingCancelled -= SnappingCancelled;
-        keyboardService.SnapStartStop -= KeyboardService_SnapStartStop;
+        //keyboardService.SnapStartStop -= KeyboardService_SnapStartStop;
         keyboardService.ChangeLayout -= KeyboardService_ChangeLayout;
         keyboardService.Dispose();
-
-        Hook.GlobalEvents().Dispose();
 
         keyboardService.SetSnappingStopped();
 

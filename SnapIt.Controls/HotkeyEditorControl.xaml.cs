@@ -90,7 +90,7 @@ public partial class HotkeyEditorControl : UserControl
             var str = new StringBuilder();
 
             if (modifiers.HasFlag(ModifierKeys.Control))
-                str.Append("Control + ");
+                str.Append("Ctrl + ");
             if (modifiers.HasFlag(ModifierKeys.Shift))
                 str.Append("Shift + ");
             if (modifiers.HasFlag(ModifierKeys.Alt))

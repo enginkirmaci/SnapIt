@@ -52,11 +52,12 @@ public partial class App
         containerRegistry.RegisterSingleton<IWindowManager, WindowManager>();
         containerRegistry.RegisterSingleton<IScreenManager, ScreenManager>();
 
+        containerRegistry.RegisterSingleton<IGlobalHookService, GlobalHookService>();
         containerRegistry.RegisterSingleton<IMouseService, MouseService>();
         containerRegistry.RegisterSingleton<IKeyboardService, KeyboardService>();
         containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
         containerRegistry.RegisterSingleton<ISettingService, SettingService>();
-        //containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
+        containerRegistry.RegisterSingleton<IHotkeyService, HotkeyService>();
         containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
         containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
         containerRegistry.RegisterSingleton<IWindowsService, WindowsService>();
@@ -132,6 +133,9 @@ public partial class App
             var snapServiceContainer = AppContainer.Resolve<ISnapManager>();
 
             snapServiceContainer?.Dispose();
+
+            var globalHookService = AppContainer.Resolve<IGlobalHookService>();
+            globalHookService?.Hook?.Dispose();
         }
 
         Log.Logger.Information("SnapIt Exited");
@@ -155,7 +159,7 @@ public partial class App
 
     private static void CurrentDomainOnUnhandledException(UnhandledExceptionEventArgs args, ILogger log)
     {
-        AppLauncher.RunBypassSingleInstance();
+        //AppLauncher.RunBypassSingleInstance();
 
         var exception = args.ExceptionObject as Exception;
         var terminatingMessage = args.IsTerminating ? " The application is terminating." : string.Empty;
