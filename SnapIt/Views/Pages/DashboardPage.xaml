@@ -248,6 +248,23 @@
                         Text="Settings" />
                 </StackPanel>
             </ui:CardAction>
+
+            <ui:CardAction
+                Grid.Row="1"
+                Grid.Column="3"
+                Height="67.25"
+                Margin="4,8,0,0"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="about"
+                Icon="{ui:SymbolIcon Info24}">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0"
+                        FontSize="13"
+                        FontWeight="Medium"
+                        Text="About" />
+                </StackPanel>
+            </ui:CardAction>
         </Grid>
 
         <StackPanel Grid.Row="2" Margin="12,18,12,12">

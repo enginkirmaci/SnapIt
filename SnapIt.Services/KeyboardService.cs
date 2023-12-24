@@ -1,5 +1,6 @@
-﻿using System.Windows.Forms;
-using Gma.System.MouseKeyHook;
+﻿using GlobalHotKey;
+using SharpHook;
+using SharpHook.Native;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Events;
@@ -15,8 +16,9 @@ public class KeyboardService : IKeyboardService
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
     private readonly IWindowsService windowsService;
-    private IKeyboardMouseEvents globalHook;
-    private List<Keys> keysDown = [];
+    private readonly IHotkeyService hotkeyService;
+    private readonly IGlobalHookService globalHookService;
+    private List<KeyCode> keysDown = [];
 
     public bool IsInitialized { get; private set; }
 
@@ -33,11 +35,15 @@ public class KeyboardService : IKeyboardService
     public KeyboardService(
         ISettingService settingService,
         IWinApiService winApiService,
-        IWindowsService windowsService)
+        IWindowsService windowsService,
+        IHotkeyService hotkeyService,
+        IGlobalHookService globalHookService)
     {
         this.settingService = settingService;
         this.winApiService = winApiService;
         this.windowsService = windowsService;
+        this.hotkeyService = hotkeyService;
+        this.globalHookService = globalHookService;
     }
 
     public async Task InitializeAsync()
@@ -50,71 +56,95 @@ public class KeyboardService : IKeyboardService
         await settingService.InitializeAsync();
         await winApiService.InitializeAsync();
         await windowsService.InitializeAsync();
-
-        globalHook = Hook.GlobalEvents();
-        globalHook.KeyDown += Esc_KeyDown;
-
-        var map = new Dictionary<Combination, Action>
-        {
-            { Combination.FromString(settingService.Settings.CycleLayoutsShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), CycleLayouts },
-            { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStopSnapping }
-        };
+        await globalHookService.InitializeAsync();
 
         if (settingService.Settings.EnableKeyboard)
         {
-            map.Add(Combination.FromString(settingService.Settings.MoveLeftShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Left));
-            map.Add(Combination.FromString(settingService.Settings.MoveRightShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Right));
-            map.Add(Combination.FromString(settingService.Settings.MoveUpShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Up));
-            map.Add(Combination.FromString(settingService.Settings.MoveDownShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), () => MoveActiveWindowByKeyboard(MoveDirection.Down));
+            hotkeyService.KeyPressed -= HotkeyService_KeyPressed;
+            hotkeyService.KeyPressed += HotkeyService_KeyPressed;
 
-            if ((settingService.Settings.MoveLeftShortcut +
-                settingService.Settings.MoveRightShortcut +
-                settingService.Settings.MoveUpShortcut +
-                settingService.Settings.MoveDownShortcut).Contains("Win"))
+            await hotkeyService.InitializeAsync();
+
+            if (globalHookService.Hook != null)
             {
-                globalHook.KeyDown += HookManager_KeyDown;
-                globalHook.KeyUp += HookManager_KeyUp;
-            }
-        }
+                globalHookService.Hook.KeyPressed += Esc_KeyDown;
 
-        globalHook.OnCombination(map);
-
-        IsInitialized = true;
-    }
-
-    public void SetSnappingStopped()
-    {
-        if (settingService.Settings != null)
-        {
-            var map = new Dictionary<Combination, Action>
-            {
-                { Combination.FromString(settingService.Settings.StartStopShortcut.Replace(" ", string.Empty).Replace("Win", "LWin")), StartStopSnapping }
-            };
-
-            globalHook?.OnCombination(map);
-        }
-    }
-
-    public void Dispose()
-    {
-        if (globalHook != null)
-        {
-            globalHook.KeyDown -= Esc_KeyDown;
-
-            if (settingService.Settings.EnableKeyboard)
-            {
                 if ((settingService.Settings.MoveLeftShortcut +
                     settingService.Settings.MoveRightShortcut +
                     settingService.Settings.MoveUpShortcut +
                     settingService.Settings.MoveDownShortcut).Contains("Win"))
                 {
-                    globalHook.KeyDown -= HookManager_KeyDown;
-                    globalHook.KeyUp -= HookManager_KeyUp;
+                    globalHookService.Hook.KeyPressed += HookManager_KeyDown;
+                    globalHookService.Hook.KeyReleased += HookManager_KeyUp;
+                }
+            }
+        }
+
+        IsInitialized = true;
+    }
+
+    public void Dispose()
+    {
+        if (globalHookService.Hook != null)
+        {
+            globalHookService.Hook.KeyPressed -= Esc_KeyDown;
+
+            if (settingService.Settings.EnableKeyboard)
+            {
+                hotkeyService.KeyPressed -= HotkeyService_KeyPressed;
+                hotkeyService.Dispose();
+
+                if ((settingService.Settings.MoveLeftShortcut +
+                    settingService.Settings.MoveRightShortcut +
+                    settingService.Settings.MoveUpShortcut +
+                    settingService.Settings.MoveDownShortcut).Contains("Win"))
+                {
+                    globalHookService.Hook.KeyPressed -= HookManager_KeyDown;
+                    globalHookService.Hook.KeyReleased -= HookManager_KeyUp;
                 }
             }
         }
 
         IsInitialized = false;
+    }
+
+    private void HotkeyService_KeyPressed(object? sender, KeyPressedEventArgs e)
+    {
+        if (e.HotKey.Equals(hotkeyService.CycleLayoutsHotKey))
+        {
+            CycleLayouts();
+        }
+        if (e.HotKey.Equals(hotkeyService.StartStopHotKey))
+        {
+            StartStopSnapping();
+        }
+        if (e.HotKey.Equals(hotkeyService.MoveLeftHotKey))
+        {
+            MoveActiveWindowByKeyboard(MoveDirection.Left);
+        }
+        if (e.HotKey.Equals(hotkeyService.MoveRightHotKey))
+        {
+            MoveActiveWindowByKeyboard(MoveDirection.Right);
+        }
+        if (e.HotKey.Equals(hotkeyService.MoveUpHotKey))
+        {
+            MoveActiveWindowByKeyboard(MoveDirection.Up);
+        }
+        if (e.HotKey.Equals(hotkeyService.MoveDownHotKey))
+        {
+            MoveActiveWindowByKeyboard(MoveDirection.Down);
+        }
+    }
+
+    public void SetSnappingStopped()
+    {
+        if (settingService.Settings.EnableKeyboard)
+        {
+            hotkeyService.KeyPressed -= HotkeyService_KeyPressed;
+            hotkeyService.KeyPressed += HotkeyService_KeyPressed;
+
+            hotkeyService.RegisterStartStopHotkey();
+        }
     }
 
     private void StartStopSnapping()
@@ -143,9 +173,9 @@ public class KeyboardService : IKeyboardService
         ChangeLayout?.Invoke(snapScreen, nextLayout);
     }
 
-    private void Esc_KeyDown(object sender, KeyEventArgs e)
+    private void Esc_KeyDown(object? sender, KeyboardHookEventArgs e)
     {
-        if (e.KeyCode == Keys.Escape)
+        if (e.Data.KeyCode == KeyCode.VcEscape)
         {
             SnappingCancelled?.Invoke();
         }
@@ -185,45 +215,45 @@ public class KeyboardService : IKeyboardService
         }
     }
 
-    private void HookManager_KeyDown(object sender, KeyEventArgs e)
+    private void HookManager_KeyDown(object? sender, KeyboardHookEventArgs e)
     {
         //Used for overriding the Windows default hotkeys
-        if (keysDown.Contains(e.KeyCode) == false)
+        if (keysDown.Contains(e.Data.KeyCode) == false)
         {
-            keysDown.Add(e.KeyCode);
+            keysDown.Add(e.Data.KeyCode);
         }
 
-        if (e.KeyCode == Keys.Right && WIN())
+        if (e.Data.KeyCode == KeyCode.VcRight && WIN())
         {
-            e.Handled = true;
+            e.SuppressEvent = true;
         }
-        else if (e.KeyCode == Keys.Left && WIN())
+        else if (e.Data.KeyCode == KeyCode.VcLeft && WIN())
         {
-            e.Handled = true;
+            e.SuppressEvent = true;
         }
-        else if (e.KeyCode == Keys.Up && WIN())
+        else if (e.Data.KeyCode == KeyCode.VcUp && WIN())
         {
-            e.Handled = true;
+            e.SuppressEvent = true;
         }
-        else if (e.KeyCode == Keys.Down && WIN())
+        else if (e.Data.KeyCode == KeyCode.VcDown && WIN())
         {
-            e.Handled = true;
+            e.SuppressEvent = true;
         }
     }
 
-    private void HookManager_KeyUp(object sender, KeyEventArgs e)
+    private void HookManager_KeyUp(object? sender, KeyboardHookEventArgs e)
     {
         //Used for overriding the Windows default hotkeys
-        while (keysDown.Contains(e.KeyCode))
+        while (keysDown.Contains(e.Data.KeyCode))
         {
-            keysDown.Remove(e.KeyCode);
+            keysDown.Remove(e.Data.KeyCode);
         }
     }
 
     private bool WIN()
     {
-        if (keysDown.Contains(Keys.LWin) ||
-            keysDown.Contains(Keys.RWin))
+        if (keysDown.Contains(KeyCode.VcLeftMeta) ||
+            keysDown.Contains(KeyCode.VcRightMeta))
         {
             return true;
         }

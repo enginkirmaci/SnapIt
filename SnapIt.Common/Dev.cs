@@ -18,14 +18,13 @@ public static class Dev
     public const bool SkipLicense = false;
     public const bool TestTrialEnded = false;
     public const bool TestInTrial = false;
-    public const bool SkipRunAsAdmin = false;
+    public const bool SkipRunAsAdmin = true;
 #else
     public const bool IsActive = false;
     public const bool ShowSnapWindowOnStartup = false;
     public const bool IsTopmostDisabled = false;
-    public const bool SkipLicense = false; //todo make it false with first release
+    public const bool SkipLicense = false;
     public const bool TestTrialEnded = false;
-
     public const bool TestInTrial = false;
     public const bool SkipRunAsAdmin = false;
 #endif

@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="UserControl"
-    d:DesignHeight="150"
     d:DesignWidth="300"
     mc:Ignorable="d">
     <TextBox

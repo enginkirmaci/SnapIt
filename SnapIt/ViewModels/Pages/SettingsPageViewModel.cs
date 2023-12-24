@@ -35,14 +35,7 @@ public class SettingsPageViewModel : ViewModelBase
     }
 
     public bool IsRunAsAdmin
-    {
-        get => Properties.Settings.Default.RunAsAdmin;
-        set
-        {
-            Properties.Settings.Default.RunAsAdmin = value;
-            Properties.Settings.Default.Save();
-        }
-    }
+    { get => settingService.Settings.RunAsAdmin; set { settingService.Settings.RunAsAdmin = value; } }
 
     public bool IsStartupTaskActive
     {

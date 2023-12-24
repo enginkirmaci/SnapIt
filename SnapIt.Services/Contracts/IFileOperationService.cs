@@ -7,7 +7,9 @@ public interface IFileOperationService : IInitialize
 {
     Task Save<T>(T config);
 
-    Task<T> Load<T>() where T : new();
+    Task<T> LoadAsync<T>() where T : new();
+
+    T Load<T>() where T : new();
 
     void SaveLayout(Layout layout);
 

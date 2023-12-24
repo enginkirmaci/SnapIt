@@ -126,9 +126,6 @@ public class SnapWindow : Window, IWindow
 
     public new void Hide()
     {
-        //currentArea?.NormalStyle(false);
-        //currentOverlay?.NormalStyle(false);
-
         base.Hide();
     }
 

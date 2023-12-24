@@ -1,7 +1,4 @@
-﻿using SnapIt.Common.Extensions;
-using SnapIt.Common.Graphics;
-
-namespace SnapIt.Common.Entities;
+﻿namespace SnapIt.Common.Entities;
 
 public class Settings
 {
@@ -26,14 +23,15 @@ public class Settings
     public UITheme AppTheme { get; set; } = UITheme.System;
     public Dictionary<string, string> ScreensLayouts { get; set; }
     public List<string> DeactivedScreens { get; set; }
-    public string MoveUpShortcut { get; set; } = "Control + Alt + Up";
-    public string MoveDownShortcut { get; set; } = "Control + Alt + Down";
-    public string MoveLeftShortcut { get; set; } = "Control + Alt + Left";
-    public string MoveRightShortcut { get; set; } = "Control + Alt + Right";
-    public string CycleLayoutsShortcut { get; set; } = "Control + Alt + C";
-    public string StartStopShortcut { get; set; } = "Control + Alt + S";
+    public string MoveUpShortcut { get; set; } = "Ctrl + Alt + Up";
+    public string MoveDownShortcut { get; set; } = "Ctrl + Alt + Down";
+    public string MoveLeftShortcut { get; set; } = "Ctrl + Alt + Left";
+    public string MoveRightShortcut { get; set; } = "Ctrl + Alt + Right";
+    public string CycleLayoutsShortcut { get; set; } = "Ctrl + Alt + C";
+    public string StartStopShortcut { get; set; } = "Ctrl + Alt + S";
     public bool IsVersion3000MessageShown { get; set; }
     public bool CheckForNewVersion { get; set; } = true;
+    public bool RunAsAdmin { get; set; } = true;
 
     //public Color HighlightColor { get; set; } = System.Windows.Media.Color.FromArgb(255, 33, 33, 33).Convert();
     //public Color OverlayColor { get; set; } = System.Windows.Media.Color.FromArgb(255, 99, 99, 99).Convert();

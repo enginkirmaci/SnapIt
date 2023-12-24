@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using Gma.System.MouseKeyHook;
+using SharpHook;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Events;
 using SnapIt.Common.Extensions;
@@ -12,8 +12,7 @@ public class MouseService : IMouseService
     private readonly ISettingService settingService;
     private readonly IWinApiService winApiService;
     private readonly IWindowsService windowsService;
-    private IKeyboardMouseEvents globalHook;
-
+    private readonly IGlobalHookService globalHookService;
     private bool isWindowDetected = false;
     private bool isListening = false;
     private bool isHoldingKey = false;
@@ -37,11 +36,13 @@ public class MouseService : IMouseService
     public MouseService(
         ISettingService settingService,
         IWinApiService winApiService,
-        IWindowsService windowsService)
+        IWindowsService windowsService,
+        IGlobalHookService globalHookService)
     {
         this.settingService = settingService;
         this.winApiService = winApiService;
         this.windowsService = windowsService;
+        this.globalHookService = globalHookService;
     }
 
     public async Task InitializeAsync()
@@ -54,19 +55,19 @@ public class MouseService : IMouseService
         await settingService.InitializeAsync();
         await winApiService.InitializeAsync();
         await windowsService.InitializeAsync();
+        await globalHookService.InitializeAsync();
 
-        globalHook = Hook.GlobalEvents();
-
-        if (settingService.Settings.EnableMouse)
+        if (globalHookService.Hook != null && settingService.Settings.EnableMouse)
         {
-            globalHook.MouseMove += MouseMoveEvent;
-            globalHook.MouseDown += MouseDownEvent;
-            globalHook.MouseUp += MouseUpEvent;
+            globalHookService.Hook.MouseDragged += MouseMoveEvent;
+            globalHookService.Hook.MousePressed += MouseDownEvent;
+            globalHookService.Hook.MouseReleased += MouseUpEvent;
+            globalHookService.Hook.KeyPressed += Esc_KeyDown;
 
             if (settingService.Settings.EnableHoldKey)
             {
-                globalHook.KeyDown += GlobalHook_KeyDown;
-                globalHook.KeyUp += GlobalHook_KeyUp;
+                globalHookService.Hook.KeyPressed += KeyDown;
+                globalHookService.Hook.KeyReleased += KeyUp;
             }
         }
 
@@ -78,16 +79,16 @@ public class MouseService : IMouseService
 
     public void Dispose()
     {
-        if (globalHook != null)
+        if (globalHookService.Hook != null)
         {
-            globalHook.MouseMove -= MouseMoveEvent;
-            globalHook.MouseDown -= MouseDownEvent;
-            globalHook.MouseUp -= MouseUpEvent;
+            globalHookService.Hook.MouseMoved -= MouseMoveEvent;
+            globalHookService.Hook.MousePressed -= MouseDownEvent;
+            globalHookService.Hook.MouseReleased -= MouseUpEvent;
 
             if (settingService.Settings.EnableHoldKey)
             {
-                globalHook.KeyDown -= GlobalHook_KeyDown;
-                globalHook.KeyUp -= GlobalHook_KeyUp;
+                globalHookService.Hook.KeyPressed -= KeyDown;
+                globalHookService.Hook.KeyReleased -= KeyUp;
             }
         }
 
@@ -99,7 +100,7 @@ public class MouseService : IMouseService
         isListening = false;
     }
 
-    private void MouseMoveEvent(object sender, MouseEventArgs e)
+    private void MouseMoveEvent(object? sender, MouseHookEventArgs e)
     {
         if (isListening)
         {
@@ -162,22 +163,22 @@ public class MouseService : IMouseService
         }
     }
 
-    private void MouseDownEvent(object sender, MouseEventArgs e)
+    private void MouseDownEvent(object? sender, MouseHookEventArgs e)
     {
-        if (e.Button == MouseButtonsMap(settingService.Settings.MouseButton))
+        if (e.Data.Button == MouseButtonsMap(settingService.Settings.MouseButton))
         {
             activeWindow = ActiveWindow.Empty;
             snapAreaInfo = SnapAreaInfo.Empty;
             isWindowDetected = false;
             isListening = true;
 
-            startLocation = e.Location;
+            startLocation = new System.Drawing.Point(e.Data.X, e.Data.Y);
         }
     }
 
-    private void MouseUpEvent(object sender, MouseEventArgs e)
+    private void MouseUpEvent(object? sender, MouseHookEventArgs e)
     {
-        if (e.Button == MouseButtonsMap(settingService.Settings.MouseButton) && isListening)
+        if (e.Data.Button == MouseButtonsMap(settingService.Settings.MouseButton) && isListening)
         {
             isListening = false;
             HideWindows?.Invoke();
@@ -186,16 +187,24 @@ public class MouseService : IMouseService
             {
                 ActiveWindow = activeWindow,
                 Rectangle = snapAreaInfo?.Rectangle
-            }, e.Button == MouseButtons.Left);
+            }, e.Data.Button == SharpHook.Native.MouseButton.Button1);
         }
     }
 
-    private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
+    private void Esc_KeyDown(object? sender, KeyboardHookEventArgs e)
+    {
+        if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcEscape)
+        {
+            SnappingCancelled?.Invoke();
+        }
+    }
+
+    private void KeyUp(object? sender, KeyboardHookEventArgs e)
     {
         switch (settingService.Settings.HoldKey)
         {
             case HoldKey.Control:
-                if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftControl || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightControl)
                 {
                     isHoldingKey = false;
                 }
@@ -203,7 +212,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Alt:
-                if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
+                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftAlt || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightAlt)
                 {
                     isHoldingKey = false;
                 }
@@ -211,7 +220,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Shift:
-                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftShift || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightShift)
                 {
                     isHoldingKey = false;
                 }
@@ -219,13 +228,13 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Win:
-                if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
+                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftMeta || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightMeta)
                 {
                     isHoldingKey = false;
 
                     if (holdKeyUsed)
                     {
-                        e.Handled = true;
+                        e.SuppressEvent = true;
                     }
                 }
 
@@ -238,12 +247,12 @@ public class MouseService : IMouseService
         }
     }
 
-    private void GlobalHook_KeyDown(object sender, KeyEventArgs e)
+    private void KeyDown(object? sender, KeyboardHookEventArgs e)
     {
         switch (settingService.Settings.HoldKey)
         {
             case HoldKey.Control:
-                if (e.KeyCode == Keys.Control || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftControl || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightControl)
                 {
                     isHoldingKey = true;
                 }
@@ -251,7 +260,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Alt:
-                if (e.KeyCode == Keys.Alt || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
+                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftAlt || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightAlt)
                 {
                     isHoldingKey = true;
                 }
@@ -259,7 +268,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Shift:
-                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftShift || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightShift)
                 {
                     isHoldingKey = true;
                 }
@@ -267,7 +276,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Win:
-                if (e.KeyCode == Keys.LWin || e.KeyCode == Keys.RWin)
+                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftMeta || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightMeta)
                 {
                     isHoldingKey = true;
                 }
@@ -285,25 +294,25 @@ public class MouseService : IMouseService
         return move > settingService.Settings.MouseDragDelay;
     }
 
-    private MouseButtons MouseButtonsMap(MouseButton mouseButton)
+    private SharpHook.Native.MouseButton MouseButtonsMap(MouseButton mouseButton)
     {
         switch (mouseButton)
         {
             case MouseButton.Right:
-                return MouseButtons.Right;
+                return SharpHook.Native.MouseButton.Button2;
 
             case MouseButton.Middle:
-                return MouseButtons.Middle;
+                return SharpHook.Native.MouseButton.Button3;
 
             case MouseButton.XButton1:
-                return MouseButtons.XButton1;
+                return SharpHook.Native.MouseButton.Button4;
 
             case MouseButton.XButton2:
-                return MouseButtons.XButton2;
+                return SharpHook.Native.MouseButton.Button5;
 
             case MouseButton.Left:
             default:
-                return MouseButtons.Left;
+                return SharpHook.Native.MouseButton.Button1;
         }
     }
 

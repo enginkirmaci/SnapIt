@@ -28,6 +28,8 @@ public partial class App
     //public static NotifyIcon NotifyIcon { get; set; }
     public static Assembly Assembly => Assembly.GetExecutingAssembly();
 
+    public string[] startupArgs;
+
     protected override Window CreateShell()
     {
         //if (!Dev.IsActive)
@@ -35,6 +37,44 @@ public partial class App
         //    var snapManager = AppContainer.Resolve<ISnapManager>();
         //    _ = snapManager.InitializeAsync();
         //}
+        var settingService = AppContainer.Resolve<ISettingService>();
+
+        settingService.LoadSettings();
+
+        if (!AppLauncher.BypassSingleInstance(startupArgs))
+        {
+            if (settingService.Settings.RunAsAdmin && !Dev.SkipRunAsAdmin)
+            {
+                if (AppLauncher.IsAdmin(startupArgs))
+                {
+                    if (!AppInstance.RegisterSingleInstance())
+                    {
+                        //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
+                        //NotifyIcon.Visible = true;
+
+                        Shutdown();
+                    }
+                }
+                else if (!Dev.IsActive)
+                {
+                    AppLauncher.RunAsAdmin();
+                    Shutdown();
+                }
+            }
+            else
+            {
+                if (!AppInstance.RegisterSingleInstance() && !Dev.IsActive)
+                {
+                    //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
+                    //NotifyIcon.Visible = true;
+
+                    Shutdown();
+                }
+            }
+        }
+
+        Telemetry.TrackEvent("OnStartup");
+        Log.Logger.Information("SnapIt Started");
 
         var applicationWindow = AppContainer.Resolve<MainWindow>();
 
@@ -52,11 +92,12 @@ public partial class App
         containerRegistry.RegisterSingleton<IWindowManager, WindowManager>();
         containerRegistry.RegisterSingleton<IScreenManager, ScreenManager>();
 
+        containerRegistry.RegisterSingleton<IGlobalHookService, GlobalHookService>();
         containerRegistry.RegisterSingleton<IMouseService, MouseService>();
         containerRegistry.RegisterSingleton<IKeyboardService, KeyboardService>();
         containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
         containerRegistry.RegisterSingleton<ISettingService, SettingService>();
-        //containerRegistry.RegisterSingleton<IApplicationService, ApplicationService>();
+        containerRegistry.RegisterSingleton<IHotkeyService, HotkeyService>();
         containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
         containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
         containerRegistry.RegisterSingleton<IWindowsService, WindowsService>();
@@ -86,43 +127,7 @@ public partial class App
         //    Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/Assets/app.ico")).Stream)
         //};
 
-        if (!AppLauncher.BypassSingleInstance(e.Args))
-        {
-            if (SnapIt.Properties.Settings.Default.RunAsAdmin && !Dev.SkipRunAsAdmin)
-            {
-                if (e.Args.Length > 0 && AppLauncher.IsAdmin(e.Args))
-                {
-                    if (!AppInstance.RegisterSingleInstance())
-                    {
-                        //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
-                        //NotifyIcon.Visible = true;
-
-                        Shutdown();
-                        return;
-                    }
-                }
-                else if (!Dev.IsActive)
-                {
-                    AppLauncher.RunAsAdmin();
-                    Shutdown();
-                    return;
-                }
-            }
-            else
-            {
-                if (!AppInstance.RegisterSingleInstance() && !Dev.IsActive)
-                {
-                    //NotifyIcon.ShowBalloonTip(3000, null, $"Only one instance of {Constants.AppName} can run at the same time.", ToolTipIcon.Warning);
-                    //NotifyIcon.Visible = true;
-
-                    Shutdown();
-                    return;
-                }
-            }
-        }
-
-        Telemetry.TrackEvent("OnStartup");
-        Log.Logger.Information("SnapIt Started");
+        startupArgs = e.Args;
     }
 
     private void OnExit(object sender, ExitEventArgs e)
@@ -132,6 +137,9 @@ public partial class App
             var snapServiceContainer = AppContainer.Resolve<ISnapManager>();
 
             snapServiceContainer?.Dispose();
+
+            var globalHookService = AppContainer.Resolve<IGlobalHookService>();
+            globalHookService?.Hook?.Dispose();
         }
 
         Log.Logger.Information("SnapIt Exited");
@@ -155,7 +163,7 @@ public partial class App
 
     private static void CurrentDomainOnUnhandledException(UnhandledExceptionEventArgs args, ILogger log)
     {
-        AppLauncher.RunBypassSingleInstance();
+        //AppLauncher.RunBypassSingleInstance();
 
         var exception = args.ExceptionObject as Exception;
         var terminatingMessage = args.IsTerminating ? " The application is terminating." : string.Empty;

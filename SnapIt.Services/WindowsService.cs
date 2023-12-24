@@ -1,6 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using SnapIt.Common.Contracts;
 using SnapIt.Common.Entities;
 using SnapIt.Services.Contracts;
 
@@ -108,11 +106,4 @@ public class WindowsService : IWindowsService
         pattern = pattern.Replace(" ", @"\s");
         return new Regex(pattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase).IsMatch(input);
     }
-}
-
-public interface IWindowsService : IInitialize
-{
-    bool IsExcludedApplication(string Title, bool isKeyboard);
-
-    bool DisableIfFullScreen();
 }
