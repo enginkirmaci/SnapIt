@@ -55,9 +55,8 @@ public class HotkeyService : IHotkeyService
             hotKeyManager.Register(MoveUpHotKey);
             hotKeyManager.Register(MoveDownHotKey);
         }
-        catch (Exception ex)
+        catch
         {
-            var t = ex;
         }
 
         hotKeyManager.KeyPressed -= KeyPressed;
