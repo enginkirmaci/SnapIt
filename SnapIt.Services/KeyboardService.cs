@@ -225,18 +225,22 @@ public class KeyboardService : IKeyboardService
 
         if (e.Data.KeyCode == KeyCode.VcRight && WIN())
         {
+            MoveActiveWindowByKeyboard(MoveDirection.Right);
             e.SuppressEvent = true;
         }
         else if (e.Data.KeyCode == KeyCode.VcLeft && WIN())
         {
+            MoveActiveWindowByKeyboard(MoveDirection.Left);
             e.SuppressEvent = true;
         }
         else if (e.Data.KeyCode == KeyCode.VcUp && WIN())
         {
+            MoveActiveWindowByKeyboard(MoveDirection.Up);
             e.SuppressEvent = true;
         }
         else if (e.Data.KeyCode == KeyCode.VcDown && WIN())
         {
+            MoveActiveWindowByKeyboard(MoveDirection.Down);
             e.SuppressEvent = true;
         }
     }
