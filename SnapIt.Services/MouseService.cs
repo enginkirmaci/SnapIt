@@ -81,7 +81,7 @@ public class MouseService : IMouseService
     {
         if (globalHookService.Hook != null)
         {
-            globalHookService.Hook.MouseMoved -= MouseMoveEvent;
+            globalHookService.Hook.MouseDragged -= MouseMoveEvent;
             globalHookService.Hook.MousePressed -= MouseDownEvent;
             globalHookService.Hook.MouseReleased -= MouseUpEvent;
 
@@ -148,7 +148,6 @@ public class MouseService : IMouseService
                 }
                 else if (ShowWindowsIfNecessary != null && ShowWindowsIfNecessary.Invoke())
                 {
-                    //todo maybe ShowWindowsIfNecessary?.Invoke() can work before SelectElementWithPoint
                 }
                 else
                 {
@@ -167,6 +166,8 @@ public class MouseService : IMouseService
     {
         if (e.Data.Button == MouseButtonsMap(settingService.Settings.MouseButton))
         {
+            globalHookService.Hook.MouseDragged += MouseMoveEvent;
+
             activeWindow = ActiveWindow.Empty;
             snapAreaInfo = SnapAreaInfo.Empty;
             isWindowDetected = false;
@@ -180,6 +181,8 @@ public class MouseService : IMouseService
     {
         if (e.Data.Button == MouseButtonsMap(settingService.Settings.MouseButton) && isListening)
         {
+            globalHookService.Hook.MouseDragged -= MouseMoveEvent;
+
             isListening = false;
             HideWindows?.Invoke();
 
