@@ -51,7 +51,7 @@ public class SnapFullOverlay : Control
         Visibility = Visibility.Hidden;
     }
 
-    public void OnHoverStyle()
+    public void OnHoverStyle(bool animate = true)
     {
         DoubleAnimation animation = new DoubleAnimation
         {
@@ -65,7 +65,14 @@ public class SnapFullOverlay : Control
         {
             Visibility = Visibility.Visible;
 
-            overlay.BeginAnimation(OpacityProperty, animation);
+            if (animate)
+            {
+                overlay.BeginAnimation(OpacityProperty, animation);
+            }
+            else
+            {
+                overlay.Opacity = Theme.Opacity;
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using SharpHook;
+using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Events;
 using SnapIt.Common.Extensions;

@@ -32,7 +32,7 @@ public class Settings
     public bool IsVersion3000MessageShown { get; set; }
     public bool CheckForNewVersion { get; set; } = true;
     public bool RunAsAdmin { get; set; } = true;
-
+    public bool MouseHoverAnimation { get; set; } = false;
     //public Color HighlightColor { get; set; } = System.Windows.Media.Color.FromArgb(255, 33, 33, 33).Convert();
     //public Color OverlayColor { get; set; } = System.Windows.Media.Color.FromArgb(255, 99, 99, 99).Convert();
     //public Color BorderColor { get; set; } = System.Windows.Media.Color.FromArgb(255, 200, 200, 200).Convert();

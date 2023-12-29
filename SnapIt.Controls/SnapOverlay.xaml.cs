@@ -132,13 +132,13 @@ public partial class SnapOverlay : UserControl
         SnapFullOverlay.NormalStyle();
     }
 
-    public void OnHoverStyle()
+    public void OnHoverStyle(bool animate = true)
     {
         Overlay.Background = Brushes.Transparent;
         Border.Visibility = Visibility.Hidden;
         MergedIcon.Visibility = Visibility.Hidden;
 
-        SnapFullOverlay.OnHoverStyle();
+        SnapFullOverlay.OnHoverStyle(animate);
     }
 
     private void SnapOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
