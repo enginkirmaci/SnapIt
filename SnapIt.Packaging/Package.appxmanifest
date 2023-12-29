@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" IgnorableNamespaces="uap rescap desktop">
   <!-- xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"-->
-  <Identity Name="30071EnginKrmac.SnapIt" Publisher="CN=5CFA03AE-FF07-4595-B025-C45A2265838F" Version="5.0.4.0" />
+  <Identity Name="30071EnginKrmac.SnapIt" Publisher="CN=5CFA03AE-FF07-4595-B025-C45A2265838F" Version="5.0.5.0" />
   <Properties>
     <DisplayName>SnapIt</DisplayName>
     <PublisherDisplayName>Engin Kırmacı</PublisherDisplayName>
