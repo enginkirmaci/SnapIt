@@ -56,6 +56,20 @@
                 <ui:ToggleSwitch IsChecked="{Binding IsRunAsAdmin}" />
             </ui:CardControl>
 
+            <ui:CardControl Margin="0,0,0,8">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock FontSize="14" Text="Disable mouse hover animations" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="It is recommend to disable it if hovering not responsive enough."
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding MouseHoverAnimation}" />
+            </ui:CardControl>
+
             <ui:CardControl
                 Margin="0,0,0,8"
                 Header="Check for new version"

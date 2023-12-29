@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using SnapIt.Application;
 using SnapIt.Application.Contracts;
+using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
 using SnapIt.Services.Contracts;
@@ -10,6 +12,7 @@ namespace SnapIt.ViewModels.Pages;
 
 public class SettingsPageViewModel : ViewModelBase
 {
+    private readonly ISnapManager snapManager;
     private readonly ISettingService settingService;
     private readonly IThemeService themeService;
     private bool isStartupTaskActive;
@@ -37,6 +40,9 @@ public class SettingsPageViewModel : ViewModelBase
     public bool IsRunAsAdmin
     { get => settingService.Settings.RunAsAdmin; set { settingService.Settings.RunAsAdmin = value; } }
 
+    public bool MouseHoverAnimation
+    { get => settingService.Settings.MouseHoverAnimation; set { settingService.Settings.MouseHoverAnimation = value; ApplyChanges(); } }
+
     public bool IsStartupTaskActive
     {
         get => isStartupTaskActive;
@@ -60,6 +66,7 @@ public class SettingsPageViewModel : ViewModelBase
         ISettingService settingService,
         IThemeService themeService)
     {
+        this.snapManager = snapManager;
         this.settingService = settingService;
         this.themeService = themeService;
         ThemeList = [
@@ -78,6 +85,15 @@ public class SettingsPageViewModel : ViewModelBase
         await settingService.InitializeAsync();
 
         IsStartupTaskActive = await settingService.GetStartupTaskStatusAsync();
+    }
+
+    private void ApplyChanges()
+    {
+        if (!Dev.IsActive)
+        {
+            snapManager.Dispose();
+            snapManager.InitializeAsync();
+        }
     }
 
     private void ChangeTheme()

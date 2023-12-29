@@ -16,6 +16,7 @@ public class SnapWindow : Window, IWindow
     private readonly IWinApiService winApiService;
     private SnapArea currentArea;
     private SnapOverlay currentOverlay;
+    private bool animate = false;
 
     public SnapScreen Screen { get; set; }
     public List<Rectangle> SnapAreaBoundries { get; set; }
@@ -53,13 +54,13 @@ public class SnapWindow : Window, IWindow
             X = (float)(100 / (screen.ScaleFactor * 100)),
             Y = (float)(100 / (screen.ScaleFactor * 100))
         };
+
+        animate = settingService.Settings.MouseHoverAnimation;
     }
 
-    //TODO test here
     public new void Show()
     {
         base.Show();
-        //MaximizeWindow();
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -149,17 +150,17 @@ public class SnapWindow : Window, IWindow
 
             if (dependencyObject is SnapArea && currentArea?.Name != ((SnapArea)dependencyObject).Name)
             {
-                currentArea?.NormalStyle();
+                currentArea?.NormalStyle(animate);
                 currentOverlay?.NormalStyle();
             }
             else if (dependencyObject is not SnapArea)
             {
-                currentArea?.NormalStyle();
+                currentArea?.NormalStyle(animate);
             }
 
             if (dependencyObject is SnapOverlay && currentOverlay?.Name != ((SnapOverlay)dependencyObject).Name)
             {
-                currentArea?.NormalStyle();
+                currentArea?.NormalStyle(animate);
                 currentOverlay?.NormalStyle();
             }
             else if (dependencyObject is not SnapOverlay)
@@ -175,7 +176,7 @@ public class SnapWindow : Window, IWindow
 
                     if (!(currentArea != null && currentArea.Name == ((SnapArea)dependencyObject).Name))
                     {
-                        snapArea.OnHoverStyle();
+                        snapArea.OnHoverStyle(animate);
                     }
 
                     currentArea = snapArea;
@@ -190,7 +191,7 @@ public class SnapWindow : Window, IWindow
 
                     if (!(currentOverlay != null && currentOverlay?.Name == ((SnapOverlay)dependencyObject).Name))
                     {
-                        snapOverlay.OnHoverStyle();
+                        snapOverlay.OnHoverStyle(animate);
                     }
 
                     currentArea = null;

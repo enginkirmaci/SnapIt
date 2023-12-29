@@ -99,7 +99,7 @@ public class SnapArea : Control
         Name = $"snaparea_{Guid.NewGuid():N}";
     }
 
-    public void NormalStyle()
+    public void NormalStyle(bool animate = true)
     {
         ColorAnimation animation = new ColorAnimation
         {
@@ -117,7 +117,15 @@ public class SnapArea : Control
             //    return;
 
             area.Background = brush;
-            brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+
+            if (animate)
+            {
+                brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+            }
+            else
+            {
+                area.Background = Theme.OverlayBrush;
+            }
         }
     }
 
