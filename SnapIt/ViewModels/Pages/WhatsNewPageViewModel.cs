@@ -10,6 +10,16 @@ public class WhatsNewPageViewModel : ViewModelBase
     [
         new ChangeLogItem()
         {
+            Header = "v5.0.5.0",
+            Lines =
+                [
+                    "Some more performance improvements.",
+                    "Color animations can be disabled on Settings page.",
+                    "Replaced old hook with SharpHook for global mouse hooking."
+                ]
+        },
+        new ChangeLogItem()
+        {
             Header = "v5.0.0.0",
             Lines =
                 [
