@@ -67,7 +67,13 @@ public class HotkeyService : IHotkeyService
 
     public void RegisterStartStopHotkey()
     {
-        hotKeyManager.Register(StartStopHotKey);
+        try
+        {
+            hotKeyManager.Register(StartStopHotKey);
+        }
+        catch
+        {
+        }
 
         hotKeyManager.KeyPressed -= KeyPressed;
         hotKeyManager.KeyPressed += KeyPressed;
@@ -75,12 +81,18 @@ public class HotkeyService : IHotkeyService
 
     public void Dispose()
     {
-        hotKeyManager.Unregister(CycleLayoutsHotKey);
-        hotKeyManager.Unregister(StartStopHotKey);
-        hotKeyManager.Unregister(MoveLeftHotKey);
-        hotKeyManager.Unregister(MoveRightHotKey);
-        hotKeyManager.Unregister(MoveUpHotKey);
-        hotKeyManager.Unregister(MoveDownHotKey);
+        try
+        {
+            hotKeyManager.Unregister(CycleLayoutsHotKey);
+            hotKeyManager.Unregister(StartStopHotKey);
+            hotKeyManager.Unregister(MoveLeftHotKey);
+            hotKeyManager.Unregister(MoveRightHotKey);
+            hotKeyManager.Unregister(MoveUpHotKey);
+            hotKeyManager.Unregister(MoveDownHotKey);
+        }
+        catch
+        {
+        }
 
         hotKeyManager.KeyPressed -= KeyPressed;
 
