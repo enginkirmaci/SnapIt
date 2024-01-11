@@ -10,6 +10,15 @@ public class WhatsNewPageViewModel : ViewModelBase
     [
         new ChangeLogItem()
         {
+            Header = "v5.0.6.0",
+            Lines =
+                [
+                    "Exclude app dialog fixes.",
+                    "Hotkey fix"
+                ]
+        },
+        new ChangeLogItem()
+        {
             Header = "v5.0.5.0",
             Lines =
                 [

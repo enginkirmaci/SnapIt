@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Prism.Mvvm;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
 using SnapIt.Services.Contracts;
@@ -26,7 +25,7 @@ public class ExcludeApplicationDialogViewModel : ViewModelBase
 
     public override async Task InitializeAsync(RoutedEventArgs args)
     {
-        selectedExcludedApplication = new();
+        SelectedExcludedApplication ??= new();
 
         MatchRules = [
             MatchRule.Contains,
