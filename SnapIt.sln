@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Services", "SnapIt.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapIt.Application", "SnapIt.App\SnapIt.Application.csproj", "{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap.Launcher", "Snap.Launcher\Snap.Launcher.csproj", "{2ECCA725-16CB-65F3-B712-DF49FA973EE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -292,6 +294,36 @@ Global
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|x64.Build.0 = Debug|Any CPU
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|x86.ActiveCfg = Debug|Any CPU
 		{6EC95476-6EDD-40A1-800A-5EAFC21DCF1F}.Standalone|x86.Build.0 = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|x64.Build.0 = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Debug|x86.Build.0 = Debug|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|ARM.Build.0 = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|ARM64.Build.0 = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|x64.ActiveCfg = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|x64.Build.0 = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|x86.ActiveCfg = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Release|x86.Build.0 = Release|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|Any CPU.ActiveCfg = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|Any CPU.Build.0 = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|ARM.ActiveCfg = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|ARM.Build.0 = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|ARM64.ActiveCfg = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|ARM64.Build.0 = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|x64.ActiveCfg = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|x64.Build.0 = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|x86.ActiveCfg = Standalone|Any CPU
+		{2ECCA725-16CB-65F3-B712-DF49FA973EE9}.Standalone|x86.Build.0 = Standalone|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
