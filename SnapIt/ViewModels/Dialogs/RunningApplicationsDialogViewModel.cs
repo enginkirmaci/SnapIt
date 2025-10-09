@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using Prism.Mvvm;
-using SnapIt.Common.Mvvm;
+﻿using SnapIt.Common.Mvvm;
 using SnapIt.Services.Contracts;
 
 namespace SnapIt.ViewModels.Dialogs;

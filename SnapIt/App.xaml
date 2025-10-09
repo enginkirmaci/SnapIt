@@ -1,4 +1,4 @@
-﻿<prism:PrismApplication
+﻿<Application
     x:Class="SnapIt.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,7 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Exit="OnExit"
     Startup="OnStartup">
-    <prism:PrismApplication.Resources>
+    <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
@@ -33,5 +33,5 @@
 
             <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Assets/#Segoe Fluent Icons</FontFamily>
         </ResourceDictionary>
-    </prism:PrismApplication.Resources>
-</prism:PrismApplication>
+    </Application.Resources>
+</Application>

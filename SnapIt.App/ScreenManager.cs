@@ -1,5 +1,4 @@
 ﻿using System.Windows.Interop;
-using DryIoc;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 
@@ -9,16 +8,15 @@ public class ScreenManager : IScreenManager
 {
     private const uint WM_DISPLAYCHANGE = 126;
     private const uint WM_SETTINGCHANGE = 26;
-    private readonly IContainer container;
     private static bool screenChanged = false;
 
-    private ISnapManager snapManager;
+    private ISnapManager? snapManager;
 
     public bool IsInitialized { get; private set; }
 
-    public ScreenManager(IContainer container)
+    public void SetSnapManager(ISnapManager snapManager)
     {
-        this.container = container;
+        this.snapManager = snapManager;
     }
 
     public async Task InitializeAsync()
@@ -27,8 +25,6 @@ public class ScreenManager : IScreenManager
         {
             return;
         }
-
-        snapManager = container.GetService<ISnapManager>();
 
         HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(System.Windows.Application.Current.MainWindow).Handle);
         source.AddHook(new HwndSourceHook(WndProc));
@@ -69,7 +65,7 @@ public class ScreenManager : IScreenManager
         if (screenChanged)
         {
             screenChanged = false;
-            snapManager.ScreenChangedEvent();
+            snapManager?.ScreenChangedEvent();
         }
     }
 }

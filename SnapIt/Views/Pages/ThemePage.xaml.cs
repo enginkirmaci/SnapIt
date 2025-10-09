@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 using SnapIt.ViewModels.Pages;
-using Wpf.Ui.Controls;
+using Wpf.Ui.Abstractions.Controls;
 
 namespace SnapIt.Views.Pages;
 

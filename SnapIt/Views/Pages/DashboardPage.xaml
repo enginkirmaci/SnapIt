@@ -1,14 +1,14 @@
 ﻿<Page
     x:Class="SnapIt.Views.Pages.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="clr-namespace:SnapIt.Common.Entities;assembly=SnapIt.Common"
-    xmlns:local="clr-namespace:SnapIt.Views.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gif="clr-namespace:XamlAnimatedGif;assembly=XamlAnimatedGif"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SnapIt.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Dashboard"
     Margin="0,42,0,0"
     d:DataContext="{d:DesignInstance local:DashboardPage,
@@ -136,8 +136,7 @@
                 Margin="4,0,4,0"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="mousesettings"
-                Icon="{ui:FontIcon '&#xe962;',
-                                   'Segoe Fluent Icons'}">
+                Icon="{ui:FontIcon '&#xe962;'}">
                 <StackPanel>
                     <ui:TextBlock
                         Margin="0"
@@ -217,8 +216,7 @@
                 Margin="4,8,4,0"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="tutorials"
-                Icon="{ui:FontIcon '&#xe7be;',
-                                   'Segoe Fluent Icons'}">
+                Icon="{ui:FontIcon '&#xe7be;'}">
                 <StackPanel>
                     <ui:TextBlock
                         Margin="0"

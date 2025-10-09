@@ -1,6 +1,5 @@
 ﻿using System.Windows.Forms;
 using SharpHook;
-using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Events;
 using SnapIt.Common.Extensions;
@@ -191,13 +190,13 @@ public class MouseService : IMouseService
             {
                 ActiveWindow = activeWindow,
                 Rectangle = snapAreaInfo?.Rectangle
-            }, e.Data.Button == SharpHook.Native.MouseButton.Button1);
+            }, e.Data.Button == SharpHook.Data.MouseButton.Button1);
         }
     }
 
     private void Esc_KeyDown(object? sender, KeyboardHookEventArgs e)
     {
-        if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcEscape)
+        if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcEscape)
         {
             SnappingCancelled?.Invoke();
         }
@@ -208,7 +207,7 @@ public class MouseService : IMouseService
         switch (settingService.Settings.HoldKey)
         {
             case HoldKey.Control:
-                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftControl || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightControl)
+                if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcLeftControl || e.Data.KeyCode == SharpHook.Data.KeyCode.VcRightControl)
                 {
                     isHoldingKey = false;
                 }
@@ -216,7 +215,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Alt:
-                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftAlt || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightAlt)
+                if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcLeftAlt || e.Data.KeyCode == SharpHook.Data.KeyCode.VcRightAlt)
                 {
                     isHoldingKey = false;
                 }
@@ -224,7 +223,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Shift:
-                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftShift || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightShift)
+                if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcLeftShift || e.Data.KeyCode == SharpHook.Data.KeyCode.VcRightShift)
                 {
                     isHoldingKey = false;
                 }
@@ -232,7 +231,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Win:
-                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftMeta || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightMeta)
+                if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcLeftMeta || e.Data.KeyCode == SharpHook.Data.KeyCode.VcRightMeta)
                 {
                     isHoldingKey = false;
 
@@ -256,7 +255,7 @@ public class MouseService : IMouseService
         switch (settingService.Settings.HoldKey)
         {
             case HoldKey.Control:
-                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftControl || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightControl)
+                if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcLeftControl || e.Data.KeyCode == SharpHook.Data.KeyCode.VcRightControl)
                 {
                     isHoldingKey = true;
                 }
@@ -264,7 +263,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Alt:
-                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftAlt || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightAlt)
+                if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcLeftAlt || e.Data.KeyCode == SharpHook.Data.KeyCode.VcRightAlt)
                 {
                     isHoldingKey = true;
                 }
@@ -272,7 +271,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Shift:
-                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftShift || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightShift)
+                if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcLeftShift || e.Data.KeyCode == SharpHook.Data.KeyCode.VcRightShift)
                 {
                     isHoldingKey = true;
                 }
@@ -280,7 +279,7 @@ public class MouseService : IMouseService
                 break;
 
             case HoldKey.Win:
-                if (e.Data.KeyCode == SharpHook.Native.KeyCode.VcLeftMeta || e.Data.KeyCode == SharpHook.Native.KeyCode.VcRightMeta)
+                if (e.Data.KeyCode == SharpHook.Data.KeyCode.VcLeftMeta || e.Data.KeyCode == SharpHook.Data.KeyCode.VcRightMeta)
                 {
                     isHoldingKey = true;
                 }
@@ -298,25 +297,25 @@ public class MouseService : IMouseService
         return move > settingService.Settings.MouseDragDelay;
     }
 
-    private SharpHook.Native.MouseButton MouseButtonsMap(MouseButton mouseButton)
+    private SharpHook.Data.MouseButton MouseButtonsMap(MouseButton mouseButton)
     {
         switch (mouseButton)
         {
             case MouseButton.Right:
-                return SharpHook.Native.MouseButton.Button2;
+                return SharpHook.Data.MouseButton.Button2;
 
             case MouseButton.Middle:
-                return SharpHook.Native.MouseButton.Button3;
+                return SharpHook.Data.MouseButton.Button3;
 
             case MouseButton.XButton1:
-                return SharpHook.Native.MouseButton.Button4;
+                return SharpHook.Data.MouseButton.Button4;
 
             case MouseButton.XButton2:
-                return SharpHook.Native.MouseButton.Button5;
+                return SharpHook.Data.MouseButton.Button5;
 
             case MouseButton.Left:
             default:
-                return SharpHook.Native.MouseButton.Button1;
+                return SharpHook.Data.MouseButton.Button1;
         }
     }
 

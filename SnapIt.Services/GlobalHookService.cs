@@ -35,5 +35,6 @@ public class GlobalHookService : IGlobalHookService
 
     public void Dispose()
     {
+        Hook?.Dispose();
     }
 }

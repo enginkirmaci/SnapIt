@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Interop;
-using Prism.Commands;
+
 using SnapIt.Application.Contracts;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
