@@ -114,7 +114,7 @@ public partial class App
 
         var settingService = Services.GetRequiredService<ISettingService>();
 
-        settingService.LoadSettings();
+        await settingService.LoadSettingsAsync();
 
         if (!AppLauncher.BypassSingleInstance(startupArgs))
         {

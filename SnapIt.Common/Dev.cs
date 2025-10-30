@@ -14,7 +14,7 @@ public static class Dev
 #if DEBUG
     public const bool IsActive = true;
     public const bool ShowSnapWindowOnStartup = false;
-    public const bool IsTopmostDisabled = false;
+    public const bool IsTopmostDisabled = true;
     public const bool SkipLicense = false;
     public const bool TestTrialEnded = false;
     public const bool TestInTrial = false;

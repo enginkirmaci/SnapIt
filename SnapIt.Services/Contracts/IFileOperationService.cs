@@ -9,8 +9,6 @@ public interface IFileOperationService : IInitialize
 
     Task<T> LoadAsync<T>() where T : new();
 
-    T Load<T>() where T : new();
-
     void SaveLayout(Layout layout);
 
     void ExportLayout(Layout layout, string layoutPath);
