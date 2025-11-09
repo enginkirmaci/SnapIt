@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SnapIt.ViewModels.Dialogs;
 using Wpf.Ui.Controls;
 
@@ -15,7 +16,7 @@ public partial class RenameDialog : ContentDialog
         ContentPresenter contentPresenter)
         : base(contentPresenter)
     {
-        ViewModel = App.AppContainer.GetService<RenameDialogViewModel>();
+        ViewModel = App.Services.GetRequiredService<RenameDialogViewModel>();
         DataContext = this;
 
         InitializeComponent();

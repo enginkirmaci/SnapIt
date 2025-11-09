@@ -3,11 +3,12 @@ using SnapIt.Common.Contracts;
 using SnapIt.ViewModels.Windows;
 using SnapIt.Views.Pages;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions;
 using Wpf.Ui.Controls;
 
 namespace SnapIt.Views.Windows;
 
-public partial class MainWindow : IWindow
+public partial class MainWindow : INavigationWindow
 {
     private bool _isUserClosedPane;
     private bool _isPaneOpenedOrClosedFromCode;
@@ -77,4 +78,19 @@ public partial class MainWindow : IWindow
 
         _isUserClosedPane = true;
     }
+
+    public INavigationView GetNavigation() => NavigationView;
+
+    public bool Navigate(Type pageType) => NavigationView.Navigate(pageType);
+
+    public void SetServiceProvider(IServiceProvider serviceProvider)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetPageService(INavigationViewPageProvider navigationViewPageProvider) => NavigationView.SetPageProviderService(navigationViewPageProvider);
+
+    public void ShowWindow() => Show();
+
+    public void CloseWindow() => Close();
 }

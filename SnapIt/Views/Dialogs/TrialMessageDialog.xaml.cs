@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SnapIt.ViewModels.Dialogs;
 using Wpf.Ui.Controls;
 
@@ -17,7 +18,7 @@ public partial class TrialMessageDialog : ContentDialog
     {
         InitializeComponent();
 
-        ViewModel = App.AppContainer.GetService<TrialMessageDialogViewModel>();
+        ViewModel = App.Services.GetRequiredService<TrialMessageDialogViewModel>();
         DataContext = this;
     }
 }

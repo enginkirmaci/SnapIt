@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SnapIt.ViewModels.Dialogs;
 using Wpf.Ui.Controls;
 
@@ -14,7 +15,7 @@ public partial class RunningApplicationsDialog : ContentDialog
     public RunningApplicationsDialog(ContentPresenter contentPresenter)
         : base(contentPresenter)
     {
-        ViewModel = App.AppContainer.GetService<RunningApplicationsDialogViewModel>();
+        ViewModel = App.Services.GetRequiredService<RunningApplicationsDialogViewModel>();
         DataContext = this;
 
         InitializeComponent();

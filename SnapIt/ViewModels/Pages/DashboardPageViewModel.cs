@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using Prism.Commands;
-using SnapIt.Common.Converters;
+﻿using SnapIt.Common.Converters;
 using SnapIt.Common.Mvvm;
 using Wpf.Ui;
 

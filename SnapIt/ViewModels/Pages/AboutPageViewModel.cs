@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using Prism.Commands;
-using SnapIt.Common.Entities;
+﻿using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
 using SnapIt.Views.Pages;
 using Wpf.Ui;

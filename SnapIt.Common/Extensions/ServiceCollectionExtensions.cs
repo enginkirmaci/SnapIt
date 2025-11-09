@@ -1,11 +1,11 @@
-﻿using Prism.Ioc;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace SnapIt.Common.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IContainerRegistry AddTransientFromNamespace(
-        this IContainerRegistry services,
+    public static IServiceCollection AddTransientFromNamespace(
+        this IServiceCollection services,
         string namespaceName,
         params Assembly[] assemblies
     )
@@ -15,14 +15,15 @@ public static class ServiceCollectionExtensions
             IEnumerable<Type> types = assembly.GetTypes()
                 .Where(x =>
                     x.IsClass &&
+                    x.Namespace != null &&
                     x.Namespace!.StartsWith(namespaceName, StringComparison.InvariantCultureIgnoreCase)
                 );
 
             foreach (Type? type in types)
             {
-                if (!services.IsRegistered(type))
+                if (!services.Any(sd => sd.ImplementationType == type))
                 {
-                    services.Register(type);
+                    services.AddSingleton(type);
                 }
             }
         }

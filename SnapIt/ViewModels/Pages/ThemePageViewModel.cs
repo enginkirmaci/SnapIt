@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using Prism.Commands;
+
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;

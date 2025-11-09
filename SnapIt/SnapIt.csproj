@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <Product>SnapIt</Product>
     <Description>SnapIt is a window manager for Windows. Organizes your windows to improve your productivity when working with wide and multiple screens.</Description>
-    <Version>5.0.6.0</Version>
+    <Version>5.0.7.0</Version>
     <Copyright>Copyright ©  2019</Copyright>
     <Company>Engin KIRMACI</Company>
     <FileVersion>
@@ -48,14 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dirkster.ColorPickerLib" Version="1.6.2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
-    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
-    <PackageReference Include="Serilog" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="XamlAnimatedGif" Version="2.2.0" />
-    <PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
-    <PackageReference Include="WPF-UI.Tray" Version="3.0.0-preview.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="WPF-UI.DependencyInjection" Version="4.0.3" />
+    <PackageReference Include="XamlAnimatedGif" Version="2.3.1" />
+    <PackageReference Include="WPF-UI" Version="4.0.3" />
+    <PackageReference Include="WPF-UI.Tray" Version="4.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SnapIt.App\SnapIt.Application.csproj" />

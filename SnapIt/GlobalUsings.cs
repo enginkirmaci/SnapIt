@@ -6,10 +6,9 @@
 global using System;
 global using System.Collections.Generic;
 global using System.Collections.ObjectModel;
-global using System.Diagnostics;
 global using System.Linq;
-global using System.Reflection;
+global using System.Threading;
 global using System.Threading.Tasks;
-global using System.Windows.Threading;
-global using Microsoft.Extensions.DependencyInjection;
+global using System.Windows;
+global using Microsoft.Extensions.Hosting;
 global using Windows.System;

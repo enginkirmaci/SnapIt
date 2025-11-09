@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SnapIt.ViewModels.Dialogs;
 using Wpf.Ui.Controls;
 
@@ -15,7 +16,7 @@ public partial class ExcludeApplicationDialog : ContentDialog
         ContentPresenter contentPresenter)
         : base(contentPresenter)
     {
-        ViewModel = App.AppContainer.GetService<ExcludeApplicationDialogViewModel>();
+        ViewModel = App.Services.GetRequiredService<ExcludeApplicationDialogViewModel>();
         DataContext = this;
 
         InitializeComponent();

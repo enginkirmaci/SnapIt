@@ -1,20 +1,21 @@
 ﻿using System.IO;
-using System.Windows;
-using DryIoc;
-using Prism.DryIoc;
-using Prism.Ioc;
+using System.Reflection;
+using System.Windows.Threading;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Events;
 using SnapIt.Application;
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Applications;
-using SnapIt.Common.Contracts;
-using SnapIt.Common.Entities;
 using SnapIt.Common.Extensions;
 using SnapIt.Services;
 using SnapIt.Services.Contracts;
+using SnapIt.ViewModels.Windows;
 using SnapIt.Views.Windows;
 using Wpf.Ui;
+using Wpf.Ui.DependencyInjection;
 
 namespace SnapIt;
 
@@ -23,23 +24,97 @@ namespace SnapIt;
 /// </summary>
 public partial class App
 {
-    public static IContainer AppContainer { get; set; }
-
-    //public static NotifyIcon NotifyIcon { get; set; }
+    public string[] startupArgs;
     public static Assembly Assembly => Assembly.GetExecutingAssembly();
 
-    public string[] startupArgs;
-
-    protected override Window CreateShell()
+    // Configure Serilog logger before host creation
+    static App()
     {
-        //if (!Dev.IsActive)
-        //{
-        //    var snapManager = AppContainer.Resolve<ISnapManager>();
-        //    _ = snapManager.InitializeAsync();
-        //}
-        var settingService = AppContainer.Resolve<ISettingService>();
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.File(
+                Path.Combine(AppContext.BaseDirectory, "logs", "log.txt"),
+                rollingInterval: RollingInterval.Day,
+                restrictedToMinimumLevel: LogEventLevel.Information
+            )
+            //.WriteTo.Console()
+            .CreateLogger();
+    }
 
-        settingService.LoadSettings();
+    private static readonly IHost _host = Host.CreateDefaultBuilder()
+        .UseSerilog() // <-- Integrate Serilog with the host
+        .ConfigureAppConfiguration(c =>
+        {
+            var basePath =
+                Path.GetDirectoryName(AppContext.BaseDirectory)
+                ?? throw new DirectoryNotFoundException(
+                    "Unable to find the base directory of the application."
+                );
+            _ = c.SetBasePath(basePath);
+        })
+        .ConfigureServices(
+            (context, services) =>
+            {
+                _ = services.AddNavigationViewPageProvider();
+
+                // App Host
+                _ = services.AddHostedService<ApplicationHostService>();
+
+                _ = services.AddSingleton<ISnackbarService, SnackbarService>();
+                _ = services.AddSingleton<IContentDialogService, ContentDialogService>();
+                _ = services.AddSingleton<INotifyIconService, NotifyIconService>();
+                _ = services.AddSingleton<IThemeService, ThemeService>();
+                _ = services.AddSingleton<ITaskBarService, TaskBarService>();
+                _ = services.AddSingleton<INavigationService, NavigationService>();
+
+                // Main window with navigation
+                _ = services.AddSingleton<INavigationWindow, MainWindow>();
+                _ = services.AddSingleton<MainWindowViewModel>();
+
+                // Views and ViewModels
+                _ = services.AddTransientFromNamespace("SnapIt.Views", Assembly);
+                _ = services.AddTransientFromNamespace("SnapIt.ViewModels", Assembly);
+
+                _ = services.AddSingleton<ISnapManager, SnapManager>();
+                _ = services.AddSingleton<IWindowManager, WindowManager>();
+                _ = services.AddSingleton<IScreenManager, ScreenManager>();
+
+                _ = services.AddSingleton<IGlobalHookService, GlobalHookService>();
+                _ = services.AddSingleton<IMouseService, MouseService>();
+                _ = services.AddSingleton<IKeyboardService, KeyboardService>();
+                _ = services.AddSingleton<IFileOperationService, FileOperationService>();
+                _ = services.AddSingleton<ISettingService, SettingService>();
+                _ = services.AddSingleton<IHotkeyService, HotkeyService>();
+                _ = services.AddSingleton<IWinApiService, WinApiService>();
+                _ = services.AddSingleton<IStoreLicenseService, StoreLicenseService>();
+                _ = services.AddSingleton<IWindowsService, WindowsService>();
+            }
+        )
+        .Build();
+
+    /// <summary>
+    /// Gets services.
+    /// </summary>
+    public static IServiceProvider Services
+    {
+        get { return _host.Services; }
+    }
+
+    /// <summary>
+    /// Occurs when the application is loading.
+    /// </summary>
+    private async void OnStartup(object sender, StartupEventArgs e)
+    {
+        startupArgs = e.Args;
+        Telemetry.TrackEvent("OnStartup");
+        Log.Logger.Information("SnapIt Started");
+        RegisterGlobalExceptionHandling(Log.Logger);
+
+        await _host.StartAsync();
+
+        var settingService = Services.GetRequiredService<ISettingService>();
+
+        await settingService.LoadSettingsAsync();
 
         if (!AppLauncher.BypassSingleInstance(startupArgs))
         {
@@ -72,79 +147,23 @@ public partial class App
                 }
             }
         }
-
-        Telemetry.TrackEvent("OnStartup");
-        Log.Logger.Information("SnapIt Started");
-
-        var applicationWindow = AppContainer.Resolve<MainWindow>();
-
-        return applicationWindow;
     }
 
-    protected override void RegisterTypes(IContainerRegistry containerRegistry)
+    /// <summary>
+    /// Occurs when the application is closing.
+    /// </summary>
+    private async void OnExit(object sender, ExitEventArgs e)
     {
-        containerRegistry.RegisterSingleton<IWindow, MainWindow>();
+        await _host.StopAsync();
 
-        containerRegistry.AddTransientFromNamespace("SnapIt.Views", Assembly);
-        containerRegistry.AddTransientFromNamespace("SnapIt.ViewModels", Assembly);
-
-        containerRegistry.RegisterSingleton<ISnapManager, SnapManager>();
-        containerRegistry.RegisterSingleton<IWindowManager, WindowManager>();
-        containerRegistry.RegisterSingleton<IScreenManager, ScreenManager>();
-
-        containerRegistry.RegisterSingleton<IGlobalHookService, GlobalHookService>();
-        containerRegistry.RegisterSingleton<IMouseService, MouseService>();
-        containerRegistry.RegisterSingleton<IKeyboardService, KeyboardService>();
-        containerRegistry.RegisterSingleton<IFileOperationService, FileOperationService>();
-        containerRegistry.RegisterSingleton<ISettingService, SettingService>();
-        containerRegistry.RegisterSingleton<IHotkeyService, HotkeyService>();
-        containerRegistry.RegisterSingleton<IWinApiService, WinApiService>();
-        containerRegistry.RegisterSingleton<IStoreLicenseService, StoreLicenseService>();
-        containerRegistry.RegisterSingleton<IWindowsService, WindowsService>();
-
-        containerRegistry.RegisterSingleton<IThemeService, ThemeService>();
-        containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
-        containerRegistry.RegisterSingleton<ISnackbarService, SnackbarService>();
-        containerRegistry.RegisterSingleton<IContentDialogService, ContentDialogService>();
-        containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
-
-        AppContainer = containerRegistry.GetContainer();
-    }
-
-    private void OnStartup(object sender, StartupEventArgs e)
-    {
-        Log.Logger = new LoggerConfiguration()
-                   .MinimumLevel.Debug()
-                   .WriteTo.File(Path.Combine(Constants.RootFolder, "logs", "log.txt"),
-                        rollingInterval: RollingInterval.Day)
-                   .CreateLogger();
-
-        RegisterGlobalExceptionHandling(Log.Logger);
-
-        //todo change this
-        //NotifyIcon = new NotifyIcon
-        //{
-        //    Icon = new System.Drawing.Icon(GetResourceStream(new Uri("pack://application:,,,/Assets/app.ico")).Stream)
-        //};
-
-        startupArgs = e.Args;
-    }
-
-    private void OnExit(object sender, ExitEventArgs e)
-    {
-        if (AppContainer != null)
-        {
-            var snapServiceContainer = AppContainer.Resolve<ISnapManager>();
-
-            snapServiceContainer?.Dispose();
-
-            var globalHookService = AppContainer.Resolve<IGlobalHookService>();
-            globalHookService?.Hook?.Dispose();
-        }
+        _host.Dispose();
 
         Log.Logger.Information("SnapIt Exited");
     }
 
+    /// <summary>
+    /// Occurs when an exception is thrown by an application but not handled.
+    /// </summary>
     private void RegisterGlobalExceptionHandling(ILogger log)
     {
         // this is the line you really want

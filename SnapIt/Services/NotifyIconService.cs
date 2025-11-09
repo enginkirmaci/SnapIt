@@ -1,18 +1,13 @@
-﻿using System.Windows;
-using Prism.Commands;
+﻿using System.Diagnostics;
 using SnapIt.Application.Contracts;
-using SnapIt.Common.Contracts;
 using SnapIt.Common.Converters;
 using SnapIt.Common.Entities;
+using SnapIt.Common.Mvvm;
 using SnapIt.Services.Contracts;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
 namespace SnapIt.Services;
-
-public interface INotifyIconService : IInitialize
-{
-}
 
 public class NotifyIconService : Wpf.Ui.Tray.NotifyIconService, INotifyIconService
 {

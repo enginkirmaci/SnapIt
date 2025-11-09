@@ -33,10 +33,7 @@ public class SettingService : ISettingService
 
         await fileOperationService.InitializeAsync();
 
-        if (Settings == null)
-        {
-            LoadSettings();
-        }
+        await LoadSettingsAsync();
 
         ExcludedApplicationSettings = await fileOperationService.LoadAsync<ExcludedApplicationSettings>();
         ExcludedApplicationSettings.Applications = ExcludedApplicationSettings.Applications.Where(i => i != null).ToList();
@@ -60,11 +57,9 @@ public class SettingService : ISettingService
         IsInitialized = true;
     }
 
-    public void LoadSettings()
+    public async Task LoadSettingsAsync()
     {
-        Settings = fileOperationService.Load<Settings>();
-
-        Settings ??= new Settings();
+        Settings ??= await fileOperationService.LoadAsync<Settings>() ?? new Settings();
     }
 
     public void ReInitialize()

@@ -59,7 +59,7 @@
             <ui:CardControl Margin="0,0,0,8">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <TextBlock FontSize="14" Text="Disable mouse hover animations" />
+                        <TextBlock FontSize="14" Text="Enable mouse hover animations" />
                         <TextBlock
                             FontSize="12"
                             Foreground="{DynamicResource TextFillColorTertiaryBrush}"

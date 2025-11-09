@@ -1,4 +1,5 @@
 ﻿using SnapIt.ViewModels.Pages;
+using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 
 namespace SnapIt.Views.Pages;

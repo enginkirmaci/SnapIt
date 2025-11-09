@@ -76,6 +76,8 @@ public class SnapManager : ISnapManager
             windowManager.Show();
         }
 
+        screenManager.SetSnapManager(this);
+
         mouseService.MoveWindow += MoveWindow;
         mouseService.SnappingCancelled += SnappingCancelled;
 

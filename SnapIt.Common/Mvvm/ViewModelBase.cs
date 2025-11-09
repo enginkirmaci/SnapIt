@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Prism.Commands;
 
 namespace SnapIt.Common.Mvvm;
 

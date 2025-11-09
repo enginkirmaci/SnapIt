@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.Http;
-using System.Windows;
 using System.Windows.Media;
-using DryIoc;
-using Prism.Commands;
-using Prism.Ioc;
+using Microsoft.Extensions.DependencyInjection;
+
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
@@ -97,7 +96,7 @@ public class MainWindowViewModel : ViewModelBase
                 Content = "About",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Info24 },
                 TargetPageType = typeof(AboutPage),
-                MenuItems = new object[]
+                MenuItemsSource = new object[]
                 {
                     new NavigationViewItem("What's New", typeof(WhatsNewPage))
                 }
@@ -170,7 +169,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         if (!Dev.IsActive)
         {
-            var snapManager = App.AppContainer.Resolve<ISnapManager>();
+            var snapManager = App.Services.GetRequiredService<ISnapManager>();
             await snapManager.InitializeAsync();
 
             //await TaskEx.WaitUntil(() => snapManager.IsInitialized);

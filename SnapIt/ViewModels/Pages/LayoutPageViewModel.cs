@@ -1,7 +1,6 @@
 ﻿using System.Collections.Specialized;
-using System.Windows;
 using System.Windows.Forms;
-using Prism.Commands;
+
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;

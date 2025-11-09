@@ -1,6 +1,6 @@
 ﻿using GlobalHotKey;
 using SharpHook;
-using SharpHook.Native;
+using SharpHook.Data;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Events;
