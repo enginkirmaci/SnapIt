@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using SnapIt.Common.Entities;
+﻿using SnapIt.Common.Entities;
 using SnapIt.Common.Mvvm;
 
 namespace SnapIt.ViewModels.Pages;
@@ -8,6 +7,19 @@ public class WhatsNewPageViewModel : ViewModelBase
 {
     private readonly List<ChangeLogItem> changeLogs =
     [
+        new ChangeLogItem()
+        {
+            Header = "v5.0.7.0",
+            Lines =
+            [
+                "Major refactor and cleanup.",
+                "Migrated to .NET 9.0 and Microsoft DI.",
+                "Simplified App startup and DI setup.",
+                "Updated dependencies (Serilog, SharpHook, WPF-UI).",
+                "Improved async file operations and error handling.",
+                "Removed unused code, improved nullability."
+            ]
+        },
         new ChangeLogItem()
         {
             Header = "v5.0.6.0",

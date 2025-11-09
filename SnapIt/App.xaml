@@ -30,8 +30,6 @@
 
             <sys:Boolean x:Key="FalseValue">False</sys:Boolean>
             <sys:Boolean x:Key="TrueValue">True</sys:Boolean>
-
-            <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Assets/#Segoe Fluent Icons</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

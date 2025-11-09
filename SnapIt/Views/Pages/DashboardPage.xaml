@@ -135,8 +135,10 @@
                 Grid.Column="1"
                 Margin="4,0,4,0"
                 Command="{Binding NavigateCommand}"
-                CommandParameter="mousesettings"
-                Icon="{ui:FontIcon '&#xe962;'}">
+                CommandParameter="mousesettings">
+                <ui:CardAction.Icon>
+                    <ui:FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xe962;" />
+                </ui:CardAction.Icon>
                 <StackPanel>
                     <ui:TextBlock
                         Margin="0"
@@ -215,8 +217,10 @@
                 Grid.Column="1"
                 Margin="4,8,4,0"
                 Command="{Binding NavigateCommand}"
-                CommandParameter="tutorials"
-                Icon="{ui:FontIcon '&#xe7be;'}">
+                CommandParameter="tutorials">
+                <ui:CardAction.Icon>
+                    <ui:FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xe7be;" />
+                </ui:CardAction.Icon>
                 <StackPanel>
                     <ui:TextBlock
                         Margin="0"
