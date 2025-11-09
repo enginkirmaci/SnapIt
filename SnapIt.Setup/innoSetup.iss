@@ -57,7 +57,7 @@ Root: HKCU; Subkey: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"; ValueTy
 [Code]
 function InitializeSetup: Boolean;
 begin 
-  Dependency_AddDotNet80Desktop; 
+  Dependency_AddDotNet90Desktop; 
 
   Result := True;
 end;
