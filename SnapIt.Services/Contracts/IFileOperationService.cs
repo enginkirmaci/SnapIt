@@ -5,7 +5,7 @@ namespace SnapIt.Services.Contracts;
 
 public interface IFileOperationService : IInitialize
 {
-    Task Save<T>(T config);
+    Task SaveAsync<T>(T config);
 
     Task<T> LoadAsync<T>() where T : new();
 

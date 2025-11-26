@@ -111,7 +111,7 @@ public class DatabaseOperationService : IFileOperationService
         _isInitialized = false;
     }
 
-    public async Task Save<T>(T config)
+    public async Task SaveAsync<T>(T config)
     {
         var typeName = typeof(T).Name;
         var operationLock = GetOperationLock(typeName);
@@ -247,7 +247,7 @@ public class DatabaseOperationService : IFileOperationService
             if (string.IsNullOrEmpty(jsonData))
             {
                 var defaultValue = new T();
-                await Save(defaultValue);
+                _ = SaveAsync(defaultValue);
                 return defaultValue;
             }
 
@@ -473,7 +473,7 @@ public class DatabaseOperationService : IFileOperationService
         var settingsPath = Path.Combine(_rootFolder, "Settings.json");
         if (File.Exists(settingsPath))
         {
-            var jsonData = await File.ReadAllTextAsync(settingsPath);
+            var jsonData = File.ReadAllText(settingsPath);
             var entity = new SettingsEntity
             {
                 Version = "2.0",
@@ -487,7 +487,7 @@ public class DatabaseOperationService : IFileOperationService
         var excludedAppsPath = Path.Combine(_rootFolder, "ExcludedApplicationSettings.json");
         if (File.Exists(excludedAppsPath))
         {
-            var jsonData = await File.ReadAllTextAsync(excludedAppsPath);
+            var jsonData = File.ReadAllText(excludedAppsPath);
             var entity = new ExcludedApplicationSettingsEntity
             {
                 Version = "2.0",
@@ -501,7 +501,7 @@ public class DatabaseOperationService : IFileOperationService
         var appGroupPath = Path.Combine(_rootFolder, "ApplicationGroupSettings.json");
         if (File.Exists(appGroupPath))
         {
-            var jsonData = await File.ReadAllTextAsync(appGroupPath);
+            var jsonData = File.ReadAllText(appGroupPath);
             var entity = new ApplicationGroupSettingsEntity
             {
                 Version = "1.0",
@@ -515,7 +515,7 @@ public class DatabaseOperationService : IFileOperationService
         var licensePath = Path.Combine(_rootFolder, "StandaloneLicense.json");
         if (File.Exists(licensePath))
         {
-            var jsonData = await File.ReadAllTextAsync(licensePath);
+            var jsonData = File.ReadAllText(licensePath);
             var entity = new StandaloneLicenseEntity
             {
                 JsonData = jsonData,
@@ -533,7 +533,7 @@ public class DatabaseOperationService : IFileOperationService
             {
                 try
                 {
-                    var jsonData = await File.ReadAllTextAsync(layoutFile);
+                    var jsonData = File.ReadAllText(layoutFile);
                     var layout = Json.Deserialize<Layout>(jsonData);
                     if (layout != null)
                     {

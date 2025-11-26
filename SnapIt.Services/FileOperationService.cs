@@ -101,7 +101,7 @@ public class FileOperationService : IFileOperationService
         }
     }
 
-    public async Task Save<T>(T config)
+    public async Task SaveAsync<T>(T config)
     {
         var configPath = GetConfigPath<T>();
         var fileLock = GetFileLock(configPath);

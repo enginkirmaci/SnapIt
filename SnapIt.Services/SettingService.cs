@@ -92,7 +92,7 @@ public class SettingService : ISettingService
         //Settings.BorderThickness = Settings.Theme.BorderThickness;
         //Settings.Opacity = Settings.Theme.Opacity;
 
-        fileOperationService.Save(Settings);
+        fileOperationService.SaveAsync(Settings);
 
         foreach (var layout in Layouts.Where(i => i.Status == LayoutStatus.NotSaved))
         {
@@ -104,13 +104,13 @@ public class SettingService : ISettingService
     {
         ExcludedApplicationSettings.Applications = excludedApplications;
 
-        fileOperationService.Save(ExcludedApplicationSettings);
+        fileOperationService.SaveAsync(ExcludedApplicationSettings);
     }
 
     public void SaveStandaloneLicense(StandaloneLicense standaloneLicense)
     {
         StandaloneLicense = standaloneLicense;
-        fileOperationService.Save(StandaloneLicense);
+        fileOperationService.SaveAsync(StandaloneLicense);
     }
 
     public void SaveLayout(Layout layout)
@@ -284,6 +284,6 @@ public class SettingService : ISettingService
 
     private void SaveApplicationGroupSettings()
     {
-        fileOperationService.Save(ApplicationGroupSettings);
+        fileOperationService.SaveAsync(ApplicationGroupSettings);
     }
 }
