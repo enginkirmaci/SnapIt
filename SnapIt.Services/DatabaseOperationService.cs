@@ -86,14 +86,29 @@ public class DatabaseOperationService : IFileOperationService
 
     public void Dispose()
     {
-        _isInitialized = false;
-        _initLock?.Dispose();
-
         foreach (var lockObj in _operationLocks.Values)
         {
-            lockObj?.Dispose();
+            try
+            {
+                lockObj?.Dispose();
+            }
+            catch
+            {
+                // Ignore disposal errors
+            }
         }
         _operationLocks.Clear();
+
+        try
+        {
+            _initLock?.Dispose();
+        }
+        catch
+        {
+            // Ignore disposal errors
+        }
+
+        _isInitialized = false;
     }
 
     public async Task Save<T>(T config)
@@ -281,6 +296,11 @@ public class DatabaseOperationService : IFileOperationService
 
             context.SaveChanges();
         }
+        catch (Exception)
+        {
+            // Log or handle layout save errors if needed
+            throw;
+        }
         finally
         {
             operationLock.Release();
@@ -319,6 +339,11 @@ public class DatabaseOperationService : IFileOperationService
                 context.SaveChanges();
             }
         }
+        catch (Exception)
+        {
+            // Log or handle layout deletion errors if needed
+            throw;
+        }
         finally
         {
             operationLock.Release();
@@ -353,7 +378,7 @@ public class DatabaseOperationService : IFileOperationService
 
         var layouts = context.Layouts
             .AsNoTracking()
-            .ToList()
+            .AsEnumerable() // Switch to client-side evaluation for JSON deserialization
             .Select(entity =>
             {
                 try
@@ -366,8 +391,9 @@ public class DatabaseOperationService : IFileOperationService
                     }
                     return null;
                 }
-                catch
+                catch (Exception)
                 {
+                    // Skip invalid layout data
                     return null;
                 }
             })
@@ -395,29 +421,37 @@ public class DatabaseOperationService : IFileOperationService
 
         foreach (var layoutId in PredefinedLayouts)
         {
-            var resourceName = $"SnapIt.Layouts.{layoutId}.json";
-            using var stream = assembly?.GetManifestResourceStream(resourceName);
-
-            if (stream == null)
+            try
             {
-                continue;
-            }
+                var resourceName = $"SnapIt.Layouts.{layoutId}.json";
+                using var stream = assembly?.GetManifestResourceStream(resourceName);
 
-            using var reader = new StreamReader(stream);
-            var fileContents = await reader.ReadToEndAsync();
-            var layout = Json.Deserialize<Layout>(fileContents);
-
-            if (layout != null)
-            {
-                var entity = new LayoutEntity
+                if (stream == null)
                 {
-                    Guid = layout.Guid.ToString(),
-                    Name = layout.Name,
-                    Version = layout.Version,
-                    JsonData = fileContents,
-                    LastModified = DateTime.UtcNow
-                };
-                context.Layouts.Add(entity);
+                    continue;
+                }
+
+                using var reader = new StreamReader(stream);
+                var fileContents = await reader.ReadToEndAsync();
+                var layout = Json.Deserialize<Layout>(fileContents);
+
+                if (layout != null)
+                {
+                    var entity = new LayoutEntity
+                    {
+                        Guid = layout.Guid.ToString(),
+                        Name = layout.Name,
+                        Version = layout.Version,
+                        JsonData = fileContents,
+                        LastModified = DateTime.UtcNow
+                    };
+                    context.Layouts.Add(entity);
+                }
+            }
+            catch (Exception)
+            {
+                // Skip invalid predefined layout resource
+                continue;
             }
         }
 
@@ -514,9 +548,10 @@ public class DatabaseOperationService : IFileOperationService
                         context.Layouts.Add(entity);
                     }
                 }
-                catch
+                catch (Exception)
                 {
-                    // Skip invalid layout files
+                    // Skip invalid layout files during migration
+                    continue;
                 }
             }
         }
