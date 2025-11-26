@@ -33,6 +33,21 @@ To use SnapIt, follow these steps:
 
 For more detailed instructions, please refer to the [user manual](https://github.com/enginkirmaci/SnapIt/wiki/User-Manual). *UNDERCONSTRUCTION
 
+## Settings Storage
+SnapIt now uses SQLite to store settings and layouts instead of JSON files. The database file (`SnapItSettings.db`) is stored in `%LocalApplicationData%\SnapIt\`.
+
+### Automatic Migration
+If you're upgrading from a previous version that used JSON files:
+- Your existing settings will be automatically migrated to the SQLite database on first run
+- The original JSON files will remain untouched for backward compatibility
+- No manual intervention is required
+
+### Benefits of SQLite Storage
+- Improved performance for read/write operations
+- Better data integrity with ACID transactions
+- Reduced file I/O overhead
+- Easier backup (single database file instead of multiple JSON files)
+
 ## Contributing
 We welcome contributions to SnapIt! If you would like to contribute, please follow these steps:
 1. Fork the repository.
