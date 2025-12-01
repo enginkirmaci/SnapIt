@@ -132,8 +132,8 @@ public partial class App
                 }
                 else if (!Dev.IsActive)
                 {
-                    AppLauncher.RunAsAdmin();
                     Shutdown();
+                    AppLauncher.RunAsAdmin();
                 }
             }
             else
