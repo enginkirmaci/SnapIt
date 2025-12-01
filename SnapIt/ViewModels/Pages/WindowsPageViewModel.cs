@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 using SnapIt.Application.Contracts;
 using SnapIt.Common;
@@ -29,13 +29,15 @@ public class WindowsPageViewModel : ViewModelBase
     public bool DisableForModal
     { get { disableForModal = settingService.Settings.DisableForModal; return disableForModal; } set { settingService.Settings.DisableForModal = value; SetProperty(ref disableForModal, value); ApplyChanges(); } }
 
+    public bool DisableWindowCornering
+    { get => settingService.Settings.DisableWindowCornering; set { settingService.Settings.DisableWindowCornering = value; ApplyChanges(); } }
+
     public ObservableCollection<ExcludedApplication> ExcludedApplications { get => excludedApplications; set => SetProperty(ref excludedApplications, value); }
     public ExcludedApplication SelectedExcludedApplication { get => selectedExcludedApplication; set => SetProperty(ref selectedExcludedApplication, value); }
     public bool IsExcludeApplicationDialogOpen { get => isExcludeApplicationDialogOpen; set => SetProperty(ref isExcludeApplicationDialogOpen, value); }
     public bool IsRunningApplicationsDialogOpen { get => isRunningApplicationsDialogOpen; set => SetProperty(ref isRunningApplicationsDialogOpen, value); }
     public ObservableCollection<MatchRule> MatchRules { get => matchRules; set => SetProperty(ref matchRules, value); }
 
-    //public DelegateCommand<RoutedEventArgs> LoadedCommand { get; private set; }
     public DelegateCommand ExcludeWindowsModalCommand { get; private set; }
 
     public DelegateCommand<ExcludedApplication> OpenExcludeApplicationCommand { get; private set; }
@@ -128,25 +130,6 @@ public class WindowsPageViewModel : ViewModelBase
             }
         });
 
-        //ExcludeApplicationDialogClosingCommand = new DelegateCommand<object>((isSave) =>
-        //{
-        //    IsExcludeApplicationDialogOpen = false;
-
-        //    if ((bool)isSave)
-        //    {
-        //        if (!ExcludedApplications.Contains(SelectedExcludedApplication))
-        //        {
-        //            ExcludedApplications.Add(SelectedExcludedApplication);
-        //        }
-        //        else
-        //        {
-        //        }
-
-        //        settingService.SaveExcludedApps(ExcludedApplications.ToList());
-        //        ApplyChanges();
-        //    }
-        //});
-
         RemoveExcludedApplicationCommand = new DelegateCommand<ExcludedApplication>((selected) =>
         {
             ExcludedApplications.Remove(selected);
@@ -158,7 +141,6 @@ public class WindowsPageViewModel : ViewModelBase
 
     public override async Task InitializeAsync(RoutedEventArgs args)
     {
-        //await snapManager.InitializeAsync();
         await settingService.InitializeAsync();
         await winApiService.InitializeAsync();
 

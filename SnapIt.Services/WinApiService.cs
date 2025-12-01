@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
@@ -11,11 +11,14 @@ namespace SnapIt.Services;
 public class WinApiService : IWinApiService
 {
     private const int MAX_PATH = 260;
+    private readonly ISettingService settingService;
 
     public bool IsInitialized { get; private set; }
 
-    public WinApiService()
-    { }
+    public WinApiService(ISettingService settingService)
+    {
+        this.settingService = settingService;
+    }
 
     public async Task InitializeAsync()
     {
@@ -60,14 +63,6 @@ public class WinApiService : IWinApiService
     {
         var style = PInvoke.User32.GetWindowLong(activeWindow.Handle, PInvoke.User32.WindowLongIndexFlags.GWL_STYLE);
 
-        //foreach (WindowStyles ws in (WindowStyles[])Enum.GetValues(typeof(WindowStyles)))
-        //{
-        //    var wsEnum = (WindowStyles)(style & (uint)(ws));
-
-        //    if (wsEnum != WindowStyles.WS_EX_LEFT)
-        //    {
-        //    }
-        //}
         var windowStyle = (PInvoke.User32.WindowStylesEx)(style & (uint)PInvoke.User32.WindowStylesEx.WS_EX_APPWINDOW);
 
         return windowStyle == PInvoke.User32.WindowStylesEx.WS_EX_APPWINDOW;
@@ -95,7 +90,12 @@ public class WinApiService : IWinApiService
 
         Dev.Log($"{activeWindow.Handle}, {X},{Y}  {width}x{height}");
 
-        PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL); //if window maximized, restores to normal so position can be set
+        if (settingService.Settings.DisableWindowCornering)
+        {
+            SetWindowCornerPreference(activeWindow, DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_DONOTROUND);
+        }
+
+        PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL);
 
         var res = PInvoke.User32.SetWindowPos(
             activeWindow.Handle,
@@ -112,51 +112,6 @@ public class WinApiService : IWinApiService
             Dev.Log(msg);
         }
     }
-
-    //public async Task MoveWindow(ActiveWindow activeWindow, int X, int Y, int width, int height)
-    //{
-    //    PInvoke.User32.ShowWindow(activeWindow.Handle, PInvoke.User32.WindowShowStyle.SW_SHOWNORMAL);
-
-    //    double frameCount = 15;
-
-    //    var from = activeWindow.Boundry ?? new Rectangle();
-    //    var to = new Rectangle(X, Y, X + width, Y + height);
-
-    //    var pLeft = (to.Left - from.Left) / frameCount;
-    //    var pTop = (to.Top - from.Top) / frameCount;
-    //    var pRight = (to.Right - from.Right) / frameCount;
-    //    var pBottom = (to.Bottom - from.Bottom) / frameCount;
-
-    //    for (var i = 0; i < frameCount; i++)
-    //    {
-    //        var current = new Rectangle(
-    //            (int)(from.Left + (double)(i * pLeft)),
-    //            (int)(from.Top + (double)(i * pTop)),
-    //            (int)(from.Right + (double)(i * pRight)),
-    //            (int)(from.Bottom + (double)(i * pBottom)));
-
-    //        PInvoke.User32.SetWindowPos(
-    //           activeWindow.Handle,
-    //           PInvoke.User32.SpecialWindowHandles.HWND_TOP,
-    //           (int)current.X,
-    //           (int)current.Y,
-    //           (int)current.Width,
-    //           (int)current.Height,
-    //           PInvoke.User32.SetWindowPosFlags.SWP_ASYNCWINDOWPOS |
-    //           PInvoke.User32.SetWindowPosFlags.SWP_NOSENDCHANGING);
-
-    //        await Task.Delay(5);
-    //    }
-
-    //    PInvoke.User32.SetWindowPos(
-    //         activeWindow.Handle,
-    //         PInvoke.User32.SpecialWindowHandles.HWND_TOP,
-    //         (int)to.X,
-    //         (int)to.Y,
-    //         (int)to.Width,
-    //         (int)to.Height,
-    //         PInvoke.User32.SetWindowPosFlags.SWP_ASYNCWINDOWPOS);
-    //}
 
     public void SendMessage(ActiveWindow activeWindow)
     {
@@ -223,8 +178,27 @@ public class WinApiService : IWinApiService
             PInvoke.User32.SystemParametersInfoFlags.None);
 
         var currentWallpaper = new string(buff, 0, buff.Length);
-        //User32.SystemParametersInfo(SPI_GETDESKWALLPAPER, currentWallpaper.Length, currentWallpaper, 0);
         return currentWallpaper.Substring(0, currentWallpaper.IndexOf('\0'));
+    }
+
+    public void SetWindowCornerPreference(ActiveWindow activeWindow, DWM_WINDOW_CORNER_PREFERENCE preference)
+    {
+        if (activeWindow == null || activeWindow.Handle == nint.Zero)
+            return;
+
+        try
+        {
+            int pref = (int)preference;
+            DwmApi.DwmSetWindowAttribute(
+                activeWindow.Handle,
+                DWMWINDOWATTRIBUTE.WindowCornerPreference,
+                ref pref,
+                sizeof(int));
+        }
+        catch (Exception ex)
+        {
+            Dev.Log($"Failed to set window corner preference: {ex.Message}");
+        }
     }
 
     public void Dispose()
