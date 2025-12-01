@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="SnapIt.Views.Pages.WindowsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -33,73 +33,6 @@
             NavigateUri="nuget.org/packages/WPF-UI/"
             Visibility="Collapsed" />
 
-        <!--<ui:Dialog
-            Panel.ZIndex="9"
-            ButtonLeftName="Save"
-            DialogHeight="390"
-            DialogWidth="500"
-            IsShown="{Binding IsExcludeApplicationDialogOpen, Mode=TwoWay}"
-            Visibility="{Binding IsExcludeApplicationDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="ButtonRightClick">
-                    <i:InvokeCommandAction Command="{Binding ExcludeApplicationDialogClosingCommand}" CommandParameter="{StaticResource FalseValue}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="ButtonLeftClick">
-                    <i:InvokeCommandAction Command="{Binding ExcludeApplicationDialogClosingCommand}" CommandParameter="{StaticResource TrueValue}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <StackPanel>
-                <TextBlock Text="To exclude application, you can choose from running applications or type a keyword and matching rule. If keyword matches to application title, snapping will be disabled for that window." TextWrapping="Wrap" />
-
-                <ui:Button
-                    Margin="0,16"
-                    HorizontalAlignment="Center"
-                    Appearance="Secondary"
-                    Command="{Binding OpenRunningApplicationsDialogCommand}"
-                    Content="choose from running applications"
-                    Icon="AppsList24" />
-
-                <TextBlock
-                    Margin="0,0,0,12"
-                    HorizontalAlignment="Center"
-                    Text="or" />
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="110" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Text="Keyword" />
-                    <TextBox
-                        Grid.Row="1"
-                        Margin="0,0,6,0"
-                        Text="{Binding SelectedExcludedApplication.Keyword, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <TextBlock Grid.Column="1" Text="Match Rule" />
-                    <ComboBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        ItemsSource="{Binding MatchRules}"
-                        SelectedItem="{Binding SelectedExcludedApplication.MatchRule, Mode=TwoWay}" />
-                </Grid>
-
-                <TextBlock Margin="0,8" Text="Applied for" />
-
-                <StackPanel Orientation="Horizontal">
-                    <CheckBox Content="Mouse" IsChecked="{Binding SelectedExcludedApplication.Mouse}" />
-                    <CheckBox
-                        Margin="12,0,0,0"
-                        Content="Keyboard"
-                        IsChecked="{Binding SelectedExcludedApplication.Keyboard}" />
-                </StackPanel>
-            </StackPanel>
-        </ui:Dialog>-->
-
         <StackPanel>
             <ui:CardControl
                 Margin="0,0,0,8"
@@ -123,6 +56,23 @@
                     </StackPanel>
                 </ui:CardControl.Header>
                 <ui:ToggleSwitch IsChecked="{Binding DisableForModal}" />
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,8" Icon="Empty">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock
+                            FontSize="13"
+                            FontWeight="Medium"
+                            Text="Disable window cornering for Windows 11" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="Removes rounded corners from windows when snapped (Windows 11 only)"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding EnableAutomaticWindowCornering}" />
             </ui:CardControl>
 
             <ui:CardControl

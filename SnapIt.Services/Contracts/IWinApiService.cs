@@ -1,4 +1,4 @@
-﻿using SnapIt.Common.Contracts;
+using SnapIt.Common.Contracts;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Graphics;
 
@@ -25,4 +25,6 @@ public interface IWinApiService : IInitialize
     ActiveWindow GetActiveWindow();
 
     string GetCurrentDesktopWallpaper();
+
+    void SetWindowCornerPreference(ActiveWindow activeWindow, DWM_WINDOW_CORNER_PREFERENCE preference);
 }
