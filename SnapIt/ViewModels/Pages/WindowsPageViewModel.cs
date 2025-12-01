@@ -29,8 +29,8 @@ public class WindowsPageViewModel : ViewModelBase
     public bool DisableForModal
     { get { disableForModal = settingService.Settings.DisableForModal; return disableForModal; } set { settingService.Settings.DisableForModal = value; SetProperty(ref disableForModal, value); ApplyChanges(); } }
 
-    public bool DisableWindowCornering
-    { get => settingService.Settings.DisableWindowCornering; set { settingService.Settings.DisableWindowCornering = value; ApplyChanges(); } }
+    public bool EnableAutomaticWindowCornering
+    { get => settingService.Settings.EnableAutomaticWindowCornering; set { settingService.Settings.EnableAutomaticWindowCornering = value; ApplyChanges(); } }
 
     public ObservableCollection<ExcludedApplication> ExcludedApplications { get => excludedApplications; set => SetProperty(ref excludedApplications, value); }
     public ExcludedApplication SelectedExcludedApplication { get => selectedExcludedApplication; set => SetProperty(ref selectedExcludedApplication, value); }

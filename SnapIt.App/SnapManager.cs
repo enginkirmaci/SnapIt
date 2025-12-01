@@ -1,4 +1,4 @@
-﻿using SnapIt.Application.Contracts;
+using SnapIt.Application.Contracts;
 using SnapIt.Common;
 using SnapIt.Common.Entities;
 using SnapIt.Common.Graphics;
@@ -16,6 +16,7 @@ public class SnapManager : ISnapManager
     private readonly IMouseService mouseService;
     private readonly IKeyboardService keyboardService;
     private readonly IWindowsService windowsService;
+    private readonly IWindowEventService windowEventService;
 
     private SnapLoadingWindow loadingWindow;
     private bool isTrialEnded = false;
@@ -38,7 +39,8 @@ public class SnapManager : ISnapManager
         IScreenManager screenManager,
         IMouseService mouseService,
         IKeyboardService keyboardService,
-        IWindowsService windowsService)
+        IWindowsService windowsService,
+        IWindowEventService windowEventService)
     {
         this.windowManager = windowManager;
         this.settingService = settingService;
@@ -47,6 +49,7 @@ public class SnapManager : ISnapManager
         this.mouseService = mouseService;
         this.keyboardService = keyboardService;
         this.windowsService = windowsService;
+        this.windowEventService = windowEventService;
 
         keyboardService.SnapStartStop += KeyboardService_SnapStartStop;
     }
@@ -70,6 +73,8 @@ public class SnapManager : ISnapManager
         await keyboardService.InitializeAsync();
         await mouseService.InitializeAsync();
         await windowsService.InitializeAsync();
+        await windowEventService.InitializeAsync();
+        windowEventService.StartMonitoring();
 
         if (Dev.IsActive && Dev.ShowSnapWindowOnStartup)
         {
@@ -210,6 +215,7 @@ public class SnapManager : ISnapManager
         keyboardService.MoveWindow -= MoveWindow;
         keyboardService.SnappingCancelled -= SnappingCancelled;
         //keyboardService.SnapStartStop -= KeyboardService_SnapStartStop;
+        windowEventService.StopMonitoring();
         keyboardService.ChangeLayout -= KeyboardService_ChangeLayout;
         keyboardService.Dispose();
 

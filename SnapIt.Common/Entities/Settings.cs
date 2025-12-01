@@ -19,7 +19,7 @@ public class Settings
     public bool EnableKeyboard { get; set; } = true;
     public bool DisableForFullscreen { get; set; } = true;
     public bool DisableForModal { get; set; } = true;
-    public bool DisableWindowCornering { get; set; } = false;
+    public bool EnableAutomaticWindowCornering { get; set; } = false;
     public bool ShowMainWindow { get; set; } = true;
     public UITheme AppTheme { get; set; } = UITheme.System;
     public Dictionary<string, string> ScreensLayouts { get; set; }

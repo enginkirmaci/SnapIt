@@ -72,7 +72,7 @@
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </ui:CardControl.Header>
-                <ui:ToggleSwitch IsChecked="{Binding DisableWindowCornering}" />
+                <ui:ToggleSwitch IsChecked="{Binding EnableAutomaticWindowCornering}" />
             </ui:CardControl>
 
             <ui:CardControl
