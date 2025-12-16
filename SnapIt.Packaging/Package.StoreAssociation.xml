@@ -373,5 +373,5 @@
     <MainPackageIdentityName>30071EnginKrmac.SnapItforBusiness</MainPackageIdentityName>
     <MainPackageIdentityName>30071EnginKrmac.Themely</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9PHGBMZ7RBZX" />
+  <PackageInfoList LandingUrl="https://devcenterapi.dce.mp.microsoft.com/dashboard/Application?appId=9PHGBMZ7RBZX" />
 </StoreAssociation>
